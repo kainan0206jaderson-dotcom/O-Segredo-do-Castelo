@@ -518,7 +518,7 @@ export class WorldScene extends Phaser.Scene {
   private showRoomName(name: string): void {
     if (!name) return;
     const label = this.add.text(GAME_WIDTH / 2, 18, name, {
-      fontFamily: 'Georgia, serif', fontSize: '12px', color: '#fad65c', stroke: '#18142a', strokeThickness: 3,
+      fontFamily: '"Pixelify Sans", Georgia, serif', fontSize: '12px', color: '#fad65c', stroke: '#18142a', strokeThickness: 3,
     }).setOrigin(0.5).setScrollFactor(0).setDepth(1001).setResolution(4).setAlpha(0);
     this.tweens.chain({
       targets: label,

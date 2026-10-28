@@ -44,7 +44,7 @@ export class GrimoireScene extends Phaser.Scene {
 
     GrimoireScene.lastNotices = [];
     this.tabTexts = TABS.map((name, i) =>
-      this.add.text(x0 + 12 + i * 76, y0 + 8, name, textStyle(10, COLORS.text)).setResolution(TEXT_RES)
+      this.add.text(x0 + 12 + i * 68, y0 + 8, name, textStyle(10, COLORS.text)).setResolution(TEXT_RES)
         .setInteractive({ useHandCursor: true }).on('pointerdown', () => this.setTab(i)),
     );
     this.add.text(x0 + w - 10, y0 + 6, '✕', textStyle(12, COLORS.gold)).setOrigin(1, 0).setResolution(TEXT_RES)

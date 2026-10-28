@@ -14,6 +14,15 @@ import { setupMobileScreen } from './ui/mobile';
 import { session } from './core/session';
 import { audio } from './audio/Audio';
 
+// texto é desenhado em alta resolução e reduzido: filtro suave evita letras "mastigadas"
+// (o Phaser refaz a textura do texto a cada mudança, então o filtro vai junto)
+const updateText = Phaser.GameObjects.Text.prototype.updateText;
+Phaser.GameObjects.Text.prototype.updateText = function (this: Phaser.GameObjects.Text) {
+  updateText.call(this);
+  this.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
+  return this;
+};
+
 const game = new Phaser.Game({
   type: Phaser.AUTO,
   parent: 'game',
