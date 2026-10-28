@@ -1,4 +1,10 @@
 import Phaser from 'phaser';
+import { GAME_HEIGHT, GAME_WIDTH, RENDER_ZOOM } from '../config/game';
+
+/** Toque em pixels de jogo (o canvas tem RENDER_ZOOM pixels reais por pixel de jogo). */
+function screenPoint(p: Phaser.Input.Pointer): { x: number; y: number } {
+  return { x: p.x / RENDER_ZOOM, y: p.y / RENDER_ZOOM };
+}
 
 /**
  * Junta teclado e toque em comandos únicos: direção (-1..1) e ação.
@@ -66,7 +72,8 @@ export class InputManager {
   }
 
   private createActionButton(): void {
-    const { width, height } = this.scene.scale.gameSize;
+    const width = GAME_WIDTH;
+    const height = GAME_HEIGHT;
     const ring = this.scene.add.circle(0, 0, 18, 0xfad65c, 0.18).setStrokeStyle(1, 0xfad65c, 0.7);
     const star = this.scene.add.star(0, 0, 5, 4, 9, 0xfad65c, 0.85);
     this.actionButton = this.scene.add.container(width - 34, height - 34, [ring, star])
@@ -82,14 +89,16 @@ export class InputManager {
   private onDown(p: Phaser.Input.Pointer): void {
     if (this.stickPointer || !p.wasTouch || p.x > this.scene.scale.gameSize.width / 2) return;
     this.stickPointer = p;
-    this.stickOrigin.set(p.x, p.y);
-    this.base.setPosition(p.x, p.y).setVisible(true);
-    this.knob.setPosition(p.x, p.y).setVisible(true);
+    const { x, y } = screenPoint(p);
+    this.stickOrigin.set(x, y);
+    this.base.setPosition(x, y).setVisible(true);
+    this.knob.setPosition(x, y).setVisible(true);
   }
 
   private onMove(p: Phaser.Input.Pointer): void {
     if (p !== this.stickPointer) return;
-    const d = new Phaser.Math.Vector2(p.x - this.stickOrigin.x, p.y - this.stickOrigin.y);
+    const { x, y } = screenPoint(p);
+    const d = new Phaser.Math.Vector2(x - this.stickOrigin.x, y - this.stickOrigin.y);
     const len = Math.min(d.length(), InputManager.RADIUS);
     d.setLength(len);
     this.knob.setPosition(this.stickOrigin.x + d.x, this.stickOrigin.y + d.y);

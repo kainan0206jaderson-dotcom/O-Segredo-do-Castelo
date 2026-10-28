@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { GAME_HEIGHT, GAME_WIDTH } from '../config/game';
+import { GAME_HEIGHT, GAME_WIDTH, RENDER_ZOOM } from '../config/game';
 import { InputManager } from '../input/InputManager';
 import { COLORS, TEXT_RES, textStyle } from '../ui/theme';
 import { settings, setSetting, type Settings } from '../core/settings';
@@ -71,7 +71,7 @@ export class OptionsScene extends Phaser.Scene {
         .setInteractive({ useHandCursor: true })
         .on('pointerdown', (p: Phaser.Input.Pointer) => {
           this.sel = i;
-          const dir = r.value && r.label !== 'Tela tremendo' && r.label !== 'Texto' ? (p.x < GAME_WIDTH / 2 ? -1 : 1) : 0;
+          const dir = r.value && r.label !== 'Tela tremendo' && r.label !== 'Texto' ? (p.x / RENDER_ZOOM < GAME_WIDTH / 2 ? -1 : 1) : 0;
           r.change(dir);
           this.render();
         });

@@ -26,7 +26,7 @@ import { Beam } from '../world/Beam';
 import { Darkness, type Light } from '../world/Darkness';
 import { CauldronScene } from './CauldronScene';
 import { GrimoireScene } from './GrimoireScene';
-import { GAME_HEIGHT, GAME_WIDTH, TILE_SIZE } from '../config/game';
+import { GAME_HEIGHT, GAME_WIDTH, RENDER_ZOOM, TILE_SIZE } from '../config/game';
 import { shake, flash } from '../ui/fx';
 import { audio, type Sfx, type Track } from '../audio/Audio';
 import { Bark, pickLine } from '../ui/Bark';
@@ -535,17 +535,35 @@ export class WorldScene extends Phaser.Scene {
     return `criaturas:${this.mapKey}:${group}`;
   }
 
-  /** Mapas menores que a tela ficam centralizados; maiores seguem o jogador. */
+  /**
+   * Mapas menores que a tela ficam centralizados e ampliados (em escala inteira) para
+   * encher a tela; maiores seguem o jogador. O HUD tem uma câmera própria, sem zoom
+   * de sala, que mostra só o que está preso na tela (scrollFactor 0).
+   */
   private setupCamera(map: Phaser.Tilemaps.Tilemap): void {
     const cam = this.cameras.main;
     const w = map.widthInPixels;
     const h = map.heightInPixels;
-    const bx = w < GAME_WIDTH ? -(GAME_WIDTH - w) / 2 : 0;
-    const by = h < GAME_HEIGHT ? -(GAME_HEIGHT - h) / 2 : 0;
-    cam.setBounds(bx, by, Math.max(w, GAME_WIDTH), Math.max(h, GAME_HEIGHT));
+    const fit = Math.min(GAME_WIDTH / w, GAME_HEIGHT / h);
+    const zoom = Math.min(RENDER_ZOOM * 2, Math.max(RENDER_ZOOM, Math.floor(RENDER_ZOOM * fit)));
+    const viewW = (GAME_WIDTH * RENDER_ZOOM) / zoom;
+    const viewH = (GAME_HEIGHT * RENDER_ZOOM) / zoom;
+    cam.setOrigin(0.5).setZoom(zoom);
+    const bx = w < viewW ? -(viewW - w) / 2 : 0;
+    const by = h < viewH ? -(viewH - h) / 2 : 0;
+    cam.setBounds(bx, by, Math.max(w, viewW), Math.max(h, viewH));
     cam.startFollow(this.player, true, 0.15, 0.15);
     cam.setDeadzone(48, 32);
     cam.setRoundPixels(true);
+
+    const ui = this.cameras.add();
+    this.events.on(Phaser.Scenes.Events.PRE_RENDER, () => {
+      for (const o of this.children.list) {
+        const onScreen = (o as unknown as Phaser.GameObjects.Components.ScrollFactor).scrollFactorX === 0;
+        const c = o as unknown as Phaser.GameObjects.Components.Visible & { cameraFilter: number };
+        c.cameraFilter = onScreen ? cam.id : ui.id;
+      }
+    });
   }
 
   private showRoomName(name: string): void {
