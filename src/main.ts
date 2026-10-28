@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { GAME_HEIGHT, GAME_WIDTH } from './config/game';
+import { GAME_HEIGHT, GAME_WIDTH, RENDER_ZOOM } from './config/game';
 import { BootScene } from './scenes/BootScene';
 import { PreloadScene } from './scenes/PreloadScene';
 import { TitleScene } from './scenes/TitleScene';
@@ -15,10 +15,22 @@ import { setupMobileScreen } from './ui/mobile';
 import { session } from './core/session';
 import { audio } from './audio/Audio';
 
-// texto é desenhado em alta resolução e reduzido: filtro suave evita letras "mastigadas"
-// (o Phaser refaz a textura do texto a cada mudança, então o filtro vai junto)
+// O canvas tem RENDER_ZOOM pixels reais por pixel de jogo. Toda câmera nova já nasce
+// ampliada e presa no canto, então cenas e HUD continuam usando coordenadas de jogo.
+// (a câmera do mundo troca para o centro, porque segue o aprendiz; ver WorldScene)
+const addCamera = Phaser.Cameras.Scene2D.CameraManager.prototype.add;
+Phaser.Cameras.Scene2D.CameraManager.prototype.add = function (this: Phaser.Cameras.Scene2D.CameraManager, ...args: Parameters<typeof addCamera>) {
+  const cam = addCamera.apply(this, args);
+  if (args.length === 0) cam.setOrigin(0).setZoom(RENDER_ZOOM);
+  return cam;
+};
+
+// texto desenhado na resolução real da tela (letra de pixel, mas sem borrão);
+// o Phaser refaz a textura do texto a cada mudança, então resolução e filtro vão junto
+const TEXT_MIN_RES = RENDER_ZOOM + 1;
 const updateText = Phaser.GameObjects.Text.prototype.updateText;
 Phaser.GameObjects.Text.prototype.updateText = function (this: Phaser.GameObjects.Text) {
+  if (this.style.resolution < TEXT_MIN_RES) this.style.resolution = TEXT_MIN_RES;
   updateText.call(this);
   this.texture.setFilter(Phaser.Textures.FilterMode.LINEAR);
   return this;
@@ -27,8 +39,8 @@ Phaser.GameObjects.Text.prototype.updateText = function (this: Phaser.GameObject
 const game = new Phaser.Game({
   type: Phaser.AUTO,
   parent: 'game',
-  width: GAME_WIDTH,
-  height: GAME_HEIGHT,
+  width: GAME_WIDTH * RENDER_ZOOM,
+  height: GAME_HEIGHT * RENDER_ZOOM,
   backgroundColor: '#18142a',
   pixelArt: true,
   roundPixels: true,
