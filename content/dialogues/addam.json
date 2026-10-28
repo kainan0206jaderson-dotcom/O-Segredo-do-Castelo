@@ -1,0 +1,44 @@
+{
+  "id": "addam",
+  "speaker": "Mister Addam",
+  "entries": [
+    {
+      "when": {
+        "flag": "jogo:fim"
+      },
+      "start": "fim"
+    },
+    {
+      "when": {
+        "flag": "amelia:capturada"
+      },
+      "start": "virtudes"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Boa noite, aprendiz. Mister Addam, a seu dispor. Assombro esta galeria há muito, muito tempo.",
+      "next": "oi-2"
+    },
+    "oi-2": {
+      "text": "Quadros são janelas com boas maneiras. Esses quatro, porém, andam mal-educados desde que a fuligem chegou."
+    },
+    "virtudes": {
+      "text": "Uma dica de cavalheiro: no Quadro da Coragem, acenda primeiro e lute depois.",
+      "next": "virtudes-2"
+    },
+    "virtudes-2": {
+      "text": "No da Inteligência, nem todo suporte merece um espelho. No da Astúcia, quem espera chega primeiro.",
+      "next": "virtudes-3"
+    },
+    "virtudes-3": {
+      "text": "E no da Lealdade... ora, isso o seu coração já sabe."
+    },
+    "fim": {
+      "text": "Esplêndido! A galeria nunca esteve tão iluminada. Permita-me tirar a cartola. Ela atravessa a mão, mas a intenção conta."
+    }
+  }
+}

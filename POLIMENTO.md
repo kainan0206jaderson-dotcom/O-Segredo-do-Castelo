@@ -43,3 +43,4 @@ Detalhes notados durante o desenvolvimento, para a fase de ajuste final.
   - Cerimônia final: personagens com animação de comemoração e confete; créditos com música.
   - Quadros-portais: entrada com efeito de "mergulhar na tinta".
   - Cone de visão dos olhos atravessa paredes no desenho (a visão em si não muda); cortar o facho na parede.
+  - Fantasmas (Booh, Mister Addam, Dona Lágrima) e gnomos (Mary, Mish Mish, Wish Wish): arte provisória; detalhar com as características reais que o kainan passar.

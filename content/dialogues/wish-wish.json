@@ -1,0 +1,42 @@
+{
+  "id": "wish-wish",
+  "speaker": "Wish Wish",
+  "entries": [
+    {
+      "when": {
+        "flag": "gnomo:wish-wish"
+      },
+      "start": "depois"
+    },
+    {
+      "when": {
+        "questActive": "esconde-esconde"
+      },
+      "start": "achado"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "achado": {
+      "text": "Ahhh, me achou! Eu estava tão bem escondido debaixo das estrelas...",
+      "next": "achado-2"
+    },
+    "achado-2": {
+      "text": "Fala pra Mary que o Wish Wish perdeu. Mas só desta vez!",
+      "effects": [
+        {
+          "setFlag": "gnomo:wish-wish",
+          "value": true
+        }
+      ]
+    },
+    "oi": {
+      "text": "Psiu! Sou o Wish Wish. Estou escondido. Você não me viu, tá?"
+    },
+    "depois": {
+      "text": "Próxima rodada eu me escondo dentro de um caldeirão. Ninguém vai me achar!"
+    }
+  }
+}

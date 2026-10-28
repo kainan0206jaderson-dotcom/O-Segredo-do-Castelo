@@ -57,13 +57,13 @@
     ]
   },
   "o-diretor": {
-    "title": "O Diretor do Castelo",
+    "title": "O Ministro da Magia",
     "kind": "principal",
     "xp": 40,
     "stages": [
       {
         "id": "ir-ao-corredor",
-        "objective": "Vá ao Corredor dos Quadros (porta oeste do Grande Salão) e procure o gabinete do Prof. Arquimedes.",
+        "objective": "Vá ao Corredor dos Quadros (porta oeste do Grande Salão) e procure o gabinete do Ministro Bonfatt.",
         "completeWhen": {
           "flag": "visto:morgana-corredor"
         },
@@ -87,11 +87,11 @@
       },
       {
         "id": "falar-com-diretor",
-        "objective": "Converse com o Prof. Arquimedes no gabinete."
+        "objective": "Converse com o Ministro Bonfatt no gabinete."
       },
       {
         "id": "ir-ao-hall",
-        "objective": "Siga o Prof. Arquimedes até o Hall da Escada, no fim oeste do corredor."
+        "objective": "Siga o Ministro Bonfatt até o Hall da Escada, no fim oeste do corredor."
       }
     ]
   },
@@ -360,6 +360,32 @@
       {
         "id": "contar-ao-aristoteles",
         "objective": "Conte para o Prof. Aristóteles."
+      }
+    ]
+  },
+  "esconde-esconde": {
+    "title": "Esconde-esconde dos gnomos",
+    "kind": "secundaria",
+    "xp": 30,
+    "stages": [
+      {
+        "id": "procurar",
+        "objective": "Ache o Mish Mish (cheiro de livro velho) e o Wish Wish (vive contando estrelas).",
+        "completeWhen": {
+          "all": [
+            {
+              "flag": "gnomo:mish-mish"
+            },
+            {
+              "flag": "gnomo:wish-wish"
+            }
+          ]
+        },
+        "then": "contar-a-mary"
+      },
+      {
+        "id": "contar-a-mary",
+        "objective": "Conte para a Mary, na Recepção."
       }
     ]
   }

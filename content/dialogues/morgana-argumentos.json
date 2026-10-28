@@ -28,10 +28,10 @@
     },
     "b": {
       "speaker": "Morgana Cinzel",
-      "text": "Minhas virtudes? Ninguém nunca reparou nelas. Nem o Arquimedes.",
+      "text": "Minhas virtudes? Ninguém nunca reparou nelas. Nem o Bonfatt.",
       "choices": [
         {
-          "text": "Mostrar as cartas do Arquimedes.",
+          "text": "Mostrar as cartas do Bonfatt.",
           "next": "c"
         },
         {

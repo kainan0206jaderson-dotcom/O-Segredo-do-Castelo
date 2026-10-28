@@ -68,7 +68,7 @@
       ]
     },
     "curta": {
-      "text": "Uma luz fria desceu da torre, as velas apagaram e o Arquimedes se trancou no gabinete. Fim.",
+      "text": "Uma luz fria desceu da torre, as velas apagaram e o Bonfatt se trancou no gabinete. Fim.",
       "next": "fim",
       "effects": [
         {
@@ -82,7 +82,7 @@
       "next": "dramatica-2"
     },
     "dramatica-2": {
-      "text": "E o nobre Professor Arquimedes correu para o gabinete e trancou a porta! Com TRÊS voltas na chave! Eu teria desmaiado, se quadros desmaiassem.",
+      "text": "E o nobre Ministro Bonfatt correu para o gabinete e trancou a porta! Com TRÊS voltas na chave! Eu teria desmaiado, se quadros desmaiassem.",
       "next": "fim",
       "effects": [
         {
@@ -101,7 +101,7 @@
       ]
     },
     "depois": {
-      "text": "Se encontrar o Arquimedes, diga que o meu lado esquerdo continua sendo o melhor."
+      "text": "Se encontrar o Bonfatt, diga que o meu lado esquerdo continua sendo o melhor."
     },
     "enigma": {
       "text": "Uma pedra? A Pedra da Inteligência? Talvez eu saiba onde ela está. Talvez esteja atrás da minha moldura. Mas só conto para quem resolver a minha charada!",
@@ -145,7 +145,7 @@
       ]
     },
     "selo": {
-      "text": "O diretor engolido pela fuligem? Que cena! Pena que eu estava virado para o lado errado."
+      "text": "O ministro engolido pela fuligem? Que cena! Pena que eu estava virado para o lado errado."
     },
     "fim-ato": {
       "text": "Eu vi tudo pela moldura: o selo virou poeira! Vou pedir para me pintarem uma cena disso. Comigo no centro, claro."

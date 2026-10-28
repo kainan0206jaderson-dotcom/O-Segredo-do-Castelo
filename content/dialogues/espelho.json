@@ -55,7 +55,7 @@
       "next": "preso-3"
     },
     "preso-3": {
-      "text": "Antes de sumir, escondi pedaços de cartas pelo andar. Cartas do Arquimedes. Ache três e leia para mim aqui.",
+      "text": "Antes de sumir, escondi pedaços de cartas pelo andar. Cartas do Bonfatt. Ache três e leia para mim aqui.",
       "speaker": "Profa. Amélia",
       "next": "preso-4"
     },
@@ -74,7 +74,7 @@
       "speaker": "Profa. Amélia"
     },
     "libertar": {
-      "text": "Você lê as três cartas em voz alta. As palavras do diretor brilham no vidro.",
+      "text": "Você lê as três cartas em voz alta. As palavras do ministro brilham no vidro.",
       "speaker": "✦",
       "next": "libertar-2"
     },

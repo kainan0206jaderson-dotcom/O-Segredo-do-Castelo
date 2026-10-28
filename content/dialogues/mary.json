@@ -1,0 +1,70 @@
+{
+  "id": "mary",
+  "speaker": "Mary",
+  "entries": [
+    {
+      "when": {
+        "questStage": "esconde-esconde",
+        "stage": "contar-a-mary"
+      },
+      "start": "fim"
+    },
+    {
+      "when": {
+        "questDone": "esconde-esconde"
+      },
+      "start": "depois"
+    },
+    {
+      "when": {
+        "questActive": "esconde-esconde"
+      },
+      "start": "procura"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Oi, oi! Sou a Mary. Eu e meus irmãos, o Mish Mish e o Wish Wish, estamos brincando de esconde-esconde.",
+      "next": "oi-2"
+    },
+    "oi-2": {
+      "text": "Só que eles se esconderam BEM DEMAIS. Faz três dias que eu procuro!",
+      "next": "oi-3"
+    },
+    "oi-3": {
+      "text": "Dica de gnomo: o Mish Mish adora cheiro de livro velho, e o Wish Wish vive contando estrelas. Ache os dois para mim?",
+      "effects": [
+        {
+          "startQuest": "esconde-esconde"
+        }
+      ]
+    },
+    "procura": {
+      "text": "Achou? Livro velho e estrelas, lembra? Gnomo escondido sempre deixa a ponta do chapéu de fora."
+    },
+    "fim": {
+      "text": "Você achou os dois! Agora é a minha vez de me esconder. Tome, presente de gnomo: dois Elixires Estelares e uma Poção de Vigor!",
+      "effects": [
+        {
+          "giveItem": "elixir-estelar",
+          "count": 2
+        },
+        {
+          "giveItem": "pocao-vigor"
+        },
+        {
+          "completeQuest": "esconde-esconde"
+        },
+        {
+          "giveXp": 20
+        }
+      ]
+    },
+    "depois": {
+      "text": "Shhh! Estou escondida. ...Droga, você me achou de novo."
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import { InputManager } from '../input/InputManager';
 import { AssetRegistry } from '../core/AssetRegistry';
+import { assets } from '../core/registry';
 import { GAME_HEIGHT, GAME_WIDTH } from '../config/game';
 import { session } from '../core/session';
 import { db } from '../content';
@@ -11,15 +12,25 @@ const CAST: { sheet: string; name: string }[] = [
   { sheet: 'npc.trinco', name: 'Trinco' },
   { sheet: 'npc.dona-brasa', name: 'Dona Brasa' },
   { sheet: 'npc.aristoteles', name: 'Aristóteles' },
-  { sheet: 'npc.arquimedes', name: 'Arquimedes' },
+  { sheet: 'npc.arquimedes', name: 'Bonfatt' },
   { sheet: 'npc.amelia', name: 'Amélia' },
   { sheet: 'npc.morgana', name: 'Morgana' },
   { sheet: 'npc.fuxico', name: 'Fuxico' },
 ];
 
+/** Fila de trás: fantasmas e gnomos do castelo. */
+const BACK: { sheet: string; name: string }[] = [
+  { sheet: 'npc.booh', name: 'Booh' },
+  { sheet: 'npc.addam', name: 'Mister Addam' },
+  { sheet: 'npc.lagrima', name: 'Dona Lágrima' },
+  { sheet: 'npc.mary', name: 'Mary' },
+  { sheet: 'npc.mish-mish', name: 'Mish Mish' },
+  { sheet: 'npc.wish-wish', name: 'Wish Wish' },
+];
+
 const CEREMONY = [
   'O Coração do Castelo voltou a bater, e todas as velas se acenderam de uma vez.',
-  'No Grande Salão, o Prof. Arquimedes pediu silêncio (o Fuxico demorou um pouco).',
+  'No Grande Salão, o Ministro Bonfatt pediu silêncio (o Fuxico demorou um pouco).',
   '"Por coragem, inteligência, astúcia e lealdade, todas juntas..."',
   '"...este aprendiz agora é Guardião do Castelo!"',
 ];
@@ -68,6 +79,13 @@ export class EndingScene extends Phaser.Scene {
       this.add.text(x, y + 6, c.name, textStyle(7, COLORS.muted)).setOrigin(0.5, 0).setResolution(TEXT_RES)
         .setAlpha(0).setData('fade', 300 + i * 220);
     });
+    const bgap = 58;
+    BACK.forEach((c, i) => {
+      const x = GAME_WIDTH / 2 - ((BACK.length - 1) * bgap) / 2 + i * bgap;
+      this.actor(c.sheet, x, 232, 2000 + i * 160);
+      this.add.text(x, 236, c.name, textStyle(7, COLORS.muted)).setOrigin(0.5, 0).setResolution(TEXT_RES)
+        .setAlpha(0).setData('fade', 2000 + i * 160);
+    });
     const outfit = session.state.equipment.capa ? db.items[session.state.equipment.capa]?.sheet : undefined;
     this.actor(outfit ?? 'player.aprendiz', x0 + 3 * gap, y, 1900, true);
     this.children.list.filter((o) => o.getData('fade') !== undefined).forEach((o) =>
@@ -77,7 +95,7 @@ export class EndingScene extends Phaser.Scene {
       .setOrigin(0.5).setResolution(TEXT_RES);
     this.add.text(GAME_WIDTH / 2, GAME_HEIGHT - 12, InputManager.isTouchDevice(this) ? 'toque para continuar' : 'E para continuar',
       textStyle(7, COLORS.muted)).setOrigin(0.5).setResolution(TEXT_RES);
-    this.time.delayedCall(2300, () => {
+    this.time.delayedCall(3000, () => {
       this.busy = false;
       this.showLine();
     });
@@ -87,7 +105,7 @@ export class EndingScene extends Phaser.Scene {
     if (!this.textures.exists(sheet)) return;
     const s = this.add.sprite(x, y, sheet, 0).setOrigin(0.5, 1).setAlpha(0).setScale(hero ? 1.25 : 1);
     if (this.anims.exists(AssetRegistry.animKey(sheet, 'idle'))) s.play(AssetRegistry.animKey(sheet, 'idle'));
-    this.tweens.add({ targets: s, alpha: sheet === 'npc.amelia' ? 0.8 : 1, y: { from: y + 6, to: y }, duration: 500, delay });
+    this.tweens.add({ targets: s, alpha: assets().isGhost(sheet) ? 0.8 : 1, y: { from: y + 6, to: y }, duration: 500, delay });
   }
 
   private showLine(): void {

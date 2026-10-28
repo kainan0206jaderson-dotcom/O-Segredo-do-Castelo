@@ -1,0 +1,27 @@
+{
+  "id": "lagrima",
+  "speaker": "Dona Lágrima",
+  "entries": [
+    {
+      "when": {
+        "flag": "jogo:fim"
+      },
+      "start": "fim"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Buáááá! Ah, oi. Sou a Dona Lágrima. Não ligue, eu choro por tudo. Hoje foi porque a estufa ficou escura.",
+      "next": "oi-2"
+    },
+    "oi-2": {
+      "text": "Pelo menos minhas lágrimas regam os canteiros. Só falta luz: semente no canteiro, depois Lumen nela. Snif."
+    },
+    "fim": {
+      "text": "Buááá! Agora é choro de alegria, juro! O castelo inteiro brilhando... snif... que lindo."
+    }
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "mish-mish",
+  "speaker": "Mish Mish",
+  "entries": [
+    {
+      "when": {
+        "flag": "gnomo:mish-mish"
+      },
+      "start": "depois"
+    },
+    {
+      "when": {
+        "questActive": "esconde-esconde"
+      },
+      "start": "achado"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "achado": {
+      "text": "Ahhh, me achou! Eu estava tão bem escondido atrás desses livros...",
+      "next": "achado-2"
+    },
+    "achado-2": {
+      "text": "Fala pra Mary que o Mish Mish perdeu. Mas só desta vez!",
+      "effects": [
+        {
+          "setFlag": "gnomo:mish-mish",
+          "value": true
+        }
+      ]
+    },
+    "oi": {
+      "text": "Psiu! Sou o Mish Mish. Estou escondido. Você não me viu, tá?"
+    },
+    "depois": {
+      "text": "Próxima rodada eu me escondo dentro de um caldeirão. Ninguém vai me achar!"
+    }
+  }
+}

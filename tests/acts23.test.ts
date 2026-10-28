@@ -197,3 +197,29 @@ describe('salas novas', () => {
     }
   });
 });
+
+describe('elenco do castelo', () => {
+  it('esconde-esconde dos gnomos: a Mary pede, os irmãos são achados e ela dá o presente', () => {
+    const s = newGame('m', 's');
+    talk('mish-mish', s);
+    expect(s.flags['gnomo:mish-mish']).toBeUndefined();
+    talk('mary', s);
+    expect(stage(s, 'esconde-esconde')).toBe('procurar');
+    talk('mish-mish', s);
+    talk('wish-wish', s);
+    expect(stage(s, 'esconde-esconde')).toBe('contar-a-mary');
+    talk('mary', s);
+    expect(s.inventory['elixir-estelar']).toBe(2);
+    expect(stage(s, 'esconde-esconde')).toBe('fim');
+  });
+
+  it('o Booh conta a lenda de São Paulo, e o Ministro Bonfatt substitui o Arquimedes nos textos', () => {
+    const s = newGame('m', 's');
+    talk('booh', s);
+    expect(s.flags['ouviu:lenda']).toBe(true);
+    expect(JSON.stringify(dialogues['booh'])).toMatch(/São Paulo/);
+    const all = JSON.stringify([dialogues, db.quests, db.items, db.challenges]);
+    expect(all).not.toMatch(/Arquimedes/);
+    expect(all).not.toMatch(/Murta|Trouxa/);
+  });
+});

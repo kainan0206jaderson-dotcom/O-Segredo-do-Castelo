@@ -1354,6 +1354,101 @@ d.rectangle((5, 15, 10, 15), fill=(96, 64, 38, 255))
 save_strip([outline(im)], "prop.atril", "sprites/atril.png", {})
 
 
+# ---------- Elenco do castelo [KAINAN: nomes]; aparência e jeito de cada um [FICÇÃO]
+# Fantasmas (16x24, translúcidos): parado 0-1, falando 2-3
+GHOST_EDGE = (120, 170, 220, 200)
+
+def booh(bob, mouth):
+    """Booh: fantasminha clássico de lençol, bochechudo e brincalhão, com laço vermelho."""
+    im = canvas(16, 24)
+    d = ImageDraw.Draw(im)
+    body = (236, 244, 255, 190)
+    y = 4 + bob
+    ell(d, (2, y, 13, y + 11), body)
+    d.rectangle((2, y + 6, 13, y + 15), fill=body)
+    for i, x in enumerate(range(2, 14, 3)):
+        d.polygon([(x, y + 15), (x + 2, y + 15), (x + 1 + (1 if (i + bob) % 2 else -1), y + 18)], fill=body)
+    d.point([(5, y + 5), (10, y + 5), (5, y + 6), (10, y + 6)], fill=(30, 36, 70, 255))
+    d.point([(4, y + 8), (11, y + 8)], fill=(250, 170, 190, 200))  # bochechas
+    if mouth:
+        ell(d, (6, y + 8, 9, y + 11), (40, 30, 60, 255))
+    else:
+        d.line([(6, y + 9), (9, y + 9)], fill=(40, 30, 60, 255))
+    d.polygon([(5, y + 12), (8, y + 13), (5, y + 14)], fill=(214, 60, 70, 255))  # laço
+    d.polygon([(11, y + 12), (8, y + 13), (11, y + 14)], fill=(214, 60, 70, 255))
+    return outline(im, GHOST_EDGE)
+
+def addam(bob, mouth):
+    """Mister Addam: cavalheiro fantasma de cartola, bigode e casaca, muito educado."""
+    im = canvas(16, 24)
+    d = ImageDraw.Draw(im)
+    y = 1 + bob
+    coat = (150, 170, 210, 185)
+    skin = (226, 236, 250, 200)
+    d.rectangle((4, y, 11, y + 4), fill=(70, 80, 120, 210))  # cartola
+    d.rectangle((2, y + 4, 13, y + 5), fill=(70, 80, 120, 210))
+    d.rectangle((5, y + 3, 10, y + 3), fill=(170, 120, 200, 220))  # fita
+    ell(d, (4, y + 5, 11, y + 12), skin)
+    d.point([(6, y + 8), (9, y + 8)], fill=(30, 36, 70, 255))
+    d.line([(5, y + 10), (10, y + 10)], fill=(90, 90, 120, 230))  # bigode
+    if mouth:
+        d.point([(7, y + 11), (8, y + 11)], fill=(40, 30, 60, 255))
+    d.polygon([(4, y + 13), (11, y + 13), (13, y + 21), (2, y + 21)], fill=coat)
+    d.line([(7, y + 13), (7, y + 20)], fill=(236, 240, 250, 220))  # camisa
+    d.point([(8, y + 14)], fill=(170, 120, 200, 255))  # gravatinha
+    d.polygon([(3, y + 21), (12, y + 21), (8 + bob, 23)], fill=coat)
+    return outline(im, GHOST_EDGE)
+
+def lagrima(bob, mouth):
+    """Dona Lágrima: menina fantasma de maria-chiquinha e óculos redondos, chora por qualquer coisa."""
+    im = canvas(16, 24)
+    d = ImageDraw.Draw(im)
+    y = 2 + bob
+    hair = (170, 190, 230, 200)
+    ell(d, (1, y + 3, 4, y + 8), hair)
+    ell(d, (11, y + 3, 14, y + 8), hair)
+    ell(d, (3, y, 12, y + 10), hair)
+    ell(d, (4, y + 3, 11, y + 11), (232, 240, 252, 205))
+    for cx in (6, 9):
+        d.ellipse((cx - 1, y + 5, cx + 1, y + 7), outline=(60, 70, 110, 255))
+    d.point([(5, y + 9), (10, y + 9)], fill=(120, 190, 255, 255))  # lágrimas
+    if mouth:
+        ell(d, (6, y + 9, 9, y + 11), (40, 30, 60, 255))
+    else:
+        d.arc((6, y + 9, 9, y + 12), 200, 340, fill=(40, 30, 60, 255))
+    d.polygon([(5, y + 11), (10, y + 11), (12, y + 19), (3, y + 19)], fill=(200, 214, 240, 180))
+    d.polygon([(3, y + 19), (12, y + 19), (7 - bob, 23)], fill=(200, 214, 240, 150))
+    return outline(im, GHOST_EDGE)
+
+for key, fn in (("booh", booh), ("addam", addam), ("lagrima", lagrima)):
+    save_strip([fn(0, False), fn(1, False), fn(0, True), fn(1, False)], f"npc.{key}", f"sprites/{key}.png", IDLE_TALK, ghost=True)
+
+# Gnomos (16x16): chapéu pontudo de cores diferentes; parado 0-1, falando 2-3
+def gnomo(hat, beard, bob, mouth, trancas=False):
+    im = canvas(16, 16)
+    d = ImageDraw.Draw(im)
+    y = 1 + bob
+    d.polygon([(8, y), (3, y + 6), (13, y + 6)], fill=hat)
+    ell(d, (5, y + 5, 10, y + 10), (240, 196, 160, 255))
+    d.point([(6, y + 7), (9, y + 7)], fill=(30, 30, 50, 255))
+    d.point([(7, y + 8)], fill=(220, 120, 110, 255))  # narizinho
+    if beard:
+        d.polygon([(5, y + 9), (10, y + 9), (8, y + 13)], fill=(244, 244, 248, 255))
+    if trancas:
+        d.line([(4, y + 7), (3, y + 11)], fill=(214, 150, 70, 255), width=2)
+        d.line([(11, y + 7), (12, y + 11)], fill=(214, 150, 70, 255), width=2)
+    if mouth:
+        d.point([(7, y + 10 if not beard else y + 9)], fill=(60, 30, 40, 255))
+    d.rectangle((5, y + 11, 10, 14), fill=(90, 120, 70, 255))
+    d.rectangle((5, 14, 6, 15), fill=(80, 50, 30, 255))
+    d.rectangle((9, 14, 10, 15), fill=(80, 50, 30, 255))
+    return outline(im)
+
+for key, hat, beard, tr in (("mary", (214, 70, 110, 255), False, True), ("mish-mish", (70, 160, 90, 255), True, False),
+                            ("wish-wish", (80, 110, 210, 255), True, False)):
+    save_strip([gnomo(hat, beard, 0, False, tr), gnomo(hat, beard, 1, False, tr), gnomo(hat, beard, 0, True, tr), gnomo(hat, beard, 1, False, tr)],
+               f"npc.{key}", f"sprites/{key}.png", IDLE_TALK)
+
 # ---------- Mapas Tiled (.tmj), gerados a partir de uma descrição de cada sala
 FLOOR, FLOOR2, CARPET, TOP, FACE, WOOD, WIN, B1, B2, B3, B4 = [i + 1 for i in range(11)]
 WOODF, GRASS, STARS, PAINT = 12, 13, 14, 15  # chãos novos da etapa 5
@@ -1503,7 +1598,7 @@ build_room("recepcao", "Recepção", 20, 13,
            tables=[(12, 6, 4, 1)],  # balcão da recepção, com o Trinco atrás
            props=[("prop.vela", 3, 4), ("prop.vela", 16, 4)],
            spawns=[("inicio", 9, 10)],
-           npcs=[("trinco", "npc.trinco", 13, 5, "trinco", False)],
+           npcs=[("trinco", "npc.trinco", 13, 5, "trinco", False), ("mary", "npc.mary", 5, 7, "mary", False)],
            pickups=[("abobora-recepcao", "abobora", 3, 10)])
 
 # Grande Salão: quatro mesas das casas; sul = Recepção, leste = Cozinha
@@ -1516,7 +1611,7 @@ build_room("grande-salao", "Grande Salão", 40, 24,
            banners=[(9, B1), (12, B2), (27, B3), (30, B4)],
            candles=[("vela-1", 5, 4, True), ("vela-2", 34, 4, True), ("vela-3", 5, 19, True),
                     ("vela-4", 34, 19, True), ("vela-5", 16, 5, True), ("vela-6", 23, 5, True)],
-           npcs=[("dom-moldura", "npc.dom-moldura", 19, 2, "dom-moldura", True)],
+           npcs=[("dom-moldura", "npc.dom-moldura", 19, 2, "dom-moldura", True), ("booh", "npc.booh", 36, 6, "booh", False)],
            pickups=[("gelo-seco-salao", "gelo-seco", 30, 18)],
            boards=[("quadro-desafios", "velas-do-salao", 24, 3), ("quadro-corrida", "corrida-levitacao", 15, 3)],
            extra=[pt("npc", "fuxico", 21, 16, sprite="npc.fuxico", dialogue="fuxico", wall=False),
@@ -1560,7 +1655,7 @@ build_room("corredor", "Corredor dos Quadros", 34, 10,
                        when=ALL(QS("o-diretor", "ir-ao-corredor"), NOT(FL("visto:morgana-corredor"))))])
 
 # Gabinete do Diretor: o Prof. Arquimedes em pessoa; sul = Corredor
-build_room("gabinete", "Gabinete do Diretor", 16, 11,
+build_room("gabinete", "Gabinete do Ministro", 16, 11,
            doors=[("S", 7, "map.corredor", "do-gabinete", "do-corredor")],
            tables=[(5, 4, 6, 1)], carpet=(6, 6, 9, 8), windows=(3, 12),
            props=[("prop.estante", 1, 2), ("prop.estante", 2, 2), ("prop.estante", 13, 2), ("prop.estante", 14, 2),
@@ -1611,7 +1706,7 @@ build_room("biblioteca", "Biblioteca", 28, 16,
            props=[("prop.estante", 2, 2), ("prop.estante", 3, 2), ("prop.estante", 8, 2), ("prop.estante", 12, 2),
                   ("prop.estante", 15, 2), ("prop.estante", 24, 2), ("prop.estante", 25, 2),
                   ("prop.vela", 11, 4), ("prop.vela", 16, 4)],
-           npcs=[("aristoteles", "npc.aristoteles", 11, 7, "aristoteles", False)],
+           npcs=[("aristoteles", "npc.aristoteles", 11, 7, "aristoteles", False), ("mish-mish", "npc.mish-mish", 9, 12, "mish-mish", False)],
            extra=[pt("npc", "espelho", 16, 1, x=17 * 16, sprite="npc.espelho", dialogue="espelho", wall=True),
                   pt("npc", "amelia", 17, 5, sprite="npc.amelia", dialogue="amelia", wall=False,
                      when=ANY(ALL(LIVRE, NOT(CAPTURADA)), FIM)),
@@ -1646,7 +1741,7 @@ build_room("estufa", "Estufa", 22, 14,
            doors=[("L", 6, "map.biblioteca", "da-estufa", "da-biblioteca")],
            floor_tile=GRASS, windows=(3, 7, 11, 15),
            stations=[("saco-sementes", "despensa", "prop.saco-sementes", 17, 4, "semente-mandragora")],
-           npcs=[("fada-ramalhete", "npc.fada-ramalhete", 8, 5, "fada-ramalhete", False)],
+           npcs=[("fada-ramalhete", "npc.fada-ramalhete", 8, 5, "fada-ramalhete", False), ("lagrima", "npc.lagrima", 12, 5, "lagrima", False)],
            props=[("prop.vaso", 2, 4), ("prop.vaso", 19, 11), ("prop.vaso", 2, 11)],
            extra=[*[pt("canteiro", f"canteiro-{i + 1}", cx, 9) for i, cx in enumerate((5, 9, 13))],
                   pt("pickup", "carta-2", 3, 12, y=12 * 16 + 12, item="carta-amelia-2", oculto=True, dialogue="carta-2",
@@ -1661,6 +1756,7 @@ dials = [(4, 8, 0, 2), (7, 10, 1, 3), (12, 10, 2, 0), (15, 8, 3, 1)]  # tx, ty, 
 build_room("observatorio", "Observatório", 20, 14,
            doors=[("S", 9, "map.biblioteca", "do-observatorio", "da-biblioteca")],
            floor_tile=STARS, windows=(4, 8, 11, 15),
+           npcs=[("wish-wish", "npc.wish-wish", 3, 11, "wish-wish", False)],
            extra=[pt("npc", "telescopio", 9, 5, sprite="prop.telescopio", dialogue="telescopio", wall=False),
                   *[pt("dial", f"mostrador-{i + 1}", dx, dy, group="estrelas", house=hz, answer=hz, start=st,
                        activeWhen=LIVRE, inactive="O ponteiro está preso numa crosta de fuligem. Não gira.")
@@ -1678,7 +1774,7 @@ build_room("galeria", "Galeria dos Quadros", 32, 14,
                    dict(when=EMBLEMAS, locked="A barreira empurra você de volta. Faltam emblemas."))],
            floor_tile=PAINT, carpet=(3, 5, 28, 6),
            candles=[("vela-g1", 2, 3, True), ("vela-g2", 29, 3, True)],
-           npcs=[("quadro-arquimedes", "npc.quadro-arquimedes", 15, 1, "quadro-arquimedes", True)],
+           npcs=[("quadro-arquimedes", "npc.quadro-arquimedes", 15, 1, "quadro-arquimedes", True), ("addam", "npc.addam", 6, 9, "addam", False)],
            extra=[*[pt("painting", f"quadro-{v}", px, 2, x=px * 16 + 16, index=i, doneFlag=done) for i, (v, px, done) in enumerate(PORTAIS)],
                   *[zone("door", f"porta-quadro-{v}", px, 3, 2, 1, target=f"map.quadro-{v}", spawn="da-galeria", when=CAPTURADA,
                          locked="Só tinta e moldura... por enquanto.") for v, px, _ in PORTAIS],

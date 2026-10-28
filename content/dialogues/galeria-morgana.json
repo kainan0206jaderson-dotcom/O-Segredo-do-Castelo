@@ -8,7 +8,7 @@
   ],
   "nodes": {
     "a": {
-      "text": "A Galeria! Olha esses quadros: coragem, inteligência, astúcia, lealdade. E ali... o retrato do diretor?",
+      "text": "A Galeria! Olha esses quadros: coragem, inteligência, astúcia, lealdade. E ali... o retrato do ministro?",
       "speaker": "Profa. Amélia",
       "next": "a-2"
     },

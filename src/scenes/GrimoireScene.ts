@@ -71,7 +71,7 @@ export class GrimoireScene extends Phaser.Scene {
           { icon: 'coracao', title: `Vida ${s.vida}/${st.vidaMax}`, detail: 'Sombrinhas tiram vida. Se acabar, você desmaia e acorda na entrada da sala. Sobremesa Mandrágora devolve vida.' },
           { icon: 'energia', title: `Energia ${s.energia}/${st.energiaMax}`, detail: 'Cada feitiço gasta energia mágica. Ela volta sozinha, e a Cerveja de Abóbora acelera.' },
           { icon: 'poder', title: `Poder ${st.poder}`, detail: 'A força dos seus feitiços contra criaturas. Sobe com o nível.' },
-          { icon: house ? db.houses[s.house!].capa : 'bloqueado', title: house ? `Casa: ${house.name}` : 'Casa: ainda não escolhida', detail: house?.description ?? 'O Prof. Arquimedes ajuda cada aprendiz a escolher sua mesa no Grande Salão.', muted: !house },
+          { icon: house ? db.houses[s.house!].capa : 'bloqueado', title: house ? `Casa: ${house.name}` : 'Casa: ainda não escolhida', detail: house?.description ?? 'O Ministro Bonfatt ajuda cada aprendiz a escolher sua mesa no Grande Salão.', muted: !house },
           { icon: s.equipment.capa ?? 'bloqueado', title: capa ? `Capa: ${capa.name}` : 'Capa: nenhuma', detail: capa ? `${capa.description}\n\nTroque de capa na aba Bolsa.` : 'Capas aparecem na bolsa conforme você avança.', muted: !capa },
         ];
       }
