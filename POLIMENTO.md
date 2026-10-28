@@ -12,12 +12,12 @@
 - Falas curtas do aprendiz ao pegar coisas, entrar em salas, levar dano etc.
 - Tela cheia no celular: a largura do jogo acompanha o formato da tela, o desenho usa a resolução real do aparelho (letras nítidas) e salas pequenas ganham zoom inteiro.
 - Trilha mais mágica: celesta, harpa, flauta, cordas, coro e sinos com eco de salão.
+- Grande Salão mais compacto: mesas com bancos e toalha com a bandeira de cada casa (com pratos e cálices); mundo 25% maior na tela e móveis de enfeite nas outras salas.
 - Porão secreto com baús aleatórios, Mapa dos Segredos, Estrelas Perdidas e sombras fujonas no jogo livre.
 
 ## Fica para depois da v1
 
 - Animação de andar do aprendiz: pernas mudam pouco entre quadros; pedir 6 quadros com balanço do manto.
-- Mesas das casas: hoje são blocos de madeira; desenhar mesas com bancos, pratos e as cores de cada casa.
 - Ícone do aviso "gire o celular" usa caractere de texto; trocar por desenho em pixel.
 - Balão "!" de interação: redesenhar.
 - Balcão da recepção: desenhar como móvel com profundidade (hoje o jogador aparece por cima dele ao chegar perto).

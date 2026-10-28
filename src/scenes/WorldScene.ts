@@ -73,6 +73,8 @@ interface Trigger {
   fired: boolean;
 }
 
+/** Ampliação extra do mundo em relação ao HUD. */
+const WORLD_SCALE = 1.25;
 const FADE_MS = 220;
 const TALK_RANGE = 20;
 const SPELL_RANGE = 28;
@@ -308,6 +310,13 @@ export class WorldScene extends Phaser.Scene {
           if (!sprite) break;
           const p = this.add.sprite(o.x!, o.y!, sprite, prop<number>(o.properties, 'frame') ?? 0).setOrigin(0.5, 1).setDepth(o.y!);
           if (assets().hasAnimation(sprite, 'idle')) p.play({ key: AssetRegistry.animKey(sprite, 'idle'), startFrame: Phaser.Math.Between(0, 2) });
+          // móvel de enfeite que ocupa espaço: "solido" é a altura (em px) da base que bloqueia
+          const solid = prop<number>(o.properties, 'solido');
+          if (solid) {
+            const wall = this.add.zone(o.x!, o.y! - solid / 2, p.width - 2, solid);
+            this.physics.add.existing(wall, true);
+            this.physics.add.collider(this.player, wall);
+          }
           break;
         }
         case 'target': {
@@ -545,7 +554,10 @@ export class WorldScene extends Phaser.Scene {
     const w = map.widthInPixels;
     const h = map.heightInPixels;
     const fit = Math.min(GAME_WIDTH / w, GAME_HEIGHT / h);
-    const zoom = Math.min(RENDER_ZOOM * 2, Math.max(RENDER_ZOOM, Math.floor(RENDER_ZOOM * fit)));
+    // o mundo aparece um pouco ampliado (1,25x) em todas as salas: personagens e objetos
+    // ficam maiores na tela do celular; salas pequenas ampliam mais para encher a tela
+    const base = Math.max(RENDER_ZOOM, Math.round(RENDER_ZOOM * WORLD_SCALE));
+    const zoom = Math.min(RENDER_ZOOM * 2, Math.max(base, Math.floor(RENDER_ZOOM * fit)));
     const viewW = (GAME_WIDTH * RENDER_ZOOM) / zoom;
     const viewH = (GAME_HEIGHT * RENDER_ZOOM) / zoom;
     cam.setOrigin(0.5).setZoom(zoom);
