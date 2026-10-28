@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { InputManager } from '../input/InputManager';
 import { GAME_HEIGHT, GAME_WIDTH } from '../config/game';
 import { COLORS, TEXT_RES, textStyle } from '../ui/theme';
+import { audio } from '../audio/Audio';
 
 const ACTS: Record<string, { title: string; subtitle: string; next: string }> = {
   '1': {
@@ -26,6 +27,7 @@ export class ActCardScene extends Phaser.Scene {
   }
 
   create(data: { act: string }): void {
+    audio.sfx('missao');
     const a = ACTS[data.act] ?? ACTS['1'];
     this.ready = false;
     const bg = this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x0c0a16, 1).setOrigin(0).setAlpha(0).setInteractive()

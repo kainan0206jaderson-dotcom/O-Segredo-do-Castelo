@@ -7,6 +7,8 @@ import { useItem } from '../systems/rules';
 import { stats } from '../systems/progression';
 import { GAME_HEIGHT, GAME_WIDTH } from '../config/game';
 import { COLORS, TEXT_RES, textStyle } from '../ui/theme';
+import { flash } from '../ui/fx';
+import { audio } from '../audio/Audio';
 
 type Entry = { icon?: string; title: string; detail: string; muted?: boolean; use?: string };
 const TABS = ['Aprendiz', 'Bolsa', 'Feitiços', 'Receitas', 'Missões'] as const;
@@ -47,6 +49,9 @@ export class GrimoireScene extends Phaser.Scene {
     );
     this.add.text(x0 + w - 10, y0 + 6, '✕', textStyle(12, COLORS.gold)).setOrigin(1, 0).setResolution(TEXT_RES)
       .setInteractive({ useHandCursor: true }).on('pointerdown', () => this.close());
+    this.add.text(x0 + w - 32, y0 + 8, '⚙ Opções', textStyle(9, COLORS.muted)).setOrigin(1, 0).setResolution(TEXT_RES)
+      .setInteractive({ useHandCursor: true }).on('pointerdown', () => this.openOptions());
+    audio.sfx('menu');
 
     const dx = x0 + w / 2 + 12;
     this.detailIcon = this.add.image(dx + 8, y0 + 44, 'ui.icones', 0).setScale(2);
@@ -104,6 +109,7 @@ export class GrimoireScene extends Phaser.Scene {
   }
 
   private setTab(i: number): void {
+    if (this.tabTexts.length && i !== this.tab) audio.sfx('blip');
     this.tab = Phaser.Math.Wrap(i, 0, TABS.length);
     this.sel = 0;
     this.tabTexts.forEach((t, j) => t.setColor(j === this.tab ? COLORS.gold : COLORS.muted).setText(`${j === this.tab ? '▸' : ' '}${TABS[j]}`));
@@ -151,16 +157,23 @@ export class GrimoireScene extends Phaser.Scene {
     const cur = this.entries()[this.sel];
     if (!cur?.use || !cur.icon) return;
     const r = useItem(session.state, db, cur.icon);
-    if (!r.ok) return;
+    if (!r.ok) return void audio.sfx('erro');
+    audio.sfx('pocao');
     const texts = r.notices.filter((n) => n.text).map((n) => n.text);
     GrimoireScene.lastNotices.push(...texts);
     session.save();
-    this.cameras.main.flash(150, 120, 255, 160);
+    flash(this.cameras.main, 150, 120, 255, 160);
     this.sel = Math.min(this.sel, Math.max(0, this.entries().length - 1));
     this.renderList();
   }
 
+  private openOptions(): void {
+    this.scene.launch('Options', { back: 'Grimoire' });
+    this.scene.pause();
+  }
+
   private close(): void {
+    audio.sfx('menu');
     this.scene.stop();
     this.scene.resume('World', { from: 'grimoire' });
   }

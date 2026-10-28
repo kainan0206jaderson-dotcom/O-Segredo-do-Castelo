@@ -27,6 +27,8 @@ import { Darkness, type Light } from '../world/Darkness';
 import { CauldronScene } from './CauldronScene';
 import { GrimoireScene } from './GrimoireScene';
 import { GAME_HEIGHT, GAME_WIDTH, TILE_SIZE } from '../config/game';
+import { shake, flash } from '../ui/fx';
+import { audio, type Sfx, type Track } from '../audio/Audio';
 
 export interface WorldData {
   map: string;
@@ -79,6 +81,26 @@ const REVEAL_RADIUS = 96;
 const REVEAL_MS = 3800;
 const ORB_SPEED = 78;
 const BOSS_FLAG = 'boss:fase';
+
+const ACT2_MAPS = ['map.biblioteca', 'map.sala-espectral', 'map.estufa', 'map.observatorio'];
+
+/** Música de cada sala: Ato 1 animado, biblioteca calma, quadros tensos, duelo na torre. */
+function spellSound(id: string | null | undefined): Sfx {
+  switch (id) {
+    case 'lumen': case 'levitar': case 'revelar': case 'escudo': case 'abrir': case 'fogos': case 'vento':
+      return id;
+    case 'fogos-bruxos': return 'fogos';
+    case 'passo-de-vento': return 'vento';
+    default: return 'blip';
+  }
+}
+
+function trackFor(map: string, bossPhase: unknown): Track {
+  if (map === 'map.coracao') return bossPhase ? 'duelo' : 'quadros';
+  if (map === 'map.galeria' || map.startsWith('map.quadro-')) return 'quadros';
+  if (ACT2_MAPS.includes(map)) return 'biblioteca';
+  return 'castelo';
+}
 const BOSS_START_FLAG = 'boss:iniciar';
 
 /** Lê uma condição guardada como texto JSON numa propriedade do Tiled. */
@@ -205,9 +227,11 @@ export class WorldScene extends Phaser.Scene {
           if (locked && this.time.now > this.doorNoticeAt) {
             this.doorNoticeAt = this.time.now + 2500;
             this.hud.notify(locked);
+            audio.sfx('erro');
           }
           return;
         }
+        if (!this.transitioning && !this.dialogue) audio.sfx('porta');
         this.goTo({ map: prop(o.properties, 'target')!, spawn: prop(o.properties, 'spawn') });
       });
     }
@@ -227,6 +251,8 @@ export class WorldScene extends Phaser.Scene {
     this.refreshPresence(false);
     this.showRoomName(prop(map.properties, 'nome') ?? '');
     this.cameras.main.fadeIn(FADE_MS, 24, 20, 42);
+    audio.music(trackFor(data.map, s.flags[BOSS_FLAG]));
+    if (data.fainted) audio.sfx('desmaio');
 
     // ao voltar do caldeirão, do grimório, de um tutorial ou do fim de ato
     this.events.on(Phaser.Scenes.Events.RESUME, (_s: unknown, from?: { from?: string }) => {
@@ -525,6 +551,11 @@ export class WorldScene extends Phaser.Scene {
 
   /** Avisos de texto vão para a tela; tutoriais e fim de ato entram na fila. */
   private showNotices(notices: Notice[]): void {
+    const kinds = new Set(notices.map((n) => n.kind));
+    if (kinds.has('level')) audio.sfx('nivel');
+    else if (kinds.has('quest-done') || kinds.has('spell')) audio.sfx('missao');
+    else if (kinds.has('quest-start') || kinds.has('recipe') || kinds.has('house')) audio.sfx('confirmar');
+    else if (kinds.has('item') || kinds.has('equip')) audio.sfx('pegar');
     for (const n of notices) {
       if (n.kind === 'tutorial' && n.ref) this.queueTutorial(n.ref);
       else if (n.kind === 'act-end' && n.ref) this.actQueue.push(n.ref);
@@ -709,7 +740,8 @@ export class WorldScene extends Phaser.Scene {
     apply({ takeItem: spot.accepts }, s, db);
     s.flags[this.socketFlag(spot.name)] = true;
     this.puzzles.showFilled(spot);
-    this.cameras.main.flash(200, 250, 214, 92);
+    audio.sfx('enigma');
+    flash(this.cameras.main, 200, 250, 214, 92);
     this.hud.notify(`${item.name} encaixada!`);
     this.afterStateChange();
     if (this.puzzles.groupFilled(spot.group) && spot.dialogue) {
@@ -731,6 +763,7 @@ export class WorldScene extends Phaser.Scene {
       apply({ takeItem: 'semente-mandragora' }, s, db);
       s.flags[flag] = 1;
       t.showFrame(1);
+      audio.sfx('pegar');
       this.hud.notify('Semente plantada! Agora ela quer luz.');
       this.queueTutorial('estufa');
     } else if (st === 1) {
@@ -758,12 +791,14 @@ export class WorldScene extends Phaser.Scene {
     const sym = (Number(s.flags[this.dialFlag(t.thingName)] ?? meta.start) + 1) % 4;
     s.flags[this.dialFlag(t.thingName)] = sym;
     t.showFrame(meta.house * 4 + sym);
+    audio.sfx('menu');
     this.tweens.add({ targets: t, scaleX: { from: 0.6, to: 1 }, duration: 160 });
     const group = [...this.dials.entries()].filter(([, m]) => m.group === meta.group);
     const solved = group.every(([d, m]) => Number(s.flags[this.dialFlag(d.thingName)] ?? m.start) === m.answer);
     if (solved) {
       s.flags[solvedFlag] = true;
-      this.cameras.main.flash(500, 220, 230, 255);
+      flash(this.cameras.main, 500, 220, 230, 255);
+      audio.sfx('enigma');
       this.hud.notify('As constelações se alinham!');
     }
     this.afterStateChange();
@@ -774,7 +809,7 @@ export class WorldScene extends Phaser.Scene {
     (t.body as Phaser.Physics.Arcade.StaticBody).enable = false;
     if (!animate) return;
     session.state.flags[this.lockFlag(t.thingName)] = true;
-    this.cameras.main.shake(200, 0.004);
+    shake(this.cameras.main, 200, 0.004);
     this.puff(t.x, t.y - 16);
     this.hud.notify('Click! A porta se abriu.');
   }
@@ -791,12 +826,14 @@ export class WorldScene extends Phaser.Scene {
     if (session.state.flags[flag]) return;
     session.state.flags[flag] = true;
     this.puzzles.openGates(group);
+    audio.sfx('enigma');
     this.hud.notify('Click! A grade se abriu.');
     this.afterStateChange();
   }
 
   private onLevitatedIntoSocket(sk: SocketSpot): void {
-    this.cameras.main.flash(120, 250, 214, 92);
+    flash(this.cameras.main, 120, 250, 214, 92);
+    audio.sfx('acerto');
     if (this.challenge?.isTarget(sk.name)) return void this.challenge.hitTarget(sk.name, session.state, db);
     if (sk.turn) return; // suportes de espelho: quem decide é o raio de luz
     // atris da biblioteca e afins: o encaixe fica guardado no save
@@ -836,7 +873,8 @@ export class WorldScene extends Phaser.Scene {
       this.wave = 0;
       this.activateWave();
     }
-    this.cameras.main.flash(250, 20, 10, 40);
+    flash(this.cameras.main, 250, 20, 10, 40);
+    audio.sfx('confirmar');
     this.hud.notify('Valendo!');
     if (def.tutorial) this.queueTutorial(def.tutorial);
   }
@@ -853,10 +891,12 @@ export class WorldScene extends Phaser.Scene {
     this.hud.setTimer(undefined);
     const def = db.challenges[ch.id];
     if (ch.status === 'won') {
+      audio.sfx('vitoria');
       this.hud.notify('Desafio vencido!');
       this.showNotices(ch.notices);
       this.burstFireworks(this.player.x, this.player.y - 30);
     } else {
+      audio.sfx('derrota');
       this.hud.notify('O tempo acabou! Tente de novo no quadro.');
       if (def.kind === 'acender') for (const c of this.candles) if (def.targets.includes(c.targetName)) c.setLit(true);
       if (def.kind === 'espectral') {
@@ -881,16 +921,19 @@ export class WorldScene extends Phaser.Scene {
     // soltar um objeto levitado não gasta energia
     if (spellId === 'levitar' && this.puzzles.carried) {
       const r = this.puzzles.drop(this.player.frontPoint(14));
+      audio.sfx(r === false ? 'erro' : 'blip');
       if (r === false) this.hud.notify('Não cabe aí.');
       return;
     }
     const spell = spellId ? db.spells[spellId] : undefined;
     if (spell && !spendEnergy(s, spell.cost)) {
+      audio.sfx('sem-energia');
       this.hud.notify('Sem energia mágica! Espere um pouco.');
-      this.cameras.main.shake(80, 0.002);
+      shake(this.cameras.main, 80, 0.002);
       return;
     }
     const fxKey = spell?.fx ?? 'fx.fagulha';
+    audio.sfx(spellSound(spellId));
     if (fxKey === 'fx.fogos') this.burstFireworks(at.x, at.y - 6);
     else {
       const fx = this.add.sprite(at.x, at.y, fxKey).setDepth(this.player.depth + 1);
@@ -931,10 +974,12 @@ export class WorldScene extends Phaser.Scene {
       const boss = this.boss;
       if (boss && boss.canBeHit(now) && Phaser.Math.Distance.Between(at.x, at.y, boss.x, boss.y - 12) < SPELL_RANGE + 16) {
         boss.hit(now);
-        this.cameras.main.shake(120, 0.004);
+        audio.sfx('acerto');
+        shake(this.cameras.main, 120, 0.004);
         return this.afterStateChange();
       }
       const hit = this.creatures.filter((c) => c.canBeHit(now) && Phaser.Math.Distance.Between(at.x, at.y, c.x, c.y - 6) < SPELL_RANGE + 6);
+      if (hit.length) audio.sfx('acerto');
       for (const c of hit) {
         if (c.takeHit(stats(s, db).poder, this.player, now)) this.banishCreature(c);
       }
@@ -944,6 +989,7 @@ export class WorldScene extends Phaser.Scene {
       if (planter && spellId === 'lumen') {
         s.flags[this.planterFlag(planter.thingName)] = 2;
         planter.showFrame(2);
+        audio.sfx('enigma');
         this.tweens.add({ targets: planter, scaleY: { from: 0.4, to: 1 }, duration: 400, ease: 'Back.out' });
         this.hud.notify('A mandrágora cresceu! Colha com a ação.');
         return this.afterStateChange();
@@ -958,12 +1004,14 @@ export class WorldScene extends Phaser.Scene {
     if (!target || target.lit) return this.afterStateChange();
 
     target.setLit(true);
+    audio.sfx('acerto');
     if (this.challenge?.isTarget(target.targetName)) this.challenge.hitTarget(target.targetName, s, db);
     else s.flags[this.candleFlag(target.targetName)] = true;
     this.afterStateChange();
   }
 
   private banishCreature(c: Creature): void {
+    audio.sfx('espanto');
     this.puff(c.x, c.y - 6);
     c.destroy();
     this.creatures = this.creatures.filter((x) => x !== c);
@@ -1022,6 +1070,7 @@ export class WorldScene extends Phaser.Scene {
       this.boss.reveal(now + REVEAL_MS - 600);
       ghosts += 1;
     }
+    if (found) audio.sfx('enigma');
     if (found) this.hud.notify('Algo escondido apareceu!');
     else if (!ghosts) this.hud.notify('Nada escondido por aqui.');
     this.afterStateChange();
@@ -1047,6 +1096,7 @@ export class WorldScene extends Phaser.Scene {
       .filter((t) => !s.flags[this.lockFlag(t.thingName)])
       .find((t) => Phaser.Math.Distance.Between(at.x, at.y, t.x, t.y - 6) < SPELL_RANGE + 10);
     if (!lock) {
+      audio.sfx('erro');
       this.hud.notify('Nada trancado por perto.');
       return;
     }
@@ -1062,6 +1112,7 @@ export class WorldScene extends Phaser.Scene {
   // ---------- duelo com a Morgana
 
   private fireOrb(x: number, y: number, tx: number, ty: number): void {
+    audio.sfx('orbe');
     const orb = this.orbs.create(x, y, 'fx.orbe') as Phaser.Physics.Arcade.Sprite;
     orb.play(AssetRegistry.animKey('fx.orbe', 'idle')).setDepth(1100);
     (orb.body as Phaser.Physics.Arcade.Body).setCircle(3, 1, 1);
@@ -1074,6 +1125,7 @@ export class WorldScene extends Phaser.Scene {
     if (!orb.active) return;
     orb.destroy();
     if (this.shielded) {
+      audio.sfx('escudo');
       const spark = this.add.circle(orb.x, orb.y, 2, 0xbeebff).setDepth(1200);
       this.tweens.add({ targets: spark, radius: 8, alpha: 0, duration: 200, onComplete: () => spark.destroy() });
       return;
@@ -1139,6 +1191,7 @@ export class WorldScene extends Phaser.Scene {
     const away = new Phaser.Math.Vector2(this.player.x - fromX, this.player.y - fromY).setLength(150);
     this.player.setVelocity(away.x, away.y);
     this.tweens.add({ targets: this.player, alpha: 0.3, duration: 90, yoyo: true, repeat: 5, onComplete: () => this.player.setAlpha(1) });
+    audio.sfx('dano');
     const fainted = hurt(session.state, 1);
     this.refreshHud();
     if (fainted) this.faint();
@@ -1149,7 +1202,8 @@ export class WorldScene extends Phaser.Scene {
     if (this.transitioning) return;
     this.transitioning = true;
     this.player.halt();
-    this.cameras.main.flash(250, 170, 110, 220);
+    audio.sfx('derrota');
+    flash(this.cameras.main, 250, 170, 110, 220);
     this.cameras.main.fadeOut(500, 24, 20, 42);
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () =>
       this.scene.restart({ map: this.mapKey, spawn: this.checkpoint ?? this.entry.spawn, caught: true }),
@@ -1192,7 +1246,7 @@ export class WorldScene extends Phaser.Scene {
           c.setLit(false);
           session.state.flags[this.candleFlag(c.targetName)] = false;
         }
-        this.cameras.main.flash(300, 10, 6, 20);
+        flash(this.cameras.main, 300, 10, 6, 20);
       }
       if (t.actor) {
         this.puff(t.ax, t.ay - 10);
@@ -1270,6 +1324,7 @@ export class WorldScene extends Phaser.Scene {
     if (phase === 'fase1' || phase === 'fase2') {
       delete session.state.flags[BOSS_START_FLAG];
       session.state.flags[BOSS_FLAG] = phase;
+      audio.music('duelo');
       this.boss?.start(phase, this.time.now);
     }
     this.afterStateChange();
@@ -1289,7 +1344,8 @@ export class WorldScene extends Phaser.Scene {
       t.sprite.setFrame(1);
       this.beam.clear();
       this.beam = undefined;
-      this.cameras.main.flash(400, 250, 240, 170);
+      flash(this.cameras.main, 400, 250, 240, 170);
+      audio.sfx('enigma');
       this.hud.notify('O cristal acendeu!');
       this.afterStateChange();
     }
@@ -1323,7 +1379,10 @@ export class WorldScene extends Phaser.Scene {
       if (!this.dialogueBox.typing) this.talkingTo?.setTalking(false);
       const nav = this.controls.navPressed();
       if (nav) this.dialogueBox.moveSelection(nav);
-      if (this.controls.actionPressed()) this.advanceDialogue();
+      if (this.controls.actionPressed()) {
+        audio.sfx('blip');
+        this.advanceDialogue();
+      }
       return;
     }
     if (this.flushOverlays()) return;
@@ -1349,6 +1408,7 @@ export class WorldScene extends Phaser.Scene {
 
     const dir = this.controls.direction();
     if (time >= this.knockUntil) this.player.move(dir);
+    if (dir.lengthSq() > 0) audio.sfx('passo');
     else this.player.setDepth(this.player.y);
     this.puzzles.update(dir, delta);
     for (const c of this.creatures) c.think(this.player, time, delta);

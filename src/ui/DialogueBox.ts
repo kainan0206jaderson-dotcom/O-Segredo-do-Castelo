@@ -2,8 +2,9 @@ import Phaser from 'phaser';
 import { GAME_HEIGHT, GAME_WIDTH } from '../config/game';
 import type { DialogueView } from '../systems/DialogueRunner';
 import { COLORS, TEXT_RES, textStyle } from './theme';
+import { charsPerSecond } from '../core/settings';
+import { audio } from '../audio/Audio';
 
-const CHARS_PER_SECOND = 45;
 const BOX_H = 64;
 const MARGIN = 8;
 
@@ -83,7 +84,10 @@ export class DialogueBox {
 
   update(deltaMs: number): void {
     if (!this.visible || !this.typing) return;
-    this.shown = Math.min(this.fullText.length, this.shown + (deltaMs / 1000) * CHARS_PER_SECOND);
+    const before = Math.floor(this.shown / 4);
+    this.shown = Math.min(this.fullText.length, this.shown + (deltaMs / 1000) * charsPerSecond());
+    // "voz" da caixa de diálogo: um bipe a cada poucas letras
+    if (Math.floor(this.shown / 4) !== before && this.typing) audio.sfx('blip');
     this.bodyText.setText(this.fullText.slice(0, Math.floor(this.shown)));
     if (!this.typing) this.afterTyping();
   }

@@ -6,6 +6,8 @@ import { InputManager } from '../input/InputManager';
 import { brew } from '../systems/brewing';
 import { GAME_HEIGHT, GAME_WIDTH } from '../config/game';
 import { COLORS, TEXT_RES, textStyle } from '../ui/theme';
+import { shake, flash } from '../ui/fx';
+import { audio } from '../audio/Audio';
 
 const MAX_SLOTS = 3;
 
@@ -64,6 +66,7 @@ export class CauldronScene extends Phaser.Scene {
   private add_(id: string): void {
     if (this.slots.length >= MAX_SLOTS) return;
     this.slots.push(id);
+    audio.sfx('pegar');
     this.message.setText('');
     this.render();
   }
@@ -73,11 +76,13 @@ export class CauldronScene extends Phaser.Scene {
     if (r.ok) {
       this.message.setText(`${r.discovered ? 'Receita descoberta! ' : ''}Você fez: ${db.items[r.item].name}`);
       CauldronScene.lastNotices.push(...r.notices.filter((n) => n.kind !== 'item').map((n) => n.text));
-      this.cameras.main.flash(200, 120, 255, 160);
+      audio.sfx('pocao');
+      flash(this.cameras.main, 200, 120, 255, 160);
       session.save();
     } else {
       this.message.setText(r.reason === 'nao-combina' ? 'Puf! A mistura virou fumaça... e os ingredientes voltaram para a bolsa.' : 'Faltam ingredientes.');
-      this.cameras.main.shake(150, 0.004);
+      audio.sfx('erro');
+      shake(this.cameras.main, 150, 0.004);
     }
     this.slots = [];
     this.sel = 0;

@@ -6,6 +6,8 @@ import { GAME_HEIGHT, GAME_WIDTH } from '../config/game';
 import { session } from '../core/session';
 import { db } from '../content';
 import { COLORS, TEXT_RES, textStyle } from '../ui/theme';
+import { flash } from '../ui/fx';
+import { audio } from '../audio/Audio';
 
 /** Quem sobe ao palco na cerimônia final, da esquerda para a direita. */
 const CAST: { sheet: string; name: string }[] = [
@@ -61,6 +63,7 @@ export class EndingScene extends Phaser.Scene {
   create(): void {
     this.step = 0;
     this.busy = true;
+    audio.music('final');
     this.controls = new InputManager(this, { touchControls: false });
     this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x0c0a16, 1).setOrigin(0).setInteractive()
       .on('pointerdown', () => this.advance());
@@ -113,7 +116,8 @@ export class EndingScene extends Phaser.Scene {
     this.line.setText(text).setAlpha(0);
     this.tweens.add({ targets: this.line, alpha: 1, duration: 350 });
     if (this.step === CEREMONY.length - 1) {
-      this.cameras.main.flash(600, 250, 214, 92);
+      audio.sfx('nivel');
+      flash(this.cameras.main, 600, 250, 214, 92);
       const title = this.add.text(GAME_WIDTH / 2, 100, 'GUARDIÃO DO CASTELO', textStyle(18, COLORS.gold, { fontStyle: 'bold' }))
         .setOrigin(0.5).setResolution(TEXT_RES).setScale(0.6).setAlpha(0);
       this.tweens.add({ targets: title, alpha: 1, scale: 1, duration: 700, ease: 'Back.out' });
