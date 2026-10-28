@@ -1,0 +1,37 @@
+{
+  "id": "dona-brasa",
+  "speaker": "Dona Brasa",
+  "entries": [
+    { "when": { "questDone": "luz-na-cozinha" }, "start": "depois" },
+    { "when": { "questStage": "luz-na-cozinha", "stage": "falar-com-brasa" }, "start": "final" },
+    { "when": { "questStage": "luz-na-cozinha", "stage": "acender-velas" }, "start": "lembrete-velas" },
+    { "when": { "questStage": "luz-na-cozinha", "stage": "entregar-drink" }, "start": "entrega" },
+    { "when": { "questStage": "luz-na-cozinha", "stage": "preparar-drink" }, "start": "lembrete-drink" },
+    { "when": { "questStage": "luz-na-cozinha", "stage": "ir-a-cozinha" }, "start": "chegada" },
+    { "start": "ocupada" }
+  ],
+  "nodes": {
+    "ocupada": { "text": "Ai, ai, ai! Sem luz não tem escondidinho de abóbora! Volte mais tarde, docinho." },
+    "chegada": { "text": "Finalmente alguém! Eu sou a Dona Brasa, fada da cozinha. Desde que a luz fria desceu da torre, minhas velas não acendem de jeito nenhum.", "next": "chegada-2" },
+    "chegada-2": { "text": "Mas eu conheço um truque: a fumaça de um Drink Bruxo Fumegante acorda chama adormecida. E com chama acordada, eu te ensino o Lumen.", "next": "chegada-3" },
+    "chegada-3": {
+      "text": "Sabe preparar um?",
+      "choices": [
+        { "text": "Não faço ideia.", "next": "receita" },
+        { "text": "Claro! (mentira)", "next": "receita-mentira" }
+      ]
+    },
+    "receita-mentira": { "text": "Hihi, sei. Vou anotar no seu grimório mesmo assim.", "next": "receita" },
+    "receita": { "text": "Suco colorido e gelo seco no caldeirão, depois é só mexer. O suco tá ali no canto, e o gelo seco ficou no Grande Salão.",
+      "effects": [{ "learnRecipe": "drink-fumegante" }, { "advanceQuest": "luz-na-cozinha", "to": "preparar-drink" }] },
+    "lembrete-drink": { "text": "Suco colorido mais gelo seco, no caldeirão grande! A receita tá no seu grimório, aba Receitas." },
+    "entrega": { "text": "Olha essa fumaça! Perfeito! Agora segura a varinha assim... diz comigo: LUMEN!",
+      "effects": [{ "takeItem": "drink-fumegante" }, { "learnSpell": "lumen" }, { "advanceQuest": "luz-na-cozinha", "to": "acender-velas" }], "next": "entrega-2" },
+    "entrega-2": { "text": "Isso! Agora acende as duas velas da bancada pra mim? Escolha o Lumen e aponte para elas." },
+    "lembrete-velas": { "text": "As duas velas da bancada, docinho! Fique de frente pra elas e lance o Lumen." },
+    "final": { "text": "Que luz linda! A cozinha voltou a cheirar a abóbora. Tome, a receita da nossa Sobremesa Mandrágora. Segredo de família!",
+      "effects": [{ "learnRecipe": "sobremesa-mandragora" }, { "completeQuest": "luz-na-cozinha" }], "next": "final-2" },
+    "final-2": { "text": "Ah, e se quiser treinar, tem um quadro de desafios no Grande Salão. Quem vence aprende uns feitiços que não estão nos livros..." },
+    "depois": { "text": "Volte quando quiser, docinho. Sempre tem cerveja de abóbora sem álcool pra aprendiz." }
+  }
+}

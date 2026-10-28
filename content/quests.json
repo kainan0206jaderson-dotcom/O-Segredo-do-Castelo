@@ -5,5 +5,17 @@
       { "id": "falar-com-quadro", "objective": "Fale com o quadro vivo no Grande Salão." },
       { "id": "voltar-ao-trinco", "objective": "Conte ao Trinco o que o quadro disse." }
     ]
+  },
+  "luz-na-cozinha": {
+    "title": "Luz na Cozinha",
+    "stages": [
+      { "id": "ir-a-cozinha", "objective": "Vá até a Cozinha Bruxa, a leste do Grande Salão." },
+      { "id": "preparar-drink", "objective": "Prepare um Drink Bruxo Fumegante no caldeirão: suco colorido + gelo seco.",
+        "completeWhen": { "hasItem": "drink-fumegante" }, "then": "entregar-drink" },
+      { "id": "entregar-drink", "objective": "Leve o drink para a Dona Brasa." },
+      { "id": "acender-velas", "objective": "Acenda as 2 velas da cozinha com Lumen (troque o feitiço e use a ação).",
+        "completeWhen": { "all": [{ "flag": "vela:map.cozinha:vela-a" }, { "flag": "vela:map.cozinha:vela-b" }] }, "then": "falar-com-brasa" },
+      { "id": "falar-com-brasa", "objective": "Volte a falar com a Dona Brasa." }
+    ]
   }
 }

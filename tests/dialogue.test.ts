@@ -40,7 +40,7 @@ describe('primeira missão completa', () => {
     expect(fim.notices).toContain('Missão concluída: Primeira noite no castelo');
     expect(s.inventory.grimorio).toBe(1);
     expect(s.quests['primeira-noite'].done).toBe(true);
-    expect(currentObjective(s, db)).toBeUndefined();
+    expect(currentObjective(s, db)?.quest).toBe('Luz na Cozinha');
   });
 
   it('o quadro só fala de passagem antes da missão', () => {
@@ -73,8 +73,12 @@ describe('conteúdo', () => {
         if ('giveItem' in e) expect(db.items[e.giveItem], e.giveItem).toBeDefined();
         if ('startQuest' in e) expect(db.quests[e.startQuest]).toBeDefined();
         if ('advanceQuest' in e) expect(db.quests[e.advanceQuest].stages.map((s) => s.id)).toContain(e.to);
+        if ('learnSpell' in e) expect(db.spells[e.learnSpell], e.learnSpell).toBeDefined();
+        if ('learnRecipe' in e) expect(db.recipes[e.learnRecipe], e.learnRecipe).toBeDefined();
       }
       expect(d.entries.at(-1)?.when, `${d.id}: a última entrada deve valer sempre`).toBeUndefined();
     }
   });
 });
+
+export { talk };

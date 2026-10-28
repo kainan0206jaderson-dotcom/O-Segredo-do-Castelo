@@ -2,29 +2,129 @@
   "id": "trinco",
   "speaker": "Trinco",
   "entries": [
-    { "when": { "questDone": "primeira-noite" }, "start": "depois" },
-    { "when": { "questStage": "primeira-noite", "stage": "voltar-ao-trinco" }, "start": "retorno" },
-    { "when": { "questStage": "primeira-noite", "stage": "falar-com-quadro" }, "start": "lembrete" },
-    { "start": "boas-vindas" }
+    {
+      "when": {
+        "questDone": "primeira-noite"
+      },
+      "start": "depois"
+    },
+    {
+      "when": {
+        "questStage": "primeira-noite",
+        "stage": "voltar-ao-trinco"
+      },
+      "start": "retorno"
+    },
+    {
+      "when": {
+        "questStage": "primeira-noite",
+        "stage": "falar-com-quadro"
+      },
+      "start": "lembrete"
+    },
+    {
+      "start": "boas-vindas"
+    }
   ],
   "nodes": {
-    "boas-vindas": { "text": "Opa, opa! Um aprendiz novo! Bem-vindo ao Castelo Magia & Bruxaria. Eu sou o Trinco, guardião de todas as chaves. Bom, de quase todas.", "next": "sumico" },
-    "sumico": { "text": "Mas olha, hoje a noite tá esquisita. As velas estão apagando sozinhas e o Professor Arquimedes sumiu antes da aula!", "next": "mesa" },
+    "boas-vindas": {
+      "text": "Opa, opa! Um aprendiz novo! Bem-vindo ao Castelo Magia & Bruxaria. Eu sou o Trinco, guardião de todas as chaves. Bom, de quase todas.",
+      "next": "sumico"
+    },
+    "sumico": {
+      "text": "Mas olha, hoje a noite tá esquisita. As velas estão apagando sozinhas e o Professor Arquimedes sumiu antes da aula!",
+      "next": "mesa"
+    },
     "mesa": {
       "text": "Antes de tudo: em qual mesa do Grande Salão você vai sentar?",
       "choices": [
-        { "text": "Coragem", "next": "mesa-ok", "effects": [{ "setFlag": "casa", "value": "coragem" }] },
-        { "text": "Inteligência", "next": "mesa-ok", "effects": [{ "setFlag": "casa", "value": "inteligencia" }] },
-        { "text": "Astúcia", "next": "mesa-ok", "effects": [{ "setFlag": "casa", "value": "astucia" }] },
-        { "text": "Lealdade", "next": "mesa-ok", "effects": [{ "setFlag": "casa", "value": "lealdade" }] }
+        {
+          "text": "Coragem",
+          "next": "mesa-ok",
+          "effects": [
+            {
+              "setFlag": "casa",
+              "value": "coragem"
+            }
+          ]
+        },
+        {
+          "text": "Inteligência",
+          "next": "mesa-ok",
+          "effects": [
+            {
+              "setFlag": "casa",
+              "value": "inteligencia"
+            }
+          ]
+        },
+        {
+          "text": "Astúcia",
+          "next": "mesa-ok",
+          "effects": [
+            {
+              "setFlag": "casa",
+              "value": "astucia"
+            }
+          ]
+        },
+        {
+          "text": "Lealdade",
+          "next": "mesa-ok",
+          "effects": [
+            {
+              "setFlag": "casa",
+              "value": "lealdade"
+            }
+          ]
+        }
       ]
     },
-    "mesa-ok": { "text": "Escolha bonita! Tome, sua varinha. Não aponte para o meu nariz, por favor.", "effects": [{ "giveItem": "varinha" }], "next": "missao" },
-    "missao": { "text": "Faz um favor? O quadro do Dom Moldura, no Grande Salão, vê tudo. Pergunta pra ele o que aconteceu. A porta é logo ali, ao norte.", "effects": [{ "startQuest": "primeira-noite" }] },
-    "lembrete": { "text": "O Dom Moldura fica pendurado no Grande Salão, bem no meio da parede. Não tem como errar. Ele não sai de lá. Literalmente.", "next": null },
-    "retorno": { "text": "E aí? O que o Dom Moldura disse?", "next": "retorno-2" },
-    "retorno-2": { "text": "Uma luz fria saindo da torre? Hmm... isso não é coisa boa, não. Você vai precisar de mais que uma varinha.", "next": "retorno-3" },
-    "retorno-3": { "text": "Leva este grimório. Ele se enche sozinho quando você aprende magia. A Cozinha Bruxa, a leste do salão, é um bom lugar pra começar.", "effects": [{ "giveItem": "grimorio" }, { "completeQuest": "primeira-noite" }] },
-    "depois": { "text": "Grimório na mão, varinha no bolso... Agora sim parece um bruxo de verdade! Quase." }
+    "mesa-ok": {
+      "text": "Escolha bonita! Tome, sua varinha. Não aponte para o meu nariz, por favor.",
+      "effects": [
+        {
+          "giveItem": "varinha"
+        }
+      ],
+      "next": "missao"
+    },
+    "missao": {
+      "text": "Faz um favor? O quadro do Dom Moldura, no Grande Salão, vê tudo. Pergunta pra ele o que aconteceu. A porta é logo ali, ao norte.",
+      "effects": [
+        {
+          "startQuest": "primeira-noite"
+        }
+      ]
+    },
+    "lembrete": {
+      "text": "O Dom Moldura fica pendurado no Grande Salão, bem no meio da parede. Não tem como errar. Ele não sai de lá. Literalmente.",
+      "next": null
+    },
+    "retorno": {
+      "text": "E aí? O que o Dom Moldura disse?",
+      "next": "retorno-2"
+    },
+    "retorno-2": {
+      "text": "Uma luz fria saindo da torre? Hmm... isso não é coisa boa, não. Você vai precisar de mais que uma varinha.",
+      "next": "retorno-3"
+    },
+    "retorno-3": {
+      "text": "Leva este grimório. Ele se enche sozinho quando você aprende magia. A Cozinha Bruxa, a leste do salão, é um bom lugar pra começar.",
+      "effects": [
+        {
+          "giveItem": "grimorio"
+        },
+        {
+          "completeQuest": "primeira-noite"
+        },
+        {
+          "startQuest": "luz-na-cozinha"
+        }
+      ]
+    },
+    "depois": {
+      "text": "Grimório na mão, varinha no bolso... Agora sim parece um bruxo de verdade! Quase. A Dona Brasa tá te esperando na cozinha."
+    }
   }
 }

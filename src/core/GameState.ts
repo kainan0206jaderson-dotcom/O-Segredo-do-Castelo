@@ -1,6 +1,6 @@
 import type { FlagValue } from '../types/content';
 
-export const SAVE_VERSION = 1;
+export const SAVE_VERSION = 2;
 
 export interface QuestProgress {
   stage: string;
@@ -15,9 +15,18 @@ export interface GameState {
   flags: Record<string, FlagValue>;
   quests: Record<string, QuestProgress>;
   inventory: Record<string, number>;
+  /** Feitiços aprendidos, na ordem em que foram aprendidos. */
+  spells: string[];
+  selectedSpell: string | null;
+  recipes: string[];
+  /** Desafios opcionais vencidos e o melhor tempo. */
+  challenges: Record<string, { done: boolean; bestMs?: number }>;
   playTimeMs: number;
 }
 
 export function newGame(map: string, spawn: string): GameState {
-  return { version: SAVE_VERSION, map, spawn, flags: {}, quests: {}, inventory: {}, playTimeMs: 0 };
+  return {
+    version: SAVE_VERSION, map, spawn, flags: {}, quests: {}, inventory: {},
+    spells: [], selectedSpell: null, recipes: [], challenges: {}, playTimeMs: 0,
+  };
 }

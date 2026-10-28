@@ -1,7 +1,10 @@
-import type { DialogueDef, ItemDef, QuestDef } from '../types/content';
+import type { ChallengeDef, DialogueDef, ItemDef, QuestDef, RecipeDef, SpellDef } from '../types/content';
 import type { ContentDb } from '../systems/rules';
 import quests from '../../content/quests.json';
 import items from '../../content/items.json';
+import spells from '../../content/spells.json';
+import recipes from '../../content/recipes.json';
+import challenges from '../../content/challenges.json';
 
 const dialogueFiles = import.meta.glob<DialogueDef>('../../content/dialogues/*.json', { eager: true, import: 'default' });
 
@@ -12,4 +15,7 @@ export const dialogues: Record<string, DialogueDef> = Object.fromEntries(
 export const db: ContentDb = {
   quests: quests as Record<string, QuestDef>,
   items: items as Record<string, ItemDef>,
+  spells: spells as Record<string, SpellDef>,
+  recipes: recipes as Record<string, RecipeDef>,
+  challenges: challenges as Record<string, ChallengeDef>,
 };

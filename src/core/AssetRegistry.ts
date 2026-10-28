@@ -15,6 +15,8 @@ export interface SpritesheetDef {
   frameWidth: number;
   frameHeight: number;
   animations: Record<string, AnimationDef>;
+  /** Quadros com nome, para folhas de ícones ("abobora" -> 0). */
+  frameNames?: Record<string, number>;
 }
 
 export interface TilesetDef {
@@ -98,6 +100,11 @@ export class AssetRegistry {
 
   hasAnimation(sheet: string, anim: string): boolean {
     return Boolean(this.manifest.spritesheets[sheet]?.animations[anim]);
+  }
+
+  /** Número do quadro de um nome numa folha de ícones; undefined se não existir. */
+  frameOf(sheet: string, name: string): number | undefined {
+    return this.manifest.spritesheets[sheet]?.frameNames?.[name];
   }
 
   tileset(key: string): TilesetDef {

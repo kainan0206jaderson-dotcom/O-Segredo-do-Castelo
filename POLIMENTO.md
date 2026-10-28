@@ -14,3 +14,10 @@ Detalhes notados durante o desenvolvimento, para a fase de ajuste final.
 - Balcão da recepção: desenhar como móvel com profundidade (hoje o jogador aparece por cima dele ao chegar perto).
 - Caixa de diálogo: retrato do personagem ao lado do texto e som de "fala" por letra.
 - Escolhas no diálogo: moldura própria em vez de texto com fundo.
+- Caldeirão: animação de borbulhar ao mexer, ingredientes caindo na panela e som de "puf" ao errar.
+- Grimório: páginas com textura de papel e ícones maiores; virar página entre abas.
+- Velas: luz real ao redor (escurecer a sala e iluminar com Lumen), não só o brilho rápido.
+- Desafio: cronômetro com moldura própria, aviso de "faltam 10s" e placar de recorde no quadro.
+- Fogos Bruxos: mais cores e faíscas que caem devagar.
+- Dona Brasa: asas batendo e farinha voando quando ela fala.
+- Mesa da cozinha: panelas, tábuas e ingredientes em cima, não só madeira lisa.

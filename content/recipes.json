@@ -1,0 +1,5 @@
+{
+  "drink-fumegante": { "ingredients": { "suco-colorido": 1, "gelo-seco": 1 }, "result": "drink-fumegante" },
+  "cerveja-abobora": { "ingredients": { "abobora": 1, "gelo-seco": 1 }, "result": "cerveja-abobora" },
+  "sobremesa-mandragora": { "ingredients": { "folha-mandragora": 1, "cacau": 1 }, "result": "sobremesa-mandragora" }
+}
