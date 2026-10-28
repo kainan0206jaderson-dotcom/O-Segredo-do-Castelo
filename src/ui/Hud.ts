@@ -108,8 +108,8 @@ export class Hud {
     if (hurt) flash(this.scene.cameras.main, 120, 120, 20, 30);
   }
 
-  setTimer(text: string | undefined): void {
-    this.timer.setVisible(Boolean(text)).setText(text ?? '');
+  setTimer(text: string | undefined, urgent = false): void {
+    this.timer.setVisible(Boolean(text)).setText(text ?? '').setColor(urgent ? '#ff8a7a' : COLORS.gold);
   }
 
   notify(text: string): void {

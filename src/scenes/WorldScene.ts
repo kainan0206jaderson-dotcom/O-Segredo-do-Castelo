@@ -885,7 +885,12 @@ export class WorldScene extends Phaser.Scene {
     ch.update(delta);
     const { done, total } = ch.progress;
     if (ch.status === 'running') {
-      this.hud.setTimer(`⏳ ${Math.ceil(ch.remainingMs / 1000)}s   ${done}/${total}`);
+      const secs = Math.ceil(ch.remainingMs / 1000);
+      const before = Math.ceil((ch.remainingMs + delta) / 1000);
+      // aviso de tempo: "faltam 10s" e um tique por segundo no fim
+      if (secs !== before && secs === 10) this.hud.notify('Faltam 10 segundos!');
+      if (secs !== before && secs <= 5 && secs > 0) audio.sfx('menu');
+      this.hud.setTimer(`⏳ ${secs}s   ${done}/${total}`, secs <= 10);
       return;
     }
     this.hud.setTimer(undefined);
