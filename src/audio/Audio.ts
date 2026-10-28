@@ -26,64 +26,91 @@ export function noteHz(note: string): number {
 }
 
 /**
+ * Instrumentos da trilha. Continuam simples (osciladores), mas cada um tem seu
+ * envelope e timbre: celesta e sino brilham, harpa dedilha, cordas e coro sustentam.
+ */
+export type Instrument = 'celesta' | 'harpa' | 'cordas' | 'flauta' | 'sino' | 'baixo' | 'coro' | 'chip';
+
+/**
  * Uma música: canais com uma nota por passo (colcheia). "-" é pausa, "." segura a nota anterior.
  * Cada canal tem seu próprio tamanho e repete sozinho.
  */
 export interface Song {
   bpm: number;
-  channels: { wave: Wave; vol: number; notes: string }[];
+  channels: { inst: Instrument; vol: number; notes: string }[];
 }
 
-/** Partituras curtas em loop [FICÇÃO: composições originais]. */
+/** Repete um trecho de partitura n vezes (para não escrever ". . . . ." à mão). */
+const rep = (s: string, n: number) => Array(n).fill(s).join(' ');
+/** Nota longa: a nota seguida de n-1 "." */
+const hold = (note: string, n: number) => [note, ...Array(n - 1).fill('.')].join(' ');
+const holds = (notes: string, n: number) => notes.split(' ').map((x) => hold(x, n)).join(' ');
+
+/**
+ * Partituras em loop [FICÇÃO: composições originais]. Clima de filme de magia:
+ * valsas em tom menor, celesta brilhando por cima, harpa em arpejo e cordas ao fundo.
+ */
 export const SONGS: Record<Track, Song> = {
-  // tela inicial: valsa misteriosa em ré menor
+  // tela inicial: valsa misteriosa em mi menor (compasso 3/4, 6 colcheias por compasso)
   titulo: {
-    bpm: 96,
+    bpm: 100,
     channels: [
-      { wave: 'triangle', vol: 0.22, notes: 'D5 . F5 A5 . D6 C6 . A5 G5 . F5 E5 . . . F5 . A5 C6 . F6 E6 . C6 A#5 . A5 G5 . . . ' },
-      { wave: 'sine', vol: 0.18, notes: 'D3 . . A2 . . D3 . . A2 . . C3 . . G2 . . F3 . . C3 . . A#2 . . A2 . . ' },
+      { inst: 'celesta', vol: 0.16, notes: 'E5 . . G5 B5 . A5 . G5 . F#5 . G5 . . E5 C5 . D#5 . . . B4 . E5 . . G5 C6 . B5 . A5 . G5 . F#5 . A5 . D#5 F#5 E5 . . . . -' },
+      { inst: 'harpa', vol: 0.12, notes: 'E3 B3 E4 G4 B3 G3 D3 A3 D4 F#4 A3 F#3 C3 G3 C4 E4 G3 E3 B2 F#3 B3 D#4 F#3 D#3 C3 G3 C4 E4 G3 E3 E3 B3 E4 G4 B3 G3 B2 F#3 A3 D#4 A3 F#3 E3 B3 E4 G4 B4 -' },
+      { inst: 'cordas', vol: 0.05, notes: holds('G4 F#4 E4 D#4 E4 G4 F#4 G4', 6) },
+      { inst: 'cordas', vol: 0.045, notes: holds('B3 A3 C4 B3 C4 B3 B3 B3', 6) },
+      { inst: 'sino', vol: 0.05, notes: `${rep('-', 22)} B6 ${rep('-', 23)} E7 ${rep('-', 49)}` },
     ],
   },
-  // Ato 1: castelo animado, fá maior, passinho saltitante
+  // Ato 1: castelo encantado, sol maior com o "fá sustenido mágico" (modo lídio), 6/8 saltitante
   castelo: {
-    bpm: 118,
+    bpm: 132,
     channels: [
-      { wave: 'square', vol: 0.08, notes: 'F5 - A5 C6 A5 - G5 F5 E5 - G5 A#5 A5 G5 F5 - D5 - F5 A5 G5 - F5 E5 F5 . . . - - - - ' },
-      { wave: 'triangle', vol: 0.2, notes: 'F3 C4 A3 C4 C3 G3 E3 G3 D3 A3 F3 A3 C3 G3 E3 G3 A#2 F3 D3 F3 C3 G3 E3 G3 F3 C4 A3 C4 F2 . . . ' },
+      { inst: 'celesta', vol: 0.15, notes: 'B4 . D5 G5 . F#5 E5 . C#5 . D5 . B4 . D5 G5 . A5 B5 . . . . . C6 . B5 A5 . G5 F#5 . E5 . C#5 . D5 . E5 F#5 . A5 G5 . . . . -' },
+      { inst: 'harpa', vol: 0.11, notes: 'G2 D3 G3 D3 B3 D3 A2 E3 A3 E3 C#4 E3 G2 D3 G3 D3 B3 D3 E2 B2 E3 B2 G3 B2 C3 G3 C4 G3 E4 G3 A2 E3 A3 E3 C#4 E3 D3 A3 D4 A3 F#4 A3 G2 D3 G3 D3 B3 D3' },
+      { inst: 'flauta', vol: 0.06, notes: `${rep('-', 48)} D6 . . B5 . . C#6 . . A5 . . D6 . . G6 . . F#6 . . . . . E6 . . C6 . . C#6 . . A5 . . D6 . . F#6 . . G6 . . . . .` },
+      { inst: 'cordas', vol: 0.035, notes: holds('G3 A3 G3 E3 C4 A3 D4 G3', 6) },
     ],
   },
-  // Ato 2: biblioteca calma e curiosa, lá menor
+  // Ato 2: biblioteca calma e curiosa, lá menor com sexta maior (dórico), 4/4 lento
   biblioteca: {
     bpm: 84,
     channels: [
-      { wave: 'triangle', vol: 0.2, notes: 'A4 . C5 E5 . D5 C5 . B4 . G4 . A4 . . . C5 . E5 G5 . F5 E5 . D5 . B4 . C5 . . . ' },
-      { wave: 'sine', vol: 0.14, notes: 'E5 - A5 - E5 - A5 - D5 - G5 - D5 - G5 - E5 - A5 - E5 - A5 - F5 - A5 - E5 - G#5 - ' },
-      { wave: 'sine', vol: 0.18, notes: 'A2 . . . E3 . . . G2 . . . D3 . . . F2 . . . C3 . . . E2 . . . E2 . . . ' },
+      { inst: 'flauta', vol: 0.09, notes: 'A4 . . C5 E5 . D5 . C5 . B4 . A4 . . . F#5 . . E5 D5 . C5 . B4 . . . E5 . . . A4 . . C5 E5 . A5 . G5 . F#5 . E5 . . . D5 . F#5 . E5 . C5 . A4 . . . . . - -' },
+      { inst: 'harpa', vol: 0.1, notes: 'A2 E3 A3 C4 E4 C4 A3 E3 F2 C3 F3 A3 C4 A3 F3 C3 D3 A3 D4 F#4 A4 F#4 D4 A3 E2 B2 E3 G#3 B3 G#3 E3 B2 A2 E3 A3 C4 E4 C4 A3 E3 E2 B2 E3 G3 B3 G3 E3 B2 D3 A3 D4 F#4 A4 F#4 D4 A3 A2 E3 A3 C4 E4 A4 E4 C4' },
+      { inst: 'cordas', vol: 0.045, notes: holds('E4 C4 F#4 E4 E4 G4 F#4 E4', 8) },
+      { inst: 'celesta', vol: 0.06, notes: `${rep('-', 14)} E6 - ${rep('-', 14)} B6 - ${rep('-', 14)} A6 - ${rep('-', 12)} C7 - B6 -` },
     ],
   },
-  // Ato 3: dentro dos quadros, mi menor, um pouco tenso
+  // Ato 3: dentro dos quadros, escala de tons inteiros (sonho estranho), mi menor
   quadros: {
-    bpm: 100,
+    bpm: 96,
     channels: [
-      { wave: 'square', vol: 0.06, notes: 'E5 - - G5 F#5 - E5 - B4 - - D5 E5 - - - C5 - - E5 D5 - C5 - B4 - A4 - B4 - - - ' },
-      { wave: 'triangle', vol: 0.2, notes: 'E2 E3 E2 E3 E2 E3 E2 E3 C2 C3 C2 C3 C2 C3 B1 B2 ' },
+      { inst: 'celesta', vol: 0.09, notes: 'E5 G#5 C6 G#5 E5 G#5 C6 G#5 D5 F#5 A#5 F#5 D5 F#5 A#5 F#5 C5 E5 G#5 E5 C5 E5 G#5 E5 D5 F#5 A#5 F#5 D5 F#5 A#5 D6' },
+      { inst: 'flauta', vol: 0.07, notes: 'B4 . . . C5 . B4 . A#4 . . . . . . . G4 . . . A#4 . C5 . B4 . . . . . - - E5 . . . D5 . C5 . B4 . . . G#4 . . . A4 . . . C5 . E5 . D#5 . . . . . - -' },
+      { inst: 'coro', vol: 0.05, notes: holds('E3 D3 C3 B2', 8) },
+      { inst: 'baixo', vol: 0.14, notes: 'E2 - - - E2 - - - D2 - - - D2 - - - C2 - - - C2 - - - B1 - - - B1 - B1 -' },
     ],
   },
-  // duelo com a Morgana: rápido, ré menor
+  // duelo com a Morgana: rápido, ré menor, cordas nervosas e celesta em alerta
   duelo: {
     bpm: 150,
     channels: [
-      { wave: 'square', vol: 0.07, notes: 'D5 D5 F5 D5 A5 D5 G5 F5 E5 E5 G5 E5 A#5 A5 G5 E5 F5 F5 A5 F5 C6 A5 G5 F5 E5 C#5 E5 G5 A5 . . . ' },
-      { wave: 'triangle', vol: 0.22, notes: 'D2 D3 D2 D3 D2 D3 D2 D3 C2 C3 C2 C3 C2 C3 C2 C3 A#1 A#2 A#1 A#2 A#1 A#2 A#1 A#2 A1 A2 A1 A2 A1 A2 C#3 E3 ' },
-      { wave: 'sawtooth', vol: 0.025, notes: 'D4 F4 A4 F4 D4 F4 A4 F4 C4 E4 G4 E4 C4 E4 G4 E4 A#3 D4 F4 D4 A#3 D4 F4 D4 A3 C#4 E4 C#4 A3 C#4 E4 C#4 ' },
+      { inst: 'chip', vol: 0.06, notes: 'D5 D5 F5 D5 A5 D5 G5 F5 E5 E5 G5 E5 A#5 A5 G5 E5 F5 F5 A5 F5 C6 A5 G5 F5 E5 C#5 E5 G5 A5 . . .' },
+      { inst: 'baixo', vol: 0.2, notes: 'D2 D3 D2 D3 D2 D3 D2 D3 C2 C3 C2 C3 C2 C3 C2 C3 A#1 A#2 A#1 A#2 A#1 A#2 A#1 A#2 A1 A2 A1 A2 A1 A2 C#3 E3' },
+      { inst: 'harpa', vol: 0.07, notes: 'D4 F4 A4 F4 D4 F4 A4 F4 C4 E4 G4 E4 C4 E4 G4 E4 A#3 D4 F4 D4 A#3 D4 F4 D4 A3 C#4 E4 C#4 A3 C#4 E4 C#4' },
+      { inst: 'cordas', vol: 0.045, notes: holds('A4 G4 F4 E4', 8) },
+      { inst: 'sino', vol: 0.04, notes: `D6 ${rep('-', 31)}` },
     ],
   },
-  // final e créditos: dó maior, festivo
+  // final e créditos: valsa festiva em dó maior, com sinos de comemoração
   final: {
-    bpm: 108,
+    bpm: 112,
     channels: [
-      { wave: 'square', vol: 0.08, notes: 'C5 E5 G5 C6 . B5 A5 G5 F5 . A5 . G5 . E5 . F5 E5 D5 F5 E5 D5 C5 E5 D5 . . . - - - - ' },
-      { wave: 'triangle', vol: 0.2, notes: 'C3 G3 E3 G3 C3 G3 E3 G3 F3 C4 A3 C4 C3 G3 E3 G3 D3 A3 F3 A3 G2 D3 B2 D3 G2 . . . G2 . . . ' },
+      { inst: 'celesta', vol: 0.15, notes: 'C5 . E5 G5 . C6 B5 . A5 . G5 . A5 . F5 . A5 C6 G5 . . . . . F5 . A5 C6 . F6 E6 . D6 . C6 . D6 . B5 . G5 D6 C6 . . . . -' },
+      { inst: 'harpa', vol: 0.11, notes: 'C3 G3 C4 E4 G3 E3 G2 D3 G3 B3 D3 B2 F2 C3 F3 A3 C3 A2 C3 G3 C4 E4 G3 E3 F2 C3 F3 A3 C3 A2 C3 G3 C4 E4 G3 E3 G2 D3 G3 B3 F3 D3 C3 G3 C4 E4 G4 -' },
+      { inst: 'cordas', vol: 0.045, notes: holds('E4 D4 C4 E4 C4 E4 D4 E4', 6) },
+      { inst: 'sino', vol: 0.05, notes: `${rep('-', 18)} G6 - - C7 ${rep('-', 20)} E7 ${rep('-', 5)}` },
     ],
   },
 };
@@ -130,12 +157,34 @@ class AudioEngine {
     this.sfxBus.connect(this.master);
     this.musicBus = ctx.createGain();
     this.musicBus.connect(this.master);
+    // eco de salão de castelo: um pouco nos efeitos, mais na música (é o que dá o ar "mágico")
+    const reverb = ctx.createConvolver();
+    reverb.buffer = this.makeImpulse(ctx, 2.8);
+    reverb.connect(this.master);
+    const send = (from: GainNode, amount: number) => {
+      const g = ctx.createGain();
+      g.gain.value = amount;
+      from.connect(g).connect(reverb);
+    };
+    send(this.musicBus, 0.55);
+    send(this.sfxBus, 0.2);
     this.noiseBuf = ctx.createBuffer(1, ctx.sampleRate, ctx.sampleRate);
     const data = this.noiseBuf.getChannelData(0);
     for (let i = 0; i < data.length; i++) data[i] = Math.random() * 2 - 1;
     this.applyVolumes();
     if (this.track) this.startSong();
     return ctx;
+  }
+
+  /** Resposta de sala: ruído em estéreo que some aos poucos. */
+  private makeImpulse(ctx: AudioContext, seconds: number): AudioBuffer {
+    const len = Math.floor(ctx.sampleRate * seconds);
+    const buf = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (let c = 0; c < 2; c++) {
+      const d = buf.getChannelData(c);
+      for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / len) ** 3;
+    }
+    return buf;
   }
 
   private applyVolumes(): void {
@@ -256,7 +305,8 @@ class AudioEngine {
     }
     const g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, ctx.currentTime);
-    g.gain.setTargetAtTime(1, ctx.currentTime + 0.3, 0.4);
+    // instrumentos com ataque suave soam mais baixo que o chiptune antigo: ganho extra
+    g.gain.setTargetAtTime(2, ctx.currentTime + 0.3, 0.4);
     g.connect(this.musicBus!);
     this.songGain = g;
     this.step = 0;
@@ -279,26 +329,110 @@ class AudioEngine {
         if (n === '-' || n === '.') continue;
         let len = 1;
         while (notes[(i + len) % notes.length] === '.' && len < notes.length) len++;
-        this.musicNote(this.nextAt, ch.wave, noteHz(n), stepS * len * 0.92, ch.vol);
+        this.musicNote(this.nextAt, ch.inst, noteHz(n), stepS * len * 0.92, ch.vol);
       }
       this.step++;
       this.nextAt += stepS;
     }
   }
 
-  private musicNote(t: number, wave: Wave, hz: number, dur: number, vol: number): void {
+  /** Uma nota de um instrumento da trilha (ver Instrument). */
+  private musicNote(t: number, inst: Instrument, hz: number, dur: number, vol: number): void {
     const ctx = this.ctx!;
-    const o = ctx.createOscillator();
-    const g = ctx.createGain();
-    o.type = wave;
-    o.frequency.value = hz;
-    g.gain.setValueAtTime(0.0001, t);
-    g.gain.exponentialRampToValueAtTime(vol, t + 0.015);
-    g.gain.setTargetAtTime(vol * 0.6, t + 0.05, 0.1);
-    g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-    o.connect(g).connect(this.songGain!);
-    o.start(t);
-    o.stop(t + dur + 0.02);
+    const out = ctx.createGain();
+    out.connect(this.songGain!);
+    let end = t + dur;
+    const partial = (wave: Wave, mult: number, level: number, detune = 0, decay?: number) => {
+      const o = ctx.createOscillator();
+      const g = ctx.createGain();
+      o.type = wave;
+      o.frequency.value = hz * mult;
+      o.detune.value = detune;
+      g.gain.value = level;
+      if (decay) {
+        g.gain.setValueAtTime(level, t);
+        g.gain.exponentialRampToValueAtTime(0.0001, t + decay);
+      }
+      o.connect(g).connect(out);
+      o.start(t);
+      return o;
+    };
+    const vibrato = (oscs: OscillatorNode[], rate: number, cents: number, delay: number) => {
+      const lfo = ctx.createOscillator();
+      const lg = ctx.createGain();
+      lfo.frequency.value = rate;
+      lg.gain.setValueAtTime(0, t);
+      lg.gain.linearRampToValueAtTime(cents, t + delay);
+      lfo.connect(lg);
+      for (const o of oscs) lg.connect(o.detune);
+      lfo.start(t);
+      return lfo;
+    };
+    // ataque e queda: "toque" (soa e vai sumindo) ou "sopro" (sobe, segura e solta)
+    const strike = (ring: number) => {
+      out.gain.setValueAtTime(0.0001, t);
+      out.gain.exponentialRampToValueAtTime(vol, t + 0.004);
+      out.gain.exponentialRampToValueAtTime(0.0001, t + ring);
+      end = t + ring;
+    };
+    const swell = (attack: number, release: number) => {
+      out.gain.setValueAtTime(0.0001, t);
+      out.gain.linearRampToValueAtTime(vol, t + Math.min(attack, dur * 0.8));
+      out.gain.setValueAtTime(vol, t + Math.max(dur, attack));
+      out.gain.exponentialRampToValueAtTime(0.0001, t + Math.max(dur, attack) + release);
+      end = t + Math.max(dur, attack) + release;
+    };
+    const oscs: OscillatorNode[] = [];
+    switch (inst) {
+      case 'celesta':
+        oscs.push(partial('sine', 1, 1), partial('sine', 4, 0.3, 0, 0.2), partial('triangle', 2, 0.12));
+        strike(Math.max(dur, 1.3));
+        break;
+      case 'sino':
+        oscs.push(partial('sine', 1, 1), partial('sine', 2.76, 0.45, 0, 0.9), partial('sine', 5.4, 0.2, 0, 0.4));
+        strike(2.6);
+        break;
+      case 'harpa':
+        oscs.push(partial('triangle', 1, 1), partial('sine', 2, 0.25, 0, 0.3));
+        strike(Math.max(dur, 0.9));
+        break;
+      case 'cordas': {
+        const f = ctx.createBiquadFilter();
+        f.type = 'lowpass';
+        f.frequency.value = 1500;
+        out.disconnect();
+        out.connect(f).connect(this.songGain!);
+        oscs.push(partial('sawtooth', 1, 0.5, -7), partial('sawtooth', 1, 0.5, 7));
+        swell(0.35, 0.45);
+        break;
+      }
+      case 'coro': {
+        const f = ctx.createBiquadFilter();
+        f.type = 'lowpass';
+        f.frequency.value = 900;
+        out.disconnect();
+        out.connect(f).connect(this.songGain!);
+        oscs.push(partial('triangle', 1, 0.6, -5), partial('triangle', 1, 0.6, 5), partial('sine', 2, 0.25));
+        swell(0.6, 0.7);
+        break;
+      }
+      case 'flauta':
+        oscs.push(partial('sine', 1, 1), partial('triangle', 2, 0.12));
+        swell(0.06, 0.12);
+        break;
+      case 'baixo':
+        oscs.push(partial('triangle', 1, 1));
+        swell(0.01, 0.08);
+        break;
+      case 'chip':
+        oscs.push(partial('square', 1, 1));
+        swell(0.01, 0.06);
+        break;
+    }
+    if (inst === 'flauta' || inst === 'cordas' || inst === 'coro') {
+      vibrato(oscs, inst === 'coro' ? 4.5 : 5.2, 9, 0.25).stop(end + 0.05);
+    }
+    for (const o of oscs) o.stop(end + 0.05);
   }
 }
 
