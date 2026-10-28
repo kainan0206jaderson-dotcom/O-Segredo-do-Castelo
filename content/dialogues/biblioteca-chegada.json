@@ -1,0 +1,29 @@
+{
+  "id": "biblioteca-chegada",
+  "speaker": "Prof. Aristóteles",
+  "entries": [
+    {
+      "start": "a"
+    }
+  ],
+  "nodes": {
+    "a": {
+      "text": "A escada termina numa biblioteca enorme. Livros cochilam nas estantes. Alguns roncam.",
+      "speaker": "✦",
+      "next": "a-2"
+    },
+    "a-2": {
+      "text": "Psiu! Aqui, aprendiz. Fale baixo: os dicionários acordam de mau humor.",
+      "speaker": "Prof. Aristóteles",
+      "effects": [
+        {
+          "startQuest": "cartas-de-amelia"
+        },
+        {
+          "setFlag": "visto:biblioteca",
+          "value": true
+        }
+      ]
+    }
+  }
+}

@@ -1,0 +1,138 @@
+{
+  "id": "aristoteles",
+  "speaker": "Prof. Aristóteles",
+  "entries": [
+    {
+      "when": {
+        "flag": "jogo:fim"
+      },
+      "start": "fim"
+    },
+    {
+      "when": {
+        "flag": "morgana:convencida"
+      },
+      "start": "coracao"
+    },
+    {
+      "when": {
+        "questStage": "livros-fujoes",
+        "stage": "contar-ao-aristoteles"
+      },
+      "start": "livros-fim"
+    },
+    {
+      "when": {
+        "questStage": "cartas-de-amelia",
+        "stage": "falar-com-aristoteles"
+      },
+      "start": "intro"
+    },
+    {
+      "when": {
+        "questStage": "cartas-de-amelia",
+        "stage": "aula-espectral"
+      },
+      "start": "aula"
+    },
+    {
+      "when": {
+        "questActive": "as-virtudes"
+      },
+      "start": "virtudes"
+    },
+    {
+      "when": {
+        "questActive": "cartas-de-amelia"
+      },
+      "start": "dica"
+    },
+    {
+      "start": "ocupado"
+    }
+  ],
+  "nodes": {
+    "intro": {
+      "text": "Então foi você que quebrou o selo da escada! Sou o Prof. Aristóteles. Ensino Criaturas Espectrais, e cuido desta bagunça de papel.",
+      "next": "intro-2"
+    },
+    "intro-2": {
+      "text": "Más notícias: a Profa. Amélia sumiu na mesma noite que o diretor. A última vez que a vi, ela estava em frente àquele espelho.",
+      "next": "intro-3"
+    },
+    "intro-3": {
+      "text": "E desde então o espelho... cochicha. Eu achava que era o eco. O eco não pede para a gente achar cartas.",
+      "next": "intro-4"
+    },
+    "intro-4": {
+      "text": "Coisas escondidas pedem um feitiço próprio. Preste atenção: varinha para baixo, olho bem aberto... REVELAR!",
+      "next": "intro-5"
+    },
+    "intro-5": {
+      "text": "Agora você enxerga o que a fuligem esconde. Treine na minha aula, na sala a leste. Os espectros de lá adoram pegar aprendiz desprevenido.",
+      "next": "intro-6"
+    },
+    "intro-6": {
+      "text": "Ah, e se puder: três livros fugiram das estantes de novo. Os atris ficam na parede oeste. Livros leves voam com Levitar.",
+      "effects": [
+        {
+          "learnSpell": "revelar"
+        },
+        {
+          "tutorial": "revelar"
+        },
+        {
+          "advanceQuest": "cartas-de-amelia",
+          "to": "aula-espectral"
+        },
+        {
+          "startQuest": "livros-fujoes"
+        }
+      ]
+    },
+    "aula": {
+      "text": "A aula é na sala a leste. Fale com o quadro de desafios para começar.",
+      "next": "aula-2"
+    },
+    "aula-2": {
+      "text": "Dica de professor: Revelar primeiro, Lumen depois. Espectro que você não vê, você não acerta."
+    },
+    "dica": {
+      "text": "Use Revelar perto de cantinhos suspeitos. A Amélia adorava esconder bilhetes em lugares óbvios demais para alguém procurar."
+    },
+    "livros-fim": {
+      "text": "Os três livros de volta no lugar! E nenhum mordeu você? Impressionante.",
+      "next": "livros-fim-2"
+    },
+    "livros-fim-2": {
+      "text": "Tome: a receita do Elixir Estelar. Folha de mandrágora com gelo seco. Devolve energia mágica num gole.",
+      "effects": [
+        {
+          "learnRecipe": "elixir-estelar"
+        },
+        {
+          "completeQuest": "livros-fujoes"
+        },
+        {
+          "giveXp": 20
+        }
+      ]
+    },
+    "virtudes": {
+      "text": "A Amélia dentro de um quadro? Isso é coisa de quem estudou MUITO bem pintura encantada.",
+      "next": "virtudes-2"
+    },
+    "virtudes-2": {
+      "text": "Quatro quadros, quatro virtudes. Converse com o retrato do diretor na Galeria. Ele sabe mais do que parece."
+    },
+    "coracao": {
+      "text": "Cheguei correndo assim que as velas tremeram! Perdi alguma coisa? ...Perdi tudo, né."
+    },
+    "fim": {
+      "text": "Guardião do Castelo! Vou pedir para os dicionários fazerem silêncio em sua homenagem. Por uns cinco minutos, pelo menos."
+    },
+    "ocupado": {
+      "text": "Shhh. Estou catalogando livros que não querem ser catalogados."
+    }
+  }
+}

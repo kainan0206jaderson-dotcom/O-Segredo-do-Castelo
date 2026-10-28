@@ -1,0 +1,20 @@
+{
+  "id": "carta-4",
+  "speaker": "Carta",
+  "entries": [
+    {
+      "start": "a"
+    }
+  ],
+  "nodes": {
+    "a": {
+      "text": "O último pedaço, com um desenho de estrelas na margem:",
+      "speaker": "✦",
+      "next": "a-2"
+    },
+    "a-2": {
+      "text": "\"Na torre, os mostradores contam a nossa história: coragem é a chama, inteligência é o livro, astúcia é a lua, lealdade é o coração.\"",
+      "speaker": "Carta do Arquimedes"
+    }
+  }
+}

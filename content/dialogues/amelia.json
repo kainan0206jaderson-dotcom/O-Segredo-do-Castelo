@@ -1,0 +1,90 @@
+{
+  "id": "amelia",
+  "speaker": "Profa. Amélia",
+  "entries": [
+    {
+      "when": {
+        "flag": "jogo:fim"
+      },
+      "start": "fim"
+    },
+    {
+      "when": {
+        "flag": "morgana:convencida"
+      },
+      "start": "coracao"
+    },
+    {
+      "when": {
+        "flag": "amelia:resgatada"
+      },
+      "start": "resgatada"
+    },
+    {
+      "when": {
+        "questStage": "cartas-de-amelia",
+        "stage": "alinhar-estrelas"
+      },
+      "start": "estrelas"
+    },
+    {
+      "when": {
+        "questStage": "cartas-de-amelia",
+        "stage": "olhar-telescopio"
+      },
+      "start": "telescopio"
+    },
+    {
+      "when": {
+        "questStage": "cartas-de-amelia",
+        "stage": "abrir-galeria"
+      },
+      "start": "galeria"
+    },
+    {
+      "when": {
+        "questStage": "cartas-de-amelia",
+        "stage": "entrar-galeria"
+      },
+      "start": "galeria"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "estrelas": {
+      "text": "No Observatório, cada mostrador é de uma virtude. A última carta diz qual símbolo combina com cada uma.",
+      "next": "estrelas-2"
+    },
+    "estrelas-2": {
+      "text": "Ela está escondida lá mesmo. Revelar, aprendiz! Você já é especialista."
+    },
+    "telescopio": {
+      "text": "As constelações estão alinhadas! Agora olhe pelo telescópio. O céu sempre guardou o melhor feitiço para o final."
+    },
+    "galeria": {
+      "text": "A Galeria fica ao norte da biblioteca. A porta foi trancada pela Morgana... mas Abrir é Abrir.",
+      "next": "galeria-2"
+    },
+    "galeria-2": {
+      "text": "Vamos juntos. Eu flutuo na frente. Se tiver fantasma lá dentro, ele que se assuste comigo."
+    },
+    "resgatada": {
+      "text": "Você me tirou do quadro! Fico te devendo uma. Duas, até.",
+      "next": "resgatada-2"
+    },
+    "resgatada-2": {
+      "text": "Junte os quatro emblemas e a barreira cai. O Coração do Castelo fica logo depois."
+    },
+    "coracao": {
+      "text": "Morgana do nosso lado... quem diria. O castelo gosta de surpresas."
+    },
+    "fim": {
+      "text": "Guardião do Castelo! Eu sabia. Bom, desconfiava. Bom... torcia muito."
+    },
+    "oi": {
+      "text": "Oi, aprendiz! Se precisar de mim, estou por aqui. Flutuando. É o que fantasmas fazem."
+    }
+  }
+}

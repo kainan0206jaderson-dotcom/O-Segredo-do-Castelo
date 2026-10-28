@@ -43,6 +43,10 @@ A arte atual é provisória e gerada por `tools/gen_placeholder_assets.py`.
   aparições rápidas de Morgana, níveis com vida, energia e poder, tutoriais curtos,
   ficha do aprendiz no grimório, missão secundária (Dama do Chá) e a Corrida de
   Levitação. Depois do fim do ato o castelo fica livre para explorar.
+- Etapa 5: Atos 2 e 3 e o final. Biblioteca, Aula de Criaturas Espectrais (desafio de
+  três levas), Estufa, Observatório, Galeria dos Quadros, quatro quadros-provas e o Coração
+  do Castelo. Feitiços Revelar, Escudo e Abrir; cartas da Amélia; duelo em duas fases com a
+  Morgana; cerimônia, créditos e jogo livre depois do final.
 
 ## Conteúdo do jogo
 

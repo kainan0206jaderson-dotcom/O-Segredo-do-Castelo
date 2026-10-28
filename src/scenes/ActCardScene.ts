@@ -9,6 +9,11 @@ const ACTS: Record<string, { title: string; subtitle: string; next: string }> = 
     subtitle: 'O Selo da Escada foi quebrado.',
     next: 'O castelo agora é todo seu: explore, vença desafios e ajude quem pedir.\nO Ato 2 espera no andar de cima.',
   },
+  '2': {
+    title: 'Fim do Ato 2',
+    subtitle: 'A Morgana levou a Amélia para dentro dos quadros.',
+    next: 'Quatro quadros, quatro virtudes. Junte os emblemas na Galeria\ne abra o caminho até o Coração do Castelo.',
+  },
 };
 
 /** Tela de fim de ato. Depois dela o jogo continua livre no castelo. */

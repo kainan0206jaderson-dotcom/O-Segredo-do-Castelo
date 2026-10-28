@@ -1,0 +1,50 @@
+{
+  "id": "galeria-morgana",
+  "speaker": "Morgana Cinzel",
+  "entries": [
+    {
+      "start": "a"
+    }
+  ],
+  "nodes": {
+    "a": {
+      "text": "A Galeria! Olha esses quadros: coragem, inteligência, astúcia, lealdade. E ali... o retrato do diretor?",
+      "speaker": "Profa. Amélia",
+      "next": "a-2"
+    },
+    "a-2": {
+      "text": "Bem-vindos à minha exposição!",
+      "speaker": "Morgana Cinzel",
+      "next": "a-3"
+    },
+    "a-3": {
+      "text": "A Amélia fica tão bem em moldura dourada, não acham? Vou pendurar ela no quadro da Lealdade.",
+      "speaker": "Morgana Cinzel",
+      "next": "a-4"
+    },
+    "a-4": {
+      "text": "Uma corrente de fuligem puxa a Amélia para dentro do quadro. Os quatro quadros começam a brilhar.",
+      "speaker": "✦",
+      "next": "a-5"
+    },
+    "a-5": {
+      "text": "Quatro quadros, quatro provas. Duvido que alguém passe por todas. Até nunca, aprendiz!",
+      "speaker": "Morgana Cinzel",
+      "effects": [
+        {
+          "setFlag": "amelia:capturada",
+          "value": true
+        },
+        {
+          "completeQuest": "cartas-de-amelia"
+        },
+        {
+          "startQuest": "as-virtudes"
+        },
+        {
+          "endAct": 2
+        }
+      ]
+    }
+  }
+}

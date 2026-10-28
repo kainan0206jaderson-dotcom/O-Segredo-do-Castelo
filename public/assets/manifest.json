@@ -223,7 +223,19 @@
         "pedra-coragem": 28,
         "pedra-inteligencia": 29,
         "pedra-astucia": 30,
-        "pedra-lealdade": 31
+        "pedra-lealdade": 31,
+        "carta-amelia-1": 32,
+        "carta-amelia-2": 33,
+        "carta-amelia-3": 34,
+        "carta-amelia-4": 35,
+        "semente-mandragora": 36,
+        "pocao-vigor": 37,
+        "elixir-estelar": 38,
+        "livro-coracao": 39,
+        "emblema-coragem": 40,
+        "emblema-inteligencia": 41,
+        "emblema-astucia": 42,
+        "emblema-lealdade": 43
       }
     },
     "npc.dona-brasa": {
@@ -916,6 +928,269 @@
           "repeat": -1
         }
       }
+    },
+    "npc.espectro": {
+      "url": "sprites/espectro.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameRate": 5,
+          "repeat": -1
+        },
+        "hit": {
+          "frames": [
+            4
+          ],
+          "frameRate": 1,
+          "repeat": 0
+        }
+      }
+    },
+    "npc.olho": {
+      "url": "sprites/olho.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        },
+        "hit": {
+          "frames": [
+            2
+          ],
+          "frameRate": 1,
+          "repeat": 0
+        }
+      }
+    },
+    "fx.orbe": {
+      "url": "fx/orbe.png",
+      "frameWidth": 8,
+      "frameHeight": 8,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 10,
+          "repeat": -1
+        }
+      }
+    },
+    "npc.ancora": {
+      "url": "sprites/ancora.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 3,
+          "repeat": -1
+        },
+        "hit": {
+          "frames": [
+            2
+          ],
+          "frameRate": 1,
+          "repeat": 0
+        }
+      }
+    },
+    "prop.canteiro": {
+      "url": "sprites/canteiro.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {}
+    },
+    "prop.saco-sementes": {
+      "url": "sprites/saco-sementes.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {}
+    },
+    "npc.fada-ramalhete": {
+      "url": "sprites/fada-ramalhete.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "talk": {
+          "frames": [
+            2,
+            3
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
+    },
+    "npc.espelho": {
+      "url": "sprites/espelho.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "animations": {
+        "idle": {
+          "frames": [
+            0
+          ],
+          "frameRate": 1,
+          "repeat": -1
+        },
+        "livre": {
+          "frames": [
+            1,
+            2
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        }
+      }
+    },
+    "prop.mostrador": {
+      "url": "sprites/mostrador.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {}
+    },
+    "prop.telescopio": {
+      "url": "sprites/telescopio.png",
+      "frameWidth": 16,
+      "frameHeight": 32,
+      "animations": {}
+    },
+    "prop.espelho-luz": {
+      "url": "sprites/espelho-luz.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {}
+    },
+    "prop.suporte-espelho": {
+      "url": "sprites/suporte-espelho.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {}
+    },
+    "prop.cristal": {
+      "url": "sprites/cristal.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {}
+    },
+    "prop.fonte-luz": {
+      "url": "sprites/fonte-luz.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {}
+    },
+    "prop.porta-trancada": {
+      "url": "sprites/porta-trancada.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "animations": {}
+    },
+    "prop.barreira": {
+      "url": "sprites/barreira.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        }
+      }
+    },
+    "prop.quadro-portal": {
+      "url": "sprites/quadro-portal.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "animations": {}
+    },
+    "npc.quadro-arquimedes": {
+      "url": "sprites/quadro-arquimedes.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            0,
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "talk": {
+          "frames": [
+            2,
+            3
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
+    },
+    "npc.coracao": {
+      "url": "sprites/coracao.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "animations": {
+        "idle": {
+          "frames": [
+            0
+          ],
+          "frameRate": 1,
+          "repeat": -1
+        },
+        "aceso": {
+          "frames": [
+            1,
+            2
+          ],
+          "frameRate": 3,
+          "repeat": -1
+        }
+      }
+    },
+    "prop.livro": {
+      "url": "sprites/livro.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {}
+    },
+    "prop.atril": {
+      "url": "sprites/atril.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {}
     }
   },
   "tilesets": {
@@ -957,6 +1232,66 @@
     },
     "map.hall": {
       "url": "maps/hall.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.biblioteca": {
+      "url": "maps/biblioteca.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.sala-espectral": {
+      "url": "maps/sala-espectral.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.estufa": {
+      "url": "maps/estufa.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.observatorio": {
+      "url": "maps/observatorio.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.galeria": {
+      "url": "maps/galeria.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.quadro-coragem": {
+      "url": "maps/quadro-coragem.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.quadro-inteligencia": {
+      "url": "maps/quadro-inteligencia.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.quadro-astucia": {
+      "url": "maps/quadro-astucia.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.quadro-lealdade": {
+      "url": "maps/quadro-lealdade.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.coracao": {
+      "url": "maps/coracao.tmj",
       "tilesets": [
         "tiles.castelo"
       ]

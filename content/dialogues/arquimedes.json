@@ -4,6 +4,12 @@
   "entries": [
     {
       "when": {
+        "flag": "jogo:fim"
+      },
+      "start": "pos-jogo"
+    },
+    {
+      "when": {
         "questStage": "o-diretor",
         "stage": "falar-com-diretor"
       },
@@ -152,6 +158,9 @@
     "casa-lealdade": {
       "text": "A mesa da Lealdade! Quem nunca deixa um amigo para trás. Esta capa recupera sua energia mais rápido.",
       "next": "levitar"
+    },
+    "pos-jogo": {
+      "text": "Guardião do Castelo! O castelo é todo seu: desafios, receitas, cantinhos escondidos. Volte sempre que quiser."
     }
   }
 }

@@ -1,0 +1,18 @@
+{
+  "id": "emblema-astucia",
+  "speaker": "✦",
+  "entries": [
+    {
+      "start": "a"
+    }
+  ],
+  "nodes": {
+    "a": {
+      "text": "Um emblema em forma de lua, que brilha de lado, meio sorrateiro.",
+      "next": "a-2"
+    },
+    "a-2": {
+      "text": "Emblema da Astúcia guardado! Volte para a Galeria pela porta do quadro."
+    }
+  }
+}

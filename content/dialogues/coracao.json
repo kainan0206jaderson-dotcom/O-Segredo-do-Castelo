@@ -1,0 +1,72 @@
+{
+  "id": "coracao",
+  "speaker": "Coração do Castelo",
+  "entries": [
+    {
+      "when": {
+        "flag": "jogo:fim"
+      },
+      "start": "aceso"
+    },
+    {
+      "when": {
+        "flag": "morgana:convencida"
+      },
+      "start": "final"
+    },
+    {
+      "start": "frio"
+    }
+  ],
+  "nodes": {
+    "frio": {
+      "text": "Um coração de pedra enorme, frio e cinza. A fuligem não deixa você chegar perto."
+    },
+    "final": {
+      "text": "Você encosta a varinha no Coração. A Morgana encosta a dela também. A Amélia, o Aristóteles...",
+      "speaker": "✦",
+      "next": "final-2"
+    },
+    "final-2": {
+      "text": "Tum. Tum. TUM! O coração acende em dourado, e a luz corre pelas paredes do castelo inteiro.",
+      "speaker": "✦",
+      "next": "final-3"
+    },
+    "final-3": {
+      "text": "Uma moldura estala lá na Galeria, e alguém de chapéu pontudo aparece num redemoinho de tinta.",
+      "speaker": "✦",
+      "next": "final-4"
+    },
+    "final-4": {
+      "text": "Ufa! Nada como sair de um quadro. Aprendiz, você fez o que nenhum professor conseguiu.",
+      "speaker": "Prof. Arquimedes",
+      "next": "final-5"
+    },
+    "final-5": {
+      "text": "Fique com isto: o Livro do Coração. Ele guarda a história desta noite. E agora, ao Grande Salão!",
+      "speaker": "Prof. Arquimedes",
+      "effects": [
+        {
+          "giveItem": "livro-coracao"
+        },
+        {
+          "completeQuest": "as-virtudes"
+        },
+        {
+          "setFlag": "jogo:fim",
+          "value": true
+        },
+        {
+          "setFlag": "arquimedes:voltou",
+          "value": true
+        },
+        {
+          "endAct": 3
+        }
+      ]
+    },
+    "aceso": {
+      "text": "O Coração do Castelo bate forte e dourado. Tum. Tum."
+    }
+  }
+}

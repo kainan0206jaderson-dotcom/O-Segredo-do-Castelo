@@ -196,6 +196,30 @@ tile(7, banner((168, 40, 40)))      # Coragem (cores provisórias)
 tile(8, banner((40, 90, 168)))      # Inteligência
 tile(9, banner((40, 140, 80)))      # Astúcia
 tile(10, banner((200, 160, 40)))    # Lealdade
+# pisos do segundo andar (etapa 5): madeira da biblioteca, grama da estufa, céu do observatório, tinta dos quadros
+def wood_floor(x, y):
+    if y % 5 == 4 or (x + (5 if (y // 5) % 2 else 0)) % 10 == 0:
+        return (96, 64, 38)
+    return (138, 96, 58) if (x * 5 + y) % 13 else (150, 106, 66)
+def grass(x, y):
+    if (x * 7 + y * 11) % 17 == 0:
+        return (104, 84, 52)
+    return (74, 126, 62) if (x * 3 + y * 5) % 7 else (92, 146, 74)
+def starry(x, y):
+    h = (x * 37 + y * 91) % 97
+    if h == 0:
+        return (230, 230, 255)
+    if h in (13, 51):
+        return (90, 100, 170)
+    return (26, 28, 62) if (x // 8 + y // 8) % 2 else (30, 32, 70)
+def paint_floor(x, y):
+    if (x * 3 + y * 7) % 19 == 0:
+        return (120, 80, 150)
+    return (54, 42, 80) if ((x // 4) + (y // 4)) % 2 else (62, 48, 92)
+tile(11, wood_floor)
+tile(12, grass)
+tile(13, starry)
+tile(14, paint_floor)
 TS.save(os.path.join(ROOT, "tilesets", "castelo.png"))
 
 # ---------- Fagulha de magia (8x8, 4 quadros) e caldeirão (16x16, 3 quadros)
@@ -974,6 +998,30 @@ for name, col in CAPAS.items():
     NEW_ICONS[f"capa-{name}"] = capa_icon(col)
 for name in ("coragem", "inteligencia", "astucia", "lealdade"):
     NEW_ICONS[f"pedra-{name}"] = pedra_icon(CAPAS[name][1])
+# ícones da etapa 5: cartas da Amélia, emblemas das virtudes, semente, poções novas, livro do coração
+def i_carta(px):
+    rect(px, 3, 3, 12, 13, (246, 246, 252)); rect(px, 3, 3, 12, 3, (196, 206, 226)); rect(px, 3, 13, 12, 13, (196, 206, 226))
+    for y in (6, 8, 10):
+        rect(px, 5, y, 10, y, (150, 160, 190))
+def emblema_icon(col):
+    def f(px):
+        disc(px, 7.5, 8.5, 5.5, 5.5, (214, 170, 60)); disc(px, 7.5, 8.5, 3.6, 3.6, col); rect(px, 6, 1, 9, 3, (214, 170, 60)); px[(6, 7)] = (255, 255, 255)
+    return f
+def i_semente(px):
+    disc(px, 7.5, 9, 3, 4, (150, 104, 60), (110, 74, 40)); rect(px, 7, 3, 8, 5, (90, 170, 80)); px[(9, 4)] = (90, 170, 80)
+def bottle(col, star=False):
+    def f(px):
+        rect(px, 6, 2, 9, 4, (150, 104, 60)); disc(px, 7.5, 10, 4.5, 4.5, col, tuple(max(0, v - 50) for v in col)); px[(6, 8)] = (255, 255, 255)
+        if star:
+            px[(7, 10)] = P["Y"]; px[(8, 10)] = P["Y"]; px[(7, 11)] = P["Y"]; px[(8, 9)] = P["Y"]
+    return f
+def i_livro_coracao(px):
+    rect(px, 3, 3, 12, 13, (196, 150, 40)); rect(px, 3, 3, 4, 13, (138, 100, 24)); disc(px, 8.5, 8, 2.2, 2.2, (200, 40, 60))
+NEW_ICONS.update({"carta-amelia-1": i_carta, "carta-amelia-2": i_carta, "carta-amelia-3": i_carta, "carta-amelia-4": i_carta,
+                  "semente-mandragora": i_semente, "pocao-vigor": bottle((200, 50, 70)), "elixir-estelar": bottle((60, 90, 200), True),
+                  "livro-coracao": i_livro_coracao})
+for name in ("coragem", "inteligencia", "astucia", "lealdade"):
+    NEW_ICONS[f"emblema-{name}"] = emblema_icon(CAPAS[name][0])
 ALL_ICONS = {**ICONS, **NEW_ICONS}
 icons = Image.new("RGBA", (16 * len(ALL_ICONS), 16), (0, 0, 0, 0))
 for i, (name, fn) in enumerate(ALL_ICONS.items()):
@@ -982,18 +1030,343 @@ icons.save(os.path.join(ROOT, "ui", "icones.png"))
 SHEETS["ui.icones"]["frameNames"] = {name: i for i, name in enumerate(ALL_ICONS)}
 
 
+# ---------- Arte da etapa 5 (Atos 2 e 3), desenhada com formas simples e contorno automático
+from PIL import ImageDraw
+
+def canvas(w, h):
+    return Image.new("RGBA", (w, h), (0, 0, 0, 0))
+
+def outline(im, col=None):
+    """Contorno de 1 px em volta de tudo que já foi pintado."""
+    col = col or (P["k"] + (255,))
+    px = im.load()
+    w, h = im.size
+    solid = {(x, y) for y in range(h) for x in range(w) if px[x, y][3] > 0}
+    for (x, y) in solid:
+        for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+            q = (x + dx, y + dy)
+            if 0 <= q[0] < w and 0 <= q[1] < h and q not in solid and px[q][3] == 0:
+                px[q] = col
+    return im
+
+def ell(d, box, col):
+    d.ellipse(box, fill=col)
+
+def save_strip(frames, key, path, anims=None, **extra):
+    fw, fh = frames[0].size
+    im = canvas(fw * len(frames), fh)
+    for i, f in enumerate(frames):
+        im.alpha_composite(f, (i * fw, 0))
+    im.save(os.path.join(ROOT, path))
+    sheet_entry(key, path, fw, fh, anims, **extra)
+
+def rgba(c, a=255):
+    return tuple(c[:3]) + (a,)
+
+# Espectro [FICÇÃO] (16x16): fantasma claro e translúcido; 4 quadros de balanço + 1 atingido
+def espectro(bob, hit=False):
+    im = canvas(16, 16)
+    d = ImageDraw.Draw(im)
+    body = (255, 255, 255, 230) if hit else (206, 234, 250, 175)
+    ell(d, (3, 1 + bob, 12, 10 + bob), body)
+    d.rectangle((3, 6 + bob, 12, 11 + bob), fill=body)
+    for i, x in enumerate(range(3, 13, 3)):
+        d.polygon([(x, 11 + bob), (x + 2, 11 + bob), (x + 1 + (bob if i % 2 else -bob), 14)], fill=body)
+    if not hit:
+        d.point([(6, 5 + bob), (9, 5 + bob), (6, 6 + bob), (9, 6 + bob)], fill=(40, 50, 90, 255))
+        d.point([(7, 8 + bob), (8, 8 + bob)], fill=(80, 100, 150, 220))
+    return outline(im, (110, 160, 210, 190))
+save_strip([espectro(0), espectro(1), espectro(0), espectro(-1), espectro(0, True)], "npc.espectro", "sprites/espectro.png",
+           {"idle": {"frames": [0, 1, 2, 3], "frameRate": 5, "repeat": -1}, "hit": {"frames": [4], "frameRate": 1, "repeat": 0}})
+
+# Olho-sentinela da Morgana [FICÇÃO] (16x16): olho voador com asinhas; 2 quadros + piscada
+def olho(flap, blink=False):
+    im = canvas(16, 16)
+    d = ImageDraw.Draw(im)
+    wing = (60, 44, 84, 255)
+    d.polygon([(4, 8), (0, 5 - flap), (1, 10)], fill=wing)
+    d.polygon([(11, 8), (15, 5 - flap), (14, 10)], fill=wing)
+    ell(d, (3, 4, 12, 12), (236, 232, 240, 255))
+    if blink:
+        d.rectangle((3, 7, 12, 9), fill=(110, 80, 140, 255))
+    else:
+        ell(d, (6, 6, 9, 10), (170, 110, 220, 255))
+        d.point([(7, 8), (8, 8)], fill=(24, 20, 37, 255))
+    return outline(im)
+save_strip([olho(0), olho(2), olho(0, True)], "npc.olho", "sprites/olho.png",
+           {"idle": {"frames": [0, 1], "frameRate": 6, "repeat": -1}, "hit": {"frames": [2], "frameRate": 1, "repeat": 0}})
+
+# Orbe de fuligem (8x8), disparado pela Morgana
+def orbe(swap):
+    im = canvas(8, 8)
+    d = ImageDraw.Draw(im)
+    a, b = ((110, 60, 170, 255), (210, 160, 250, 255))
+    ell(d, (1, 1, 6, 6), b if swap else a)
+    ell(d, (2, 2, 5, 5), a if swap else b)
+    return im
+save_strip([orbe(False), orbe(True)], "fx.orbe", "fx/orbe.png", {"idle": {"frames": [0, 1], "frameRate": 10, "repeat": -1}})
+
+# Âncora de fuligem (16x24): cristal escuro que prende alguém com correntes
+def ancora(glow, hit=False):
+    im = canvas(16, 24)
+    d = ImageDraw.Draw(im)
+    dark = (240, 230, 250, 255) if hit else (64, 46, 96, 255)
+    d.polygon([(8, 3), (13, 13), (8, 22), (3, 13)], fill=dark)
+    d.line([(8, 5), (8, 20)], fill=(150, 100, 210, 255) if glow else (110, 70, 160, 255))
+    d.line([(5, 13), (11, 13)], fill=(150, 100, 210, 255) if glow else (110, 70, 160, 255))
+    im = outline(im)
+    for i in range(3):
+        d.rectangle((13 + (i % 2), 16 + i * 2, 14 + (i % 2), 17 + i * 2), outline=(150, 150, 160, 255))
+    return im
+save_strip([ancora(False), ancora(True), ancora(False, True)], "npc.ancora", "sprites/ancora.png",
+           {"idle": {"frames": [0, 1], "frameRate": 3, "repeat": -1}, "hit": {"frames": [2], "frameRate": 1, "repeat": 0}})
+
+# Canteiro da estufa (16x16): vazio, plantado (broto), crescido (mandrágora com carinha)
+def canteiro(stage):
+    im = canvas(16, 16)
+    d = ImageDraw.Draw(im)
+    d.rectangle((1, 9, 14, 15), fill=(120, 72, 40, 255))
+    d.rectangle((2, 9, 13, 10), fill=(70, 48, 30, 255))
+    if stage == 1:
+        d.line([(8, 5), (8, 9)], fill=(90, 170, 80, 255))
+        d.point([(7, 5), (9, 4)], fill=(120, 200, 100, 255))
+    if stage == 2:
+        for x, y in ((5, 2), (7, 1), (9, 1), (11, 2), (6, 4), (10, 4)):
+            d.line([(8, 7), (x, y)], fill=(90, 180, 80, 255))
+        ell(d, (5, 5, 11, 10), (210, 180, 130, 255))
+        d.point([(7, 7), (9, 7)], fill=(24, 20, 37, 255))
+        d.point([(8, 9)], fill=(140, 90, 70, 255))
+    return outline(im)
+save_strip([canteiro(0), canteiro(1), canteiro(2)], "prop.canteiro", "sprites/canteiro.png", {})
+
+# saco de sementes (16x16)
+im = canvas(16, 16)
+d = ImageDraw.Draw(im)
+d.polygon([(4, 6), (12, 6), (14, 15), (2, 15)], fill=(196, 170, 120, 255))
+d.rectangle((5, 3, 11, 6), fill=(170, 140, 96, 255))
+d.point([(6, 10), (9, 12), (11, 9), (5, 13)], fill=(110, 74, 40, 255))
+save_strip([outline(im)], "prop.saco-sementes", "sprites/saco-sementes.png", {})
+
+# Fada Ramalhete [FICÇÃO]: a mesma base da Dona Brasa, de vestido e touca verdes
+base = Image.open(os.path.join(ROOT, "sprites", "dona-brasa.png")).convert("RGBA")
+px = base.load()
+swap = {(240, 240, 236): (130, 196, 100), (240, 140, 60): (120, 80, 40), (92, 60, 146): (70, 120, 50), (58, 38, 98): (44, 84, 34)}
+for y in range(base.height):
+    for x in range(base.width):
+        r, g, b, a = px[x, y]
+        if a and (r, g, b) in swap:
+            px[x, y] = swap[(r, g, b)] + (255,)
+base.save(os.path.join(ROOT, "sprites", "fada-ramalhete.png"))
+sheet_entry("npc.fada-ramalhete", "sprites/fada-ramalhete.png", 16, 24, IDLE_TALK)
+
+# Espelho da Amélia (32x32, na parede): 0 = presa (vidro escuro, correntes), 1 = livre, 2 = brilho
+def espelho(state):
+    im = canvas(32, 32)
+    d = ImageDraw.Draw(im)
+    ell(d, (4, 1, 27, 31), (200, 206, 226, 255))
+    ell(d, (7, 4, 24, 28), (40, 50, 84, 255) if state == 0 else (150, 190, 230, 255) if state == 1 else (220, 240, 255, 255))
+    ell(d, (12, 9, 19, 16), (180, 190, 210, 120) if state == 0 else (240, 240, 250, 200))
+    d.rectangle((12, 15, 19, 25), fill=(200, 210, 230, 110) if state == 0 else (246, 246, 255, 200))
+    if state == 0:
+        d.line([(7, 6), (24, 26)], fill=(110, 110, 120, 255), width=1)
+        d.line([(24, 6), (7, 26)], fill=(110, 110, 120, 255), width=1)
+        d.point([(15, 16)], fill=(170, 110, 220, 255))
+    else:
+        d.point([(10, 8), (11, 7), (21, 22)], fill=(255, 255, 255, 255))
+    return outline(im)
+save_strip([espelho(0), espelho(1), espelho(2)], "npc.espelho", "sprites/espelho.png",
+           {"idle": {"frames": [0], "frameRate": 1, "repeat": -1}, "livre": {"frames": [1, 2], "frameRate": 2, "repeat": -1}})
+
+# Mostradores das constelações (16x24): base na cor da casa + disco com o símbolo (4 casas x 4 símbolos)
+SIMBOLOS = ["chama", "livro", "lua", "coracao"]
+def simbolo(d, name, cx, cy):
+    if name == "chama":
+        d.polygon([(cx, cy - 4), (cx + 3, cy + 2), (cx, cy + 3), (cx - 3, cy + 2)], fill=(236, 126, 48, 255))
+        d.point([(cx, cy), (cx, cy + 1)], fill=(250, 214, 92, 255))
+    elif name == "livro":
+        d.rectangle((cx - 3, cy - 3, cx + 3, cy + 3), fill=(70, 110, 200, 255))
+        d.line([(cx, cy - 3), (cx, cy + 3)], fill=(230, 230, 236, 255))
+    elif name == "lua":
+        ell(d, (cx - 3, cy - 3, cx + 3, cy + 3), (250, 230, 140, 255))
+        ell(d, (cx - 1, cy - 4, cx + 4, cy + 2), (30, 32, 70, 255))
+    else:
+        ell(d, (cx - 3, cy - 3, cx, cy), (220, 60, 80, 255))
+        ell(d, (cx, cy - 3, cx + 3, cy), (220, 60, 80, 255))
+        d.polygon([(cx - 3, cy - 1), (cx + 3, cy - 1), (cx, cy + 3)], fill=(220, 60, 80, 255))
+def dial(house_col, sym):
+    im = canvas(16, 24)
+    d = ImageDraw.Draw(im)
+    d.rectangle((5, 12, 10, 21), fill=(120, 116, 132, 255))
+    d.rectangle((3, 20, 12, 23), fill=house_col + (255,))
+    ell(d, (1, 2, 14, 14), (30, 32, 70, 255))
+    simbolo(d, SIMBOLOS[sym], 8, 8)
+    im = outline(im)
+    ImageDraw.Draw(im).ellipse((1, 2, 14, 14), outline=house_col + (255,))
+    return im
+save_strip([dial(HOUSE_COLORS[h], s) for h in range(4) for s in range(4)], "prop.mostrador", "sprites/mostrador.png", {})
+
+# telescópio (16x32)
+im = canvas(16, 32)
+d = ImageDraw.Draw(im)
+d.line([(3, 20), (13, 4)], fill=(190, 150, 60, 255), width=3)
+d.line([(4, 19), (12, 6)], fill=(230, 196, 100, 255))
+d.line([(8, 14), (4, 31)], fill=(96, 64, 38, 255), width=1)
+d.line([(8, 14), (12, 31)], fill=(96, 64, 38, 255), width=1)
+d.line([(8, 14), (8, 31)], fill=(96, 64, 38, 255), width=1)
+save_strip([outline(im)], "prop.telescopio", "sprites/telescopio.png", {})
+
+# espelho de levitar (16x16) e suporte no chão com a direção marcada (0 = /, 1 = \)
+im = canvas(16, 16)
+d = ImageDraw.Draw(im)
+d.rectangle((7, 11, 8, 15), fill=(150, 104, 60, 255))
+ell(d, (3, 1, 12, 12), (200, 206, 226, 255))
+ell(d, (5, 3, 10, 10), (170, 210, 240, 255))
+d.point([(6, 4)], fill=(255, 255, 255, 255))
+save_strip([outline(im)], "prop.espelho-luz", "sprites/espelho-luz.png", {})
+def suporte(slash):
+    im = canvas(16, 16)
+    d = ImageDraw.Draw(im)
+    d.rectangle((1, 10, 14, 15), fill=(120, 116, 132, 255))
+    d.rectangle((2, 11, 13, 14), fill=(90, 86, 104, 255))
+    pts = [(3, 14), (12, 11)] if slash else [(3, 11), (12, 14)]
+    d.line(pts, fill=(250, 214, 92, 255))
+    return outline(im)
+save_strip([suporte(True), suporte(False)], "prop.suporte-espelho", "sprites/suporte-espelho.png", {})
+
+# cristal (16x24): apagado e aceso; fonte de luz (16x16)
+def cristal(on):
+    im = canvas(16, 24)
+    d = ImageDraw.Draw(im)
+    col = (250, 240, 170, 255) if on else (110, 120, 150, 255)
+    d.polygon([(8, 2), (13, 10), (8, 21), (3, 10)], fill=col)
+    d.line([(8, 4), (8, 19)], fill=(255, 255, 255, 255) if on else (150, 160, 190, 255))
+    d.rectangle((4, 20, 11, 23), fill=(90, 86, 104, 255))
+    return outline(im)
+save_strip([cristal(False), cristal(True)], "prop.cristal", "sprites/cristal.png", {})
+im = canvas(16, 16)
+d = ImageDraw.Draw(im)
+d.rectangle((4, 9, 11, 15), fill=(120, 116, 132, 255))
+ell(d, (3, 2, 12, 10), (250, 214, 92, 255))
+ell(d, (5, 4, 10, 8), (255, 246, 190, 255))
+save_strip([outline(im)], "prop.fonte-luz", "sprites/fonte-luz.png", {})
+
+# porta trancada (32x32): fechada com cadeado / aberta
+def porta(aberta):
+    im = canvas(32, 32)
+    d = ImageDraw.Draw(im)
+    if aberta:
+        d.rectangle((2, 2, 29, 31), fill=(20, 16, 30, 255))
+        d.rectangle((2, 2, 4, 31), fill=(110, 74, 40, 255))
+        d.rectangle((27, 2, 29, 31), fill=(110, 74, 40, 255))
+    else:
+        d.rectangle((2, 2, 29, 31), fill=(120, 80, 46, 255))
+        d.line([(16, 2), (16, 31)], fill=(70, 46, 28, 255))
+        for y in (8, 22):
+            d.rectangle((2, y, 29, y + 1), fill=(90, 86, 104, 255))
+        d.rectangle((13, 13, 19, 19), fill=(150, 150, 160, 255))
+        d.rectangle((15, 15, 17, 17), fill=(24, 20, 37, 255))
+        d.arc((13, 9, 19, 16), 180, 360, fill=(150, 150, 160, 255))
+    return outline(im)
+save_strip([porta(False), porta(True)], "prop.porta-trancada", "sprites/porta-trancada.png", {})
+
+# barreira de fuligem (32x32) que fecha a escada da torre
+def barreira(t):
+    im = canvas(32, 32)
+    px = im.load()
+    for y in range(32):
+        for x in range(32):
+            v = (x * 3 + y * 5 + t * 7) % 11
+            if v < 6:
+                px[x, y] = (70 + v * 8, 50 + v * 4, 110 + v * 10, 200)
+    return im
+save_strip([barreira(0), barreira(1), barreira(2)], "prop.barreira", "sprites/barreira.png",
+           {"idle": {"frames": [0, 1, 2], "frameRate": 6, "repeat": -1}})
+
+# quadros-portal da galeria (32x32): uma cena por virtude; quadro 2*i = normal, 2*i+1 = vencido (moldura acesa)
+def portal(i, done):
+    im = canvas(32, 32)
+    d = ImageDraw.Draw(im)
+    d.rectangle((0, 0, 31, 31), fill=(250, 214, 92, 255) if done else (190, 150, 60, 255))
+    d.rectangle((3, 3, 28, 28), fill=[(20, 14, 26, 255), (24, 30, 60, 255), (30, 26, 44, 255), (50, 40, 70, 255)][i])
+    if i == 0:  # coragem: chama no escuro
+        d.polygon([(16, 8), (21, 20), (16, 24), (11, 20)], fill=(236, 126, 48, 255))
+        d.polygon([(16, 13), (18, 20), (16, 22), (14, 20)], fill=(250, 214, 92, 255))
+    elif i == 1:  # inteligência: raio de luz entre espelhos
+        d.line([(5, 8), (16, 8), (16, 22), (26, 22)], fill=(250, 240, 170, 255), width=1)
+        ell(d, (14, 6, 18, 10), (200, 206, 226, 255)); ell(d, (14, 20, 18, 24), (200, 206, 226, 255))
+    elif i == 2:  # astúcia: olho vigiando
+        ell(d, (8, 11, 23, 20), (236, 232, 240, 255)); ell(d, (13, 12, 18, 19), (170, 110, 220, 255))
+        d.point([(15, 15), (16, 16)], fill=(24, 20, 37, 255))
+    else:  # lealdade: duas mãos e uma corrente partida
+        d.rectangle((7, 14, 13, 18), fill=(244, 200, 160, 255)); d.rectangle((18, 14, 24, 18), fill=(244, 200, 160, 255))
+        d.line([(13, 16), (18, 16)], fill=(150, 150, 160, 255))
+    if done:
+        d.point([(4, 4), (27, 4), (4, 27), (27, 27)], fill=(255, 255, 255, 255))
+    return outline(im)
+save_strip([portal(i, dn) for i in range(4) for dn in (False, True)], "prop.quadro-portal", "sprites/quadro-portal.png", {})
+
+# Arquimedes preso num quadro (32x32): parado, piscando, falando
+arq = Image.open(os.path.join(ROOT, "sprites", "arquimedes.png")).convert("RGBA")
+def quadro_arq(f, blink=False):
+    im = canvas(32, 32)
+    d = ImageDraw.Draw(im)
+    d.rectangle((0, 0, 31, 31), fill=(190, 150, 60, 255))
+    d.rectangle((3, 3, 28, 28), fill=(60, 70, 110, 255))
+    bust = arq.crop((f * 16, 0, f * 16 + 16, 24))
+    im.alpha_composite(bust, (8, 5))
+    if blink:
+        d2 = ImageDraw.Draw(im)
+        d2.line([(13, 15), (14, 15)], fill=(244, 200, 160, 255)); d2.line([(17, 15), (18, 15)], fill=(244, 200, 160, 255))
+    ImageDraw.Draw(im).rectangle((0, 0, 31, 31), outline=(24, 20, 37, 255))
+    ImageDraw.Draw(im).rectangle((2, 2, 29, 29), outline=(138, 100, 24, 255))
+    return im
+save_strip([quadro_arq(0), quadro_arq(0, True), quadro_arq(2), quadro_arq(0)], "npc.quadro-arquimedes", "sprites/quadro-arquimedes.png",
+           {"idle": {"frames": [0, 0, 0, 1], "frameRate": 2, "repeat": -1}, "talk": {"frames": [2, 3], "frameRate": 8, "repeat": -1}})
+
+# Coração do castelo (32x32): apagado / aceso pulsando
+def coracao(level):
+    im = canvas(32, 32)
+    d = ImageDraw.Draw(im)
+    cols = [((100, 96, 120), (130, 126, 150)), ((210, 50, 70), (250, 140, 120)), ((230, 70, 80), (255, 210, 150))][level]
+    ell(d, (4, 4, 17, 17), cols[0] + (255,)); ell(d, (14, 4, 27, 17), cols[0] + (255,))
+    d.polygon([(5, 13), (26, 13), (16, 28)], fill=cols[0] + (255,))
+    ell(d, (8, 7, 13, 12), cols[1] + (255,))
+    if level:
+        d.point([(9, 8), (10, 8)], fill=(255, 255, 255, 255))
+    return outline(im)
+save_strip([coracao(0), coracao(1), coracao(2)], "npc.coracao", "sprites/coracao.png",
+           {"idle": {"frames": [0], "frameRate": 1, "repeat": -1}, "aceso": {"frames": [1, 2], "frameRate": 3, "repeat": -1}})
+
+# livro que voa (16x16, levitável) e atril onde ele se encaixa (16x16)
+def livro(col):
+    im = canvas(16, 16)
+    d = ImageDraw.Draw(im)
+    d.rectangle((3, 6, 12, 14), fill=col + (255,))
+    d.rectangle((3, 6, 4, 14), fill=tuple(max(0, v - 50) for v in col) + (255,))
+    d.rectangle((6, 8, 11, 9), fill=(240, 236, 230, 255))
+    return outline(im)
+save_strip([livro((44, 90, 170))], "prop.livro", "sprites/livro.png", {})
+im = canvas(16, 16)
+d = ImageDraw.Draw(im)
+d.polygon([(2, 9), (13, 9), (11, 12), (4, 12)], fill=(120, 80, 46, 255))
+d.rectangle((7, 12, 8, 15), fill=(96, 64, 38, 255))
+d.rectangle((5, 15, 10, 15), fill=(96, 64, 38, 255))
+save_strip([outline(im)], "prop.atril", "sprites/atril.png", {})
+
+
 # ---------- Mapas Tiled (.tmj), gerados a partir de uma descrição de cada sala
 FLOOR, FLOOR2, CARPET, TOP, FACE, WOOD, WIN, B1, B2, B3, B4 = [i + 1 for i in range(11)]
+WOODF, GRASS, STARS, PAINT = 12, 13, 14, 15  # chãos novos da etapa 5
 COLLIDES = (TOP, FACE, WOOD, WIN, B1, B2, B3, B4)
 
 
 def build_room(name, title, w, h, doors, tables=(), carpet=None, windows=(), banners=(), props=(), spawns=(), npcs=(),
-               candles=(), pickups=(), stations=(), boards=(), extra=()):
-    """doors: (lado N/S/L/O, posição, mapa destino, chegada no destino, nome desta chegada)."""
+               candles=(), pickups=(), stations=(), boards=(), extra=(), floor_tile=None, props_map=None):
+    """doors: (lado N/S/L/O, posição, mapa destino, chegada no destino, nome desta chegada[, propriedades extras])."""
     floor, walls = [], []
     for y in range(h):
         for x in range(w):
-            f = FLOOR2 if (x * 3 + y * 5) % 11 == 0 else FLOOR
+            f = floor_tile or (FLOOR2 if (x * 3 + y * 5) % 11 == 0 else FLOOR)
             if carpet and carpet[0] <= x <= carpet[2] and carpet[1] <= y <= carpet[3]:
                 f = CARPET
             wl = 0
@@ -1021,7 +1394,9 @@ def build_room(name, title, w, h, doors, tables=(), carpet=None, windows=(), ban
         oid += 1
         objects.append(kw)
 
-    for side, pos, target, target_spawn, arrive in doors:
+    for door in doors:
+        side, pos, target, target_spawn, arrive = door[:5]
+        more = plist(**door[5]) if len(door) > 5 else []
         # abertura de 2 tiles na parede; a zona da porta fica na borda externa
         if side in "NS":
             ys = (0, 1, 2) if side == "N" else (h - 1,)
@@ -1031,7 +1406,7 @@ def build_room(name, title, w, h, doors, tables=(), carpet=None, windows=(), ban
             zy = 0 if side == "N" else h - 1
             obj(name=f"porta-{arrive}", type="door", x=pos * 16, y=zy * 16, width=32, height=16,
                 properties=[{"name": "target", "type": "string", "value": target},
-                            {"name": "spawn", "type": "string", "value": target_spawn}])
+                            {"name": "spawn", "type": "string", "value": target_spawn}] + more)
             sy = 4 if side == "N" else h - 2
             obj(name=arrive, type="spawn", x=(pos + 1) * 16, y=sy * 16, point=True,
                 properties=[{"name": "facing", "type": "string", "value": "down" if side == "N" else "up"}])
@@ -1041,7 +1416,7 @@ def build_room(name, title, w, h, doors, tables=(), carpet=None, windows=(), ban
                 walls[yy * w + xx] = 0
             obj(name=f"porta-{arrive}", type="door", x=xx * 16, y=pos * 16, width=16, height=32,
                 properties=[{"name": "target", "type": "string", "value": target},
-                            {"name": "spawn", "type": "string", "value": target_spawn}])
+                            {"name": "spawn", "type": "string", "value": target_spawn}] + more)
             sx = w - 3 if side == "L" else 2
             obj(name=arrive, type="spawn", x=sx * 16 + 8, y=(pos + 1) * 16 + 8, point=True,
                 properties=[{"name": "facing", "type": "string", "value": "side"}])
@@ -1082,7 +1457,7 @@ def build_room(name, title, w, h, doors, tables=(), carpet=None, windows=(), ban
         "type": "map", "version": "1.10", "tiledversion": "1.10.2", "orientation": "orthogonal",
         "renderorder": "right-down", "width": w, "height": h, "tilewidth": 16, "tileheight": 16,
         "infinite": False, "nextlayerid": 4, "nextobjectid": oid,
-        "properties": [{"name": "nome", "type": "string", "value": title}],
+        "properties": [{"name": "nome", "type": "string", "value": title}] + plist(**(props_map or {})),
         "layers": [
             {"id": 1, "name": "chao", "type": "tilelayer", "width": w, "height": h, "x": 0, "y": 0, "opacity": 1, "visible": True, "data": floor},
             {"id": 2, "name": "paredes", "type": "tilelayer", "width": w, "height": h, "x": 0, "y": 0, "opacity": 1, "visible": True, "data": walls},
@@ -1192,7 +1567,7 @@ build_room("gabinete", "Gabinete do Diretor", 16, 11,
                   ("prop.vela", 6, 4), ("prop.vela", 10, 4), ("prop.vaso", 13, 8)],
            pickups=[("folha-gabinete", "folha-mandragora", 13, 8)],
            extra=[pt("npc", "arquimedes", 8, 3, sprite="npc.arquimedes", dialogue="arquimedes", wall=False,
-                     when=QS("o-diretor", "falar-com-diretor"))])
+                     when={"any": [QS("o-diretor", "falar-com-diretor"), FL("jogo:fim")]})])
 
 # Hall da Escada: escada selada, 4 pedestais, sombrinhas guardando a Pedra da Coragem; leste = Corredor
 build_room("hall", "Hall da Escada", 22, 14,
@@ -1201,7 +1576,9 @@ build_room("hall", "Hall da Escada", 22, 14,
            props=[("prop.vela", 2, 3), ("prop.vela", 19, 3)],
            extra=[pt("prop", "escadaria", 10, 3, x=11 * 16, sprite="prop.escadaria"),
                   pt("npc", "selo", 10, 3, x=11 * 16, sprite="prop.selo", dialogue="escada", wall=False, when=NOT(FL("ato:1:fim"))),
-                  pt("npc", "selo-quebrado", 10, 3, x=11 * 16, sprite="prop.selo-quebrado", dialogue="escada", wall=False, when=FL("ato:1:fim")),
+                  # escada liberada no fim do Ato 1: sobe para a Biblioteca
+                  zone("door", "porta-biblioteca", 10, 3, 2, 1, target="map.biblioteca", spawn="do-hall", when=FL("ato:1:fim")),
+                  pt("spawn", "da-biblioteca", 10, 4, x=11 * 16, facing="down"),
                   *[pt("socket", f"pedestal-{h}", cx, cy, accepts=f"pedra-{h}", mode="item", group="selo", sprite="prop.pedestal",
                        frame=i, dialogue="selo-quebrado")
                     for i, (h, cx, cy) in enumerate([("coragem", 6, 6), ("inteligencia", 15, 6), ("astucia", 6, 10), ("lealdade", 15, 10)])],
@@ -1211,6 +1588,177 @@ build_room("hall", "Hall da Escada", 22, 14,
                   pt("pickup", "pedra-coragem", 19, 11, y=11 * 16 + 12, item="pedra-coragem", when=QA("o-selo")),
                   zone("trigger", "morgana-hall", 13, 3, 8, 10, dialogue="hall-morgana", actor="npc.morgana", ax=136, ay=80,
                        when=ALL(QS("o-diretor", "ir-ao-hall"), NOT(FL("visto:morgana-hall"))))])
+
+# ======================= Etapa 5: Ato 2 (Ala das Oficinas) e Ato 3 (a Torre) [FICÇÃO]
+ANY = lambda *c: {"any": list(c)}
+LIVRE = FL("amelia:livre")
+CAPTURADA = FL("amelia:capturada")
+RESGATADA = FL("amelia:resgatada")
+CONVENCIDA = FL("morgana:convencida")
+FIM = FL("jogo:fim")
+EMBLEMAS = ALL(*[{"hasItem": f"emblema-{v}"} for v in ("coragem", "inteligencia", "astucia", "lealdade")])
+
+# Biblioteca: o centro do Ato 2. Sul = Hall, leste = Aula, oeste = Estufa, norte = Observatório e Galeria (trancada)
+build_room("biblioteca", "Biblioteca", 28, 16,
+           doors=[("S", 13, "map.hall", "da-biblioteca", "do-hall"),
+                  ("L", 7, "map.sala-espectral", "da-biblioteca", "da-aula"),
+                  ("O", 7, "map.estufa", "da-biblioteca", "da-estufa"),
+                  ("N", 5, "map.observatorio", "da-biblioteca", "do-observatorio"),
+                  ("N", 20, "map.galeria", "da-biblioteca", "da-galeria",
+                   dict(when=FL("trancado:map.biblioteca:porta-galeria")))],
+           floor_tile=WOODF, carpet=(13, 4, 14, 14), windows=(10, 17),
+           tables=[(3, 4, 1, 3), (8, 4, 1, 3), (19, 9, 1, 3), (24, 9, 1, 3)],
+           props=[("prop.estante", 2, 2), ("prop.estante", 3, 2), ("prop.estante", 8, 2), ("prop.estante", 12, 2),
+                  ("prop.estante", 15, 2), ("prop.estante", 24, 2), ("prop.estante", 25, 2),
+                  ("prop.vela", 11, 4), ("prop.vela", 16, 4)],
+           npcs=[("aristoteles", "npc.aristoteles", 11, 7, "aristoteles", False)],
+           extra=[pt("npc", "espelho", 16, 1, x=17 * 16, sprite="npc.espelho", dialogue="espelho", wall=True),
+                  pt("npc", "amelia", 17, 5, sprite="npc.amelia", dialogue="amelia", wall=False,
+                     when=ANY(ALL(LIVRE, NOT(CAPTURADA)), FIM)),
+                  pt("lock", "porta-galeria", 20, 2, x=21 * 16, sprite="prop.porta-trancada",
+                     locked="Trancada por magia. A fechadura brilha cinza, como fuligem."),
+                  *[pt("levitavel", f"livro-{i + 1}", lx, ly, kind="livro", sprite="prop.livro")
+                    for i, (lx, ly) in enumerate([(26, 13), (5, 13), (22, 4)])],
+                  *[pt("socket", f"atril-{i + 1}", 2, 9 + i * 2, accepts="livro", mode="levitar", group="livros", sprite="prop.atril")
+                    for i in range(3)],
+                  pt("pickup", "carta-1", 26, 5, y=5 * 16 + 12, item="carta-amelia-1", oculto=True, dialogue="carta-1",
+                     when=QA("cartas-de-amelia")),
+                  zone("trigger", "chegada-biblioteca", 11, 11, 6, 4, dialogue="biblioteca-chegada",
+                       when=NOT(FL("visto:biblioteca")))])
+
+# Sala de Criaturas Espectrais: a aula do Prof. Aristóteles, em três levas de espectros invisíveis
+# vida pensada para o poder 2 do fim do Ato 1: dois acertos por espectro, quatro no grandão
+ondas = [("leva-1", [(6, 6, 4), (15, 6, 4)]),
+         ("leva-2", [(4, 10, 4), (11, 5, 4), (17, 10, 4)]),
+         ("leva-3", [(5, 5, 4), (16, 5, 4), (11, 10, 8)])]
+build_room("sala-espectral", "Aula de Criaturas Espectrais", 22, 14,
+           doors=[("O", 6, "map.biblioteca", "da-aula", "da-biblioteca")],
+           floor_tile=WOODF, carpet=(4, 4, 17, 11), windows=(5, 16),
+           boards=[("quadro-aula", "aula-espectral", 10, 3)],
+           candles=[("vela-e1", 3, 3, True), ("vela-e2", 18, 3, True)],
+           extra=[*[pt("creature", f"{g}-{i + 1}", cx, cy, sprite="npc.espectro", group=g, hp=hp, oculto=True, challenge="aula-espectral")
+                    for g, lst in ondas for i, (cx, cy, hp) in enumerate(lst)],
+                  pt("pickup", "carta-3", 19, 11, y=11 * 16 + 12, item="carta-amelia-3", oculto=True, dialogue="carta-3",
+                     when=FL("aula:vencida"))])
+
+# Estufa: canteiros de mandrágora, a Fada Ramalhete e uma visita rápida da Morgana
+build_room("estufa", "Estufa", 22, 14,
+           doors=[("L", 6, "map.biblioteca", "da-estufa", "da-biblioteca")],
+           floor_tile=GRASS, windows=(3, 7, 11, 15),
+           stations=[("saco-sementes", "despensa", "prop.saco-sementes", 17, 4, "semente-mandragora")],
+           npcs=[("fada-ramalhete", "npc.fada-ramalhete", 8, 5, "fada-ramalhete", False)],
+           props=[("prop.vaso", 2, 4), ("prop.vaso", 19, 11), ("prop.vaso", 2, 11)],
+           extra=[*[pt("canteiro", f"canteiro-{i + 1}", cx, 9) for i, cx in enumerate((5, 9, 13))],
+                  pt("pickup", "carta-2", 3, 12, y=12 * 16 + 12, item="carta-amelia-2", oculto=True, dialogue="carta-2",
+                     when=QA("cartas-de-amelia")),
+                  *[pt("creature", f"sombra-{i + 1}", cx, cy, sprite="npc.sombrinha", group="sombras", hp=2,
+                       when=FL("visto:morgana-estufa")) for i, (cx, cy) in enumerate([(6, 11), (12, 12), (16, 8)])],
+                  zone("trigger", "morgana-estufa", 3, 8, 14, 5, dialogue="estufa-morgana", actor="npc.morgana", ax=17 * 16, ay=11 * 16,
+                       when=ALL(QA("cartas-de-amelia"), FL("aula:vencida"), NOT(FL("visto:morgana-estufa"))))])
+
+# Observatório: quatro mostradores de constelação (um por virtude) e o telescópio
+dials = [(4, 8, 0, 2), (7, 10, 1, 3), (12, 10, 2, 0), (15, 8, 3, 1)]  # tx, ty, casa (= resposta), símbolo inicial
+build_room("observatorio", "Observatório", 20, 14,
+           doors=[("S", 9, "map.biblioteca", "do-observatorio", "da-biblioteca")],
+           floor_tile=STARS, windows=(4, 8, 11, 15),
+           extra=[pt("npc", "telescopio", 9, 5, sprite="prop.telescopio", dialogue="telescopio", wall=False),
+                  *[pt("dial", f"mostrador-{i + 1}", dx, dy, group="estrelas", house=hz, answer=hz, start=st,
+                       activeWhen=LIVRE, inactive="O ponteiro está preso numa crosta de fuligem. Não gira.")
+                    for i, (dx, dy, hz, st) in enumerate(dials)],
+                  pt("pickup", "carta-4", 17, 4, y=4 * 16 + 12, item="carta-amelia-4", oculto=True, dialogue="carta-4", when=LIVRE),
+                  zone("trigger", "morgana-observatorio", 7, 9, 6, 3, dialogue="observatorio-morgana", actor="npc.morgana", ax=10 * 16, ay=12 * 16,
+                       when=ALL(QS("cartas-de-amelia", "abrir-galeria"), NOT(FL("visto:morgana-observatorio"))))])
+
+# Galeria dos Quadros: quatro quadros-portais (as virtudes), o retrato do Arquimedes e a barreira do Coração
+PORTAIS = [("coragem", 4, "pego:map.quadro-coragem:emblema"), ("inteligencia", 9, "pego:map.quadro-inteligencia:emblema"),
+           ("astucia", 21, "pego:map.quadro-astucia:emblema"), ("lealdade", 26, "amelia:resgatada")]
+build_room("galeria", "Galeria dos Quadros", 32, 14,
+           doors=[("S", 15, "map.biblioteca", "da-galeria", "da-biblioteca"),
+                  ("L", 7, "map.coracao", "da-galeria", "do-coracao",
+                   dict(when=EMBLEMAS, locked="A barreira empurra você de volta. Faltam emblemas."))],
+           floor_tile=PAINT, carpet=(3, 5, 28, 6),
+           candles=[("vela-g1", 2, 3, True), ("vela-g2", 29, 3, True)],
+           npcs=[("quadro-arquimedes", "npc.quadro-arquimedes", 15, 1, "quadro-arquimedes", True)],
+           extra=[*[pt("painting", f"quadro-{v}", px, 2, x=px * 16 + 16, index=i, doneFlag=done) for i, (v, px, done) in enumerate(PORTAIS)],
+                  *[zone("door", f"porta-quadro-{v}", px, 3, 2, 1, target=f"map.quadro-{v}", spawn="da-galeria", when=CAPTURADA,
+                         locked="Só tinta e moldura... por enquanto.") for v, px, _ in PORTAIS],
+                  *[pt("spawn", f"do-quadro-{v}", px, 5, x=px * 16 + 16, facing="down") for v, px, _ in PORTAIS],
+                  pt("npc", "barreira", 29, 8, x=30 * 16, sprite="prop.barreira", dialogue="barreira", wall=True, when=NOT(EMBLEMAS)),
+                  pt("npc", "amelia", 16, 9, sprite="npc.amelia", dialogue="amelia", wall=False,
+                     when=ANY(ALL(LIVRE, NOT(CAPTURADA)), ALL(RESGATADA, NOT(FIM)))),
+                  zone("trigger", "captura-amelia", 12, 7, 8, 5, dialogue="galeria-morgana", actor="npc.morgana", ax=20 * 16, ay=9 * 16,
+                       when=ALL(LIVRE, NOT(CAPTURADA)))])
+
+# Quadro da Coragem: sala escura cheia de sombrinhas; acenda as velas para enxergar
+build_room("quadro-coragem", "Quadro da Coragem", 24, 14,
+           doors=[("S", 11, "map.galeria", "do-quadro-coragem", "da-galeria")],
+           floor_tile=PAINT, props_map=dict(escuro=True),
+           tables=[(5, 5, 2, 2), (17, 5, 2, 2), (5, 9, 2, 2), (17, 9, 2, 2)],
+           candles=[("vela-q1", 3, 4, False), ("vela-q2", 20, 4, False), ("vela-q3", 3, 11, False), ("vela-q4", 20, 11, False),
+                    ("vela-q5", 11, 7, False)],
+           extra=[*[pt("creature", f"sombra-{i + 1}", cx, cy, sprite="npc.sombrinha", group="sombras", hp=2)
+                    for i, (cx, cy) in enumerate([(8, 4), (15, 4), (9, 10), (14, 11)])],
+                  pt("pickup", "emblema", 12, 3, y=3 * 16 + 12, item="emblema-coragem", dialogue="emblema-coragem"),
+                  zone("trigger", "intro-coragem", 9, 10, 6, 3, dialogue="quadro-coragem", when=NOT(FL("visto:quadro-coragem")))])
+
+# Quadro da Inteligência: o raio de luz precisa chegar ao cristal com três espelhos
+build_room("quadro-inteligencia", "Quadro da Inteligência", 18, 12,
+           doors=[("S", 8, "map.galeria", "do-quadro-inteligencia", "da-galeria")],
+           floor_tile=PAINT, tables=[(9, 3, 1, 1)],
+           extra=[pt("beam-source", "fonte", 2, 3, dx=1, dy=0),
+                  pt("beam-target", "cristal", 12, 4),
+                  *[pt("socket", f"suporte-{n}", sx, sy, accepts="espelho", mode="levitar", group="espelhos", turn=tr, sprite="prop.suporte-espelho")
+                    for n, sx, sy, tr in [("a", 5, 3, "\\"), ("b", 5, 8, "\\"), ("c", 12, 8, "/"), ("d", 9, 6, "/"), ("e", 15, 5, "\\")]],
+                  *[pt("levitavel", f"espelho-{i + 1}", ex, ey, kind="espelho", sprite="prop.espelho-luz")
+                    for i, (ex, ey) in enumerate([(2, 9), (14, 9), (16, 7)])],
+                  pt("pickup", "emblema", 15, 3, y=3 * 16 + 12, item="emblema-inteligencia", dialogue="emblema-inteligencia",
+                     when=FL("luz:map.quadro-inteligencia:cristal")),
+                  zone("trigger", "intro-inteligencia", 6, 8, 6, 3, dialogue="quadro-inteligencia", when=NOT(FL("visto:quadro-inteligencia")))])
+
+# Quadro da Astúcia: passar pelos olhos-sentinela sem ser visto
+build_room("quadro-astucia", "Quadro da Astúcia", 30, 14,
+           doors=[("S", 2, "map.galeria", "do-quadro-astucia", "da-galeria")],
+           floor_tile=PAINT,
+           tables=[(10, 3, 1, 5), (10, 10, 1, 3), (19, 3, 1, 3), (19, 8, 1, 5)],
+           spawns=[("cp-1", 12, 11), ("cp-2", 21, 11)],
+           extra=[pt("sentinel", "olho-1", 6, 3, sprite="npc.olho", axis="y", range=8, speed=26),
+                  pt("sentinel", "olho-2", 13, 7, sprite="npc.olho", axis="x", range=5, speed=24),
+                  pt("sentinel", "olho-3", 23, 3, sprite="npc.olho", axis="y", range=8, speed=30),
+                  pt("sentinel", "olho-4", 25, 9, sprite="npc.olho", axis="x", range=3, speed=22),
+                  zone("checkpoint", "cp-1", 11, 9, 3, 4, spawn="cp-1"),
+                  zone("checkpoint", "cp-2", 20, 9, 3, 4, spawn="cp-2"),
+                  pt("pickup", "emblema", 28, 4, y=4 * 16 + 12, item="emblema-astucia", dialogue="emblema-astucia"),
+                  zone("trigger", "intro-astucia", 1, 9, 4, 4, dialogue="quadro-astucia", when=NOT(FL("visto:quadro-astucia")))])
+
+# Quadro da Lealdade: a Amélia acorrentada por três âncoras de fuligem
+build_room("quadro-lealdade", "Quadro da Lealdade", 22, 14,
+           doors=[("S", 10, "map.galeria", "do-quadro-lealdade", "da-galeria")],
+           floor_tile=PAINT, carpet=(9, 4, 12, 7),
+           extra=[pt("npc", "amelia", 10, 4, x=11 * 16, sprite="npc.amelia", dialogue="amelia-presa", wall=False, when=NOT(RESGATADA)),
+                  *[pt("creature", f"ancora-{i + 1}", ax_, ay_, sprite="npc.ancora", group="correntes", hp=3, parado=True)
+                    for i, (ax_, ay_) in enumerate([(7, 5), (15, 5), (11, 8)])],
+                  *[pt("creature", f"sombra-{i + 1}", cx, cy, sprite="npc.sombrinha", group="sombras", hp=2)
+                    for i, (cx, cy) in enumerate([(4, 9), (18, 9), (11, 11)])],
+                  zone("trigger", "intro-lealdade", 8, 10, 6, 3, dialogue="quadro-lealdade", when=NOT(FL("visto:quadro-lealdade")))])
+
+# Coração do Castelo: o duelo com a Morgana e o final
+build_room("coracao", "Coração do Castelo", 24, 16,
+           doors=[("O", 7, "map.galeria", "do-coracao", "da-galeria")],
+           floor_tile=STARS, carpet=(10, 4, 13, 13),
+           candles=[("vela-h1", 3, 3, True), ("vela-h2", 20, 3, True), ("vela-h3", 3, 13, True), ("vela-h4", 20, 13, True)],
+           extra=[pt("npc", "coracao", 11, 3, x=12 * 16, sprite="npc.coracao", dialogue="coracao", wall=False, wide=True),
+                  pt("boss", "morgana", 12, 8, x=12 * 16, sprite="npc.morgana", when=NOT(CONVENCIDA)),
+                  *[pt("boss-spot", f"ponto-{i + 1}", bx, by) for i, (bx, by) in enumerate([(6, 6), (18, 6), (6, 11), (18, 11)])],
+                  zone("trigger", "duelo", 2, 5, 3, 6, dialogue="morgana-duelo", when=NOT(FL("visto:morgana-duelo"))),
+                  pt("npc", "morgana-npc", 15, 7, sprite="npc.morgana", dialogue="morgana-final", wall=False, when=CONVENCIDA),
+                  pt("npc", "amelia", 8, 7, sprite="npc.amelia", dialogue="amelia", wall=False, when=ALL(RESGATADA, CONVENCIDA)),
+                  pt("npc", "aristoteles", 8, 10, sprite="npc.aristoteles", dialogue="aristoteles", wall=False, when=CONVENCIDA),
+                  pt("npc", "arquimedes", 15, 10, sprite="npc.arquimedes", dialogue="arquimedes", wall=False, when=FIM)])
+
+for key in ("biblioteca", "sala-espectral", "estufa", "observatorio", "galeria",
+            "quadro-coragem", "quadro-inteligencia", "quadro-astucia", "quadro-lealdade", "coracao"):
+    MANIFEST["maps"][f"map.{key}"] = {"url": f"maps/{key}.tmj", "tilesets": ["tiles.castelo"]}
+
 
 for key in ("corredor", "gabinete", "hall"):
     MANIFEST["maps"][f"map.{key}"] = {"url": f"maps/{key}.tmj", "tilesets": ["tiles.castelo"]}

@@ -125,8 +125,13 @@ describe('desafio Velas do Grande Salão', () => {
     for (const [id, c] of Object.entries(db.challenges)) {
       const map = JSON.parse(readFileSync(`public/assets/${manifest.maps[c.map].url}`, 'utf8'));
       const objs = map.layers.find((l: { name: string }) => l.name === 'objetos').objects as { name: string; type: string; properties: unknown }[];
-      const kind = c.kind === 'levitar' ? 'socket' : 'target';
-      for (const t of c.targets) expect(objs.some((o) => o.name === t && o.type === kind), `${id}: ${t}`).toBe(true);
+      for (const t of c.targets) {
+        // espectral: o alvo é um grupo de criaturas (uma leva)
+        const found = c.kind === 'espectral'
+          ? objs.some((o) => o.type === 'creature' && prop(o.properties, 'group') === t && prop(o.properties, 'challenge') === id)
+          : objs.some((o) => o.name === t && o.type === (c.kind === 'levitar' ? 'socket' : 'target'));
+        expect(found, `${id}: ${t}`).toBe(true);
+      }
       expect(objs.some((o) => o.type === 'challenge' && prop(o.properties, 'challenge') === id), `${id}: quadro`).toBe(true);
     }
     for (const sp of Object.values(db.spells)) expect(manifest.spritesheets[sp.fx], sp.fx).toBeDefined();

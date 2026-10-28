@@ -1,0 +1,52 @@
+{
+  "id": "amelia-presa",
+  "speaker": "Profa. Amélia",
+  "entries": [
+    {
+      "when": {
+        "flag": "criaturas:map.quadro-lealdade:correntes"
+      },
+      "start": "solta"
+    },
+    {
+      "start": "presa"
+    }
+  ],
+  "nodes": {
+    "presa": {
+      "text": "Aprendiz! As correntes vêm daquelas três âncoras. Lumen nelas, várias vezes!",
+      "speaker": "Profa. Amélia",
+      "next": "presa-2"
+    },
+    "presa-2": {
+      "text": "E cuidado com as sombrinhas. Um Escudo agora ia bem.",
+      "speaker": "Profa. Amélia"
+    },
+    "solta": {
+      "text": "A última corrente se desfaz em poeira. A Amélia flutua livre de novo.",
+      "speaker": "✦",
+      "next": "solta-2"
+    },
+    "solta-2": {
+      "text": "Você voltou por mim. Isso é lealdade de verdade.",
+      "speaker": "Profa. Amélia",
+      "next": "solta-3"
+    },
+    "solta-3": {
+      "text": "Tome: o Emblema da Lealdade. Estava preso comigo. A gente se vê na Galeria!",
+      "speaker": "Profa. Amélia",
+      "effects": [
+        {
+          "setFlag": "amelia:resgatada",
+          "value": true
+        },
+        {
+          "giveItem": "emblema-lealdade"
+        },
+        {
+          "giveXp": 30
+        }
+      ]
+    }
+  }
+}

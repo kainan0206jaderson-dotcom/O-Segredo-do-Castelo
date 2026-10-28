@@ -8,7 +8,9 @@ import { GrimoireScene } from './scenes/GrimoireScene';
 import { CauldronScene } from './scenes/CauldronScene';
 import { TutorialScene } from './scenes/TutorialScene';
 import { ActCardScene } from './scenes/ActCardScene';
+import { EndingScene } from './scenes/EndingScene';
 import { setupMobileScreen } from './ui/mobile';
+import { session } from './core/session';
 
 const game = new Phaser.Game({
   type: Phaser.AUTO,
@@ -21,10 +23,10 @@ const game = new Phaser.Game({
   physics: { default: 'arcade', arcade: { debug: false } },
   scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
   input: { activePointers: 2 },
-  scene: [BootScene, PreloadScene, TitleScene, WorldScene, GrimoireScene, CauldronScene, TutorialScene, ActCardScene],
+  scene: [BootScene, PreloadScene, TitleScene, WorldScene, GrimoireScene, CauldronScene, TutorialScene, ActCardScene, EndingScene],
 });
 
 setupMobileScreen();
 
 // atalho de depuração no console do navegador
-(window as unknown as { game: Phaser.Game }).game = game;
+Object.assign(window as unknown as object, { game, session });

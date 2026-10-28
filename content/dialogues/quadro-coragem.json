@@ -1,0 +1,27 @@
+{
+  "id": "quadro-coragem",
+  "speaker": "✦",
+  "entries": [
+    {
+      "start": "a"
+    }
+  ],
+  "nodes": {
+    "a": {
+      "text": "Tudo escuro dentro do quadro. Só dá para ouvir sombrinhas rindo baixinho.",
+      "next": "a-2"
+    },
+    "a-2": {
+      "text": "Velas apagadas pelo caminho... Lumen nelas, e o escuro vai perder a graça.",
+      "effects": [
+        {
+          "setFlag": "visto:quadro-coragem",
+          "value": true
+        },
+        {
+          "tutorial": "escuro"
+        }
+      ]
+    }
+  }
+}

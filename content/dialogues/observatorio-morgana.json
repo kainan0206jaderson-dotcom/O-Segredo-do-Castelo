@@ -1,0 +1,31 @@
+{
+  "id": "observatorio-morgana",
+  "speaker": "Morgana Cinzel",
+  "entries": [
+    {
+      "start": "a"
+    }
+  ],
+  "nodes": {
+    "a": {
+      "text": "Brincando de astrônomo? A Galeria está trancada por um bom motivo, aprendiz.",
+      "speaker": "Morgana Cinzel",
+      "next": "a-2"
+    },
+    "a-2": {
+      "text": "Lá dentro tem uma coleção linda de quadros. E eu adoro aumentar a minha coleção.",
+      "speaker": "Morgana Cinzel",
+      "next": "a-3"
+    },
+    "a-3": {
+      "text": "Ela some. Só fica um cheirinho de vela apagada.",
+      "speaker": "✦",
+      "effects": [
+        {
+          "setFlag": "visto:morgana-observatorio",
+          "value": true
+        }
+      ]
+    }
+  }
+}

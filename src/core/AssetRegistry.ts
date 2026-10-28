@@ -17,6 +17,8 @@ export interface SpritesheetDef {
   animations: Record<string, AnimationDef>;
   /** Quadros com nome, para folhas de ícones ("abobora" -> 0). */
   frameNames?: Record<string, number>;
+  /** Personagem fantasma: o jogo faz flutuar e piscar de leve. */
+  ghost?: boolean;
 }
 
 export interface TilesetDef {
@@ -105,6 +107,10 @@ export class AssetRegistry {
   /** Número do quadro de um nome numa folha de ícones; undefined se não existir. */
   frameOf(sheet: string, name: string): number | undefined {
     return this.manifest.spritesheets[sheet]?.frameNames?.[name];
+  }
+
+  isGhost(sheet: string): boolean {
+    return Boolean(this.manifest.spritesheets[sheet]?.ghost);
   }
 
   tileset(key: string): TilesetDef {

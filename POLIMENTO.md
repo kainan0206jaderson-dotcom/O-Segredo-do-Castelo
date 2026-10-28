@@ -16,7 +16,7 @@ Detalhes notados durante o desenvolvimento, para a fase de ajuste final.
 - Escolhas no diálogo: moldura própria em vez de texto com fundo.
 - Caldeirão: animação de borbulhar ao mexer, ingredientes caindo na panela e som de "puf" ao errar.
 - Grimório: páginas com textura de papel e ícones maiores; virar página entre abas.
-- Velas: luz real ao redor (escurecer a sala e iluminar com Lumen), não só o brilho rápido.
+- Velas: luz real ao redor nas salas comuns também (hoje só o Quadro da Coragem escurece).
 - Desafio: cronômetro com moldura própria, aviso de "faltam 10s" e placar de recorde no quadro.
 - Fogos Bruxos: mais cores e faíscas que caem devagar.
 - Dona Brasa: asas batendo e farinha voando quando ela fala.
@@ -32,3 +32,14 @@ Detalhes notados durante o desenvolvimento, para a fase de ajuste final.
 - Corações e energia no HUD: animação ao ganhar nível (encher um por um).
 - Tutoriais: pequena animação mostrando o gesto (seta ou dedo) em vez de só o ícone.
 - Amélia: fantasma com flutuação suave, brilho pulsando e rastro de névoa ao andar; Aristóteles: fumaça branca e pergaminho ao apresentar a aula de Criaturas Espectrais.
+- Etapa 5 (Atos 2 e 3), arte e sensação:
+  - Salas novas usam chãos simples (madeira, grama, estrelas, tinta): detalhar com tapetes, mesas de leitura, vasos e estrelas piscando.
+  - Espectros: rastro de névoa e um "uuuh" baixinho; brilho roxo mais forte quando revelados.
+  - Olhos-sentinela: piscar antes de virar e som de alerta ao ver o aprendiz.
+  - Raio de luz: partículas no feixe e cristal acendendo com explosão de brilho.
+  - Escudo: bolha com reflexo e som de "plim" ao rebater orbes.
+  - Morgana no duelo: poses próprias (atirar, cansada, sumindo) e música de chefe.
+  - Coração do Castelo: batida com tremor de tela e luz correndo pelas paredes no final.
+  - Cerimônia final: personagens com animação de comemoração e confete; créditos com música.
+  - Quadros-portais: entrada com efeito de "mergulhar na tinta".
+  - Cone de visão dos olhos atravessa paredes no desenho (a visão em si não muda); cortar o facho na parede.

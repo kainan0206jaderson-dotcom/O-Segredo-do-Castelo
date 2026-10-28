@@ -1,0 +1,81 @@
+{
+  "id": "morgana-argumentos",
+  "speaker": "Morgana Cinzel",
+  "entries": [
+    {
+      "start": "a"
+    }
+  ],
+  "nodes": {
+    "a": {
+      "speaker": "Morgana Cinzel",
+      "text": "Chega! Mesmo que você me vença, o castelo continua sem lugar para mim. Por que eu pararia?",
+      "choices": [
+        {
+          "text": "Porque o castelo precisa das 4 virtudes. As suas também.",
+          "next": "b"
+        },
+        {
+          "text": "Porque eu venci. Desiste!",
+          "next": "a-erro"
+        }
+      ]
+    },
+    "a-erro": {
+      "speaker": "Morgana Cinzel",
+      "text": "Vencer não é convencer, aprendiz. Tente de novo.",
+      "next": "a"
+    },
+    "b": {
+      "speaker": "Morgana Cinzel",
+      "text": "Minhas virtudes? Ninguém nunca reparou nelas. Nem o Arquimedes.",
+      "choices": [
+        {
+          "text": "Mostrar as cartas do Arquimedes.",
+          "next": "c"
+        },
+        {
+          "text": "Ele estava ocupado, sabe como é.",
+          "next": "b-erro"
+        }
+      ]
+    },
+    "b-erro": {
+      "speaker": "Morgana Cinzel",
+      "text": "Ocupado demais por anos? Que consolo.",
+      "next": "b"
+    },
+    "c": {
+      "text": "Você entrega as cartas brancas. A Morgana lê em silêncio. A fuligem em volta dela começa a clarear.",
+      "speaker": "✦",
+      "next": "c-2"
+    },
+    "c-2": {
+      "text": "\"Ninguém foi esquecido. Volte quando quiser.\"... Ele escreveu isso? Para mim?",
+      "speaker": "Morgana Cinzel",
+      "next": "c-3"
+    },
+    "c-3": {
+      "text": "...Tá. Tá bom. Talvez eu tenha exagerado um pouquinho. Só um pouquinho.",
+      "speaker": "Morgana Cinzel",
+      "next": "c-4"
+    },
+    "c-4": {
+      "text": "Vá. Toque o Coração do Castelo. Eu... ajudo a acender.",
+      "speaker": "Morgana Cinzel",
+      "effects": [
+        {
+          "setFlag": "morgana:convencida",
+          "value": true
+        },
+        {
+          "setFlag": "boss:fase",
+          "value": "fim"
+        },
+        {
+          "giveXp": 60
+        }
+      ]
+    }
+  }
+}

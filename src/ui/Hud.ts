@@ -1,5 +1,5 @@
 import Phaser from 'phaser';
-import { GAME_WIDTH } from '../config/game';
+import { GAME_HEIGHT, GAME_WIDTH } from '../config/game';
 import { assets } from '../core/registry';
 import { COLORS, TEXT_RES, textStyle } from './theme';
 
@@ -14,6 +14,9 @@ export class Hud {
   private spellIcon: Phaser.GameObjects.Image;
   private spellName: Phaser.GameObjects.Text;
   private timer: Phaser.GameObjects.Text;
+  private bossName: Phaser.GameObjects.Text;
+  private bossBar: Phaser.GameObjects.Rectangle;
+  private bossBarBg: Phaser.GameObjects.Rectangle;
   private vitals: Phaser.GameObjects.GameObject[] = [];
   private vitalsKey = '';
   private queue: string[] = [];
@@ -46,6 +49,22 @@ export class Hud {
 
     this.timer = scene.add.text(GAME_WIDTH / 2, 40, '', textStyle(12, COLORS.gold, { stroke: '#18142a', strokeThickness: 4, fontStyle: 'bold' }))
       .setOrigin(0.5).setScrollFactor(0).setDepth(1500).setResolution(TEXT_RES).setVisible(false);
+
+    // barra de vida do duelo final, embaixo no centro
+    this.bossBarBg = scene.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT - 14, 162, 8, 0x18142a, 0.85).setStrokeStyle(1, COLORS.panelBorder)
+      .setScrollFactor(0).setDepth(1500).setVisible(false);
+    this.bossBar = scene.add.rectangle(GAME_WIDTH / 2 - 80, GAME_HEIGHT - 14, 160, 6, 0xaa6edc).setOrigin(0, 0.5)
+      .setScrollFactor(0).setDepth(1501).setVisible(false);
+    this.bossName = scene.add.text(GAME_WIDTH / 2, GAME_HEIGHT - 26, '', textStyle(8, COLORS.gold, { stroke: '#18142a', strokeThickness: 3 }))
+      .setOrigin(0.5).setScrollFactor(0).setDepth(1501).setResolution(TEXT_RES).setVisible(false);
+  }
+
+  /** Nome e vida de quem está sendo enfrentado (some com undefined). */
+  setBoss(boss: { name: string; frac: number } | undefined): void {
+    for (const o of [this.bossBarBg, this.bossBar, this.bossName]) o.setVisible(Boolean(boss));
+    if (!boss) return;
+    this.bossName.setText(boss.name);
+    this.bossBar.width = 160 * Phaser.Math.Clamp(boss.frac, 0, 1);
   }
 
   setObjective(obj: { quest: string; objective: string } | undefined): void {

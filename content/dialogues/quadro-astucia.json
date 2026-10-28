@@ -1,0 +1,27 @@
+{
+  "id": "quadro-astucia",
+  "speaker": "✦",
+  "entries": [
+    {
+      "start": "a"
+    }
+  ],
+  "nodes": {
+    "a": {
+      "text": "Olhos enormes flutuam pela sala, vigiando com um facho roxo.",
+      "next": "a-2"
+    },
+    "a-2": {
+      "text": "Se um deles te vir, você volta para o começo (ou para a última marca no chão). Paciência é astúcia.",
+      "effects": [
+        {
+          "setFlag": "visto:quadro-astucia",
+          "value": true
+        },
+        {
+          "tutorial": "sentinelas"
+        }
+      ]
+    }
+  }
+}
