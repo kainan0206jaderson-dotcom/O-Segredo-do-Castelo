@@ -147,8 +147,8 @@ def table_top(x, y):
     c = WOOD[2] if (x // 8) % 2 else mix(WOOD[2], WOOD[3], 0.25)
     if x % 8 == 0:
         c = mix(c, WOOD[3], 0.5)
-    if (y * 3 + x * 5) % 17 in (0, 1) and x % 8 in (2, 3, 4, 5):
-        c = mix(c, WOOD[1], 0.6)
+    if x % 8 == 4 and (y // 3) % 3 == 0:
+        c = mix(c, WOOD[1], 0.35)  # veio
     return c
 
 

@@ -666,8 +666,264 @@ def render_small():
         save(strip(npc_frames(rows, pal, (10, 7), "kk", 16, 16), 16, 16), f"sprites/{key}.png")
 
 
+# ======================================================================= objetos com personagem
+
+def render_portrait():
+    """Bonfatt no quadro da galeria (32x32): moldura dourada com cantos trabalhados."""
+    bon = Image.open(os.path.join(ROOT, "sprites", "arquimedes.png")).convert("RGBA")
+    gold = ramp((214, 166, 66))
+
+    def frame_img(f, blink=False):
+        im = Image.new("RGBA", (32, 32), (0, 0, 0, 0))
+        px = im.load()
+        for y in range(32):
+            for x in range(32):
+                edge = min(x, y, 31 - x, 31 - y)
+                if edge == 0:
+                    c = INK
+                elif edge == 1:
+                    c = gold[3] if x < 31 - y else gold[1]
+                elif edge == 2:
+                    c = gold[2]
+                elif edge == 3:
+                    c = gold[0]
+                else:
+                    # fundo pintado: azul-noite com degradê e cortina
+                    c = mix((44, 52, 96), (70, 80, 132), (y - 4) / 24)
+                    if x < 9 and (x + y // 3) % 4 == 0:
+                        c = mix(c, (120, 40, 60), 0.6)
+                px[x, y] = c + (255,)
+        for cx, cy in ((2, 2), (29, 2), (2, 29), (29, 29)):
+            px[cx, cy] = gold[4] + (255,)
+        bust = bon.crop((f * 16, 0, f * 16 + 16, 22))
+        im.alpha_composite(bust, (8, 5))
+        if blink:
+            skin = bon.getpixel((6, 10))
+            px[13, 14] = skin
+            px[17, 14] = skin
+        # moldura por cima do busto
+        for y in range(32):
+            for x in range(32):
+                if min(x, y, 31 - x, 31 - y) <= 3 and y > 26:
+                    px[x, y] = (gold[2] if min(x, y, 31 - x, 31 - y) == 2 else gold[1] if min(x, y, 31 - x, 31 - y) == 1 else gold[0] if min(x, y, 31 - x, 31 - y) == 3 else INK) + (255,)
+        return im
+
+    save(strip([frame_img(0), frame_img(0, True), frame_img(2), frame_img(0)], 32, 32), "sprites/quadro-arquimedes.png")
+
+
+PLANTER = {
+    0: [
+        "................",
+        "................",
+        "................",
+        "................",
+        "................",
+        "................",
+        "................",
+        "................",
+        ".kkkkkkkkkkkkkk.",
+        "kwWWWWWWWWWWWWwk",
+        "kwddDddddDdddDwk",
+        "kwdDddddDdddddwk",
+        "kWWWWWWWWWWWWWWk",
+        "kwwwwwwwwwwwwwwk",
+        "kwvwwwwwwwwwvwwk",
+        ".kkkkkkkkkkkkkk.",
+    ],
+}
+PLANTER[1] = PLANTER[0][:4] + [
+    ".......kk.......",
+    "......kLgk......",
+    ".......kgk......",
+    ".......kgk......",
+] + PLANTER[0][8:]
+PLANTER[2] = [
+    "....k.kk.k......",
+    "...kLkLgkLk.....",
+    "....kLkgLk......",
+    ".....kgLgk......",
+    ".....kmmmmk.....",
+    "....kmMmmmmk....",
+    "....kmemmemk....",
+    "....kmmnnmmk....",
+    ".kkkkmmmmmmkkkk.",
+    "kwWWWkmmmmkWWWwk",
+] + PLANTER[0][10:]
+PLANTER_PAL = {
+    "w": (120, 76, 44), "W": (150, 100, 58), "v": (90, 56, 34),
+    "d": (70, 48, 34), "D": (96, 66, 44),
+    "g": (90, 170, 80), "L": (140, 210, 110),
+    "m": (214, 184, 136), "M": (240, 214, 170), "e": (34, 28, 40), "n": (170, 100, 90),
+}
+
+
+def render_props():
+    render_portrait()
+    save(strip([paint(PLANTER[i], PLANTER_PAL, 16, 16) for i in range(3)], 16, 16), "sprites/canteiro.png")
+
+
+POT_BODY = [
+    "...kkkkkkkkkk...",
+    "..kMMMMMMMMMMk..",
+    ".kmgGggggggGgmk.",
+    ".kMkkkkkkkkkkMk.",
+    "kmMmmmmmmmmmmMmk",
+    "kmMmmmmmmmmmmmmk",
+    "kmmmmmmmmmmmmmnk",
+    ".kmmmmmmmmmmmnk.",
+    "..knnnnnnnnnnk..",
+    "...kkkkkkkkkk...",
+]
+POT_FIRE = [
+    ["...kok.ko.kok...", "....kYkoYkyk....", ".....k.k.k.k...."],
+    ["...koko.kokok...", "....kykYokYk....", ".....k.k.k.k...."],
+    ["...kok.kokok....", "....kYkyokYk....", ".....k.k..k....."],
+]
+POT_BUBBLES = [
+    ["......G.........", ".........g......", "....g...G.......".replace("G", "G")],
+    ["........G.......", "....G...........", "......g...g....."],
+    [".........g......", ".....g...G......", "....G.....g....."],
+]
+POT_PAL = {
+    "m": (58, 56, 72), "M": (96, 94, 112), "n": (36, 34, 48),
+    "g": (90, 200, 110), "G": (176, 244, 168),
+    "o": (236, 126, 48), "y": (250, 214, 92), "Y": (255, 246, 190),
+}
+
+SHELF = [
+    "kkkkkkkkkkkkkkkk",
+    "kWWWWWWWWWWWWWWk",
+    "kwk1kk2k3kk4k5wk",
+    "kwk1k22k3k44k5wk",
+    "kwk1k22k3k44k5wk",
+    "kwk!k22k#k44k%wk",
+    "kwk1k22k3k44k5wk",
+    "kwk1k22k3k44k5wk",
+    "kWWWWWWWWWWWWWWk",
+    "kwvvvvvvvvvvvvwk",
+    "kwk3kk4k1k2kk5wk",
+    "kwk3k44k1k2k55wk",
+    "kwk3k44k1k2k55wk",
+    "kwk#k44k!k@k55wk",
+    "kwk3k44k1k2k55wk",
+    "kwk3k44k1k2k55wk",
+    "kWWWWWWWWWWWWWWk",
+    "kwvvvvvvvvvvvvwk",
+    "kwk5k2kk4kk1k3wk",
+    "kwk5k2k44k11k3wk",
+    "kwk5k2k44k11k3wk",
+    "kwk%k@k44k11k#wk",
+    "kwk5k2k44k11k3wk",
+    "kwk5k2k44k11k3wk",
+    "kWWWWWWWWWWWWWWk",
+    "kwvvvvvvvvvvvvwk",
+    "kwk4k1k5kk3k2wwk",
+    "kwk4k1k5k33k2wwk",
+    "kwk$k!k%k33k@wwk",
+    "kwk4k1k5k33k2wwk",
+    "kWWWWWWWWWWWWWWk",
+    "kkkkkkkkkkkkkkkk",
+]
+SHELF_PAL = {
+    "W": (150, 100, 58), "w": (110, 72, 42), "v": (70, 46, 30),
+    "1": (176, 44, 52), "2": (46, 92, 172), "3": (40, 138, 80), "4": (200, 154, 44), "5": (120, 70, 150),
+    "!": (230, 200, 120), "@": (230, 200, 120), "#": (230, 200, 120), "$": (230, 200, 120), "%": (230, 200, 120),
+}
+
+CRATE = [
+    "................",
+    "................",
+    ".kkkkkkkkkkkkkk.",
+    ".kLLLLLLLLLLLLk.",
+    ".kLwwwwwwwwwwLk.",
+    ".kLwXwwwwwwYwLk.",
+    ".kLwwXwwwwYwwLk.",
+    ".kLwwwXwwYwwwLk.",
+    ".kLLLLLXYLLLLLk.",
+    ".kLwwwYwXwwwwLk.",
+    ".kLwwYwwwXwwwLk.",
+    ".kLwYwwwwwXwwLk.",
+    ".kLwwwwwwwwwwLk.",
+    ".kLLLLLLLLLLLLk.",
+    ".knnnnnnnnnnnnk.",
+    ".kkkkkkkkkkkkkk.",
+]
+CRATE_PAL = {"L": (160, 110, 62), "w": (128, 86, 48), "X": (96, 62, 36), "Y": (96, 62, 36), "n": (80, 52, 32)}
+
+PANTRY = [
+    "kkkkkkkkkkkkkkkk",
+    "kWWWWWWWWWWWWWWk",
+    "kw.kk..kk..kk.wk",
+    "kwkook.kgk.kpkwk",
+    "kwkOok.kGk.kPkwk",
+    "kwkook.kgk.kpkwk",
+    "kWWWWWWWWWWWWWWk",
+    "kwvvvvvvvvvvvvwk",
+    "kw.kkk...kk...wk",
+    "kwkaaak.kcck..wk",
+    "kwkAaak.kCck..wk",
+    "kwkaaak.kcck..wk",
+    "kWWWWWWWWWWWWWWk",
+    "kwvvvvvvvvvvvvwk",
+    "kw..kk..kkkk..wk",
+    "kw.kssk.kjjk..wk",
+    "kw.kSsk.kJjk..wk",
+    "kw.kssk.kjjk..wk",
+    "kWWWWWWWWWWWWWWk",
+    "kwvvvvvvvvvvvvwk",
+    "kwwwwwwwwwwwwwwk",
+    "kWWWWWWWWWWWWWWk",
+    "kkkkkkkkkkkkkkkk",
+    "................",
+]
+PANTRY_PAL = {
+    "W": (150, 100, 58), "w": (110, 72, 42), "v": (70, 46, 30),
+    "o": (236, 126, 48), "O": (255, 180, 100), "g": (176, 230, 240), "G": (230, 250, 255),
+    "p": (214, 90, 170), "P": (250, 150, 210), "a": (120, 72, 40), "A": (160, 104, 60),
+    "c": (230, 222, 200), "C": (255, 250, 236), "s": (90, 170, 80), "S": (140, 210, 110),
+    "j": (196, 60, 60), "J": (240, 120, 110),
+}
+
+VASE = [
+    "................",
+    "................",
+    "................",
+    "................",
+    ".....L.k.L......",
+    "....kLkgkLk.....",
+    ".....kLgLk......",
+    "...k..kgk..k....",
+    "...kLkkgkkLk....",
+    "....kkgggkk.....",
+    "....kooooook....",
+    "...kOOOOOOOOk...",
+    "...koOooooook...",
+    ".....koooook....",
+    ".....knnnnnk....",
+    "......kkkkk.....",
+]
+VASE_PAL = {"L": (140, 210, 110), "g": (90, 170, 80), "o": (200, 100, 56), "O": (236, 140, 84), "n": (150, 70, 40)}
+
+
+def render_furniture():
+    pots = []
+    for i in range(3):
+        rows = ["." * 16] * 1 + POT_BUBBLES[i] + ["." * 16] * 0
+        rows = rows + POT_BODY[:-1] + POT_FIRE[i][:1] + POT_FIRE[i][1:2]
+        rows = (rows + ["." * 16] * 16)[:16]
+        pots.append(paint(rows, POT_PAL, 16, 16))
+    save(strip(pots, 16, 16), "sprites/caldeirao.png")
+    save(paint(SHELF, SHELF_PAL, 16, 32), "sprites/estante.png")
+    save(paint(CRATE, CRATE_PAL, 16, 16), "sprites/caixote.png")
+    save(paint(PANTRY, PANTRY_PAL, 16, 24), "sprites/despensa.png")
+    vase = VASE
+    save(paint(vase, VASE_PAL, 16, 16), "sprites/vaso.png")
+
+
 def render_all():
     for name, robe in CAPAS.items():
         render_player(name, robe)
     render_npcs()
     render_small()
+    render_props()
+    render_furniture()
