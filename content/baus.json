@@ -1,0 +1,18 @@
+{
+  "_sobre": "Baús do porão secreto [FICÇÃO]. Cada baú sorteia de 1 a 2 itens pelo peso; depois de aberto, enche de novo após 'recargaMs' de jogo. 'chanceSombrinha' é a chance do baú ser um susto: sai uma sombrinha em vez de prêmio.",
+  "recargaMs": 240000,
+  "chanceSombrinha": 0.15,
+  "itens": [
+    { "item": "abobora", "peso": 10 },
+    { "item": "gelo-seco", "peso": 10 },
+    { "item": "suco-colorido", "peso": 10 },
+    { "item": "cacau", "peso": 10 },
+    { "item": "folha-mandragora", "peso": 7 },
+    { "item": "semente-mandragora", "peso": 6 },
+    { "item": "drink-fumegante", "peso": 5 },
+    { "item": "cerveja-abobora", "peso": 5 },
+    { "item": "sobremesa-mandragora", "peso": 5 },
+    { "item": "pocao-vigor", "peso": 5 },
+    { "item": "elixir-estelar", "peso": 2 }
+  ]
+}

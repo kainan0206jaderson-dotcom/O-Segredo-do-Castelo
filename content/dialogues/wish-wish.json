@@ -4,15 +4,70 @@
   "entries": [
     {
       "when": {
-        "flag": "gnomo:wish-wish"
+        "all": [
+          {
+            "itemAtLeast": "estrela-perdida",
+            "n": 12
+          },
+          {
+            "not": {
+              "flag": "estrelas:12"
+            }
+          }
+        ]
       },
-      "start": "depois"
+      "start": "doze"
+    },
+    {
+      "when": {
+        "all": [
+          {
+            "itemAtLeast": "estrela-perdida",
+            "n": 6
+          },
+          {
+            "not": {
+              "flag": "estrelas:6"
+            }
+          }
+        ]
+      },
+      "start": "seis"
     },
     {
       "when": {
         "questActive": "esconde-esconde"
       },
       "start": "achado"
+    },
+    {
+      "when": {
+        "all": [
+          {
+            "not": {
+              "questActive": "estrelas-perdidas"
+            }
+          },
+          {
+            "not": {
+              "questDone": "estrelas-perdidas"
+            }
+          }
+        ]
+      },
+      "start": "estrelas-intro"
+    },
+    {
+      "when": {
+        "questActive": "estrelas-perdidas"
+      },
+      "start": "estrelas-conta"
+    },
+    {
+      "when": {
+        "flag": "gnomo:wish-wish"
+      },
+      "start": "depois"
     },
     {
       "start": "oi"
@@ -37,6 +92,49 @@
     },
     "depois": {
       "text": "Próxima rodada eu me escondo dentro de um caldeirão. Ninguém vai me achar!"
+    },
+    "estrelas-intro": {
+      "text": "Psiu! Ontem caíram doze estrelinhas do céu do Observatório. Elas rolaram pelo castelo inteiro!",
+      "next": "estrelas-intro-2"
+    },
+    "estrelas-intro-2": {
+      "text": "Me traz? Com seis eu te dou um presente. Com as doze... um presente MUITO melhor. Algumas se escondem: tente Revelar!",
+      "effects": [
+        {
+          "startQuest": "estrelas-perdidas"
+        }
+      ]
+    },
+    "estrelas-conta": {
+      "text": "E as estrelas? São doze ao todo. Algumas estão em salas que você nem conhece... o porão, por exemplo. Ops, falei demais."
+    },
+    "seis": {
+      "text": "SEIS estrelas! Olha como brilham juntas. Toma, dois Elixires Estelares, feitos com poeira de estrela.",
+      "effects": [
+        {
+          "setFlag": "estrelas:6",
+          "value": true
+        },
+        {
+          "giveItem": "elixir-estelar",
+          "count": 2
+        },
+        {
+          "giveXp": 60
+        }
+      ]
+    },
+    "doze": {
+      "text": "As DOZE! O céu do Observatório está completo de novo! Este amuleto é seu: ele guarda o brilho de todas elas.",
+      "effects": [
+        {
+          "setFlag": "estrelas:12",
+          "value": true
+        },
+        {
+          "giveItem": "amuleto-estelar"
+        }
+      ]
     }
   }
 }

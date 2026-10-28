@@ -171,9 +171,9 @@ describe('Ato 1 do começo ao fim', () => {
 });
 
 describe('conteúdo do Ato 1', () => {
-  it('casas dão capas que existem e cada capa tem roupa no manifesto', () => {
+  it('casas dão capas que existem e cada capa tem roupa no manifesto (amuletos não mudam a roupa)', () => {
     for (const h of Object.values(db.houses)) expect(db.items[h.capa]?.slot).toBe('capa');
-    for (const [id, it] of Object.entries(db.items).filter(([, i]) => i.kind === 'equipamento')) {
+    for (const [id, it] of Object.entries(db.items).filter(([, i]) => i.slot === 'capa')) {
       expect(manifest.spritesheets[it.sheet!], id).toBeDefined();
     }
   });

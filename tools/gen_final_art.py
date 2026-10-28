@@ -404,7 +404,7 @@ for name in sorted(os.listdir(os.path.join(ROOT, "maps"))):
 
 # ---------------------------------------------------------------- personagens
 
-art_people.render_all()
+new_icons = art_people.render_all()
 
 # ---------------------------------------------------------------- manifesto
 
@@ -412,6 +412,10 @@ mpath = os.path.join(ROOT, "manifest.json")
 with open(mpath) as fh:
     manifest = json.load(fh)
 manifest["status"] = "definitivo"
+manifest["spritesheets"]["ui.icones"]["frameNames"].update(new_icons)
+for key, url, w, h in (("prop.bau", "sprites/bau.png", 16, 16), ("prop.alcapao", "sprites/alcapao.png", 16, 16),
+                       ("prop.escada-porao", "sprites/escada-porao.png", 16, 16)):
+    manifest["spritesheets"][key] = {"url": url, "frameWidth": w, "frameHeight": h, "animations": {}}
 with open(mpath, "w") as fh:
     json.dump(manifest, fh, indent=2, ensure_ascii=False)
 print("arte definitiva gerada")

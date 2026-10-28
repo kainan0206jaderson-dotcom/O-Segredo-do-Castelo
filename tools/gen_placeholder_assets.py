@@ -1858,6 +1858,66 @@ for key in ("biblioteca", "sala-espectral", "estufa", "observatorio", "galeria",
 
 for key in ("corredor", "gabinete", "hall"):
     MANIFEST["maps"][f"map.{key}"] = {"url": f"maps/{key}.tmj", "tilesets": ["tiles.castelo"]}
+# ---------- Etapa 6: porão secreto, Mapa dos Segredos e Estrelas Perdidas [FICÇÃO, pedido do kainan]
+def add_objects(key, objs):
+    """Acrescenta objetos a um mapa já gerado (sem mexer na descrição da sala)."""
+    path = os.path.join(ROOT, "maps", f"{key}.tmj")
+    with open(path) as fh:
+        m = json.load(fh)
+    w = m["width"]
+    walls = next(l for l in m["layers"] if l["name"] == "paredes")["data"]
+    layer = next(l for l in m["layers"] if l["type"] == "objectgroup")
+    for o in objs:
+        tx, ty = int(o["x"] // 16), int((o["y"] - 1) // 16)
+        assert o.get("width") or walls[ty * w + tx] == 0, f"{key}: {o['name']} em cima de parede ({tx},{ty})"
+        o.setdefault("width", 0)
+        o.setdefault("height", 0)
+        o["id"] = m["nextobjectid"]
+        m["nextobjectid"] += 1
+        layer["objects"].append(o)
+    with open(path, "w") as fh:
+        json.dump(m, fh)
+
+
+# Porão secreto: escuro, baús que se enchem sozinhos, sombrinhas que sempre voltam e um desafio repetível
+ondas = [("onda-1", [(5, 8), (16, 8), (11, 11)]), ("onda-2", [(4, 6), (17, 6), (6, 11), (15, 11)]),
+         ("onda-3", [(3, 9), (18, 9), (8, 5), (13, 5), (10, 12)])]
+build_room("porao", "Porão Secreto", 22, 14,
+           doors=[("N", 10, "map.cozinha", "do-porao", "da-cozinha")],
+           windows=(), tables=[(16, 3, 4, 1)],
+           props=[("prop.estante", 2, 2), ("prop.estante", 3, 2), ("prop.caixote", 6, 3), ("prop.caixote", 7, 3),
+                  ("prop.vaso", 19, 12), ("prop.caixote", 2, 12), ("prop.escada-porao", 10, 2), ("prop.escada-porao", 11, 2)],
+           candles=[("vela-p1", 5, 4, True), ("vela-p2", 15, 4, False), ("vela-p3", 3, 10, False), ("vela-p4", 18, 10, True)],
+           boards=[("quadro-porao", "sombras-do-porao", 13, 3)],
+           props_map=dict(escuro=True),
+           extra=[*[pt("chest", f"bau-{i + 1}", cx, cy) for i, (cx, cy) in enumerate([(2, 6), (19, 6), (4, 12), (17, 12)])],
+                  pt("pickup", "mapa", 10, 7, y=7 * 16 + 12, item="mapa-dos-segredos"),
+                  pt("pickup", "estrela-porao", 19, 3, y=3 * 16 + 12, item="estrela-perdida", oculto=True),
+                  *[pt("creature", f"sombra-p{i + 1}", cx, cy, sprite="npc.sombrinha", group="porao", hp=2, renasce=True)
+                    for i, (cx, cy) in enumerate([(7, 9), (14, 10)])],
+                  *[pt("creature", f"{g}-{i + 1}", cx, cy, sprite="npc.sombrinha", group=g, hp=3, challenge="sombras-do-porao")
+                    for g, lst in ondas for i, (cx, cy) in enumerate(lst)]])
+MANIFEST["maps"]["map.porao"] = {"url": "maps/porao.tmj", "tilesets": ["tiles.castelo"]}
+
+# Cozinha: alçapão trancado no canto (abre com a Chave do Porão), com a chegada de quem volta do porão
+add_objects("cozinha", [
+    pt("prop", "prop.alcapao", 4, 4, sprite="prop.alcapao"),
+    zone("door", "porta-porao", 4, 4, 1, 1, target="map.porao", spawn="da-cozinha", when={"hasItem": "chave-do-porao"},
+         locked="Um alçapão trancado no chão... a fechadura é bem velha."),
+    pt("spawn", "do-porao", 4, 6, y=6 * 16 + 8, facing="down"),
+])
+# A chave fica escondida atrás da mesa do Gabinete do Ministro
+add_objects("gabinete", [pt("pickup", "chave-porao", 14, 8, y=8 * 16 + 12, item="chave-do-porao")])
+
+# 12 Estrelas Perdidas: 10 espalhadas pelo castelo (algumas só com Revelar), 1 no porão e 1 no desafio do porão
+ESTRELAS = [
+    ("recepcao", 17, 10, False), ("grande-salao", 2, 21, False), ("cozinha", 20, 12, False), ("corredor", 31, 8, False),
+    ("hall", 2, 12, False), ("biblioteca", 26, 14, True), ("sala-espectral", 20, 12, True), ("estufa", 20, 12, True),
+    ("observatorio", 18, 12, False), ("galeria", 30, 12, True),
+]
+for i, (key, tx, ty, hidden) in enumerate(ESTRELAS):
+    add_objects(key, [pt("pickup", f"estrela-{i + 1}", tx, ty, y=ty * 16 + 12, item="estrela-perdida", **({"oculto": True} if hidden else {}))])
+
 with open(MANIFEST_PATH, "w", encoding="utf-8") as fh:
     json.dump(MANIFEST, fh, ensure_ascii=False, indent=2)
 

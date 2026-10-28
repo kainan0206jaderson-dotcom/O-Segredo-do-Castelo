@@ -78,18 +78,20 @@ export class GrimoireScene extends Phaser.Scene {
           { icon: 'poder', title: `Poder ${st.poder}`, detail: 'A força dos seus feitiços contra criaturas. Sobe com o nível.' },
           { icon: house ? db.houses[s.house!].capa : 'bloqueado', title: house ? `Casa: ${house.name}` : 'Casa: ainda não escolhida', detail: house?.description ?? 'O Ministro Bonfatt ajuda cada aprendiz a escolher sua mesa no Grande Salão.', muted: !house },
           { icon: s.equipment.capa ?? 'bloqueado', title: capa ? `Capa: ${capa.name}` : 'Capa: nenhuma', detail: capa ? `${capa.description}\n\nTroque de capa na aba Bolsa.` : 'Capas aparecem na bolsa conforme você avança.', muted: !capa },
+          ...(s.equipment.amuleto ? [{ icon: s.equipment.amuleto, title: `Amuleto: ${db.items[s.equipment.amuleto].name}`, detail: db.items[s.equipment.amuleto].description }] : []),
         ];
       }
       case 'Bolsa':
         return Object.entries(s.inventory).map(([id, n]) => {
           const it = db.items[id];
-          const worn = s.equipment.capa === id;
-          const use = it?.kind === 'equipamento' ? (worn ? undefined : 'vestir') : it?.use?.length ? 'usar' : undefined;
+          const worn = Object.values(s.equipment).includes(id);
+          const use = id === 'mapa-dos-segredos' ? 'abrir o mapa' : it?.kind === 'equipamento' ? (worn ? undefined : 'vestir') : it?.use?.length ? 'usar' : undefined;
           return { icon: id, title: `${it?.name ?? id}${n > 1 ? ` ×${n}` : ''}${worn ? ' (vestindo)' : ''}`, detail: it?.description ?? '', use };
         });
       case 'Feitiços': {
         const known = s.spells.map((id) => ({ icon: id, title: db.spells[id].name + (db.spells[id].kind === 'extra' ? ' ★' : ''), detail: db.spells[id].description }));
-        const extrasLeft = Object.entries(db.challenges).filter(([id]) => !s.challenges[id]?.done)
+        const extrasLeft = Object.entries(db.challenges)
+          .filter(([id, c]) => !s.challenges[id]?.done && c.reward.some((e) => 'learnSpell' in e))
           .map(([, c]) => ({ icon: 'bloqueado', title: '???', detail: `Feitiço extra. Vença o desafio "${c.title}" para aprender.`, muted: true }));
         return [...known, ...extrasLeft];
       }
@@ -156,6 +158,11 @@ export class GrimoireScene extends Phaser.Scene {
   private useSelected(): void {
     const cur = this.entries()[this.sel];
     if (!cur?.use || !cur.icon) return;
+    if (cur.icon === 'mapa-dos-segredos') {
+      this.scene.launch('Map', { back: 'Grimoire' });
+      this.scene.pause();
+      return;
+    }
     const r = useItem(session.state, db, cur.icon);
     if (!r.ok) return void audio.sfx('erro');
     audio.sfx('pocao');

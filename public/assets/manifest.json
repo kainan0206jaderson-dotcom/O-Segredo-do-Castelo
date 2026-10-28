@@ -235,7 +235,11 @@
         "emblema-coragem": 40,
         "emblema-inteligencia": 41,
         "emblema-astucia": 42,
-        "emblema-lealdade": 43
+        "emblema-lealdade": 43,
+        "mapa-dos-segredos": 44,
+        "estrela-perdida": 45,
+        "amuleto-estelar": 46,
+        "chave-do-porao": 47
       }
     },
     "npc.dona-brasa": {
@@ -1332,6 +1336,24 @@
           "repeat": -1
         }
       }
+    },
+    "prop.bau": {
+      "url": "sprites/bau.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {}
+    },
+    "prop.alcapao": {
+      "url": "sprites/alcapao.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {}
+    },
+    "prop.escada-porao": {
+      "url": "sprites/escada-porao.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {}
     }
   },
   "tilesets": {
@@ -1433,6 +1455,12 @@
     },
     "map.coracao": {
       "url": "maps/coracao.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.porao": {
+      "url": "maps/porao.tmj",
       "tilesets": [
         "tiles.castelo"
       ]

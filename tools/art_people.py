@@ -3,6 +3,7 @@
 Cada personagem tem sua paleta. "k" é o contorno: no fim ele é recolorido com o tom
 mais escuro da cor vizinha (contorno colorido), menos embaixo dos pés, que fica escuro.
 """
+import json
 import os
 
 from PIL import Image
@@ -920,6 +921,199 @@ def render_furniture():
     save(paint(vase, VASE_PAL, 16, 16), "sprites/vaso.png")
 
 
+# ======================================================================= porão secreto e coleção
+
+ICON_MAPA = [
+    "................",
+    "................",
+    "..kkkkkkkkkkkk..",
+    ".kPPpPPPpPPPPpk.",
+    ".kPpPPrPPpPPPPk.",
+    ".kPPPrPrPPPpPPk.",
+    ".kpPPPPPrPPPPPk.",
+    ".kPPpPPPPrPxPPk.",
+    ".kPPPPpPPPrPPpk.",
+    ".kPpPPPPPPPrPPk.",
+    ".kPPPPPpPPPPPPk.",
+    ".kpPPPPPPpPPPpk.",
+    ".kQQQQQQQQQQQQk.",
+    "..kkkkkkkkkkkk..",
+    "................",
+    "................",
+]
+ICON_MAPA_PAL = {"P": (232, 214, 170), "p": (204, 180, 130), "r": (170, 60, 60), "x": (60, 40, 120), "Q": (170, 140, 96)}
+
+ICON_ESTRELA = [
+    "................",
+    ".......kk.......",
+    "......kYYk......",
+    "......kYyk......",
+    ".kkkkkYyyykkkkk.",
+    ".kYYYYyyyyyyyyk.",
+    "..kYyyyyyyyyok..",
+    "...kyyyyyyyok...",
+    "....kyyyyyok....",
+    "...kyyyyyyyok...",
+    "...kyyyokyyok...",
+    "..kyyok..kyyok..",
+    "..kyok....kook..",
+    "..kkk......kkk..",
+    "................",
+    "................",
+]
+ICON_ESTRELA_PAL = {"Y": (255, 250, 210), "y": (250, 214, 92), "o": (210, 150, 50)}
+
+ICON_AMULETO = [
+    "....kkkkkkkk....",
+    "...kc......ck...",
+    "..kc........ck..",
+    "..kc........ck..",
+    "...kc......ck...",
+    "....kc....ck....",
+    ".....kkGGkk.....",
+    "....kGgYYgGk....",
+    "...kGgYwYYgGk...",
+    "...kGYYYYYYGk...",
+    "...kGgYYYYgGk...",
+    "....kGgYYgGk....",
+    ".....kGGGGk.....",
+    "......kkkk......",
+    "................",
+    "................",
+]
+ICON_AMULETO_PAL = {"c": (200, 200, 214), "G": (214, 166, 66), "g": (240, 200, 100), "Y": (120, 150, 240), "w": (240, 246, 255)}
+
+ICON_CHAVE = [
+    "................",
+    "................",
+    "....kkkk........",
+    "...kGggGk.......",
+    "..kGk..kGk......",
+    "..kgk..kgk......",
+    "...kGggGkkkkkkk.",
+    "....kkkkGgggggGk",
+    "........kkkGkGk.",
+    "..........kGkGk.",
+    "...........k.k..",
+    "................",
+    "................",
+    "................",
+    "................",
+    "................",
+]
+ICON_CHAVE_PAL = {"G": (150, 120, 80), "g": (190, 160, 110)}
+
+CHEST_CLOSED = [
+    "................",
+    "................",
+    "................",
+    "...kkkkkkkkkk...",
+    "..kWWWWWWWWWWk..",
+    ".kWwwwwwwwwwwWk.",
+    ".kGGGGGGGGGGGGk.",
+    ".kwwwwwkYkwwwwk.",
+    ".kGGGGGkykGGGGk.",
+    ".kwwwwwwkwwwwwk.",
+    ".kwvwwwwwwwwvwk.",
+    ".kwwwwwwwwwwwwk.",
+    ".kGGGGGGGGGGGGk.",
+    ".kvvvvvvvvvvvvk.",
+    "..kkkkkkkkkkkk..",
+    "................",
+]
+CHEST_OPEN = [
+    "................",
+    "...kkkkkkkkkk...",
+    "..kWwwwwwwwwWk..",
+    "..kWkkkkkkkkWk..",
+    "..kGGGGGGGGGGk..",
+    ".kkkkkkkkkkkkkk.",
+    ".kdddddddddddddk"[:16],
+    ".kdDddddddddDdk.",
+    ".kGGGGGkykGGGGk.",
+    ".kwwwwwwkwwwwwk.",
+    ".kwvwwwwwwwwvwk.",
+    ".kwwwwwwwwwwwwk.",
+    ".kGGGGGGGGGGGGk.",
+    ".kvvvvvvvvvvvvk.",
+    "..kkkkkkkkkkkk..",
+    "................",
+]
+CHEST_PAL = {
+    "W": (160, 110, 62), "w": (128, 86, 48), "v": (90, 58, 34),
+    "G": (176, 176, 196), "Y": (250, 214, 92), "y": (210, 160, 60),
+    "d": (40, 30, 30), "D": (90, 70, 50),
+}
+
+TRAPDOOR = [
+    "................",
+    ".kkkkkkkkkkkkkk.",
+    ".kWwwwkWwwwwkWk.",
+    ".kWwwwkWwwwwkWk.",
+    ".kGGGGGGGGGGGGk.",
+    ".kWwwwkWwwYwkWk.",
+    ".kWwwwkWwYywkWk.",
+    ".kWwwwkWwwYwkWk.",
+    ".kGGGGGGGGGGGGk.",
+    ".kWwwwkWwwwwkWk.",
+    ".kWwwwkWwwwwkWk.",
+    ".kvvvvkvvvvvkvk.",
+    ".kkkkkkkkkkkkkk.",
+    "................",
+    "................",
+    "................",
+]
+STAIRS_UP = [
+    "kkkkkkkkkkkkkkkk",
+    "kddddddddddddddk",
+    "kSSSSSSSSSSSSSSk",
+    "ksssssssssssssssk"[:16],
+    "kddddddddddddddk",
+    "kSSSSSSSSSSSSSSk",
+    "kssssssssssssssk",
+    "kddddddddddddddk",
+    "kSSSSSSSSSSSSSSk",
+    "kssssssssssssssk",
+    "kddddddddddddddk",
+    "kSSSSSSSSSSSSSSk",
+    "kssssssssssssssk",
+    "kkkkkkkkkkkkkkkk",
+    "................",
+    "................",
+]
+STAIRS_PAL = {"d": (40, 36, 56), "S": (120, 116, 140), "s": (92, 88, 112)}
+
+
+def add_icons(names_and_imgs):
+    """Acrescenta ícones no fim da tira ui/icones.png e devolve {nome: índice}."""
+    path = os.path.join(ROOT, "ui", "icones.png")
+    with open(os.path.join(ROOT, "manifest.json")) as fh:
+        known = json.load(fh)["spritesheets"]["ui.icones"]["frameNames"]
+    n0 = len([k for k in known if k not in dict(names_and_imgs)])
+    base = Image.open(path).convert("RGBA").crop((0, 0, n0 * 16, 16))
+    out = Image.new("RGBA", (base.width + 16 * len(names_and_imgs), 16), (0, 0, 0, 0))
+    out.paste(base, (0, 0))
+    idx = {}
+    for i, (name, im) in enumerate(names_and_imgs):
+        out.paste(im, ((n0 + i) * 16, 0))
+        idx[name] = n0 + i
+    out.save(path)
+    return idx
+
+
+def render_secret_stuff():
+    """Devolve os ícones novos (para o manifesto)."""
+    save(strip([paint(CHEST_CLOSED, CHEST_PAL, 16, 16), paint(CHEST_OPEN, CHEST_PAL, 16, 16)], 16, 16), "sprites/bau.png")
+    save(paint(TRAPDOOR, CHEST_PAL, 16, 16), "sprites/alcapao.png")
+    save(paint(STAIRS_UP, STAIRS_PAL, 16, 16), "sprites/escada-porao.png")
+    return add_icons([
+        ("mapa-dos-segredos", paint(ICON_MAPA, ICON_MAPA_PAL, 16, 16)),
+        ("estrela-perdida", paint(ICON_ESTRELA, ICON_ESTRELA_PAL, 16, 16)),
+        ("amuleto-estelar", paint(ICON_AMULETO, ICON_AMULETO_PAL, 16, 16)),
+        ("chave-do-porao", paint(ICON_CHAVE, ICON_CHAVE_PAL, 16, 16)),
+    ])
+
+
 def render_all():
     for name, robe in CAPAS.items():
         render_player(name, robe)
@@ -927,3 +1121,4 @@ def render_all():
     render_small()
     render_props()
     render_furniture()
+    return render_secret_stuff()

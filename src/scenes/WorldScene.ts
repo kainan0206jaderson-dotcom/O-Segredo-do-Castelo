@@ -29,6 +29,9 @@ import { GrimoireScene } from './GrimoireScene';
 import { GAME_HEIGHT, GAME_WIDTH, TILE_SIZE } from '../config/game';
 import { shake, flash } from '../ui/fx';
 import { audio, type Sfx, type Track } from '../audio/Audio';
+import { Bark, pickLine } from '../ui/Bark';
+import { openChest, type LootTable } from '../systems/loot';
+import baus from '../../content/baus.json';
 
 export interface WorldData {
   map: string;
@@ -81,6 +84,8 @@ const REVEAL_RADIUS = 96;
 const REVEAL_MS = 3800;
 const ORB_SPEED = 78;
 const BOSS_FLAG = 'boss:fase';
+/** Chance de aparecerem sombrinhas fujonas ao entrar numa sala (depois do Ato 1). */
+const RUNAWAY_CHANCE = 0.2;
 
 const ACT2_MAPS = ['map.biblioteca', 'map.sala-espectral', 'map.estufa', 'map.observatorio'];
 
@@ -150,6 +155,8 @@ export class WorldScene extends Phaser.Scene {
   private orbs!: Phaser.Physics.Arcade.Group;
   private wave = 0;
   private doorNoticeAt = 0;
+  private bark!: Bark;
+  private stillSince = 0;
 
   constructor() {
     super('World');
@@ -228,6 +235,7 @@ export class WorldScene extends Phaser.Scene {
             this.doorNoticeAt = this.time.now + 2500;
             this.hud.notify(locked);
             audio.sfx('erro');
+            this.bark.say(pickLine('trancado'));
           }
           return;
         }
@@ -245,6 +253,8 @@ export class WorldScene extends Phaser.Scene {
     this.hud = new Hud(this, touch);
     this.hud.onSpellTap = () => this.changeSpell();
     this.hud.onMenuTap = () => this.openGrimoire();
+    this.bark = new Bark(this);
+    this.stillSince = this.time.now;
     clampVitals(s, db);
     this.applyOutfit();
     this.refreshHud();
@@ -265,7 +275,17 @@ export class WorldScene extends Phaser.Scene {
     if (data.fainted) this.hud.notify('Você desmaiou... e acordou aqui. Vida e energia de volta!');
     if (data.caught) this.hud.notify('Uma sentinela viu você! De volta ao último ponto seguro.');
     this.resumeBossFight();
+    this.maybeRunawayShadows(map);
     if (!seenTutorial(s, 'controles')) this.queueTutorial('controles');
+
+    // primeira visita a uma sala: o aprendiz comenta
+    const visited = `visitou:${data.map}`;
+    if (!s.flags[visited]) {
+      s.flags[visited] = true;
+      if (Object.keys(s.flags).some((k) => k.startsWith('visitou:') && k !== visited)) {
+        this.time.delayedCall(FADE_MS + 500, () => !this.dialogue && this.bark.say(pickLine(`sala:${data.map}`, 'sala')));
+      }
+    }
 
     // salvamento automático a cada sala
     s.map = data.map;
@@ -346,7 +366,8 @@ export class WorldScene extends Phaser.Scene {
         case 'creature': {
           const group = prop<string>(o.properties, 'group') ?? '';
           const challenge = prop<string>(o.properties, 'challenge');
-          if (!challenge && s.flags[this.creatureFlag(group)]) break;
+          // "renasce": volta sempre que o aprendiz entra na sala (porão)
+          if (!challenge && !prop<boolean>(o.properties, 'renasce') && s.flags[this.creatureFlag(group)]) break;
           const c = new Creature(this, o.x!, o.y!, sprite!, o.name, group, {
             hp: prop<number>(o.properties, 'hp') ?? 2, when, challenge,
             hidden: prop<boolean>(o.properties, 'oculto'), still: prop<boolean>(o.properties, 'parado'),
@@ -357,6 +378,14 @@ export class WorldScene extends Phaser.Scene {
           else this.physics.add.overlap(this.player, c, () => this.touchCreature(c));
           if (challenge) c.setPresent(false);
           this.creatures.push(c);
+          break;
+        }
+        case 'chest': {
+          const t = new Thing(this, o.x!, o.y!, { kind: 'chest', name: o.name, sheet: 'prop.bau', ref: o.name, solid: true });
+          const at = s.flags[this.chestFlag(o.name)];
+          if (typeof at === 'number' && s.playTimeMs - at < (baus as LootTable).recargaMs) t.showFrame(1);
+          this.physics.add.collider(this.player, t);
+          this.things.push(t);
           break;
         }
         case 'trigger': {
@@ -458,6 +487,10 @@ export class WorldScene extends Phaser.Scene {
     }
   }
 
+  private chestFlag(name: string): string {
+    return `bau:${this.mapKey}:${name}`;
+  }
+
   private revealFlag(name: string): string {
     return `revelado:${this.mapKey}:${name}`;
   }
@@ -552,6 +585,11 @@ export class WorldScene extends Phaser.Scene {
   /** Avisos de texto vão para a tela; tutoriais e fim de ato entram na fila. */
   private showNotices(notices: Notice[]): void {
     const kinds = new Set(notices.map((n) => n.kind));
+    const item = notices.find((n) => n.kind === 'item');
+    if (kinds.has('level')) this.bark.say(pickLine('nivel'), true);
+    else if (kinds.has('spell')) this.bark.say(pickLine('feitico'), true);
+    else if (item) this.bark.say(pickLine(`pegar:${item.ref}`, 'pegar'), true);
+    else if (kinds.has('quest-done')) this.bark.say(pickLine('missao'));
     if (kinds.has('level')) audio.sfx('nivel');
     else if (kinds.has('quest-done') || kinds.has('spell')) audio.sfx('missao');
     else if (kinds.has('quest-start') || kinds.has('recipe') || kinds.has('house')) audio.sfx('confirmar');
@@ -652,6 +690,16 @@ export class WorldScene extends Phaser.Scene {
     this.refreshHud();
   }
 
+  private openMap(): void {
+    if (!session.state.inventory['mapa-dos-segredos']) {
+      this.bark.say('Se eu tivesse um mapa deste castelo...');
+      return;
+    }
+    this.player.halt();
+    this.scene.launch('Map', { back: 'World' });
+    this.scene.pause();
+  }
+
   private openGrimoire(): void {
     if (this.dialogue || this.transitioning) return;
     this.player.halt();
@@ -685,6 +733,7 @@ export class WorldScene extends Phaser.Scene {
       case 'pickup': {
         session.state.flags[this.pickupFlag(t.thingName)] = true;
         this.showNotices(apply({ giveItem: t.ref }, session.state, db));
+        for (const e of db.items[t.ref]?.onPickup ?? []) this.showNotices(apply(e, session.state, db));
         this.things = this.things.filter((x) => x !== t);
         this.hiddenThings = this.hiddenThings.filter((h) => h.thing !== t);
         this.near = undefined;
@@ -709,6 +758,8 @@ export class WorldScene extends Phaser.Scene {
         return this.offerChallenge(t);
       case 'socket':
         return this.useSocket(t);
+      case 'chest':
+        return this.useChest(t);
     }
   }
 
@@ -724,6 +775,59 @@ export class WorldScene extends Phaser.Scene {
     if (!seenTutorial(session.state, 'caldeirao')) this.scene.launch('Tutorial', { id: 'caldeirao', then: 'Cauldron' });
     else this.scene.launch('Cauldron');
     this.scene.pause();
+  }
+
+  /** Baú do porão: prêmio sorteado, um susto de vez em quando, e recarga com o tempo. */
+  private useChest(t: Thing): void {
+    const s = session.state;
+    const r = openChest(s, baus as LootTable, this.chestFlag(t.thingName));
+    if (r.kind === 'vazio') {
+      const min = Math.max(1, Math.ceil(r.readyInMs / 60000));
+      this.hud.notify(`Vazio. Volte em uns ${min} minuto${min > 1 ? 's' : ''}: os baús do porão se enchem sozinhos.`);
+      return;
+    }
+    t.showFrame(1);
+    audio.sfx('porta');
+    if (r.kind === 'susto') {
+      this.hud.notify('Era um baú-susto! Uma sombrinha pulou pra fora!');
+      this.bark.say('AAAH! Não era isso que eu queria achar!', true);
+      this.spawnShadow(t.x, t.y + 14, 'susto');
+    } else {
+      this.showNotices(r.items.flatMap((id) => apply({ giveItem: id }, s, db)));
+      this.puff(t.x, t.y - 10);
+    }
+    this.afterStateChange();
+  }
+
+  /**
+   * Sombrinhas fujonas: depois do Ato 1, às vezes duas sombrinhas aparecem numa sala comum.
+   * Dão experiência e deixam o passeio fora da história menos previsível.
+   */
+  private maybeRunawayShadows(map: Phaser.Tilemaps.Tilemap): void {
+    const s = session.state;
+    const calm = ['map.recepcao', 'map.coracao', 'map.sala-espectral', 'map.gabinete'];
+    if (!s.flags['ato:1:fim'] || calm.includes(this.mapKey) || this.mapKey.startsWith('map.quadro-') || this.boss) return;
+    if (Math.random() > RUNAWAY_CHANCE) return;
+    let placed = 0;
+    for (let tries = 0; tries < 60 && placed < 2; tries++) {
+      const tx = Phaser.Math.Between(2, map.width - 3);
+      const ty = Phaser.Math.Between(4, map.height - 3);
+      const x = tx * TILE_SIZE + 8;
+      const y = ty * TILE_SIZE + 14;
+      if (this.walls.getTileAt(tx, ty) || Phaser.Math.Distance.Between(x, y, this.player.x, this.player.y) < 96) continue;
+      this.spawnShadow(x, y, `fujona-${placed}`);
+      placed += 1;
+    }
+    if (placed) this.time.delayedCall(FADE_MS + 200, () => this.hud.notify('Sombrinhas fujonas por aqui! Espante com Lumen.'));
+  }
+
+  /** Sombrinha avulsa (baú-susto ou sombrinhas fujonas): some ao ser espantada e não fica no save. */
+  private spawnShadow(x: number, y: number, name: string): void {
+    const c = new Creature(this, x, y, 'npc.sombrinha', name, '', { hp: 2 });
+    this.physics.add.collider(c, this.walls);
+    this.physics.add.overlap(this.player, c, () => this.touchCreature(c));
+    this.creatures.push(c);
+    this.puff(c.x, c.y - 6);
   }
 
   /** Pedestal: coloca a pedra certa, se ela estiver na bolsa. */
@@ -897,11 +1001,13 @@ export class WorldScene extends Phaser.Scene {
     const def = db.challenges[ch.id];
     if (ch.status === 'won') {
       audio.sfx('vitoria');
+      this.time.delayedCall(800, () => this.bark.say(pickLine('desafio-vencido')));
       this.hud.notify('Desafio vencido!');
       this.showNotices(ch.notices);
       this.burstFireworks(this.player.x, this.player.y - 30);
     } else {
       audio.sfx('derrota');
+      this.bark.say(pickLine('desafio-perdido'), true);
       this.hud.notify('O tempo acabou! Tente de novo no quadro.');
       if (def.kind === 'acender') for (const c of this.candles) if (def.targets.includes(c.targetName)) c.setLit(true);
       if (def.kind === 'espectral') {
@@ -933,6 +1039,7 @@ export class WorldScene extends Phaser.Scene {
     const spell = spellId ? db.spells[spellId] : undefined;
     if (spell && !spendEnergy(s, spell.cost)) {
       audio.sfx('sem-energia');
+      this.bark.say(pickLine('sem-energia'));
       this.hud.notify('Sem energia mágica! Espere um pouco.');
       shake(this.cameras.main, 80, 0.002);
       return;
@@ -1197,6 +1304,7 @@ export class WorldScene extends Phaser.Scene {
     this.player.setVelocity(away.x, away.y);
     this.tweens.add({ targets: this.player, alpha: 0.3, duration: 90, yoyo: true, repeat: 5, onComplete: () => this.player.setAlpha(1) });
     audio.sfx('dano');
+    this.bark.say(pickLine('dano'));
     const fainted = hurt(session.state, 1);
     this.refreshHud();
     if (fainted) this.faint();
@@ -1268,6 +1376,7 @@ export class WorldScene extends Phaser.Scene {
   private startDialogue(def: DialogueDef | undefined, who?: Thing): void {
     if (!def) throw new Error(`diálogo não encontrado: ${who?.ref}`);
     this.player.halt();
+    this.bark.hide();
     who?.setHighlighted(false);
     this.talkingTo = who;
     this.dialogue = new DialogueRunner(def, session.state, db);
@@ -1409,12 +1518,21 @@ export class WorldScene extends Phaser.Scene {
 
     this.updateChallenge(delta);
     if (this.controls.menuPressed()) return this.openGrimoire();
+    if (this.controls.mapPressed()) return this.openMap();
     if (this.controls.spellCyclePressed()) this.changeSpell();
 
     const dir = this.controls.direction();
     if (time >= this.knockUntil) this.player.move(dir);
-    if (dir.lengthSq() > 0) audio.sfx('passo');
     else this.player.setDepth(this.player.y);
+    if (dir.lengthSq() > 0) {
+      audio.sfx('passo');
+      this.stillSince = time;
+    } else if (time - this.stillSince > 25000) {
+      // parado um tempinho: o aprendiz pensa alto
+      this.stillSince = time;
+      this.bark.say(pickLine('parado'));
+    }
+    this.bark.update(this.player.x, this.player.y - this.player.height - 2);
     this.puzzles.update(dir, delta);
     for (const c of this.creatures) c.think(this.player, time, delta);
     this.updateExtras(time, delta);

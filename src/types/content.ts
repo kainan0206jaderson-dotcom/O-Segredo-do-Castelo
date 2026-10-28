@@ -10,6 +10,8 @@ export type Condition =
   | { questDone: string }
   | { questActive: string }
   | { hasItem: string }
+  /** Quantidade mínima de um item na bolsa. */
+  | { itemAtLeast: string; n: number }
   | { hasSpell: string }
   | { knowsRecipe: string }
   | { house: string }
@@ -79,6 +81,8 @@ export interface QuestDef {
 export interface StatBonus {
   vida?: number;
   energia?: number;
+  /** Força extra contra criaturas. */
+  poder?: number;
   /** Multiplicador extra de velocidade (0.1 = 10% mais rápido). */
   velocidade?: number;
   /** Milissegundos a menos para recuperar 1 de energia. */
@@ -92,9 +96,11 @@ export interface ItemDef {
   /** Poções: efeitos ao usar (o item é gasto). */
   use?: Effect[];
   /** Equipamentos: onde veste, a aparência do aprendiz e o bônus. */
-  slot?: 'capa';
+  slot?: 'capa' | 'amuleto';
   sheet?: string;
   bonus?: StatBonus;
+  /** Efeitos ao pegar o item do chão (começar uma missão, por exemplo). */
+  onPickup?: Effect[];
 }
 
 export interface SpellDef {
@@ -130,6 +136,8 @@ export interface ChallengeDef {
   kind: 'acender' | 'levitar' | 'espectral';
   targets: string[];
   reward: Effect[];
+  /** Prêmio menor nas vitórias seguintes (desafios que valem repetir). */
+  repeatReward?: Effect[];
   /** Tutorial mostrado antes da primeira tentativa. */
   tutorial?: string;
 }

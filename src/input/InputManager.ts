@@ -18,6 +18,7 @@ export class InputManager {
   private navHQueued = 0;
   private spellQueued = false;
   private menuQueued = false;
+  private mapQueued = false;
   private static readonly RADIUS = 28;
 
   constructor(private scene: Phaser.Scene, opts: { touchControls?: boolean } = {}) {
@@ -45,6 +46,7 @@ export class InputManager {
       if (['ArrowLeft', 'KeyA'].includes(e.code)) this.navHQueued = -1;
       if (['ArrowRight', 'KeyD'].includes(e.code)) this.navHQueued = 1;
       if (e.code === 'KeyQ') this.spellQueued = true;
+      if (e.code === 'KeyM') this.mapQueued = true;
       if (['KeyI', 'Tab', 'Escape'].includes(e.code)) {
         this.menuQueued = true;
         e.preventDefault();
@@ -132,6 +134,13 @@ export class InputManager {
   spellCyclePressed(): boolean {
     const p = this.spellQueued;
     this.spellQueued = false;
+    return p;
+  }
+
+  /** M: abrir o Mapa dos Segredos (se o aprendiz tiver). */
+  mapPressed(): boolean {
+    const p = this.mapQueued;
+    this.mapQueued = false;
     return p;
   }
 
