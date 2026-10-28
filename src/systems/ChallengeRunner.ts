@@ -37,7 +37,7 @@ export class ChallengeRunner {
     const first = !s.challenges[this.id]?.done;
     const best = Math.min(this.elapsed, s.challenges[this.id]?.bestMs ?? Infinity);
     s.challenges[this.id] = { done: true, bestMs: best };
-    if (first) for (const e of this.def.reward) this.notices.push(...apply(e, s, db));
+    for (const e of first ? this.def.reward : this.def.repeatReward ?? []) this.notices.push(...apply(e, s, db));
   }
 
   update(deltaMs: number): void {

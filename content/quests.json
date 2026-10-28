@@ -388,5 +388,33 @@
         "objective": "Conte para a Mary, na Recepção."
       }
     ]
+  },
+  "porao-secreto": {
+    "title": "O porão secreto",
+    "kind": "secundaria",
+    "xp": 40,
+    "stages": [
+      {
+        "id": "achar-alcapao",
+        "objective": "Uma chave velha... Procure um alçapão trancado pelo castelo (talvez onde se guarda comida?).",
+        "completeWhen": {
+          "flag": "visitou:map.porao"
+        }
+      }
+    ]
+  },
+  "estrelas-perdidas": {
+    "title": "Estrelas Perdidas",
+    "kind": "secundaria",
+    "xp": 100,
+    "stages": [
+      {
+        "id": "juntar",
+        "objective": "Ache as 12 Estrelas Perdidas pelo castelo e leve ao Wish Wish, no Observatório.",
+        "completeWhen": {
+          "flag": "estrelas:12"
+        }
+      }
+    ]
   }
 }

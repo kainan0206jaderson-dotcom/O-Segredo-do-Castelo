@@ -32,7 +32,7 @@ export interface GameState {
   xp: number;
   vida: number;
   energia: number;
-  equipment: { capa?: string };
+  equipment: { capa?: string; amuleto?: string };
   playTimeMs: number;
 }
 

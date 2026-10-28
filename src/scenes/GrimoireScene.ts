@@ -7,6 +7,8 @@ import { useItem } from '../systems/rules';
 import { stats } from '../systems/progression';
 import { GAME_HEIGHT, GAME_WIDTH } from '../config/game';
 import { COLORS, TEXT_RES, textStyle } from '../ui/theme';
+import { flash } from '../ui/fx';
+import { audio } from '../audio/Audio';
 
 type Entry = { icon?: string; title: string; detail: string; muted?: boolean; use?: string };
 const TABS = ['Aprendiz', 'Bolsa', 'Feitiços', 'Receitas', 'Missões'] as const;
@@ -42,11 +44,14 @@ export class GrimoireScene extends Phaser.Scene {
 
     GrimoireScene.lastNotices = [];
     this.tabTexts = TABS.map((name, i) =>
-      this.add.text(x0 + 12 + i * 76, y0 + 8, name, textStyle(10, COLORS.text)).setResolution(TEXT_RES)
+      this.add.text(x0 + 12 + i * 68, y0 + 8, name, textStyle(10, COLORS.text)).setResolution(TEXT_RES)
         .setInteractive({ useHandCursor: true }).on('pointerdown', () => this.setTab(i)),
     );
     this.add.text(x0 + w - 10, y0 + 6, '✕', textStyle(12, COLORS.gold)).setOrigin(1, 0).setResolution(TEXT_RES)
       .setInteractive({ useHandCursor: true }).on('pointerdown', () => this.close());
+    this.add.text(x0 + w - 32, y0 + 8, '⚙ Opções', textStyle(9, COLORS.muted)).setOrigin(1, 0).setResolution(TEXT_RES)
+      .setInteractive({ useHandCursor: true }).on('pointerdown', () => this.openOptions());
+    audio.sfx('menu');
 
     const dx = x0 + w / 2 + 12;
     this.detailIcon = this.add.image(dx + 8, y0 + 44, 'ui.icones', 0).setScale(2);
@@ -73,18 +78,20 @@ export class GrimoireScene extends Phaser.Scene {
           { icon: 'poder', title: `Poder ${st.poder}`, detail: 'A força dos seus feitiços contra criaturas. Sobe com o nível.' },
           { icon: house ? db.houses[s.house!].capa : 'bloqueado', title: house ? `Casa: ${house.name}` : 'Casa: ainda não escolhida', detail: house?.description ?? 'O Ministro Bonfatt ajuda cada aprendiz a escolher sua mesa no Grande Salão.', muted: !house },
           { icon: s.equipment.capa ?? 'bloqueado', title: capa ? `Capa: ${capa.name}` : 'Capa: nenhuma', detail: capa ? `${capa.description}\n\nTroque de capa na aba Bolsa.` : 'Capas aparecem na bolsa conforme você avança.', muted: !capa },
+          ...(s.equipment.amuleto ? [{ icon: s.equipment.amuleto, title: `Amuleto: ${db.items[s.equipment.amuleto].name}`, detail: db.items[s.equipment.amuleto].description }] : []),
         ];
       }
       case 'Bolsa':
         return Object.entries(s.inventory).map(([id, n]) => {
           const it = db.items[id];
-          const worn = s.equipment.capa === id;
-          const use = it?.kind === 'equipamento' ? (worn ? undefined : 'vestir') : it?.use?.length ? 'usar' : undefined;
+          const worn = Object.values(s.equipment).includes(id);
+          const use = id === 'mapa-dos-segredos' ? 'abrir o mapa' : it?.kind === 'equipamento' ? (worn ? undefined : 'vestir') : it?.use?.length ? 'usar' : undefined;
           return { icon: id, title: `${it?.name ?? id}${n > 1 ? ` ×${n}` : ''}${worn ? ' (vestindo)' : ''}`, detail: it?.description ?? '', use };
         });
       case 'Feitiços': {
         const known = s.spells.map((id) => ({ icon: id, title: db.spells[id].name + (db.spells[id].kind === 'extra' ? ' ★' : ''), detail: db.spells[id].description }));
-        const extrasLeft = Object.entries(db.challenges).filter(([id]) => !s.challenges[id]?.done)
+        const extrasLeft = Object.entries(db.challenges)
+          .filter(([id, c]) => !s.challenges[id]?.done && c.reward.some((e) => 'learnSpell' in e))
           .map(([, c]) => ({ icon: 'bloqueado', title: '???', detail: `Feitiço extra. Vença o desafio "${c.title}" para aprender.`, muted: true }));
         return [...known, ...extrasLeft];
       }
@@ -104,6 +111,7 @@ export class GrimoireScene extends Phaser.Scene {
   }
 
   private setTab(i: number): void {
+    if (this.tabTexts.length && i !== this.tab) audio.sfx('blip');
     this.tab = Phaser.Math.Wrap(i, 0, TABS.length);
     this.sel = 0;
     this.tabTexts.forEach((t, j) => t.setColor(j === this.tab ? COLORS.gold : COLORS.muted).setText(`${j === this.tab ? '▸' : ' '}${TABS[j]}`));
@@ -150,17 +158,29 @@ export class GrimoireScene extends Phaser.Scene {
   private useSelected(): void {
     const cur = this.entries()[this.sel];
     if (!cur?.use || !cur.icon) return;
+    if (cur.icon === 'mapa-dos-segredos') {
+      this.scene.launch('Map', { back: 'Grimoire' });
+      this.scene.pause();
+      return;
+    }
     const r = useItem(session.state, db, cur.icon);
-    if (!r.ok) return;
+    if (!r.ok) return void audio.sfx('erro');
+    audio.sfx('pocao');
     const texts = r.notices.filter((n) => n.text).map((n) => n.text);
     GrimoireScene.lastNotices.push(...texts);
     session.save();
-    this.cameras.main.flash(150, 120, 255, 160);
+    flash(this.cameras.main, 150, 120, 255, 160);
     this.sel = Math.min(this.sel, Math.max(0, this.entries().length - 1));
     this.renderList();
   }
 
+  private openOptions(): void {
+    this.scene.launch('Options', { back: 'Grimoire' });
+    this.scene.pause();
+  }
+
   private close(): void {
+    audio.sfx('menu');
     this.scene.stop();
     this.scene.resume('World', { from: 'grimoire' });
   }

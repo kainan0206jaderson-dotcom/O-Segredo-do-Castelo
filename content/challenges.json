@@ -77,5 +77,40 @@
       }
     ],
     "tutorial": "aula"
+  },
+  "sombras-do-porao": {
+    "title": "Sombras do Porão",
+    "description": "Três levas de sombrinhas, cada vez maiores, em 70 segundos. Pode repetir: os baús e o prêmio voltam!",
+    "map": "map.porao",
+    "requires": {
+      "hasItem": "chave-do-porao"
+    },
+    "lockedText": "O quadro está coberto de pó.",
+    "timeLimitMs": 70000,
+    "kind": "espectral",
+    "targets": [
+      "onda-1",
+      "onda-2",
+      "onda-3"
+    ],
+    "reward": [
+      {
+        "giveXp": 120
+      },
+      {
+        "giveItem": "estrela-perdida"
+      },
+      {
+        "giveItem": "pocao-vigor"
+      }
+    ],
+    "repeatReward": [
+      {
+        "giveXp": 40
+      },
+      {
+        "giveItem": "pocao-vigor"
+      }
+    ]
   }
 }

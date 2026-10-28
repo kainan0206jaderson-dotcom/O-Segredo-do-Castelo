@@ -3,6 +3,7 @@ import { session } from '../core/session';
 import { InputManager } from '../input/InputManager';
 import { GAME_HEIGHT, GAME_WIDTH } from '../config/game';
 import { COLORS, TEXT_RES, textStyle } from '../ui/theme';
+import { audio } from '../audio/Audio';
 
 /** Tela inicial: Continuar (se houver jogo salvo) ou Novo jogo. */
 export class TitleScene extends Phaser.Scene {
@@ -27,6 +28,7 @@ export class TitleScene extends Phaser.Scene {
     this.options = [
       ...(hasSave ? [{ label: 'Continuar', run: () => this.continueGame() }] : []),
       { label: 'Novo jogo', run: () => this.newGame(hasSave) },
+      { label: 'Opções', run: () => this.openOptions() },
     ];
     this.texts = this.options.map((o, i) =>
       this.add.text(GAME_WIDTH / 2, 150 + i * 24, o.label, textStyle(13, COLORS.text)).setOrigin(0.5).setResolution(TEXT_RES)
@@ -34,12 +36,20 @@ export class TitleScene extends Phaser.Scene {
         .on('pointerover', () => this.select(i))
         .on('pointerdown', () => this.options[i].run()),
     );
-    this.add.text(GAME_WIDTH / 2, GAME_HEIGHT - 16, 'versão de teste · arte provisória', textStyle(8, COLORS.muted)).setOrigin(0.5).setResolution(TEXT_RES);
+    this.add.text(GAME_WIDTH / 2, GAME_HEIGHT - 16, 'versão 1.0 · toque ou aperte uma tecla para ligar o som', textStyle(8, COLORS.muted)).setOrigin(0.5).setResolution(TEXT_RES);
     this.controls = new InputManager(this);
     this.select(0);
+    audio.music('titulo');
+  }
+
+  private openOptions(): void {
+    audio.sfx('confirmar');
+    this.scene.launch('Options', { back: 'Title' });
+    this.scene.pause();
   }
 
   private select(i: number): void {
+    if (i !== this.selected) audio.sfx('blip');
     this.selected = i;
     this.texts.forEach((t, j) => {
       t.setColor(j === i ? COLORS.gold : COLORS.text);
@@ -48,6 +58,7 @@ export class TitleScene extends Phaser.Scene {
   }
 
   private continueGame(): void {
+    audio.sfx('confirmar');
     if (!session.continue()) return this.newGame(false);
     this.scene.start('World', { map: session.state.map, spawn: session.state.spawn });
   }
@@ -55,10 +66,12 @@ export class TitleScene extends Phaser.Scene {
   private newGame(overwrite: boolean): void {
     if (overwrite && !this.confirmingNew) {
       this.confirmingNew = true;
-      const t = this.texts[this.options.length - 1];
+      audio.sfx('erro');
+      const t = this.texts[this.options.findIndex((o) => o.label === 'Novo jogo')];
       t.setText('Apagar o jogo salvo? Toque de novo');
       return;
     }
+    audio.sfx('confirmar');
     session.startNew();
     this.scene.start('World', { map: session.state.map, spawn: session.state.spawn });
   }

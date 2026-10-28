@@ -42,7 +42,7 @@ export class Boss extends Phaser.GameObjects.Sprite {
     this.setOrigin(0.5, 1).setDepth(y);
     this.baseY = y;
     this.play(AssetRegistry.animKey(sheet, 'idle'));
-    this.zzz = scene.add.text(x, y - 30, 'cansada!', { fontFamily: 'Georgia, serif', fontSize: '8px', color: '#c8c8d6' })
+    this.zzz = scene.add.text(x, y - 30, 'cansada!', { fontFamily: '"Pixelify Sans", Georgia, serif', fontSize: '8px', color: '#c8c8d6' })
       .setOrigin(0.5).setResolution(4).setDepth(1300).setVisible(false);
   }
 

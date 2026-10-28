@@ -42,6 +42,7 @@ export function check(cond: Condition | undefined, s: GameState): boolean {
     return Boolean(q && !q.done);
   }
   if ('hasItem' in cond) return (s.inventory[cond.hasItem] ?? 0) > 0;
+  if ('itemAtLeast' in cond) return (s.inventory[cond.itemAtLeast] ?? 0) >= cond.n;
   if ('hasSpell' in cond) return s.spells.includes(cond.hasSpell);
   if ('knowsRecipe' in cond) return s.recipes.includes(cond.knowsRecipe);
   if ('house' in cond) return s.house === cond.house;
@@ -57,7 +58,7 @@ export function apply(effect: Effect, s: GameState, db: ContentDb): Notice[] {
   if ('giveItem' in effect) {
     const item = need(db.items, effect.giveItem, 'item');
     s.inventory[effect.giveItem] = (s.inventory[effect.giveItem] ?? 0) + (effect.count ?? 1);
-    return [{ kind: 'item', text: `Você recebeu: ${item.name}` }];
+    return [{ kind: 'item', text: `Você recebeu: ${item.name}`, ref: effect.giveItem }];
   }
   if ('takeItem' in effect) {
     const left = (s.inventory[effect.takeItem] ?? 0) - (effect.count ?? 1);
@@ -91,7 +92,7 @@ export function apply(effect: Effect, s: GameState, db: ContentDb): Notice[] {
     if (s.spells.includes(effect.learnSpell)) return [];
     s.spells.push(effect.learnSpell);
     s.selectedSpell = effect.learnSpell;
-    return [{ kind: 'spell', text: `Novo feitiço: ${spell.name}` }];
+    return [{ kind: 'spell', text: `Novo feitiço: ${spell.name}`, ref: effect.learnSpell }];
   }
   if ('learnRecipe' in effect) {
     const r = need(db.recipes, effect.learnRecipe, 'receita');

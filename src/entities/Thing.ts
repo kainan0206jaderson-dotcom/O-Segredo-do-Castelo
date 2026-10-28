@@ -3,7 +3,7 @@ import { AssetRegistry } from '../core/AssetRegistry';
 import { assets } from '../core/registry';
 import type { Condition } from '../types/content';
 
-export type ThingKind = 'npc' | 'pickup' | 'station' | 'challenge' | 'socket' | 'planter' | 'dial' | 'lock';
+export type ThingKind = 'npc' | 'pickup' | 'station' | 'challenge' | 'socket' | 'planter' | 'dial' | 'lock' | 'chest';
 
 export interface ThingOptions {
   kind: ThingKind;

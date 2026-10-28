@@ -204,5 +204,40 @@
     "name": "Emblema da Lealdade",
     "kind": "objeto",
     "description": "Um coração que bate junto com o seu. Abre a barreira da Galeria."
+  },
+  "mapa-dos-segredos": {
+    "name": "Mapa dos Segredos",
+    "kind": "objeto",
+    "description": "Um mapa velho que se desenha sozinho [FICÇÃO]. Mostra o castelo inteiro, onde você está, as passagens secretas, os baús e as Estrelas Perdidas que faltam. Aperte M ou abra pela Bolsa."
+  },
+  "estrela-perdida": {
+    "name": "Estrela Perdida",
+    "kind": "objeto",
+    "description": "Caiu do céu do Observatório e foi parar em algum canto do castelo. O Wish Wish coleciona: são 12 ao todo.",
+    "onPickup": [
+      {
+        "startQuest": "estrelas-perdidas"
+      }
+    ]
+  },
+  "amuleto-estelar": {
+    "name": "Amuleto Estelar",
+    "kind": "equipamento",
+    "slot": "amuleto",
+    "bonus": {
+      "poder": 1,
+      "energia": 2
+    },
+    "description": "Presente do Wish Wish por juntar as 12 Estrelas Perdidas. +1 de poder e +2 de energia."
+  },
+  "chave-do-porao": {
+    "name": "Chave do Porão",
+    "kind": "objeto",
+    "description": "Velha, torta e com cheiro de mofo. Abre um alçapão em algum lugar do castelo...",
+    "onPickup": [
+      {
+        "startQuest": "porao-secreto"
+      }
+    ]
   }
 }

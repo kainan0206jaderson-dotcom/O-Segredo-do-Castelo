@@ -2,10 +2,33 @@ import Phaser from 'phaser';
 import { GAME_HEIGHT, GAME_WIDTH } from '../config/game';
 import type { DialogueView } from '../systems/DialogueRunner';
 import { COLORS, TEXT_RES, textStyle } from './theme';
+import { charsPerSecond } from '../core/settings';
+import { audio } from '../audio/Audio';
 
-const CHARS_PER_SECOND = 45;
 const BOX_H = 64;
 const MARGIN = 8;
+const PORTRAIT = 40;
+
+/** Retrato de quem fala [nome no diálogo -> folha de sprite]. */
+const PORTRAITS: Record<string, string> = {
+  'Trinco': 'npc.trinco',
+  'Dom Moldura': 'npc.dom-moldura',
+  'Dona Brasa': 'npc.dona-brasa',
+  'Elfo Fuxico': 'npc.fuxico',
+  'Dama do Chá': 'npc.dama-cha',
+  'Ministro Bonfatt': 'npc.arquimedes',
+  'Morgana Cinzel': 'npc.morgana',
+  'Vulto encapuzado': 'npc.morgana',
+  'Profa. Amélia': 'npc.amelia',
+  'Prof. Aristóteles': 'npc.aristoteles',
+  'Fada Ramalhete': 'npc.fada-ramalhete',
+  'Booh': 'npc.booh',
+  'Mister Addam': 'npc.addam',
+  'Dona Lágrima': 'npc.lagrima',
+  'Mary': 'npc.mary',
+  'Mish Mish': 'npc.mish-mish',
+  'Wish Wish': 'npc.wish-wish',
+};
 
 /** Caixa de diálogo com efeito de máquina de escrever e lista de escolhas. */
 export class DialogueBox {
@@ -15,6 +38,10 @@ export class DialogueBox {
   private bodyText: Phaser.GameObjects.Text;
   private moreArrow: Phaser.GameObjects.Text;
   private choiceTexts: Phaser.GameObjects.Text[] = [];
+  private portraitBg: Phaser.GameObjects.Rectangle;
+  private portrait: Phaser.GameObjects.Image;
+  private bodyX = 0;
+  private wrap = 0;
   private fullText = '';
   private shown = 0;
   private choices: string[] = [];
@@ -28,9 +55,13 @@ export class DialogueBox {
     this.nameTab = scene.add.rectangle(MARGIN + 8, y0 - 7, 80, 14, COLORS.panelInner).setOrigin(0).setStrokeStyle(1, COLORS.panelBorder);
     this.nameText = scene.add.text(MARGIN + 14, y0 - 6, '', textStyle(9, COLORS.gold, { fontStyle: 'bold' })).setResolution(TEXT_RES);
     this.bodyText = scene.add.text(MARGIN + 10, y0 + 12, '', textStyle(10, COLORS.text, { wordWrap: { width: w - 24 }, lineSpacing: 2 })).setResolution(TEXT_RES);
+    this.portraitBg = scene.add.rectangle(MARGIN + 8, y0 + 12, PORTRAIT, PORTRAIT, 0x2a2140).setOrigin(0).setStrokeStyle(1, COLORS.panelBorder, 0.6);
+    this.portrait = scene.add.image(MARGIN + 8 + PORTRAIT / 2, y0 + 12 + PORTRAIT / 2, '__DEFAULT');
+    this.bodyX = MARGIN + 10;
+    this.wrap = w - 24;
     this.moreArrow = scene.add.text(MARGIN + w - 14, y0 + BOX_H - 14, '▼', textStyle(8, COLORS.gold)).setResolution(TEXT_RES);
     scene.tweens.add({ targets: this.moreArrow, y: '+=2', duration: 400, yoyo: true, repeat: -1 });
-    this.root = scene.add.container(0, 0, [panel, this.nameTab, this.nameText, this.bodyText, this.moreArrow])
+    this.root = scene.add.container(0, 0, [panel, this.nameTab, this.nameText, this.portraitBg, this.portrait, this.bodyText, this.moreArrow])
       .setScrollFactor(0).setDepth(2000).setVisible(false);
   }
 
@@ -49,7 +80,10 @@ export class DialogueBox {
   show(view: DialogueView): void {
     this.root.setVisible(true);
     this.nameText.setText(view.speaker);
-    this.nameTab.width = this.nameText.width + 12;
+    this.nameTab.setSize(this.nameText.width + 12, 14);
+    const hasPortrait = this.setPortrait(PORTRAITS[view.speaker]);
+    const shift = hasPortrait ? PORTRAIT + 8 : 0;
+    this.bodyText.setX(this.bodyX + shift).setWordWrapWidth(this.wrap - shift);
     this.fullText = view.text;
     this.shown = 0;
     this.bodyText.setText('');
@@ -57,6 +91,35 @@ export class DialogueBox {
     this.selected = 0;
     this.clearChoices();
     this.moreArrow.setVisible(false);
+  }
+
+  /** Mostra o rosto (as primeiras linhas desenhadas do quadro 0), ampliado 2x. */
+  private setPortrait(key: string | undefined): boolean {
+    const tex = key && this.scene.textures.exists(key) ? this.scene.textures.get(key) : undefined;
+    this.portraitBg.setVisible(!!tex);
+    this.portrait.setVisible(!!tex);
+    if (!tex) return false;
+    const frame = tex.get(0);
+    if (frame.width >= 32) {
+      this.portrait.setTexture(key!, 0).setCrop().setScale(1);
+      return true;
+    }
+    let top = 0;
+    while (top < frame.height - 1 && !this.rowHasPixels(key!, frame, top)) top++;
+    const size = Math.min(16, frame.height - top + 1);
+    const cropTop = Math.max(0, top - 1);
+    this.portrait.setTexture(key!, 0).setScale(2).setCrop(0, cropTop, 16, size);
+    // a imagem é centralizada pelo quadro inteiro: compensa o recorte
+    this.portrait.setDisplayOrigin(8, cropTop + size / 2);
+    return true;
+  }
+
+  private rowHasPixels(key: string, frame: Phaser.Textures.Frame, y: number): boolean {
+    for (let x = 0; x < frame.width; x++) {
+      const c = this.scene.textures.getPixel(x, y, key, frame.name);
+      if (c && c.alpha > 0) return true;
+    }
+    return false;
   }
 
   hide(): void {
@@ -83,7 +146,10 @@ export class DialogueBox {
 
   update(deltaMs: number): void {
     if (!this.visible || !this.typing) return;
-    this.shown = Math.min(this.fullText.length, this.shown + (deltaMs / 1000) * CHARS_PER_SECOND);
+    const before = Math.floor(this.shown / 4);
+    this.shown = Math.min(this.fullText.length, this.shown + (deltaMs / 1000) * charsPerSecond());
+    // "voz" da caixa de diálogo: um bipe a cada poucas letras
+    if (Math.floor(this.shown / 4) !== before && this.typing) audio.sfx('blip');
     this.bodyText.setText(this.fullText.slice(0, Math.floor(this.shown)));
     if (!this.typing) this.afterTyping();
   }

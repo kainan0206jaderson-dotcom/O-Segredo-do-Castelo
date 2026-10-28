@@ -13,7 +13,7 @@ export class PreloadScene extends Phaser.Scene {
     const y = GAME_HEIGHT / 2;
     this.add.rectangle(x, y, w, 6, 0x3a3150).setOrigin(0, 0.5);
     const bar = this.add.rectangle(x, y, 1, 6, 0xfad65c).setOrigin(0, 0.5);
-    this.add.text(GAME_WIDTH / 2, y - 16, 'Abrindo os portões do castelo...', { fontFamily: 'monospace', fontSize: '10px', color: '#e8e0f0' })
+    this.add.text(GAME_WIDTH / 2, y - 16, 'Abrindo os portões do castelo...', { fontFamily: '"Pixelify Sans", monospace', fontSize: '10px', color: '#e8e0f0' })
       .setOrigin(0.5).setResolution(4);
     this.load.on('progress', (p: number) => (bar.width = Math.max(1, w * p)));
 

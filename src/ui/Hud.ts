@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { GAME_HEIGHT, GAME_WIDTH } from '../config/game';
 import { assets } from '../core/registry';
 import { COLORS, TEXT_RES, textStyle } from './theme';
+import { flash } from './fx';
 
 const ICONS = 'ui.icones';
 
@@ -104,11 +105,11 @@ export class Hud {
     }
     add(this.scene.add.text(right - v.vidaMax * 9 - 4, 34, `Nv ${v.level}`, textStyle(8, COLORS.gold, { stroke: '#18142a', strokeThickness: 3 }))
       .setOrigin(1, 0.5).setResolution(TEXT_RES));
-    if (hurt) this.scene.cameras.main.flash(120, 120, 20, 30);
+    if (hurt) flash(this.scene.cameras.main, 120, 120, 20, 30);
   }
 
-  setTimer(text: string | undefined): void {
-    this.timer.setVisible(Boolean(text)).setText(text ?? '');
+  setTimer(text: string | undefined, urgent = false): void {
+    this.timer.setVisible(Boolean(text)).setText(text ?? '').setColor(urgent ? '#ff8a7a' : COLORS.gold);
   }
 
   notify(text: string): void {

@@ -8,7 +8,8 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview",
     "test": "vitest run",
-    "assets:placeholder": "python3 tools/gen_placeholder_assets.py"
+    "assets:placeholder": "python3 tools/gen_placeholder_assets.py",
+    "assets": "python3 tools/gen_placeholder_assets.py && python3 tools/gen_final_art.py"
   },
   "dependencies": {
     "phaser": "^3.90.0"

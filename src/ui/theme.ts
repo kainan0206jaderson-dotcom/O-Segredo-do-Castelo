@@ -9,8 +9,11 @@ export const COLORS = {
   gold: '#fad65c',
 };
 
+/** Fonte de pixel Pixelify Sans (licença SIL OFL, em public/fonts). */
+export const FONT_FAMILY = 'Pixelify Sans';
+
 export function textStyle(size: number, color = COLORS.text, extra: Phaser.Types.GameObjects.Text.TextStyle = {}): Phaser.Types.GameObjects.Text.TextStyle {
-  return { fontFamily: 'Georgia, "Times New Roman", serif', fontSize: `${size}px`, color, ...extra };
+  return { fontFamily: `"${FONT_FAMILY}", Georgia, serif`, fontSize: `${size}px`, color, ...extra };
 }
 
 /** Resolução extra do texto, para não borrar ao ampliar a tela. */

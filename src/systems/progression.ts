@@ -22,12 +22,13 @@ export function levelDef(db: Db, level: number): LevelDef {
 }
 
 export function equipmentBonus(s: GameState, db: Db): Required<StatBonus> {
-  const total = { vida: 0, energia: 0, velocidade: 0, regen: 0 };
+  const total = { vida: 0, energia: 0, poder: 0, velocidade: 0, regen: 0 };
   for (const id of Object.values(s.equipment)) {
     const b = id ? db.items[id]?.bonus : undefined;
     if (!b) continue;
     total.vida += b.vida ?? 0;
     total.energia += b.energia ?? 0;
+    total.poder += b.poder ?? 0;
     total.velocidade += b.velocidade ?? 0;
     total.regen += b.regen ?? 0;
   }
@@ -41,7 +42,7 @@ export function stats(s: GameState, db: Db): Stats {
     level: s.level,
     vidaMax: lv.vida + bonus.vida,
     energiaMax: lv.energia + bonus.energia,
-    poder: lv.poder,
+    poder: lv.poder + bonus.poder,
     regenMs: Math.max(500, db.progression.regenMs - bonus.regen),
     velocidade: 1 + bonus.velocidade,
     nextXp: db.progression.levels[s.level]?.xp,

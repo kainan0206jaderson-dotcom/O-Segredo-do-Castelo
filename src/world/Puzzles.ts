@@ -6,6 +6,7 @@ import { prop } from '../core/tiled';
 import { Pushable } from '../entities/Pushable';
 import { Levitable } from '../entities/Levitable';
 import type { Player } from '../entities/Player';
+import { shake } from '../ui/fx';
 
 type TiledObject = Phaser.Types.Tilemaps.TiledObject;
 
@@ -170,7 +171,7 @@ export class Puzzles {
       g.open = true;
       g.sprite.setFrame(1);
       (g.sprite.body as Phaser.Physics.Arcade.StaticBody).enable = false;
-      if (animate) this.scene.cameras.main.shake(250, 0.006);
+      if (animate) shake(this.scene.cameras.main, 250, 0.006);
     }
   }
 
@@ -201,7 +202,7 @@ export class Puzzles {
     const nx = target.tileX + dx;
     const ny = target.tileY + dy;
     if (!this.isFree(nx, ny, target)) {
-      this.scene.cameras.main.shake(80, 0.002);
+      shake(this.scene.cameras.main, 80, 0.002);
       return;
     }
     target.slideTo(nx, ny, () => this.refreshPlates());
