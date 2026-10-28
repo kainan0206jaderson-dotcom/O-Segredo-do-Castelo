@@ -1,0 +1,25 @@
+{
+  "id": "dom-moldura",
+  "speaker": "Dom Moldura",
+  "entries": [
+    { "when": { "questStage": "primeira-noite", "stage": "falar-com-quadro" }, "start": "relato" },
+    { "when": { "questDone": "primeira-noite" }, "start": "depois" },
+    { "start": "ocioso" }
+  ],
+  "nodes": {
+    "ocioso": { "text": "Hum? Ah, um visitante. Estou posando. Por favor, não me tire do foco." },
+    "relato": { "text": "Ah, finalmente alguém pergunta! Ninguém conversa com os quadros hoje em dia.", "next": "relato-2" },
+    "relato-2": {
+      "text": "Eu vi tudo, claro. Quer a versão curta ou a versão dramática?",
+      "choices": [
+        { "text": "A curta, por favor.", "next": "curta" },
+        { "text": "A dramática!", "next": "dramatica" }
+      ]
+    },
+    "curta": { "text": "Uma luz fria desceu da torre, as velas apagaram e o Arquimedes sumiu. Fim.", "next": "fim", "effects": [{ "setFlag": "ouviu-moldura", "value": true }] },
+    "dramatica": { "text": "Era meia-noite! Um brilho GELADO desceu da torre como neve brava! As velas tremeram, gritaram (bem baixinho) e se apagaram!", "next": "dramatica-2" },
+    "dramatica-2": { "text": "E o nobre Professor Arquimedes... PUF! Desapareceu! Eu teria desmaiado, se quadros desmaiassem.", "next": "fim", "effects": [{ "setFlag": "ouviu-moldura", "value": true }] },
+    "fim": { "text": "Conte ao Trinco. Ele tem as chaves, e eu tenho só esta moldura.", "effects": [{ "advanceQuest": "primeira-noite", "to": "voltar-ao-trinco" }] },
+    "depois": { "text": "Se encontrar o Arquimedes, diga que o meu lado esquerdo continua sendo o melhor." }
+  }
+}

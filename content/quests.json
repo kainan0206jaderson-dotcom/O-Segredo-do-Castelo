@@ -1,0 +1,9 @@
+{
+  "primeira-noite": {
+    "title": "Primeira noite no castelo",
+    "stages": [
+      { "id": "falar-com-quadro", "objective": "Fale com o quadro vivo no Grande Salão." },
+      { "id": "voltar-ao-trinco", "objective": "Conte ao Trinco o que o quadro disse." }
+    ]
+  }
+}

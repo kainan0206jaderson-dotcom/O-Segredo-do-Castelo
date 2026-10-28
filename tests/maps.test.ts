@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { readFileSync } from 'node:fs';
+import { existsSync, readFileSync } from 'node:fs';
 import type { AssetManifest } from '../src/core/AssetRegistry';
 import { prop } from '../src/core/tiled';
 
@@ -34,6 +34,15 @@ describe('mapas', () => {
     for (const m of Object.values(maps)) {
       for (const o of objectsOf(m).filter((o) => o.type === 'prop')) {
         expect(manifest.spritesheets[prop(o.properties, 'sprite')!]).toBeDefined();
+      }
+    }
+  });
+
+  it('todo NPC usa sprite do manifesto e um diálogo que existe', () => {
+    for (const m of Object.values(maps)) {
+      for (const o of objectsOf(m).filter((o) => o.type === 'npc')) {
+        expect(manifest.spritesheets[prop(o.properties, 'sprite')!]).toBeDefined();
+        expect(existsSync(`content/dialogues/${prop(o.properties, 'dialogue')}.json`), o.name).toBe(true);
       }
     }
   });

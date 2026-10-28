@@ -31,3 +31,15 @@ A arte atual é provisória e gerada por `tools/gen_placeholder_assets.py`.
 - Etapa 0: personagem animado, colisão, câmera, AssetRegistry.
 - Etapa 1: três salas conectadas (Recepção, Grande Salão, Cozinha Bruxa) com portas,
   transição, nome da sala, joystick e botão de ação no celular, aviso para girar a tela.
+- Etapa 2: tela inicial (Continuar / Novo jogo), salvamento automático, NPCs (Trinco e
+  Dom Moldura), diálogos com escolhas, primeira missão e objetivo na tela.
+
+## Conteúdo do jogo
+
+Textos, diálogos, missões e itens ficam em `content/` como JSON, sem código:
+
+- `content/dialogues/*.json`: falas, escolhas, condições (`when`) e efeitos (`effects`).
+- `content/quests.json`: missões e etapas, com o objetivo mostrado na tela.
+- `content/items.json`: itens que podem ser recebidos.
+
+`npm test` verifica se toda fala, item, missão e diálogo citado existe.
