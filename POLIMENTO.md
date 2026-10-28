@@ -21,7 +21,7 @@ Detalhes notados durante o desenvolvimento, para a fase de ajuste final.
 - Fogos Bruxos: mais cores e faíscas que caem devagar.
 - Dona Brasa: asas batendo e farinha voando quando ela fala.
 - Mesa da cozinha: panelas, tábuas e ingredientes em cima, não só madeira lisa.
-- Prof. Arquimedes: aparência inventada (chapéu vinho, óculos redondos, cavanhaque); ajustar quando houver foto de referência.
+- Prof. Arquimedes: mago de chapéu pontudo e sobretudo (pedido do kainan); detalhar bordados e barba esvoaçante.
 - Morgana: entrada com fumaça mais elaborada e capa esvoaçando; som próprio ao aparecer.
 - Sombrinhas: olhos que piscam, rastro escuro e um "puf" de luz ao sumir.
 - Estátuas: som de pedra arrastando e poeira ao andar um quadrado.
@@ -31,3 +31,4 @@ Detalhes notados durante o desenvolvimento, para a fase de ajuste final.
 - Capas das casas: hoje só trocam de cor; desenhar o brasão nas costas.
 - Corações e energia no HUD: animação ao ganhar nível (encher um por um).
 - Tutoriais: pequena animação mostrando o gesto (seta ou dedo) em vez de só o ícone.
+- Amélia: fantasma com flutuação suave, brilho pulsando e rastro de névoa ao andar; Aristóteles: fumaça branca e pergaminho ao apresentar a aula de Criaturas Espectrais.

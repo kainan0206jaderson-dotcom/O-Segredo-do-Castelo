@@ -32,7 +32,7 @@ def draw(img, ox, oy, rows):
         for x, c in enumerate(row):
             col = P[c]
             if col:
-                img.putpixel((ox + x, oy + y), col + (255,))
+                img.putpixel((ox + x, oy + y), col if len(col) == 4 else col + (255,))
 
 # ---------- Aprendiz (16x24): linhas = baixo, cima, lado; colunas = idle0, idle1, walk0..3
 HAT = [
@@ -523,35 +523,114 @@ for name, (c, cl, cs) in CAPAS.items():
     im.save(os.path.join(ROOT, "sprites", f"aprendiz-{name}.png"))
     sheet_entry(f"player.aprendiz-{name}", f"sprites/aprendiz-{name}.png", 16, 24, player_anims)
 
-# ---------- Prof. Arquimedes [FICÇÃO na aparência]: chapéu alto vinho, óculos redondos, cavanhaque grisalho
-P.update({"v": (120, 30, 54), "V": (160, 52, 80), "u": (78, 18, 36), "x": (190, 190, 200), "X": (230, 230, 236), "j": (120, 170, 220)})
+# ---------- Prof. Arquimedes [KAINAN: estilo mago, chapéu e sobretudo; detalhes FICÇÃO]
+P.update({
+    "3": (42, 46, 100), "4": (70, 78, 146), "5": (214, 170, 60),
+    "6": (98, 40, 54), "7": (138, 64, 76), "8": (62, 24, 36),
+    "x": (190, 190, 200), "X": (230, 230, 236), "j": (120, 170, 220),
+    "v": (120, 30, 54), "V": (160, 52, 80), "u": (78, 18, 36),  # vinho, usado por outras artes
+})
 def arquimedes(bob, mouth):
     rows = [
-        ".......kk.......",
-        "......kVvk......",
-        ".....kvVvvk.....",
-        ".....kvVvvk.....",
-        "....kvvyvvvk....",
-        "..kkuuuuuuuukk..",
-        "...kxxxxxxxxk...",
-        "...kxsssssssk...",
-        "...kkjkssjkkSk..",
-        "...ksssssssSk...",
-        "....kxx" + ("kk" if mouth else "xx") + "xxk....",
-        "....kxxxxxxk....",
-        "...kvVvxxvVvk...",
-        "..kvVvvyyvvVvk..",
-        "..ksVvvyyvvVsk..",
-        "..kSkvvyyvvkSk..",
-        "...kvvvyyvvvk...",
-        "...kuvvvvvvuk...",
-        "...kuuvvvvuuk...",
+        "..........kk....",
+        ".........k4k....",
+        "........k43k....",
+        ".......k433k....",
+        "......k4333k....",
+        ".....k43333k....",
+        "....k5555555k...",
+        "..kk333333333kk.",
+        "...kxsssssssxk..",
+        "...kxjjsssjjxk..",
+        "...kxssssssSxk..",
+        "...kx" + ("XXXkXXX" if mouth else "XXXXXXX") + "xk..",
+        "...k77XXXXX77k..",
+        "..k776XXXXX677k.",
+        "..k7s6XXXXX6s7k.",
+        "..k7k66XXX66k7k.",
+        "..k7k665X566k7k.",
+        "...k76656667k...",
+        "...k76665667k...",
+        "...k88666688k...",
+        "...k88888888k...",
         "....kbk..kbk....",
         "....kkk..kkk....",
     ]
-    return pad_rows(rows, 16, 24, 3 - bob)
+    return pad_rows(rows, 16, 24, 1 - bob)
 strip([arquimedes(0, False), arquimedes(1, False), arquimedes(0, True), arquimedes(0, False)], 16, 24).save(os.path.join(ROOT, "sprites", "arquimedes.png"))
 sheet_entry("npc.arquimedes", "sprites/arquimedes.png", 16, 24, IDLE_TALK)
+
+# Profa. Amélia [KAINAN, pela foto]: cabelo grisalho volumoso, capa creme com barra prateada,
+# vestido de cetim branco, luvas brancas, leque de cartas. Fantasma: translúcida, sem pés, flutua.
+P.update({
+    "Z": (170, 172, 188, 235), "U": (222, 222, 234, 235), "B": (238, 224, 218, 225),
+    "C": (238, 230, 206, 215), "H": (198, 190, 168, 210), "J": (196, 206, 226, 230),
+    "K": (248, 248, 255, 200), "N": (206, 216, 238, 180), "O": (255, 255, 255, 255),
+    "Q": (200, 228, 248, 120), "T": (200, 228, 248, 60), "9": (196, 150, 160, 230),
+    "0": (120, 170, 214, 210),  # contorno azulado de fantasma
+})
+def amelia(bob, mouth, sway):
+    tail = [
+        ["..0CKKKKKKKKC0..", "..0HNKKKKKKNH0..", "...0NKKNKKKN0...", "....QNKNKNKQ....", ".....QTQTQT.....", "......T.T.T....."],
+        ["..0CKKKKKKKKC0..", "..0HKNKKKKNKH0..", "...0NKKKNKKN0...", "....QKNKNKNQ....", ".....TQTQTQ.....", ".....T.T.T......"],
+    ][sway]
+    rows = [
+        ".....0ZUUZ0.....",
+        "....0ZUUZUU0....",
+        "...0UZUZZUZU0...",
+        "...0ZUBBBBUZ0...",
+        "..0UZBkBBkBZU0..",
+        "..0ZUBBBBBBUZ0..",
+        "..0UZB" + ("BkkB" if mouth else "B99B") + "BZU0..",
+        "..0ZUZBBBBZUZ0..",
+        "..0UZCCJJCCZU0..",
+        "..0ZCCHKKHCCZ0..",
+        "..0CHOOOKKKHCJ0.",
+        ".0CCOOOOKKKHCJ0.",
+        ".0CHBOOKKKKHCJ0.",
+        ".0JCHKKKKKKHCC0.",
+        ".0JCHKKNKKKHCC0.",
+        "..0JCKKNKKKCCJ0.",
+    ] + tail
+    return pad_rows(rows, 16, 24, 1 + bob)
+AMELIA_ANIMS = {"idle": {"frames": [0, 1, 2, 1], "frameRate": 3, "repeat": -1}, "talk": {"frames": [3, 4], "frameRate": 8, "repeat": -1}}
+strip([amelia(0, False, 0), amelia(1, False, 1), amelia(2, False, 0), amelia(1, True, 1), amelia(1, False, 0)], 16, 24).save(os.path.join(ROOT, "sprites", "amelia.png"))
+sheet_entry("npc.amelia", "sprites/amelia.png", 16, 24, AMELIA_ANIMS, ghost=True)
+
+# Prof. Aristóteles [KAINAN, pelo vídeo]: jovem, cabelo cacheado escuro, barba curta, gorro azul redondo,
+# túnica cinza com gola bordada branca, livros azuis no braço. Professor de Criaturas Espectrais.
+P.update({
+    "C": (36, 64, 140), "H": (64, 100, 186), "J": (40, 28, 22), "N": (150, 104, 74), "O": (122, 82, 58),
+    "Q": (140, 146, 156), "T": (176, 182, 192), "U": (98, 104, 116), "Z": (244, 244, 248), "B": (44, 82, 160), "9": (70, 116, 200),
+})
+def aristoteles(bob, mouth):
+    rows = [
+        "....kkkkkkk.....",
+        "...kHHCHCCCk....",
+        "..kHCCCCCCCCk...",
+        "..kCCCCCCCCCk...",
+        ".kJJkkkkkkkJJk..",
+        ".kJJNNNNNNNJJk..",
+        ".kJNkNNNkNNNJk..",
+        ".kJNNNNNNNONJk..",
+        "..kJJ" + ("NkkN" if mouth else "JJJJ") + "JJJk...",
+        "...kJJJJJJJk....",
+        "...kZZQZQZZk....",
+        "..kTQZTTTZQTk...",
+        "..kTQQTZTQQUk...",
+        "..kTQQTZTBBBk...",
+        "..kTNQTZTB99Bk..",
+        "..kUQQTZTBBBBk..",
+        "..kUQQTZTQkkk...",
+        "...kQQTTTQQk....",
+        "...kUQQQQQUk....",
+        "...kUUQQQUUk....",
+        "....kbk.kbk.....",
+        "....kkk.kkk.....",
+    ]
+    return pad_rows(rows, 16, 24, 2 - bob)
+strip([aristoteles(0, False), aristoteles(1, False), aristoteles(0, True), aristoteles(0, False)], 16, 24).save(os.path.join(ROOT, "sprites", "aristoteles.png"))
+sheet_entry("npc.aristoteles", "sprites/aristoteles.png", 16, 24, IDLE_TALK)
 
 # ---------- Morgana Cinzel [FICÇÃO]: capuz cinza-fuligem, mecha prateada, olhos violeta
 P.update({"i": (52, 48, 60), "I": (84, 80, 96), "t": (30, 28, 38), "l": (200, 200, 214), "m": (170, 110, 220), "n": (232, 220, 226)})

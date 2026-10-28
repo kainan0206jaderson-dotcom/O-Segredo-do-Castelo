@@ -867,6 +867,55 @@
         "energia": 2,
         "energia-vazia": 3
       }
+    },
+    "npc.amelia": {
+      "url": "sprites/amelia.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "frameRate": 3,
+          "repeat": -1
+        },
+        "talk": {
+          "frames": [
+            3,
+            4
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      },
+      "ghost": true
+    },
+    "npc.aristoteles": {
+      "url": "sprites/aristoteles.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "talk": {
+          "frames": [
+            2,
+            3
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
     }
   },
   "tilesets": {
