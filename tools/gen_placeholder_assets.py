@@ -227,12 +227,100 @@ for i, b in enumerate(BUBBLES):
     draw(pot, i * 16, 0, rows)
 pot.save(os.path.join(ROOT, "sprites", "caldeirao.png"))
 
+# ---------- Trinco, o duende da recepção (16x16: parado 0-1, falando 2-3)
+P.update({"e": (110, 170, 70), "E": (80, 130, 52), "r": (170, 40, 50), "R": (210, 70, 70), "n": (150, 150, 160)})
+GOB_HEAD = [
+    "................",
+    "......kkkk......",
+    ".k...keeeek...k.",
+    ".kek.keeeek.kek.",
+    "..keekeeeekeek..",
+    "...keeweeweek...",
+    "....kekeekek....",
+    "....keeeeeek....",
+]
+GOB_MOUTH = {"c": "....keEEEEek....", "o": "....keEkkEek...."}
+GOB_BODY = [
+    "...kkrrRRrrkk...",
+    "..keekrRRrkeek..",
+    "..kEkrrrrrrkyk..",
+    "...krrrrrrrkyk..",
+    "....kbk..kbk....",
+    "....kkk..kkk....",
+]
+gob = Image.new("RGBA", (64, 16), (0, 0, 0, 0))
+for i, (m, bob) in enumerate([("c", 0), ("c", 1), ("o", 0), ("c", 0)]):
+    rows = ["................"] * bob + GOB_HEAD + [GOB_MOUTH[m]] + GOB_BODY
+    rows = (rows + ["................"] * 16)[:16]
+    draw(gob, i * 16, 0, rows)
+gob.save(os.path.join(ROOT, "sprites", "trinco.png"))
+
+# ---------- Dom Moldura, o quadro vivo (32x32: parado, piscando, falando)
+P.update({"f": (190, 150, 60), "F": (230, 196, 100), "d": (40, 60, 70), "D": (60, 90, 100), "z": (200, 200, 210)})
+def painting(eyes, mouth):
+    rows = ["kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk",
+            "kFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFk",
+            "kFffffffffffffffffffffffffffffFk"]
+    inner = []
+    for y in range(26):
+        line = "kFf"
+        for x in range(26):
+            c = "d" if (x + y) % 9 else "D"
+            line += c
+        line += "fFk"
+        inner.append(list(line))
+    def put(x, y, c):
+        inner[y][x + 3] = c
+    # rosto com bigode e peruca
+    for y in range(5, 22):
+        for x in range(7, 19):
+            if (x - 12.5) ** 2 / 36 + (y - 13) ** 2 / 72 < 1:
+                put(x, y, "s")
+    for y in range(3, 12):
+        for x in range(4, 22):
+            if (x - 12.5) ** 2 / 90 + (y - 9) ** 2 / 30 < 1 and not ((x - 12.5) ** 2 / 36 + (y - 13) ** 2 / 72 < 1):
+                put(x, y, "z")
+    for x in range(7, 19):
+        put(x, 22, "z") if 9 <= x <= 16 else None
+    if eyes == "open":
+        for ex in (10, 15):
+            put(ex, 11, "k"); put(ex, 10, "w")
+    else:
+        for ex in (10, 15):
+            put(ex, 11, "k"); put(ex - 1, 11, "k")
+    for x in range(9, 17):
+        put(x, 15, "h")
+    if mouth == "open":
+        put(12, 17, "k"); put(13, 17, "k"); put(12, 18, "r"); put(13, 18, "r")
+    else:
+        put(12, 17, "S"); put(13, 17, "S")
+    # corpo com casaca
+    for y in range(22, 26):
+        for x in range(3, 23):
+            put(x, y, "r" if abs(x - 12.5) > 2 else "w")
+    rows += ["".join(r) for r in inner]
+    rows += ["kFffffffffffffffffffffffffffffFk"[:32]]
+    rows = rows[:31] + ["kkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk"]
+    return rows
+pt = Image.new("RGBA", (96, 32), (0, 0, 0, 0))
+for i, (e, m) in enumerate([("open", "closed"), ("closed", "closed"), ("open", "open")]):
+    draw(pt, i * 32, 0, painting(e, m))
+pt.save(os.path.join(ROOT, "sprites", "dom-moldura.png"))
+
+# ---------- Balão "!" de interação (8x10, 2 quadros)
+ALERT = [["..kkkk..", ".kwwwwk.", ".kwkkwk.", ".kwkkwk.", ".kwkkwk.", ".kwwwwk.", ".kwkkwk.", ".kwwwwk.", "..kwwk..", "...kk..."],
+         ["........", "..kkkk..", ".kwwwwk.", ".kwkkwk.", ".kwkkwk.", ".kwkkwk.", ".kwwwwk.", ".kwkkwk.", ".kwwwwk.", "..kwwk.."]]
+al = Image.new("RGBA", (16, 10), (0, 0, 0, 0))
+for i, rows in enumerate(ALERT):
+    draw(al, i * 8, 0, rows)
+al.save(os.path.join(ROOT, "ui", "alerta.png"))
+
 # ---------- Mapas Tiled (.tmj), gerados a partir de uma descrição de cada sala
 FLOOR, FLOOR2, CARPET, TOP, FACE, WOOD, WIN, B1, B2, B3, B4 = [i + 1 for i in range(11)]
 COLLIDES = (TOP, FACE, WOOD, WIN, B1, B2, B3, B4)
 
 
-def build_room(name, title, w, h, doors, tables=(), carpet=None, windows=(), banners=(), props=(), spawns=()):
+def build_room(name, title, w, h, doors, tables=(), carpet=None, windows=(), banners=(), props=(), spawns=(), npcs=()):
     """doors: (lado N/S/L/O, posição, mapa destino, chegada no destino, nome desta chegada)."""
     floor, walls = [], []
     for y in range(h):
@@ -293,6 +381,11 @@ def build_room(name, title, w, h, doors, tables=(), carpet=None, windows=(), ban
     for (sname, sx, sy) in spawns:
         obj(name=sname, type="spawn", x=sx * 16 + 8, y=sy * 16, point=True,
             properties=[{"name": "facing", "type": "string", "value": "up"}])
+    for (npc_id, sprite, px, py, dialogue, wall) in npcs:
+        obj(name=npc_id, type="npc", x=px * 16 + (16 if wall else 8), y=py * 16 + 16, point=True,
+            properties=[{"name": "sprite", "type": "string", "value": sprite},
+                        {"name": "dialogue", "type": "string", "value": dialogue},
+                        {"name": "wall", "type": "bool", "value": wall}])
     for (sprite, px, py) in props:
         obj(name=sprite, type="prop", x=px * 16 + 8, y=py * 16 + 16, point=True,
             properties=[{"name": "sprite", "type": "string", "value": sprite}])
@@ -322,8 +415,10 @@ def build_room(name, title, w, h, doors, tables=(), carpet=None, windows=(), ban
 build_room("recepcao", "Recepção", 20, 13,
            doors=[("N", 9, "map.grande-salao", "da-recepcao", "do-salao")],
            carpet=(9, 3, 10, 11), windows=(4, 15),
+           tables=[(12, 6, 4, 1)],  # balcão da recepção, com o Trinco atrás
            props=[("prop.vela", 3, 4), ("prop.vela", 16, 4)],
-           spawns=[("inicio", 9, 10)])
+           spawns=[("inicio", 9, 10)],
+           npcs=[("trinco", "npc.trinco", 13, 5, "trinco", False)])
 
 # Grande Salão: quatro mesas das casas; sul = Recepção, leste = Cozinha
 build_room("grande-salao", "Grande Salão", 40, 24,
@@ -333,7 +428,8 @@ build_room("grande-salao", "Grande Salão", 40, 24,
            carpet=(17, 4, 22, 22), windows=(6, 14, 25, 33),
            banners=[(9, B1), (12, B2), (27, B3), (30, B4)],
            props=[("prop.vela", 5, 4), ("prop.vela", 34, 4), ("prop.vela", 5, 19),
-                  ("prop.vela", 34, 19), ("prop.vela", 16, 5), ("prop.vela", 23, 5)])
+                  ("prop.vela", 34, 19), ("prop.vela", 16, 5), ("prop.vela", 23, 5)],
+           npcs=[("dom-moldura", "npc.dom-moldura", 19, 2, "dom-moldura", True)])
 
 # Cozinha bruxa: caldeirões; oeste = Grande Salão
 build_room("cozinha", "Cozinha Bruxa", 22, 14,

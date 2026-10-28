@@ -6,7 +6,7 @@ import Phaser from 'phaser';
  * botão redondo à direita é a ação (interagir / lançar feitiço).
  */
 export class InputManager {
-  private keys: Record<'up' | 'down' | 'left' | 'right' | 'w' | 'a' | 's' | 'd' | 'e' | 'space' | 'enter', Phaser.Input.Keyboard.Key>;
+  private keys: Record<'up' | 'down' | 'left' | 'right' | 'w' | 'a' | 's' | 'd', Phaser.Input.Keyboard.Key>;
   private stickPointer?: Phaser.Input.Pointer;
   private stickOrigin = new Phaser.Math.Vector2();
   private stickVector = new Phaser.Math.Vector2();
@@ -14,6 +14,7 @@ export class InputManager {
   private knob: Phaser.GameObjects.Arc;
   private actionButton?: Phaser.GameObjects.Container;
   private actionQueued = false;
+  private navQueued = 0;
   private static readonly RADIUS = 28;
 
   constructor(private scene: Phaser.Scene) {
@@ -22,7 +23,6 @@ export class InputManager {
     this.keys = {
       up: kb.addKey(K.UP), down: kb.addKey(K.DOWN), left: kb.addKey(K.LEFT), right: kb.addKey(K.RIGHT),
       w: kb.addKey(K.W), a: kb.addKey(K.A), s: kb.addKey(K.S), d: kb.addKey(K.D),
-      e: kb.addKey(K.E), space: kb.addKey(K.SPACE), enter: kb.addKey(K.ENTER),
     };
 
     this.base = scene.add.circle(0, 0, InputManager.RADIUS, 0xffffff, 0.12).setStrokeStyle(1, 0xffffff, 0.35);
@@ -30,6 +30,15 @@ export class InputManager {
     for (const o of [this.base, this.knob]) o.setScrollFactor(0).setDepth(1000).setVisible(false);
 
     if (InputManager.isTouchDevice(scene)) this.createActionButton();
+
+    // toques rápidos de tecla (apertar e soltar no mesmo quadro) não podem se perder,
+    // então ação e navegação são guardadas no próprio evento de tecla
+    kb.on('keydown', (e: KeyboardEvent) => {
+      if (e.repeat) return;
+      if (['KeyE', 'Space', 'Enter', 'NumpadEnter'].includes(e.code)) this.actionQueued = true;
+      if (['ArrowUp', 'KeyW'].includes(e.code)) this.navQueued = -1;
+      if (['ArrowDown', 'KeyS'].includes(e.code)) this.navQueued = 1;
+    });
 
     scene.input.addPointer(1);
     scene.input.on('pointerdown', this.onDown, this);
@@ -93,10 +102,16 @@ export class InputManager {
     return v.lengthSq() > 1 ? v.normalize() : v;
   }
 
+  /** -1 (cima), 1 (baixo) ou 0, uma vez por toque de tecla. Usado em menus e escolhas. */
+  navPressed(): number {
+    const nav = this.navQueued;
+    this.navQueued = 0;
+    return nav;
+  }
+
   /** Verdadeiro uma única vez por toque no botão ou tecla (E, Espaço, Enter). */
   actionPressed(): boolean {
-    const JD = Phaser.Input.Keyboard.JustDown;
-    const pressed = this.actionQueued || JD(this.keys.e) || JD(this.keys.space) || JD(this.keys.enter);
+    const pressed = this.actionQueued;
     this.actionQueued = false;
     return pressed;
   }

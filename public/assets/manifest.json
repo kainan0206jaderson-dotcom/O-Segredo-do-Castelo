@@ -112,6 +112,72 @@
           "repeat": 0
         }
       }
+    },
+    "npc.trinco": {
+      "url": "sprites/trinco.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 3,
+          "repeat": -1
+        },
+        "talk": {
+          "frames": [
+            2,
+            3
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
+    },
+    "npc.dom-moldura": {
+      "url": "sprites/dom-moldura.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "frameRate": 4,
+          "repeat": -1
+        },
+        "talk": {
+          "frames": [
+            0,
+            2
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
+    },
+    "ui.alerta": {
+      "url": "ui/alerta.png",
+      "frameWidth": 8,
+      "frameHeight": 10,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 3,
+          "repeat": -1
+        }
+      }
     }
   },
   "tilesets": {
