@@ -9,10 +9,22 @@
       html, body { margin: 0; height: 100%; background: #18142a; overflow: hidden; touch-action: none; }
       #game { width: 100vw; height: 100dvh; display: flex; align-items: center; justify-content: center; }
       canvas { image-rendering: pixelated; }
+      #girar {
+        display: none; position: fixed; inset: 0; z-index: 10; background: #18142a; color: #e8e0f0;
+        font: 16px/1.4 Georgia, serif; text-align: center; align-items: center; justify-content: center;
+        flex-direction: column; gap: 16px; padding: 24px;
+      }
+      #girar .icone { font-size: 48px; color: #fad65c; animation: girar 2s ease-in-out infinite; }
+      @keyframes girar { 0%, 30% { transform: rotate(0deg); } 60%, 100% { transform: rotate(90deg); } }
+      @media (orientation: portrait) and (pointer: coarse) { #girar { display: flex; } }
     </style>
   </head>
   <body>
     <div id="game"></div>
+    <div id="girar" role="alert">
+      <div class="icone" aria-hidden="true">&#9647;</div>
+      <div>Gire o celular para jogar na horizontal</div>
+    </div>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

@@ -3,6 +3,7 @@ import { GAME_HEIGHT, GAME_WIDTH } from './config/game';
 import { BootScene } from './scenes/BootScene';
 import { PreloadScene } from './scenes/PreloadScene';
 import { WorldScene } from './scenes/WorldScene';
+import { setupMobileScreen } from './ui/mobile';
 
 const game = new Phaser.Game({
   type: Phaser.AUTO,
@@ -17,6 +18,8 @@ const game = new Phaser.Game({
   input: { activePointers: 2 },
   scene: [BootScene, PreloadScene, WorldScene],
 });
+
+setupMobileScreen();
 
 // atalho de depuração no console do navegador
 (window as unknown as { game: Phaser.Game }).game = game;

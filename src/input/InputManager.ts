@@ -1,17 +1,19 @@
 import Phaser from 'phaser';
 
 /**
- * Junta teclado e toque em um único vetor de direção (-1..1).
- * No celular, tocar na metade esquerda da tela cria um joystick virtual.
- * Gamepad entra na etapa 1.
+ * Junta teclado e toque em comandos únicos: direção (-1..1) e ação.
+ * No celular, a metade esquerda da tela vira um joystick virtual e o
+ * botão redondo à direita é a ação (interagir / lançar feitiço).
  */
 export class InputManager {
-  private keys: Record<'up' | 'down' | 'left' | 'right' | 'w' | 'a' | 's' | 'd', Phaser.Input.Keyboard.Key>;
+  private keys: Record<'up' | 'down' | 'left' | 'right' | 'w' | 'a' | 's' | 'd' | 'e' | 'space' | 'enter', Phaser.Input.Keyboard.Key>;
   private stickPointer?: Phaser.Input.Pointer;
   private stickOrigin = new Phaser.Math.Vector2();
   private stickVector = new Phaser.Math.Vector2();
   private base: Phaser.GameObjects.Arc;
   private knob: Phaser.GameObjects.Arc;
+  private actionButton?: Phaser.GameObjects.Container;
+  private actionQueued = false;
   private static readonly RADIUS = 28;
 
   constructor(private scene: Phaser.Scene) {
@@ -20,17 +22,38 @@ export class InputManager {
     this.keys = {
       up: kb.addKey(K.UP), down: kb.addKey(K.DOWN), left: kb.addKey(K.LEFT), right: kb.addKey(K.RIGHT),
       w: kb.addKey(K.W), a: kb.addKey(K.A), s: kb.addKey(K.S), d: kb.addKey(K.D),
+      e: kb.addKey(K.E), space: kb.addKey(K.SPACE), enter: kb.addKey(K.ENTER),
     };
 
     this.base = scene.add.circle(0, 0, InputManager.RADIUS, 0xffffff, 0.12).setStrokeStyle(1, 0xffffff, 0.35);
     this.knob = scene.add.circle(0, 0, 10, 0xffffff, 0.35);
     for (const o of [this.base, this.knob]) o.setScrollFactor(0).setDepth(1000).setVisible(false);
 
+    if (InputManager.isTouchDevice(scene)) this.createActionButton();
+
     scene.input.addPointer(1);
     scene.input.on('pointerdown', this.onDown, this);
     scene.input.on('pointermove', this.onMove, this);
     scene.input.on('pointerup', this.onUp, this);
     scene.input.on('pointerupoutside', this.onUp, this);
+  }
+
+  static isTouchDevice(scene: Phaser.Scene): boolean {
+    return scene.sys.game.device.input.touch && window.matchMedia('(pointer: coarse)').matches;
+  }
+
+  private createActionButton(): void {
+    const { width, height } = this.scene.scale.gameSize;
+    const ring = this.scene.add.circle(0, 0, 18, 0xfad65c, 0.18).setStrokeStyle(1, 0xfad65c, 0.7);
+    const star = this.scene.add.star(0, 0, 5, 4, 9, 0xfad65c, 0.85);
+    this.actionButton = this.scene.add.container(width - 34, height - 34, [ring, star])
+      .setScrollFactor(0).setDepth(1000).setSize(44, 44).setInteractive();
+    this.actionButton.on('pointerdown', () => {
+      this.actionQueued = true;
+      this.actionButton!.setScale(0.9);
+    });
+    this.actionButton.on('pointerup', () => this.actionButton!.setScale(1));
+    this.actionButton.on('pointerout', () => this.actionButton!.setScale(1));
   }
 
   private onDown(p: Phaser.Input.Pointer): void {
@@ -68,5 +91,13 @@ export class InputManager {
     );
     if (v.lengthSq() === 0) v.copy(this.stickVector);
     return v.lengthSq() > 1 ? v.normalize() : v;
+  }
+
+  /** Verdadeiro uma única vez por toque no botão ou tecla (E, Espaço, Enter). */
+  actionPressed(): boolean {
+    const JD = Phaser.Input.Keyboard.JustDown;
+    const pressed = this.actionQueued || JD(this.keys.e) || JD(this.keys.space) || JD(this.keys.enter);
+    this.actionQueued = false;
+    return pressed;
   }
 }
