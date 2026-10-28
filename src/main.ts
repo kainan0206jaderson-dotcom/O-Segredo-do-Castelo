@@ -1,0 +1,22 @@
+import Phaser from 'phaser';
+import { GAME_HEIGHT, GAME_WIDTH } from './config/game';
+import { BootScene } from './scenes/BootScene';
+import { PreloadScene } from './scenes/PreloadScene';
+import { WorldScene } from './scenes/WorldScene';
+
+const game = new Phaser.Game({
+  type: Phaser.AUTO,
+  parent: 'game',
+  width: GAME_WIDTH,
+  height: GAME_HEIGHT,
+  backgroundColor: '#18142a',
+  pixelArt: true,
+  roundPixels: true,
+  physics: { default: 'arcade', arcade: { debug: false } },
+  scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
+  input: { activePointers: 2 },
+  scene: [BootScene, PreloadScene, WorldScene],
+});
+
+// atalho de depuração no console do navegador
+(window as unknown as { game: Phaser.Game }).game = game;
