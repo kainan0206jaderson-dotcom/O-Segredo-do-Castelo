@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "status": "provisorio",
+  "status": "definitivo",
   "spritesheets": {
     "player.aprendiz": {
       "url": "sprites/aprendiz.png",
