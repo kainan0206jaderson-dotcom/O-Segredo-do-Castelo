@@ -1456,7 +1456,7 @@ COLLIDES = (TOP, FACE, WOOD, WIN, B1, B2, B3, B4)
 
 
 def build_room(name, title, w, h, doors, tables=(), carpet=None, windows=(), banners=(), props=(), spawns=(), npcs=(),
-               candles=(), pickups=(), stations=(), boards=(), extra=(), floor_tile=None, props_map=None):
+               candles=(), pickups=(), stations=(), boards=(), extra=(), floor_tile=None, props_map=None, decor=()):
     """doors: (lado N/S/L/O, posição, mapa destino, chegada no destino, nome desta chegada[, propriedades extras])."""
     floor, walls = [], []
     for y in range(h):
@@ -1545,6 +1545,10 @@ def build_room(name, title, w, h, doors, tables=(), carpet=None, windows=(), ban
     for (sprite, px, py) in props:
         obj(name=sprite, type="prop", x=px * 16 + 8, y=py * 16 + 16, point=True,
             properties=[{"name": "sprite", "type": "string", "value": sprite}])
+    # enfeites em pixels exatos: (sprite, x da base, y da base, altura que bloqueia ou 0)
+    for (sprite, px, py, solid) in decor:
+        obj(name=sprite, type="prop", x=px, y=py, point=True,
+            properties=[{"name": "sprite", "type": "string", "value": sprite}] + plist(**({"solido": solid} if solid else {})))
     for e in extra:
         obj(**e)
 
@@ -1601,25 +1605,38 @@ build_room("recepcao", "Recepção", 20, 13,
            npcs=[("trinco", "npc.trinco", 13, 5, "trinco", False), ("mary", "npc.mary", 5, 7, "mary", False)],
            pickups=[("abobora-recepcao", "abobora", 3, 10)])
 
-# Grande Salão: quatro mesas das casas; sul = Recepção, leste = Cozinha
-build_room("grande-salao", "Grande Salão", 40, 24,
-           doors=[("S", 19, "map.recepcao", "do-salao", "da-recepcao"),
-                  ("L", 11, "map.cozinha", "do-salao", "da-cozinha"),
-                  ("O", 11, "map.corredor", "do-salao", "do-corredor")],
-           tables=[(6, 8, 3, 8), (12, 8, 3, 8), (25, 8, 3, 8), (31, 8, 3, 8)],
-           carpet=(17, 4, 22, 22), windows=(6, 14, 25, 33),
-           banners=[(9, B1), (12, B2), (27, B3), (30, B4)],
-           candles=[("vela-1", 5, 4, True), ("vela-2", 34, 4, True), ("vela-3", 5, 19, True),
-                    ("vela-4", 34, 19, True), ("vela-5", 16, 5, True), ("vela-6", 23, 5, True)],
-           npcs=[("dom-moldura", "npc.dom-moldura", 19, 2, "dom-moldura", True), ("booh", "npc.booh", 36, 6, "booh", False)],
-           pickups=[("gelo-seco-salao", "gelo-seco", 30, 18)],
-           boards=[("quadro-desafios", "velas-do-salao", 24, 3), ("quadro-corrida", "corrida-levitacao", 15, 3)],
-           extra=[pt("npc", "fuxico", 21, 16, sprite="npc.fuxico", dialogue="fuxico", wall=False),
-                  pt("levitavel", "calice-1", 3, 21, kind="calice", sprite="prop.calice"),
-                  pt("levitavel", "calice-2", 36, 21, kind="calice", sprite="prop.calice"),
-                  pt("levitavel", "calice-3", 36, 7, kind="calice", sprite="prop.calice"),
-                  *[pt("socket", f"bandeja-{i + 1}", 9 + i * 2, 5, accepts="calice", mode="levitar", group="corrida", sprite="prop.bandeja") for i in range(3)],
-                  zone("trigger", "morgana-salao", 1, 8, 5, 8, dialogue="salao-morgana", actor="npc.morgana", ax=72, ay=112,
+# Grande Salão: as quatro mesas das casas, com toalha da casa e bancos; sul = Recepção, leste = Cozinha
+SALAO_MESAS = [("coragem", 3), ("inteligencia", 8), ("astucia", 18), ("lealdade", 23)]
+
+
+def mesa_posta(casa, tx, ty=6, th=7):
+    """Toalha da casa por cima da mesa e um banco de cada lado."""
+    bottom = (ty + th) * 16
+    return [(f"prop.toalha-{casa}", (tx + 1) * 16, bottom + 4, 0),
+            ("prop.banco", (tx - 1) * 16 + 10, bottom - 16, 80),
+            ("prop.banco", (tx + 2) * 16 + 6, bottom - 16, 80)]
+
+
+build_room("grande-salao", "Grande Salão", 28, 18,
+           doors=[("S", 13, "map.recepcao", "do-salao", "da-recepcao"),
+                  ("L", 8, "map.cozinha", "do-salao", "da-cozinha"),
+                  ("O", 8, "map.corredor", "do-salao", "do-corredor")],
+           tables=[(tx, 6, 2, 7) for _, tx in SALAO_MESAS],
+           carpet=(12, 3, 15, 16), windows=(6, 21),
+           banners=[(4, B1), (9, B2), (18, B3), (23, B4)],
+           candles=[("vela-1", 1, 3, True), ("vela-2", 26, 3, True), ("vela-3", 1, 15, True),
+                    ("vela-4", 26, 15, True), ("vela-5", 11, 4, True), ("vela-6", 16, 4, True)],
+           npcs=[("dom-moldura", "npc.dom-moldura", 13, 2, "dom-moldura", True), ("booh", "npc.booh", 21, 4, "booh", False)],
+           pickups=[("gelo-seco-salao", "gelo-seco", 21, 14)],
+           boards=[("quadro-desafios", "velas-do-salao", 17, 3), ("quadro-corrida", "corrida-levitacao", 10, 3)],
+           decor=[d for casa, tx in SALAO_MESAS for d in mesa_posta(casa, tx)]
+                 + [("prop.planta", 11 * 16 + 8, 17 * 16, 8), ("prop.planta", 16 * 16 + 8, 17 * 16, 8)],
+           extra=[pt("npc", "fuxico", 14, 13, sprite="npc.fuxico", dialogue="fuxico", wall=False),
+                  pt("levitavel", "calice-1", 2, 16, kind="calice", sprite="prop.calice"),
+                  pt("levitavel", "calice-2", 25, 16, kind="calice", sprite="prop.calice"),
+                  pt("levitavel", "calice-3", 26, 9, kind="calice", sprite="prop.calice"),
+                  *[pt("socket", f"bandeja-{i + 1}", 5 + i * 2, 4, accepts="calice", mode="levitar", group="corrida", sprite="prop.bandeja") for i in range(3)],
+                  zone("trigger", "morgana-salao", 1, 5, 3, 10, dialogue="salao-morgana", actor="npc.morgana", ax=104, ay=88,
                        when=ALL(QA("o-selo"), NOT(FL("visto:morgana-salao"))))])
 
 # Cozinha bruxa: caldeirões; oeste = Grande Salão
@@ -1909,9 +1926,37 @@ add_objects("cozinha", [
 # A chave fica escondida atrás da mesa do Gabinete do Ministro
 add_objects("gabinete", [pt("pickup", "chave-porao", 14, 8, y=8 * 16 + 12, item="chave-do-porao")])
 
+# Enfeites para as salas não parecerem vazias: móveis encostados nas paredes e nos cantos,
+# longe das portas e dos caminhos dos enigmas. "solido" = altura da base que bloqueia.
+def enfeite(sprite, tx, ty, solido=0):
+    return pt("prop", sprite, tx, ty, sprite=sprite, **({"solido": solido} if solido else {}))
+
+
+ENFEITES = {
+    "recepcao": [enfeite("prop.armadura", 7, 3, 8), enfeite("prop.armadura", 12, 3, 8),
+                 enfeite("prop.planta", 1, 3, 8), enfeite("prop.planta", 18, 3, 8),
+                 enfeite("prop.barril", 17, 8, 8), enfeite("prop.barril", 18, 8, 8),
+                 enfeite("prop.prateleira-pocoes", 14, 3), enfeite("prop.caixote", 1, 11, 8)],
+    "cozinha": [enfeite("prop.prateleira-pocoes", 7, 3), enfeite("prop.prateleira-pocoes", 11, 3),
+                enfeite("prop.barril", 1, 12, 8), enfeite("prop.barril", 2, 12, 8),
+                enfeite("prop.caixote", 20, 8, 8), enfeite("prop.caixote", 20, 9, 8), enfeite("prop.planta", 14, 12, 8)],
+    "corredor": [enfeite("prop.armadura", 20, 3), enfeite("prop.armadura", 26, 3),
+                 enfeite("prop.planta", 5, 8), enfeite("prop.planta", 11, 8), enfeite("prop.planta", 22, 8), enfeite("prop.planta", 27, 8)],
+    "gabinete": [enfeite("prop.prateleira-pocoes", 11, 3), enfeite("prop.planta", 2, 8, 8)],
+    "hall": [enfeite("prop.armadura", 8, 3, 8), enfeite("prop.armadura", 13, 3, 8),
+             enfeite("prop.planta", 1, 4, 8), enfeite("prop.barril", 4, 12, 8)],
+    "biblioteca": [enfeite("prop.planta", 12, 14), enfeite("prop.planta", 15, 14)],
+    "estufa": [enfeite("prop.planta", 4, 3), enfeite("prop.planta", 10, 3), enfeite("prop.planta", 15, 3)],
+    "galeria": [enfeite("prop.planta", 3, 12), enfeite("prop.planta", 28, 12),
+                enfeite("prop.armadura", 9, 12), enfeite("prop.armadura", 22, 12)],
+    "porao": [enfeite("prop.barril", 1, 8, 8), enfeite("prop.barril", 1, 9, 8), enfeite("prop.prateleira-pocoes", 8, 3)],
+}
+for key, objs in ENFEITES.items():
+    add_objects(key, objs)
+
 # 12 Estrelas Perdidas: 10 espalhadas pelo castelo (algumas só com Revelar), 1 no porão e 1 no desafio do porão
 ESTRELAS = [
-    ("recepcao", 17, 10, False), ("grande-salao", 2, 21, False), ("cozinha", 20, 12, False), ("corredor", 31, 8, False),
+    ("recepcao", 17, 10, False), ("grande-salao", 6, 14, False), ("cozinha", 20, 12, False), ("corredor", 31, 8, False),
     ("hall", 2, 12, False), ("biblioteca", 26, 14, True), ("sala-espectral", 20, 12, True), ("estufa", 20, 12, True),
     ("observatorio", 18, 12, False), ("galeria", 30, 12, True),
 ]

@@ -7,7 +7,7 @@
       "hasSpell": "lumen"
     },
     "lockedText": "Você precisa conhecer o feitiço Lumen para este desafio.",
-    "timeLimitMs": 45000,
+    "timeLimitMs": 35000,
     "targets": [
       "vela-1",
       "vela-2",
@@ -35,7 +35,7 @@
       "hasSpell": "levitar"
     },
     "lockedText": "Você precisa conhecer o feitiço Levitar. Quem ensina é o Ministro Bonfatt.",
-    "timeLimitMs": 75000,
+    "timeLimitMs": 60000,
     "kind": "levitar",
     "targets": [
       "bandeja-1",

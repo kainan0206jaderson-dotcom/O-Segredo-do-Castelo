@@ -1354,6 +1354,60 @@
       "frameWidth": 16,
       "frameHeight": 16,
       "animations": {}
+    },
+    "prop.toalha-coragem": {
+      "url": "sprites/toalha-coragem.png",
+      "frameWidth": 24,
+      "frameHeight": 118,
+      "animations": {}
+    },
+    "prop.toalha-inteligencia": {
+      "url": "sprites/toalha-inteligencia.png",
+      "frameWidth": 24,
+      "frameHeight": 118,
+      "animations": {}
+    },
+    "prop.toalha-astucia": {
+      "url": "sprites/toalha-astucia.png",
+      "frameWidth": 24,
+      "frameHeight": 118,
+      "animations": {}
+    },
+    "prop.toalha-lealdade": {
+      "url": "sprites/toalha-lealdade.png",
+      "frameWidth": 24,
+      "frameHeight": 118,
+      "animations": {}
+    },
+    "prop.banco": {
+      "url": "sprites/banco.png",
+      "frameWidth": 10,
+      "frameHeight": 80,
+      "animations": {}
+    },
+    "prop.barril": {
+      "url": "sprites/barril.png",
+      "frameWidth": 16,
+      "frameHeight": 20,
+      "animations": {}
+    },
+    "prop.planta": {
+      "url": "sprites/planta.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {}
+    },
+    "prop.prateleira-pocoes": {
+      "url": "sprites/prateleira-pocoes.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {}
+    },
+    "prop.armadura": {
+      "url": "sprites/armadura.png",
+      "frameWidth": 16,
+      "frameHeight": 28,
+      "animations": {}
     }
   },
   "tilesets": {
