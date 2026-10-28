@@ -1,27 +1,32 @@
-# Lista de polimento (etapa 6)
+# Lista de polimento
 
-Detalhes notados durante o desenvolvimento, para a fase de ajuste final.
+## Feito na etapa 6
 
-- Fonte em pixel (bitmap) para diálogos, nomes de sala e HUD; hoje os textos usam Georgia e ficam levemente borrados ao ampliar.
-- Tapete do Grande Salão: borda dourada se repete em cada tile; trocar por tiles de canto, borda e centro.
+- Fonte em pixel (Pixelify Sans) em todos os textos, sem borrão.
+- Tileset definitivo com variações: lajotas, base de parede com tijolos, tapete com canto/borda/centro, frente das mesas, madeira, grama com flores, céu de estrelas e chão de tinta.
+- Todos os personagens, criaturas, objetos e ícones redesenhados à mão (Bonfatt, Amélia, Aristóteles, Morgana, fantasmas, gnomos, Trinco, Fuxico, Dona Brasa, Fada Ramalhete).
+- Sons e músicas: trilha por sala, música de título, duelo e final; sons de passos, portas, feitiços, diálogo (blip por letra) e alertas.
+- Diálogo com retrato de quem fala.
+- Cronômetro dos desafios fica vermelho e avisa "Faltam 10 segundos!" com tique.
+- Tela de Opções: volume de música e efeitos, velocidade do texto e desligar tremor/piscadas (acessibilidade).
+- Falas curtas do aprendiz ao pegar coisas, entrar em salas, levar dano etc.
+- Porão secreto com baús aleatórios, Mapa dos Segredos, Estrelas Perdidas e sombras fujonas no jogo livre.
+
+## Fica para depois da v1
+
 - Animação de andar do aprendiz: pernas mudam pouco entre quadros; pedir 6 quadros com balanço do manto.
 - Mesas das casas: hoje são blocos de madeira; desenhar mesas com bancos, pratos e as cores de cada casa.
-- Paredes laterais: só a borda escura; adicionar parede com tijolos e sombra.
 - Escala inteira na tela (sem borrão ao redimensionar) em vez de "caber na tela".
 - Ícone do aviso "gire o celular" usa caractere de texto; trocar por desenho em pixel.
 - Balão "!" de interação: redesenhar.
-- Sons: passos, portas, abrir diálogo, fagulha.
 - Balcão da recepção: desenhar como móvel com profundidade (hoje o jogador aparece por cima dele ao chegar perto).
-- Caixa de diálogo: retrato do personagem ao lado do texto e som de "fala" por letra.
 - Escolhas no diálogo: moldura própria em vez de texto com fundo.
 - Caldeirão: animação de borbulhar ao mexer, ingredientes caindo na panela e som de "puf" ao errar.
 - Grimório: páginas com textura de papel e ícones maiores; virar página entre abas.
 - Velas: luz real ao redor nas salas comuns também (hoje só o Quadro da Coragem escurece).
-- Desafio: cronômetro com moldura própria, aviso de "faltam 10s" e placar de recorde no quadro.
 - Fogos Bruxos: mais cores e faíscas que caem devagar.
 - Dona Brasa: asas batendo e farinha voando quando ela fala.
 - Mesa da cozinha: panelas, tábuas e ingredientes em cima, não só madeira lisa.
-- Prof. Arquimedes: mago de chapéu pontudo e sobretudo (pedido do kainan); detalhar bordados e barba esvoaçante.
 - Morgana: entrada com fumaça mais elaborada e capa esvoaçando; som próprio ao aparecer.
 - Sombrinhas: olhos que piscam, rastro escuro e um "puf" de luz ao sumir.
 - Estátuas: som de pedra arrastando e poeira ao andar um quadrado.
@@ -33,7 +38,6 @@ Detalhes notados durante o desenvolvimento, para a fase de ajuste final.
 - Tutoriais: pequena animação mostrando o gesto (seta ou dedo) em vez de só o ícone.
 - Amélia: fantasma com flutuação suave, brilho pulsando e rastro de névoa ao andar; Aristóteles: fumaça branca e pergaminho ao apresentar a aula de Criaturas Espectrais.
 - Etapa 5 (Atos 2 e 3), arte e sensação:
-  - Salas novas usam chãos simples (madeira, grama, estrelas, tinta): detalhar com tapetes, mesas de leitura, vasos e estrelas piscando.
   - Espectros: rastro de névoa e um "uuuh" baixinho; brilho roxo mais forte quando revelados.
   - Olhos-sentinela: piscar antes de virar e som de alerta ao ver o aprendiz.
   - Raio de luz: partículas no feixe e cristal acendendo com explosão de brilho.
@@ -43,4 +47,3 @@ Detalhes notados durante o desenvolvimento, para a fase de ajuste final.
   - Cerimônia final: personagens com animação de comemoração e confete; créditos com música.
   - Quadros-portais: entrada com efeito de "mergulhar na tinta".
   - Cone de visão dos olhos atravessa paredes no desenho (a visão em si não muda); cortar o facho na parede.
-  - Fantasmas (Booh, Mister Addam, Dona Lágrima) e gnomos (Mary, Mish Mish, Wish Wish): arte provisória; detalhar com as características reais que o kainan passar.
