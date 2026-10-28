@@ -2,36 +2,233 @@
   "id": "dona-brasa",
   "speaker": "Dona Brasa",
   "entries": [
-    { "when": { "questDone": "luz-na-cozinha" }, "start": "depois" },
-    { "when": { "questStage": "luz-na-cozinha", "stage": "falar-com-brasa" }, "start": "final" },
-    { "when": { "questStage": "luz-na-cozinha", "stage": "acender-velas" }, "start": "lembrete-velas" },
-    { "when": { "questStage": "luz-na-cozinha", "stage": "entregar-drink" }, "start": "entrega" },
-    { "when": { "questStage": "luz-na-cozinha", "stage": "preparar-drink" }, "start": "lembrete-drink" },
-    { "when": { "questStage": "luz-na-cozinha", "stage": "ir-a-cozinha" }, "start": "chegada" },
-    { "start": "ocupada" }
+    {
+      "when": {
+        "all": [
+          {
+            "questStage": "chaves-do-trinco",
+            "stage": "entregar-cerveja"
+          },
+          {
+            "hasItem": "cerveja-abobora"
+          }
+        ]
+      },
+      "start": "entrega-cerveja"
+    },
+    {
+      "when": {
+        "questStage": "chaves-do-trinco",
+        "stage": "entregar-cerveja"
+      },
+      "start": "cade-cerveja"
+    },
+    {
+      "when": {
+        "questStage": "chaves-do-trinco",
+        "stage": "fazer-cerveja"
+      },
+      "start": "lembrete-cerveja"
+    },
+    {
+      "when": {
+        "questStage": "chaves-do-trinco",
+        "stage": "perguntar-a-brasa"
+      },
+      "start": "chaves"
+    },
+    {
+      "when": {
+        "questStage": "chaves-do-trinco",
+        "stage": "devolver-chaves"
+      },
+      "start": "lembrete-devolver"
+    },
+    {
+      "when": {
+        "questDone": "luz-na-cozinha"
+      },
+      "start": "depois"
+    },
+    {
+      "when": {
+        "questStage": "luz-na-cozinha",
+        "stage": "falar-com-brasa"
+      },
+      "start": "final"
+    },
+    {
+      "when": {
+        "questStage": "luz-na-cozinha",
+        "stage": "acender-velas"
+      },
+      "start": "lembrete-velas"
+    },
+    {
+      "when": {
+        "questStage": "luz-na-cozinha",
+        "stage": "entregar-drink"
+      },
+      "start": "entrega"
+    },
+    {
+      "when": {
+        "questStage": "luz-na-cozinha",
+        "stage": "preparar-drink"
+      },
+      "start": "lembrete-drink"
+    },
+    {
+      "when": {
+        "questStage": "luz-na-cozinha",
+        "stage": "ir-a-cozinha"
+      },
+      "start": "chegada"
+    },
+    {
+      "start": "ocupada"
+    }
   ],
   "nodes": {
-    "ocupada": { "text": "Ai, ai, ai! Sem luz não tem escondidinho de abóbora! Volte mais tarde, docinho." },
-    "chegada": { "text": "Finalmente alguém! Eu sou a Dona Brasa, fada da cozinha. Desde que a luz fria desceu da torre, minhas velas não acendem de jeito nenhum.", "next": "chegada-2" },
-    "chegada-2": { "text": "Mas eu conheço um truque: a fumaça de um Drink Bruxo Fumegante acorda chama adormecida. E com chama acordada, eu te ensino o Lumen.", "next": "chegada-3" },
+    "ocupada": {
+      "text": "Ai, ai, ai! Sem luz não tem escondidinho de abóbora! Volte mais tarde, docinho."
+    },
+    "chegada": {
+      "text": "Finalmente alguém! Eu sou a Dona Brasa, fada da cozinha. Desde que a luz fria desceu da torre, minhas velas não acendem de jeito nenhum.",
+      "next": "chegada-2"
+    },
+    "chegada-2": {
+      "text": "Mas eu conheço um truque: a fumaça de um Drink Bruxo Fumegante acorda chama adormecida. E com chama acordada, eu te ensino o Lumen.",
+      "next": "chegada-3"
+    },
     "chegada-3": {
       "text": "Sabe preparar um?",
       "choices": [
-        { "text": "Não faço ideia.", "next": "receita" },
-        { "text": "Claro! (mentira)", "next": "receita-mentira" }
+        {
+          "text": "Não faço ideia.",
+          "next": "receita"
+        },
+        {
+          "text": "Claro! (mentira)",
+          "next": "receita-mentira"
+        }
       ]
     },
-    "receita-mentira": { "text": "Hihi, sei. Vou anotar no seu grimório mesmo assim.", "next": "receita" },
-    "receita": { "text": "Suco colorido e gelo seco no caldeirão, depois é só mexer. O suco tá ali no canto, e o gelo seco ficou no Grande Salão.",
-      "effects": [{ "learnRecipe": "drink-fumegante" }, { "advanceQuest": "luz-na-cozinha", "to": "preparar-drink" }] },
-    "lembrete-drink": { "text": "Suco colorido mais gelo seco, no caldeirão grande! A receita tá no seu grimório, aba Receitas." },
-    "entrega": { "text": "Olha essa fumaça! Perfeito! Agora segura a varinha assim... diz comigo: LUMEN!",
-      "effects": [{ "takeItem": "drink-fumegante" }, { "learnSpell": "lumen" }, { "advanceQuest": "luz-na-cozinha", "to": "acender-velas" }], "next": "entrega-2" },
-    "entrega-2": { "text": "Isso! Agora acende as duas velas da bancada pra mim? Escolha o Lumen e aponte para elas." },
-    "lembrete-velas": { "text": "As duas velas da bancada, docinho! Fique de frente pra elas e lance o Lumen." },
-    "final": { "text": "Que luz linda! A cozinha voltou a cheirar a abóbora. Tome, a receita da nossa Sobremesa Mandrágora. Segredo de família!",
-      "effects": [{ "learnRecipe": "sobremesa-mandragora" }, { "completeQuest": "luz-na-cozinha" }], "next": "final-2" },
-    "final-2": { "text": "Ah, e se quiser treinar, tem um quadro de desafios no Grande Salão. Quem vence aprende uns feitiços que não estão nos livros..." },
-    "depois": { "text": "Volte quando quiser, docinho. Sempre tem cerveja de abóbora sem álcool pra aprendiz." }
+    "receita-mentira": {
+      "text": "Hihi, sei. Vou anotar no seu grimório mesmo assim.",
+      "next": "receita"
+    },
+    "receita": {
+      "text": "Suco colorido e gelo seco no caldeirão, depois é só mexer. O suco tá ali no canto, e o gelo seco ficou no Grande Salão.",
+      "effects": [
+        {
+          "learnRecipe": "drink-fumegante"
+        },
+        {
+          "advanceQuest": "luz-na-cozinha",
+          "to": "preparar-drink"
+        }
+      ]
+    },
+    "lembrete-drink": {
+      "text": "Suco colorido mais gelo seco, no caldeirão grande! A receita tá no seu grimório, aba Receitas."
+    },
+    "entrega": {
+      "text": "Olha essa fumaça! Perfeito! Agora segura a varinha assim... diz comigo: LUMEN!",
+      "effects": [
+        {
+          "takeItem": "drink-fumegante"
+        },
+        {
+          "learnSpell": "lumen"
+        },
+        {
+          "advanceQuest": "luz-na-cozinha",
+          "to": "acender-velas"
+        },
+        {
+          "tutorial": "feiticos"
+        }
+      ],
+      "next": "entrega-2"
+    },
+    "entrega-2": {
+      "text": "Isso! Agora acende as duas velas da bancada pra mim? Escolha o Lumen e aponte para elas."
+    },
+    "lembrete-velas": {
+      "text": "As duas velas da bancada, docinho! Fique de frente pra elas e lance o Lumen."
+    },
+    "final": {
+      "text": "Que luz linda! A cozinha voltou a cheirar a abóbora. Tome, a receita da nossa Sobremesa Mandrágora. Segredo de família!",
+      "effects": [
+        {
+          "learnRecipe": "sobremesa-mandragora"
+        },
+        {
+          "completeQuest": "luz-na-cozinha"
+        }
+      ],
+      "next": "final-2"
+    },
+    "final-2": {
+      "text": "Ah! O Prof. Arquimedes mandou um recado pelo bule: quer conhecer o aprendiz que acendeu a cozinha. O gabinete dele fica no Corredor dos Quadros, porta oeste do Grande Salão.",
+      "next": "final-3",
+      "effects": [
+        {
+          "startQuest": "o-diretor"
+        }
+      ]
+    },
+    "depois": {
+      "text": "Volte quando quiser, docinho. A despensa ali no canto é sua, e sempre tem cerveja de abóbora sem álcool pra aprendiz.",
+      "effects": [
+        {
+          "startQuest": "o-diretor"
+        }
+      ]
+    },
+    "final-3": {
+      "text": "E se quiser treinar, tem um quadro de desafios no Grande Salão. E a despensa ali no canto é sua: pega o que precisar!"
+    },
+    "chaves": {
+      "text": "As chaves do Trinco? Ahá! Achei embaixo da panela de escondidinho. Ele vive \"provando\" minha comida...",
+      "next": "chaves-2"
+    },
+    "chaves-2": {
+      "text": "Devolvo com prazer, mas antes quero uma Cerveja de Abóbora fresquinha. Abóbora e gelo seco no caldeirão. A despensa tem os dois!",
+      "effects": [
+        {
+          "learnRecipe": "cerveja-abobora"
+        },
+        {
+          "advanceQuest": "chaves-do-trinco",
+          "to": "fazer-cerveja"
+        }
+      ]
+    },
+    "lembrete-cerveja": {
+      "text": "Abóbora e gelo seco no caldeirão, docinho. Tá tudo na despensa, ali no canto."
+    },
+    "entrega-cerveja": {
+      "text": "Hmm, cheirinho de abóbora! Trato é trato: aqui estão as chaves do Trinco. Todas as trinta. Eu contei.",
+      "effects": [
+        {
+          "takeItem": "cerveja-abobora"
+        },
+        {
+          "giveItem": "chaves-trinco"
+        },
+        {
+          "advanceQuest": "chaves-do-trinco",
+          "to": "devolver-chaves"
+        }
+      ]
+    },
+    "cade-cerveja": {
+      "text": "Ué, cadê a cerveja? Bebeu, foi? Hihi. Faz outra, a despensa tem tudo."
+    },
+    "lembrete-devolver": {
+      "text": "Leva logo essas chaves pro Trinco antes que ele tenha um treco. Ele fica na Recepção."
+    }
   }
 }

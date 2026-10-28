@@ -4,6 +4,59 @@
   "entries": [
     {
       "when": {
+        "all": [
+          {
+            "questStage": "chaves-do-trinco",
+            "stage": "devolver-chaves"
+          },
+          {
+            "hasItem": "chaves-trinco"
+          }
+        ]
+      },
+      "start": "devolve"
+    },
+    {
+      "when": {
+        "questActive": "chaves-do-trinco"
+      },
+      "start": "lembrete-chaves"
+    },
+    {
+      "when": {
+        "all": [
+          {
+            "questActive": "o-selo"
+          },
+          {
+            "not": {
+              "questDone": "chaves-do-trinco"
+            }
+          }
+        ]
+      },
+      "start": "chaves"
+    },
+    {
+      "when": {
+        "flag": "ato:1:fim"
+      },
+      "start": "fim-ato"
+    },
+    {
+      "when": {
+        "questActive": "o-selo"
+      },
+      "start": "selo"
+    },
+    {
+      "when": {
+        "questActive": "o-diretor"
+      },
+      "start": "diretor"
+    },
+    {
+      "when": {
         "questDone": "primeira-noite"
       },
       "start": "depois"
@@ -32,56 +85,11 @@
       "next": "sumico"
     },
     "sumico": {
-      "text": "Mas olha, hoje a noite tá esquisita. As velas estão apagando sozinhas e o Professor Arquimedes sumiu antes da aula!",
-      "next": "mesa"
-    },
-    "mesa": {
-      "text": "Antes de tudo: em qual mesa do Grande Salão você vai sentar?",
-      "choices": [
-        {
-          "text": "Coragem",
-          "next": "mesa-ok",
-          "effects": [
-            {
-              "setFlag": "casa",
-              "value": "coragem"
-            }
-          ]
-        },
-        {
-          "text": "Inteligência",
-          "next": "mesa-ok",
-          "effects": [
-            {
-              "setFlag": "casa",
-              "value": "inteligencia"
-            }
-          ]
-        },
-        {
-          "text": "Astúcia",
-          "next": "mesa-ok",
-          "effects": [
-            {
-              "setFlag": "casa",
-              "value": "astucia"
-            }
-          ]
-        },
-        {
-          "text": "Lealdade",
-          "next": "mesa-ok",
-          "effects": [
-            {
-              "setFlag": "casa",
-              "value": "lealdade"
-            }
-          ]
-        }
-      ]
+      "text": "Mas olha, hoje a noite tá esquisita. As velas estão apagando sozinhas, e o Professor Arquimedes se trancou no gabinete desde o jantar!",
+      "next": "mesa-ok"
     },
     "mesa-ok": {
-      "text": "Escolha bonita! Tome, sua varinha. Não aponte para o meu nariz, por favor.",
+      "text": "Tome, sua varinha. Não aponte para o meu nariz, por favor.",
       "effects": [
         {
           "giveItem": "varinha"
@@ -125,6 +133,50 @@
     },
     "depois": {
       "text": "Grimório na mão, varinha no bolso... Agora sim parece um bruxo de verdade! Quase. A Dona Brasa tá te esperando na cozinha."
+    },
+    "diretor": {
+      "text": "O Arquimedes quer te ver? Uau. O gabinete fica no Corredor dos Quadros, pela porta oeste do Grande Salão. Bate antes de entrar!"
+    },
+    "chaves": {
+      "text": "Aprendiz! Desastre! Perdi meu molho de chaves! Sem chave, sem porta. Sem porta, sem castelo. Sem castelo... sem emprego!",
+      "next": "chaves-2"
+    },
+    "chaves-2": {
+      "text": "A última vez que eu vi o molho foi na cozinha, roubando... digo, provando o escondidinho da Dona Brasa. Pergunta pra ela?",
+      "effects": [
+        {
+          "startQuest": "chaves-do-trinco"
+        }
+      ]
+    },
+    "lembrete-chaves": {
+      "text": "Nada das chaves ainda? A Dona Brasa, na cozinha! Ela guarda tudo que acha no chão. Inclusive duendes, uma vez."
+    },
+    "devolve": {
+      "text": "MINHAS CHAVES! Todas as trinta! Você me ajudou sem pedir nada em troca... isso tem nome: lealdade.",
+      "next": "devolve-2",
+      "effects": [
+        {
+          "takeItem": "chaves-trinco"
+        }
+      ]
+    },
+    "devolve-2": {
+      "text": "Olha só o que estava pendurado no molho esse tempo todo: uma pedra com o símbolo da Lealdade! Ela é sua. Combina com você.",
+      "effects": [
+        {
+          "giveItem": "pedra-lealdade"
+        },
+        {
+          "completeQuest": "chaves-do-trinco"
+        }
+      ]
+    },
+    "selo": {
+      "text": "O diretor sumiu numa nuvem de fuligem?! Eu SABIA que essa noite tava esquisita. Junta as quatro pedras e quebra esse selo, aprendiz!"
+    },
+    "fim-ato": {
+      "text": "O selo quebrou! A escada tá livre! Eu ia subir com você, mas... alguém tem que cuidar da recepção. É. Isso. Boa sorte!"
     }
   }
 }

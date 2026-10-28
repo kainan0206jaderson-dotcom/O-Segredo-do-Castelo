@@ -1,6 +1,10 @@
 import type { FlagValue } from '../types/content';
 
-export const SAVE_VERSION = 2;
+export const SAVE_VERSION = 3;
+
+/** Vida e energia iniciais (iguais ao nível 1 de content/progression.json). */
+export const START_VIDA = 5;
+export const START_ENERGIA = 6;
 
 export interface QuestProgress {
   stage: string;
@@ -21,12 +25,21 @@ export interface GameState {
   recipes: string[];
   /** Desafios opcionais vencidos e o melhor tempo. */
   challenges: Record<string, { done: boolean; bestMs?: number }>;
+  /** Casa escolhida com o Prof. Arquimedes (coragem, inteligencia, astucia, lealdade). */
+  house: string | null;
+  /** Ficha do aprendiz. */
+  level: number;
+  xp: number;
+  vida: number;
+  energia: number;
+  equipment: { capa?: string };
   playTimeMs: number;
 }
 
 export function newGame(map: string, spawn: string): GameState {
   return {
     version: SAVE_VERSION, map, spawn, flags: {}, quests: {}, inventory: {},
-    spells: [], selectedSpell: null, recipes: [], challenges: {}, playTimeMs: 0,
+    spells: [], selectedSpell: null, recipes: [], challenges: {},
+    house: null, level: 1, xp: 0, vida: START_VIDA, energia: START_ENERGIA, equipment: {}, playTimeMs: 0,
   };
 }

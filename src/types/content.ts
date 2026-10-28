@@ -10,6 +10,8 @@ export type Condition =
   | { hasItem: string }
   | { hasSpell: string }
   | { knowsRecipe: string }
+  | { house: string }
+  | { minLevel: number }
   | { not: Condition }
   | { all: Condition[] }
   | { any: Condition[] };
@@ -22,7 +24,16 @@ export type Effect =
   | { advanceQuest: string; to: string }
   | { completeQuest: string }
   | { learnSpell: string }
-  | { learnRecipe: string };
+  | { learnRecipe: string }
+  | { giveXp: number }
+  | { setHouse: string }
+  | { equip: string }
+  | { heal: number }
+  | { restoreEnergy: number }
+  /** Mostra um tutorial curto (só na primeira vez). */
+  | { tutorial: string }
+  /** Fecha um ato com a tela de fim de ato. */
+  | { endAct: number };
 
 export interface DialogueChoice {
   text: string;
@@ -56,13 +67,32 @@ export interface QuestStageDef {
 
 export interface QuestDef {
   title: string;
+  /** Principal (história) ou secundária (opcional). */
+  kind?: 'principal' | 'secundaria';
+  /** Experiência ao concluir. */
+  xp?: number;
   stages: QuestStageDef[];
+}
+
+export interface StatBonus {
+  vida?: number;
+  energia?: number;
+  /** Multiplicador extra de velocidade (0.1 = 10% mais rápido). */
+  velocidade?: number;
+  /** Milissegundos a menos para recuperar 1 de energia. */
+  regen?: number;
 }
 
 export interface ItemDef {
   name: string;
-  kind: 'objeto' | 'ingrediente' | 'pocao';
+  kind: 'objeto' | 'ingrediente' | 'pocao' | 'equipamento';
   description: string;
+  /** Poções: efeitos ao usar (o item é gasto). */
+  use?: Effect[];
+  /** Equipamentos: onde veste, a aparência do aprendiz e o bônus. */
+  slot?: 'capa';
+  sheet?: string;
+  bonus?: StatBonus;
 }
 
 export interface SpellDef {
@@ -73,6 +103,10 @@ export interface SpellDef {
   /** Tipo de alvo no mapa que o feitiço afeta ("vela", "trancado"...), ou "nenhum". */
   target: string;
   fx: string;
+  /** Energia mágica gasta a cada uso. */
+  cost: number;
+  /** Feitiços sem alvo podem ter um efeito no próprio aprendiz. */
+  self?: 'velocidade';
 }
 
 export interface RecipeDef {
@@ -87,6 +121,39 @@ export interface ChallengeDef {
   requires?: Condition;
   lockedText: string;
   timeLimitMs: number;
+  /** "acender": velas com Lumen; "levitar": levar objetos flutuando até os encaixes. */
+  kind: 'acender' | 'levitar';
   targets: string[];
   reward: Effect[];
+  /** Tutorial mostrado antes da primeira tentativa. */
+  tutorial?: string;
+}
+
+export interface HouseDef {
+  name: string;
+  virtue: string;
+  description: string;
+  /** Capa que o aprendiz ganha ao escolher a casa. */
+  capa: string;
+}
+
+export interface LevelDef {
+  xp: number;
+  vida: number;
+  energia: number;
+  /** Força dos feitiços contra criaturas. */
+  poder: number;
+}
+
+export interface ProgressionDef {
+  levels: LevelDef[];
+  /** Tempo para recuperar 1 ponto de energia. */
+  regenMs: number;
+  /** Experiência por criatura espantada. */
+  creatureXp: number;
+}
+
+export interface TutorialDef {
+  title: string;
+  pages: { text: string; touch?: string; icon?: string }[];
 }

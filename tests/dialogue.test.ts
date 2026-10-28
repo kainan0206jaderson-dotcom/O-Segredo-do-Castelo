@@ -23,8 +23,7 @@ describe('primeira missão completa', () => {
     const s = newGame('map.recepcao', 'inicio');
     expect(currentObjective(s, db)).toBeUndefined();
 
-    const a = talk('trinco', s, 2);
-    expect(s.flags.casa).toBe('astucia');
+    const a = talk('trinco', s);
     expect(s.inventory.varinha).toBe(1);
     expect(a.notices).toEqual(['Você recebeu: Varinha de aprendiz', 'Nova missão: Primeira noite no castelo']);
     expect(currentObjective(s, db)?.objective).toMatch(/quadro vivo/);
@@ -75,6 +74,9 @@ describe('conteúdo', () => {
         if ('advanceQuest' in e) expect(db.quests[e.advanceQuest].stages.map((s) => s.id)).toContain(e.to);
         if ('learnSpell' in e) expect(db.spells[e.learnSpell], e.learnSpell).toBeDefined();
         if ('learnRecipe' in e) expect(db.recipes[e.learnRecipe], e.learnRecipe).toBeDefined();
+        if ('tutorial' in e) expect(db.tutorials[e.tutorial], e.tutorial).toBeDefined();
+        if ('setHouse' in e) expect(db.houses[e.setHouse], e.setHouse).toBeDefined();
+        if ('equip' in e) expect(db.items[e.equip]?.kind, e.equip).toBe('equipamento');
       }
       expect(d.entries.at(-1)?.when, `${d.id}: a última entrada deve valer sempre`).toBeUndefined();
     }

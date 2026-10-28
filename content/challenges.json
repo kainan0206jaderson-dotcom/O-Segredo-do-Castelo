@@ -3,10 +3,53 @@
     "title": "Velas do Grande Salão",
     "description": "As velas vão se apagar. Acenda as 6 com Lumen antes que a ampulheta acabe.",
     "map": "map.grande-salao",
-    "requires": { "hasSpell": "lumen" },
+    "requires": {
+      "hasSpell": "lumen"
+    },
     "lockedText": "Você precisa conhecer o feitiço Lumen para este desafio.",
     "timeLimitMs": 45000,
-    "targets": ["vela-1", "vela-2", "vela-3", "vela-4", "vela-5", "vela-6"],
-    "reward": [{ "learnSpell": "fogos-bruxos" }]
+    "targets": [
+      "vela-1",
+      "vela-2",
+      "vela-3",
+      "vela-4",
+      "vela-5",
+      "vela-6"
+    ],
+    "reward": [
+      {
+        "learnSpell": "fogos-bruxos"
+      },
+      {
+        "giveXp": 40
+      }
+    ],
+    "kind": "acender",
+    "tutorial": "desafio"
+  },
+  "corrida-levitacao": {
+    "title": "Corrida de Levitação",
+    "description": "Leve os 3 cálices flutuando até as bandejas perto do quadro antes que a ampulheta acabe.",
+    "map": "map.grande-salao",
+    "requires": {
+      "hasSpell": "levitar"
+    },
+    "lockedText": "Você precisa conhecer o feitiço Levitar. Quem ensina é o Prof. Arquimedes.",
+    "timeLimitMs": 75000,
+    "kind": "levitar",
+    "targets": [
+      "bandeja-1",
+      "bandeja-2",
+      "bandeja-3"
+    ],
+    "reward": [
+      {
+        "learnSpell": "passo-de-vento"
+      },
+      {
+        "giveXp": 40
+      }
+    ],
+    "tutorial": "corrida"
   }
 }

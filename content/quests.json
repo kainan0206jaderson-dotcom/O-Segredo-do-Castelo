@@ -1,6 +1,8 @@
 {
   "primeira-noite": {
     "title": "Primeira noite no castelo",
+    "kind": "principal",
+    "xp": 20,
     "stages": [
       { "id": "falar-com-quadro", "objective": "Fale com o quadro vivo no Grande Salão." },
       { "id": "voltar-ao-trinco", "objective": "Conte ao Trinco o que o quadro disse." }
@@ -8,6 +10,8 @@
   },
   "luz-na-cozinha": {
     "title": "Luz na Cozinha",
+    "kind": "principal",
+    "xp": 30,
     "stages": [
       { "id": "ir-a-cozinha", "objective": "Vá até a Cozinha Bruxa, a leste do Grande Salão." },
       { "id": "preparar-drink", "objective": "Prepare um Drink Bruxo Fumegante no caldeirão: suco colorido + gelo seco.",
@@ -16,6 +20,58 @@
       { "id": "acender-velas", "objective": "Acenda as 2 velas da cozinha com Lumen (troque o feitiço e use a ação).",
         "completeWhen": { "all": [{ "flag": "vela:map.cozinha:vela-a" }, { "flag": "vela:map.cozinha:vela-b" }] }, "then": "falar-com-brasa" },
       { "id": "falar-com-brasa", "objective": "Volte a falar com a Dona Brasa." }
+    ]
+  },
+  "o-diretor": {
+    "title": "O Diretor do Castelo",
+    "kind": "principal",
+    "xp": 40,
+    "stages": [
+      { "id": "ir-ao-corredor", "objective": "Vá ao Corredor dos Quadros (porta oeste do Grande Salão) e procure o gabinete do Prof. Arquimedes.",
+        "completeWhen": { "flag": "visto:morgana-corredor" }, "then": "espantar-sombras" },
+      { "id": "espantar-sombras", "objective": "Espante as sombrinhas com Lumen!",
+        "completeWhen": { "flag": "criaturas:map.corredor:sombras" }, "then": "abrir-grade" },
+      { "id": "abrir-grade", "objective": "Empurre as duas estátuas até as placas do chão para abrir a grade do gabinete.",
+        "completeWhen": { "flag": "placas:map.corredor:grade" }, "then": "falar-com-diretor" },
+      { "id": "falar-com-diretor", "objective": "Converse com o Prof. Arquimedes no gabinete." },
+      { "id": "ir-ao-hall", "objective": "Siga o Prof. Arquimedes até o Hall da Escada, no fim oeste do corredor." }
+    ]
+  },
+  "o-selo": {
+    "title": "O Selo da Escada",
+    "kind": "principal",
+    "xp": 80,
+    "stages": [
+      { "id": "reunir-pedras", "objective": "Reúna as 4 pedras das casas: Coragem, Inteligência, Astúcia e Lealdade. O Elfo Fuxico, no Grande Salão, dá dicas.",
+        "completeWhen": { "all": [
+          { "any": [{ "hasItem": "pedra-coragem" }, { "flag": "encaixe:map.hall:pedestal-coragem" }] },
+          { "any": [{ "hasItem": "pedra-inteligencia" }, { "flag": "encaixe:map.hall:pedestal-inteligencia" }] },
+          { "any": [{ "hasItem": "pedra-astucia" }, { "flag": "encaixe:map.hall:pedestal-astucia" }] },
+          { "any": [{ "hasItem": "pedra-lealdade" }, { "flag": "encaixe:map.hall:pedestal-lealdade" }] }
+        ] }, "then": "colocar-pedras" },
+      { "id": "colocar-pedras", "objective": "Coloque as 4 pedras nos pedestais do Hall da Escada." }
+    ]
+  },
+  "chaves-do-trinco": {
+    "title": "As Chaves do Trinco",
+    "kind": "principal",
+    "xp": 30,
+    "stages": [
+      { "id": "perguntar-a-brasa", "objective": "Pergunte à Dona Brasa, na cozinha, se ela viu as chaves do Trinco." },
+      { "id": "fazer-cerveja", "objective": "Prepare uma Cerveja de Abóbora (abóbora + gelo seco). A despensa da cozinha tem ingredientes.",
+        "completeWhen": { "hasItem": "cerveja-abobora" }, "then": "entregar-cerveja" },
+      { "id": "entregar-cerveja", "objective": "Leve a Cerveja de Abóbora para a Dona Brasa." },
+      { "id": "devolver-chaves", "objective": "Devolva as chaves ao Trinco, na Recepção." }
+    ]
+  },
+  "cha-da-dama": {
+    "title": "O Chá da Dama",
+    "kind": "secundaria",
+    "xp": 30,
+    "stages": [
+      { "id": "fazer-sobremesa", "objective": "Faça uma Sobremesa Mandrágora (folha de mandrágora + cacau) para a Dama do Chá. Tem mandrágora no vaso do gabinete.",
+        "completeWhen": { "hasItem": "sobremesa-mandragora" }, "then": "entregar-sobremesa" },
+      { "id": "entregar-sobremesa", "objective": "Leve a Sobremesa Mandrágora para a Dama do Chá, no Corredor dos Quadros." }
     ]
   }
 }

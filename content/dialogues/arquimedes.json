@@ -1,0 +1,157 @@
+{
+  "id": "arquimedes",
+  "speaker": "Prof. Arquimedes",
+  "entries": [
+    {
+      "when": {
+        "questStage": "o-diretor",
+        "stage": "falar-com-diretor"
+      },
+      "start": "intro"
+    },
+    {
+      "when": {
+        "all": [
+          {
+            "questStage": "o-diretor",
+            "stage": "ir-ao-hall"
+          },
+          {
+            "flag": "no-hall"
+          }
+        ]
+      },
+      "start": "hall"
+    },
+    {
+      "when": {
+        "questStage": "o-diretor",
+        "stage": "ir-ao-hall"
+      },
+      "start": "vamos"
+    },
+    {
+      "start": "ocupado"
+    }
+  ],
+  "nodes": {
+    "intro": {
+      "text": "Ah! O aprendiz que acendeu a cozinha da Dona Brasa! Entre, entre. Sou o Prof. Arquimedes, diretor deste castelo.",
+      "next": "intro-2"
+    },
+    "intro-2": {
+      "text": "Vi pela janela você espantar aquelas sombrinhas e empurrar as estátuas. Nada mal para a primeira noite!",
+      "next": "intro-3"
+    },
+    "intro-3": {
+      "text": "Alguém está apagando a luz do castelo, vela por vela. Primeiro a torre, depois a cozinha, hoje o corredor. Me tranquei aqui para descobrir quem.",
+      "next": "casa"
+    },
+    "casa": {
+      "text": "Mas antes: todo aprendiz senta a uma das quatro mesas do Grande Salão. Qual virtude fala mais alto em você?",
+      "choices": [
+        {
+          "text": "Coragem",
+          "next": "casa-coragem",
+          "effects": [
+            {
+              "setHouse": "coragem"
+            },
+            {
+              "equip": "capa-coragem"
+            }
+          ]
+        },
+        {
+          "text": "Inteligência",
+          "next": "casa-inteligencia",
+          "effects": [
+            {
+              "setHouse": "inteligencia"
+            },
+            {
+              "equip": "capa-inteligencia"
+            }
+          ]
+        },
+        {
+          "text": "Astúcia",
+          "next": "casa-astucia",
+          "effects": [
+            {
+              "setHouse": "astucia"
+            },
+            {
+              "equip": "capa-astucia"
+            }
+          ]
+        },
+        {
+          "text": "Lealdade",
+          "next": "casa-lealdade",
+          "effects": [
+            {
+              "setHouse": "lealdade"
+            },
+            {
+              "equip": "capa-lealdade"
+            }
+          ]
+        }
+      ]
+    },
+    "levitar": {
+      "text": "E para quem vai andar pelo castelo, um feitiço muito útil. Segure a varinha bem leve, como uma pena... LEVITAR!",
+      "next": "levitar-2",
+      "effects": [
+        {
+          "learnSpell": "levitar"
+        },
+        {
+          "tutorial": "levitar"
+        }
+      ]
+    },
+    "levitar-2": {
+      "text": "Cálices, caixotes, livros pesados de cálculo... tudo que é leve sobe. Estátuas não. Estátuas são teimosas.",
+      "next": "selo"
+    },
+    "selo": {
+      "text": "Agora, o mais importante. O selo da escada do segundo andar mudou de cor hoje à noite. Venha comigo ao Hall da Escada, no fim oeste do corredor.",
+      "effects": [
+        {
+          "advanceQuest": "o-diretor",
+          "to": "ir-ao-hall"
+        },
+        {
+          "tutorial": "ficha"
+        }
+      ]
+    },
+    "vamos": {
+      "text": "Ao Hall da Escada, aprendiz! Fim oeste do Corredor dos Quadros. Eu vou na frente."
+    },
+    "hall": {
+      "text": "Chegue mais perto, aprendiz. Olhe este selo..."
+    },
+    "ocupado": {
+      "text": "Hmm? Desculpe, estou no meio de uma pesquisa. Volte daqui a pouco."
+    },
+    "casa-coragem": {
+      "text": "A mesa da Coragem! Quem acende a primeira vela no escuro. Vista esta capa: ela aguenta um tranco a mais.",
+      "next": "levitar"
+    },
+    "casa-inteligencia": {
+      "text": "A mesa da Inteligência! Quem pergunta até o livro acabar. Esta capa guarda mais energia mágica.",
+      "next": "levitar"
+    },
+    "casa-astucia": {
+      "text": "A mesa da Astúcia! Quem sempre acha o atalho. Com esta capa, seus pés ficam mais ligeiros.",
+      "next": "levitar"
+    },
+    "casa-lealdade": {
+      "text": "A mesa da Lealdade! Quem nunca deixa um amigo para trás. Esta capa recupera sua energia mais rápido.",
+      "next": "levitar"
+    }
+  }
+}

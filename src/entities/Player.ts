@@ -3,13 +3,17 @@ import { AssetRegistry } from '../core/AssetRegistry';
 import { PLAYER_SPEED } from '../config/game';
 
 export type Facing = 'down' | 'up' | 'side';
-const SHEET = 'player.aprendiz';
+export const DEFAULT_SHEET = 'player.aprendiz';
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
   private facing: Facing = 'down';
+  private sheet: string;
+  /** Multiplicador de velocidade (capa da Astúcia, Passo de Vento). */
+  speedMul = 1;
 
-  constructor(scene: Phaser.Scene, x: number, y: number, facing: Facing = 'down') {
-    super(scene, x, y, SHEET, 0);
+  constructor(scene: Phaser.Scene, x: number, y: number, facing: Facing = 'down', sheet = DEFAULT_SHEET) {
+    super(scene, x, y, sheet, 0);
+    this.sheet = sheet;
     scene.add.existing(this);
     scene.physics.add.existing(this);
     // caixa de colisão só nos pés, como em jogos top-down
@@ -17,18 +21,26 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     body.setSize(10, 6).setOffset(3, 17);
     this.setOrigin(0.5, 1);
     this.facing = facing;
-    this.play(AssetRegistry.animKey(SHEET, `idle-${facing}`));
+    this.play(AssetRegistry.animKey(sheet, `idle-${facing}`));
   }
 
   move(dir: Phaser.Math.Vector2): void {
-    this.setVelocity(dir.x * PLAYER_SPEED, dir.y * PLAYER_SPEED);
+    this.setVelocity(dir.x * PLAYER_SPEED * this.speedMul, dir.y * PLAYER_SPEED * this.speedMul);
     const moving = dir.lengthSq() > 0;
     if (moving) {
       this.facing = Math.abs(dir.x) > Math.abs(dir.y) ? 'side' : dir.y < 0 ? 'up' : 'down';
       if (this.facing === 'side') this.setFlipX(dir.x < 0);
     }
-    this.play(AssetRegistry.animKey(SHEET, `${moving ? 'walk' : 'idle'}-${this.facing}`), true);
+    this.play(AssetRegistry.animKey(this.sheet, `${moving ? 'walk' : 'idle'}-${this.facing}`), true);
     this.setDepth(this.y);
+  }
+
+  /** Troca a roupa (capa) mantendo a animação atual. */
+  setSheet(sheet: string): void {
+    if (sheet === this.sheet) return;
+    this.sheet = sheet;
+    this.setTexture(sheet, 0);
+    this.play(AssetRegistry.animKey(sheet, `idle-${this.facing}`));
   }
 
   halt(): void {

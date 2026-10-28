@@ -1,0 +1,24 @@
+{
+  "id": "salao-morgana",
+  "speaker": "Morgana Cinzel",
+  "entries": [
+    {
+      "start": "a"
+    }
+  ],
+  "nodes": {
+    "a": {
+      "text": "Procurando pedrinhas, aprendiz? Que fofo.",
+      "next": "b"
+    },
+    "b": {
+      "text": "Cada vela que você acende, eu apago duas. Até logo.",
+      "effects": [
+        {
+          "setFlag": "visto:morgana-salao",
+          "value": true
+        }
+      ]
+    }
+  }
+}

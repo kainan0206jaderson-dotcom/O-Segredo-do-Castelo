@@ -1,5 +1,8 @@
 import type { GameState } from '../core/GameState';
-import type { ChallengeDef, Condition, Effect, ItemDef, QuestDef, RecipeDef, SpellDef } from '../types/content';
+import type {
+  ChallengeDef, Condition, Effect, HouseDef, ItemDef, ProgressionDef, QuestDef, RecipeDef, SpellDef, TutorialDef,
+} from '../types/content';
+import { addXp, clampVitals, heal, restoreEnergy } from './progression';
 
 export interface ContentDb {
   quests: Record<string, QuestDef>;
@@ -7,10 +10,20 @@ export interface ContentDb {
   spells: Record<string, SpellDef>;
   recipes: Record<string, RecipeDef>;
   challenges: Record<string, ChallengeDef>;
+  houses: Record<string, HouseDef>;
+  progression: ProgressionDef;
+  tutorials: Record<string, TutorialDef>;
 }
 
-/** Avisos curtos para a tela ("Você recebeu: Varinha"). */
-export type Notice = { kind: 'item' | 'quest-start' | 'quest-update' | 'quest-done' | 'spell' | 'recipe'; text: string };
+/**
+ * Avisos para a tela ("Você recebeu: Varinha"). Os tipos "tutorial" e "act-end"
+ * não são texto: pedem à cena que abra o tutorial ou a tela de fim de ato indicada em ref.
+ */
+export type Notice = {
+  kind: 'item' | 'quest-start' | 'quest-update' | 'quest-done' | 'spell' | 'recipe' | 'xp' | 'level' | 'house' | 'equip' | 'vitals' | 'tutorial' | 'act-end';
+  text: string;
+  ref?: string;
+};
 
 export function check(cond: Condition | undefined, s: GameState): boolean {
   if (!cond) return true;
@@ -30,6 +43,8 @@ export function check(cond: Condition | undefined, s: GameState): boolean {
   if ('hasItem' in cond) return (s.inventory[cond.hasItem] ?? 0) > 0;
   if ('hasSpell' in cond) return s.spells.includes(cond.hasSpell);
   if ('knowsRecipe' in cond) return s.recipes.includes(cond.knowsRecipe);
+  if ('house' in cond) return s.house === cond.house;
+  if ('minLevel' in cond) return s.level >= cond.minLevel;
   return false;
 }
 
@@ -68,7 +83,7 @@ export function apply(effect: Effect, s: GameState, db: ContentDb): Notice[] {
     const p = s.quests[effect.completeQuest];
     if (!p || p.done) return [];
     p.done = true;
-    return [{ kind: 'quest-done', text: `Missão concluída: ${q.title}` }];
+    return [{ kind: 'quest-done', text: `Missão concluída: ${q.title}` }, ...(q.xp ? apply({ giveXp: q.xp }, s, db) : [])];
   }
   if ('learnSpell' in effect) {
     const spell = need(db.spells, effect.learnSpell, 'feitiço');
@@ -83,7 +98,68 @@ export function apply(effect: Effect, s: GameState, db: ContentDb): Notice[] {
     s.recipes.push(effect.learnRecipe);
     return [{ kind: 'recipe', text: `Nova receita: ${need(db.items, r.result, 'item').name}` }];
   }
+  if ('giveXp' in effect) {
+    const levels = addXp(s, db, effect.giveXp);
+    return [
+      { kind: 'xp', text: `+${effect.giveXp} de experiência` },
+      ...levels.map((lv) => ({ kind: 'level' as const, text: `Nível ${lv}! Vida e energia aumentaram.` })),
+    ];
+  }
+  if ('setHouse' in effect) {
+    const h = need(db.houses, effect.setHouse, 'casa');
+    s.house = effect.setHouse;
+    return [{ kind: 'house', text: `Casa escolhida: ${h.name}` }];
+  }
+  if ('equip' in effect) return equip(s, db, effect.equip);
+  if ('heal' in effect) {
+    heal(s, db, effect.heal);
+    return [{ kind: 'vitals', text: `+${effect.heal} de vida` }];
+  }
+  if ('restoreEnergy' in effect) {
+    restoreEnergy(s, db, effect.restoreEnergy);
+    return [{ kind: 'vitals', text: `+${effect.restoreEnergy} de energia mágica` }];
+  }
+  if ('tutorial' in effect) {
+    need(db.tutorials, effect.tutorial, 'tutorial');
+    return seenTutorial(s, effect.tutorial) ? [] : [{ kind: 'tutorial', text: '', ref: effect.tutorial }];
+  }
+  if ('endAct' in effect) {
+    s.flags[`ato:${effect.endAct}:fim`] = true;
+    return [{ kind: 'act-end', text: '', ref: String(effect.endAct) }];
+  }
   return [];
+}
+
+export function tutorialFlag(id: string): string {
+  return `tutorial:${id}`;
+}
+
+export function seenTutorial(s: GameState, id: string): boolean {
+  return Boolean(s.flags[tutorialFlag(id)]);
+}
+
+/** Veste um equipamento que está na bolsa (o anterior volta para a bolsa). */
+export function equip(s: GameState, db: ContentDb, id: string): Notice[] {
+  const item = need(db.items, id, 'item');
+  if (item.kind !== 'equipamento' || !item.slot) throw new Error(`não é equipamento: ${id}`);
+  if (s.equipment[item.slot] === id) return [];
+  if (!s.inventory[id]) s.inventory[id] = 1; // ganhar e vestir de uma vez
+  s.equipment[item.slot] = id;
+  clampVitals(s, db);
+  return [{ kind: 'equip', text: `Vestindo: ${item.name}` }];
+}
+
+export type UseResult = { ok: true; notices: Notice[] } | { ok: false; reason: 'nao-tem' | 'nao-usavel' };
+
+/** Usa um item da bolsa: poções são bebidas (e gastas), equipamentos são vestidos. */
+export function useItem(s: GameState, db: ContentDb, id: string): UseResult {
+  const item = db.items[id];
+  if (!item || !s.inventory[id]) return { ok: false, reason: 'nao-tem' };
+  if (item.kind === 'equipamento') return { ok: true, notices: equip(s, db, id) };
+  if (!item.use?.length) return { ok: false, reason: 'nao-usavel' };
+  apply({ takeItem: id }, s, db);
+  const notices = item.use.flatMap((e) => apply(e, s, db));
+  return { ok: true, notices };
 }
 
 function need<T>(table: Record<string, T>, id: string, what: string): T {
@@ -130,4 +206,9 @@ export function cycleSpell(s: GameState, delta = 1): string | null {
 
 export function spellAffects(db: ContentDb, spellId: string, targetKind: string): boolean {
   return db.spells[spellId]?.target === targetKind;
+}
+
+/** Despensa da cozinha: dá 1 de cada ingrediente que ainda não está na bolsa (evita travar por falta de ingrediente). */
+export function takeFromPantry(s: GameState, db: ContentDb, gives: string[]): Notice[] {
+  return gives.filter((id) => !s.inventory[id]).flatMap((id) => apply({ giveItem: id }, s, db));
 }

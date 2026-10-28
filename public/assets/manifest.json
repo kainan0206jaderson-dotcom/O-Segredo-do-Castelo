@@ -205,7 +205,25 @@
         "lumen": 10,
         "fogos-bruxos": 11,
         "bolsa": 12,
-        "bloqueado": 13
+        "bloqueado": 13,
+        "revelar": 14,
+        "escudo": 15,
+        "abrir": 16,
+        "levitar": 17,
+        "passo-de-vento": 18,
+        "coracao": 19,
+        "energia": 20,
+        "poder": 21,
+        "chaves-trinco": 22,
+        "capa-coragem": 23,
+        "capa-inteligencia": 24,
+        "capa-astucia": 25,
+        "capa-lealdade": 26,
+        "capa-estrelada": 27,
+        "pedra-coragem": 28,
+        "pedra-inteligencia": 29,
+        "pedra-astucia": 30,
+        "pedra-lealdade": 31
       }
     },
     "npc.dona-brasa": {
@@ -254,6 +272,650 @@
           "repeat": 0
         }
       }
+    },
+    "player.aprendiz-coragem": {
+      "url": "sprites/aprendiz-coragem.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {
+        "idle-down": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-down": {
+          "frames": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-up": {
+          "frames": [
+            6,
+            7
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-up": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-side": {
+          "frames": [
+            12,
+            13
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-side": {
+          "frames": [
+            14,
+            15,
+            16,
+            17
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
+    },
+    "player.aprendiz-inteligencia": {
+      "url": "sprites/aprendiz-inteligencia.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {
+        "idle-down": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-down": {
+          "frames": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-up": {
+          "frames": [
+            6,
+            7
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-up": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-side": {
+          "frames": [
+            12,
+            13
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-side": {
+          "frames": [
+            14,
+            15,
+            16,
+            17
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
+    },
+    "player.aprendiz-astucia": {
+      "url": "sprites/aprendiz-astucia.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {
+        "idle-down": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-down": {
+          "frames": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-up": {
+          "frames": [
+            6,
+            7
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-up": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-side": {
+          "frames": [
+            12,
+            13
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-side": {
+          "frames": [
+            14,
+            15,
+            16,
+            17
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
+    },
+    "player.aprendiz-lealdade": {
+      "url": "sprites/aprendiz-lealdade.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {
+        "idle-down": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-down": {
+          "frames": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-up": {
+          "frames": [
+            6,
+            7
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-up": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-side": {
+          "frames": [
+            12,
+            13
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-side": {
+          "frames": [
+            14,
+            15,
+            16,
+            17
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
+    },
+    "player.aprendiz-estrelada": {
+      "url": "sprites/aprendiz-estrelada.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {
+        "idle-down": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-down": {
+          "frames": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-up": {
+          "frames": [
+            6,
+            7
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-up": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-side": {
+          "frames": [
+            12,
+            13
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-side": {
+          "frames": [
+            14,
+            15,
+            16,
+            17
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
+    },
+    "npc.arquimedes": {
+      "url": "sprites/arquimedes.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "talk": {
+          "frames": [
+            2,
+            3
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
+    },
+    "npc.morgana": {
+      "url": "sprites/morgana.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "talk": {
+          "frames": [
+            2,
+            3
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
+    },
+    "npc.fuxico": {
+      "url": "sprites/fuxico.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "talk": {
+          "frames": [
+            2,
+            3
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
+    },
+    "npc.dama-cha": {
+      "url": "sprites/dama-cha.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            0,
+            0,
+            0,
+            1
+          ],
+          "frameRate": 3,
+          "repeat": -1
+        },
+        "talk": {
+          "frames": [
+            0,
+            2
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        }
+      }
+    },
+    "npc.sombrinha": {
+      "url": "sprites/sombrinha.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        },
+        "hit": {
+          "frames": [
+            4
+          ],
+          "frameRate": 1,
+          "repeat": 0
+        }
+      }
+    },
+    "prop.estatua": {
+      "url": "sprites/estatua.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {}
+    },
+    "prop.placa": {
+      "url": "sprites/placa.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {
+        "off": {
+          "frames": [
+            0
+          ],
+          "frameRate": 1,
+          "repeat": 0
+        },
+        "on": {
+          "frames": [
+            1
+          ],
+          "frameRate": 1,
+          "repeat": 0
+        }
+      }
+    },
+    "prop.grade": {
+      "url": "sprites/grade.png",
+      "frameWidth": 32,
+      "frameHeight": 16,
+      "animations": {
+        "fechada": {
+          "frames": [
+            0
+          ],
+          "frameRate": 1,
+          "repeat": 0
+        },
+        "aberta": {
+          "frames": [
+            1
+          ],
+          "frameRate": 1,
+          "repeat": 0
+        }
+      }
+    },
+    "prop.calice": {
+      "url": "sprites/calice.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {}
+    },
+    "prop.caixote": {
+      "url": "sprites/caixote.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {}
+    },
+    "prop.bandeja": {
+      "url": "sprites/bandeja.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {}
+    },
+    "prop.pedestal": {
+      "url": "sprites/pedestal.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {},
+      "frameNames": {
+        "coragem": 0,
+        "inteligencia": 1,
+        "astucia": 2,
+        "lealdade": 3
+      }
+    },
+    "prop.escadaria": {
+      "url": "sprites/escadaria.png",
+      "frameWidth": 32,
+      "frameHeight": 48,
+      "animations": {}
+    },
+    "prop.selo": {
+      "url": "sprites/selo.png",
+      "frameWidth": 32,
+      "frameHeight": 16,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        }
+      }
+    },
+    "prop.selo-quebrado": {
+      "url": "sprites/selo-quebrado.png",
+      "frameWidth": 32,
+      "frameHeight": 16,
+      "animations": {}
+    },
+    "prop.estante": {
+      "url": "sprites/estante.png",
+      "frameWidth": 16,
+      "frameHeight": 32,
+      "animations": {}
+    },
+    "prop.vaso": {
+      "url": "sprites/vaso.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {}
+    },
+    "prop.despensa": {
+      "url": "sprites/despensa.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {}
+    },
+    "prop.quadrinho-1": {
+      "url": "sprites/quadrinho-1.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {}
+    },
+    "prop.quadrinho-2": {
+      "url": "sprites/quadrinho-2.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {}
+    },
+    "prop.quadrinho-3": {
+      "url": "sprites/quadrinho-3.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {}
+    },
+    "fx.fumaca": {
+      "url": "fx/fumaca.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {
+        "burst": {
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "frameRate": 10,
+          "repeat": 0
+        }
+      }
+    },
+    "ui.vitais": {
+      "url": "ui/vitais.png",
+      "frameWidth": 8,
+      "frameHeight": 8,
+      "animations": {},
+      "frameNames": {
+        "coracao": 0,
+        "coracao-vazio": 1,
+        "energia": 2,
+        "energia-vazia": 3
+      }
+    },
+    "npc.amelia": {
+      "url": "sprites/amelia.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            1
+          ],
+          "frameRate": 3,
+          "repeat": -1
+        },
+        "talk": {
+          "frames": [
+            3,
+            4
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      },
+      "ghost": true
+    },
+    "npc.aristoteles": {
+      "url": "sprites/aristoteles.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "talk": {
+          "frames": [
+            2,
+            3
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
     }
   },
   "tilesets": {
@@ -277,6 +939,24 @@
     },
     "map.cozinha": {
       "url": "maps/cozinha.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.corredor": {
+      "url": "maps/corredor.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.gabinete": {
+      "url": "maps/gabinete.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.hall": {
+      "url": "maps/hall.tmj",
       "tilesets": [
         "tiles.castelo"
       ]

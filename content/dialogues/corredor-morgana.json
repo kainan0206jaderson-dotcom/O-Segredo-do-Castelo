@@ -1,0 +1,27 @@
+{
+  "id": "corredor-morgana",
+  "speaker": "Vulto encapuzado",
+  "entries": [
+    {
+      "start": "a"
+    }
+  ],
+  "nodes": {
+    "a": {
+      "text": "Hmm. Mais um aprendiz brincando de acender velas.",
+      "next": "b"
+    },
+    "b": {
+      "text": "Vamos ver como você se sai no escuro.",
+      "effects": [
+        {
+          "setFlag": "visto:morgana-corredor",
+          "value": true
+        },
+        {
+          "tutorial": "sombras"
+        }
+      ]
+    }
+  }
+}

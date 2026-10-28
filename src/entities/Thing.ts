@@ -1,8 +1,9 @@
 import Phaser from 'phaser';
 import { AssetRegistry } from '../core/AssetRegistry';
 import { assets } from '../core/registry';
+import type { Condition } from '../types/content';
 
-export type ThingKind = 'npc' | 'pickup' | 'station' | 'challenge';
+export type ThingKind = 'npc' | 'pickup' | 'station' | 'challenge' | 'socket';
 
 export interface ThingOptions {
   kind: ThingKind;
@@ -12,8 +13,12 @@ export interface ThingOptions {
   frame?: number;
   onWall?: boolean;
   solid?: boolean;
-  /** Diálogo, item, estação ou desafio, conforme o tipo. */
+  /** Diálogo, item, estação, desafio ou encaixe, conforme o tipo. */
   ref: string;
+  /** Só existe no mundo enquanto a condição vale (ex.: o diretor some depois da cena). */
+  when?: Condition;
+  /** Texto extra do objeto no mapa (ex.: ingredientes da despensa). */
+  extra?: string;
 }
 
 /** Qualquer coisa com que o jogador interage pela ação: NPCs, itens no chão, caldeirão, quadro de desafios. */
@@ -23,7 +28,10 @@ export class Thing extends Phaser.GameObjects.Sprite {
   readonly thingName: string;
   readonly ref: string;
   readonly onWall: boolean;
+  readonly when?: Condition;
+  readonly extra?: string;
   private alert: Phaser.GameObjects.Sprite;
+  private present = true;
 
   constructor(scene: Phaser.Scene, x: number, y: number, private readonly opts: ThingOptions) {
     super(scene, x, y, opts.sheet, opts.frame ?? 0);
@@ -31,6 +39,8 @@ export class Thing extends Phaser.GameObjects.Sprite {
     this.thingName = opts.name;
     this.ref = opts.ref;
     this.onWall = opts.onWall ?? false;
+    this.when = opts.when;
+    this.extra = opts.extra;
     scene.add.existing(this);
     this.setOrigin(0.5, 1).setDepth(this.onWall ? 1 : y);
     // quadros: o jogador fala de pé logo abaixo da moldura
@@ -48,8 +58,22 @@ export class Thing extends Phaser.GameObjects.Sprite {
     this.playAnim('idle');
   }
 
+  /** Está no mundo agora (visível e interagível)? */
+  get isPresent(): boolean {
+    return this.present;
+  }
+
+  /** Mostra ou esconde o objeto, ligando ou desligando a colisão junto. */
+  setPresent(on: boolean): void {
+    this.present = on;
+    this.setVisible(on);
+    if (!on) this.alert.setVisible(false);
+    const body = this.body as Phaser.Physics.Arcade.StaticBody | null;
+    if (body) body.enable = on;
+  }
+
   setHighlighted(on: boolean): void {
-    this.alert.setVisible(on);
+    this.alert.setVisible(on && this.present);
   }
 
   setTalking(on: boolean): void {

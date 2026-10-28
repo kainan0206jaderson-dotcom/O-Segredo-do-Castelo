@@ -33,11 +33,27 @@ describe('SaveManager', () => {
     const v1 = { version: 1, map: 'map.recepcao', spawn: 'inicio', flags: { casa: 'astucia' }, quests: {}, inventory: { varinha: 1 }, playTimeMs: 10 };
     store.setItem(SAVE_KEY, JSON.stringify(v1));
     const s = new SaveManager(store).load()!;
-    expect(s.version).toBe(2);
+    expect(s.version).toBe(3);
     expect(s.flags.casa).toBe('astucia');
     expect(s.spells).toEqual([]);
     expect(s.recipes).toEqual([]);
     expect(s.challenges).toEqual({});
+    expect(s.house).toBeNull();
+    expect(s.level).toBe(1);
+  });
+
+  it('converte um save da etapa 3 (versão 2) mantendo feitiços e missões', () => {
+    const store = new MemoryStorage();
+    const v2 = { version: 2, map: 'map.cozinha', spawn: 'do-salao', flags: {}, quests: { 'luz-na-cozinha': { stage: 'acender-velas', done: false } },
+      inventory: { varinha: 1 }, spells: ['lumen'], selectedSpell: 'lumen', recipes: ['drink-fumegante'], challenges: {}, playTimeMs: 99 };
+    store.setItem(SAVE_KEY, JSON.stringify(v2));
+    const s = new SaveManager(store).load()!;
+    expect(s.version).toBe(3);
+    expect(s.spells).toEqual(['lumen']);
+    expect(s.quests['luz-na-cozinha'].stage).toBe('acender-velas');
+    expect(s).toMatchObject({ level: 1, xp: 0, equipment: {}, house: null });
+    expect(s.vida).toBeGreaterThan(0);
+    expect(s.energia).toBeGreaterThan(0);
   });
 
   it('funciona sem armazenamento (navegação privada)', () => {

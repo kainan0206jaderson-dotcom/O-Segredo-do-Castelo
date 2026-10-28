@@ -1,4 +1,4 @@
-import { SAVE_VERSION, type GameState } from './GameState';
+import { SAVE_VERSION, START_ENERGIA, START_VIDA, type GameState } from './GameState';
 
 export const SAVE_KEY = 'segredo-do-castelo:save';
 
@@ -13,6 +13,8 @@ export interface KeyValueStorage {
 const migrations: Record<number, (s: Record<string, unknown>) => Record<string, unknown>> = {
   // v1 -> v2 (etapa 3): feitiços, receitas e desafios
   1: (s) => ({ ...s, version: 2, spells: [], selectedSpell: null, recipes: [], challenges: {} }),
+  // v2 -> v3 (etapa 4): casa, ficha do aprendiz e equipamento
+  2: (s) => ({ ...s, version: 3, house: null, level: 1, xp: 0, vida: START_VIDA, energia: START_ENERGIA, equipment: {} }),
 };
 
 export class SaveManager {
