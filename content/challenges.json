@@ -1,0 +1,12 @@
+{
+  "velas-do-salao": {
+    "title": "Velas do Grande Salão",
+    "description": "As velas vão se apagar. Acenda as 6 com Lumen antes que a ampulheta acabe.",
+    "map": "map.grande-salao",
+    "requires": { "hasSpell": "lumen" },
+    "lockedText": "Você precisa conhecer o feitiço Lumen para este desafio.",
+    "timeLimitMs": 45000,
+    "targets": ["vela-1", "vela-2", "vela-3", "vela-4", "vela-5", "vela-6"],
+    "reward": [{ "learnSpell": "fogos-bruxos" }]
+  }
+}

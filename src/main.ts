@@ -4,6 +4,8 @@ import { BootScene } from './scenes/BootScene';
 import { PreloadScene } from './scenes/PreloadScene';
 import { TitleScene } from './scenes/TitleScene';
 import { WorldScene } from './scenes/WorldScene';
+import { GrimoireScene } from './scenes/GrimoireScene';
+import { CauldronScene } from './scenes/CauldronScene';
 import { setupMobileScreen } from './ui/mobile';
 
 const game = new Phaser.Game({
@@ -17,7 +19,7 @@ const game = new Phaser.Game({
   physics: { default: 'arcade', arcade: { debug: false } },
   scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
   input: { activePointers: 2 },
-  scene: [BootScene, PreloadScene, TitleScene, WorldScene],
+  scene: [BootScene, PreloadScene, TitleScene, WorldScene, GrimoireScene, CauldronScene],
 });
 
 setupMobileScreen();

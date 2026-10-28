@@ -1,0 +1,8 @@
+{
+  "lumen": { "name": "Lumen", "kind": "principal", "description": "Acende velas, tochas e tudo que já foi luz um dia.", "target": "vela", "fx": "fx.fagulha" },
+  "levitar": { "name": "Levitar", "kind": "principal", "description": "Faz objetos flutuarem para fora do caminho.", "target": "levitavel", "fx": "fx.fagulha" },
+  "revelar": { "name": "Revelar", "kind": "principal", "description": "Mostra passagens e objetos escondidos. Ensinado pela Professora Amélia.", "target": "oculto", "fx": "fx.fagulha" },
+  "escudo": { "name": "Escudo", "kind": "principal", "description": "Uma bolha de luz que protege de travessuras mágicas.", "target": "nenhum", "fx": "fx.fagulha" },
+  "abrir": { "name": "Abrir", "kind": "principal", "description": "Destranca portas e baús encantados.", "target": "trancado", "fx": "fx.fagulha" },
+  "fogos-bruxos": { "name": "Fogos Bruxos", "kind": "extra", "description": "Feitiço extra. Solta fogos coloridos. Inútil? Talvez. Divertido? Muito.", "target": "nenhum", "fx": "fx.fogos" }
+}

@@ -15,9 +15,12 @@ export class InputManager {
   private actionButton?: Phaser.GameObjects.Container;
   private actionQueued = false;
   private navQueued = 0;
+  private navHQueued = 0;
+  private spellQueued = false;
+  private menuQueued = false;
   private static readonly RADIUS = 28;
 
-  constructor(private scene: Phaser.Scene) {
+  constructor(private scene: Phaser.Scene, opts: { touchControls?: boolean } = {}) {
     const kb = scene.input.keyboard!;
     const K = Phaser.Input.Keyboard.KeyCodes;
     this.keys = {
@@ -29,7 +32,8 @@ export class InputManager {
     this.knob = scene.add.circle(0, 0, 10, 0xffffff, 0.35);
     for (const o of [this.base, this.knob]) o.setScrollFactor(0).setDepth(1000).setVisible(false);
 
-    if (InputManager.isTouchDevice(scene)) this.createActionButton();
+    const touchControls = opts.touchControls ?? true;
+    if (touchControls && InputManager.isTouchDevice(scene)) this.createActionButton();
 
     // toques rápidos de tecla (apertar e soltar no mesmo quadro) não podem se perder,
     // então ação e navegação são guardadas no próprio evento de tecla
@@ -38,8 +42,16 @@ export class InputManager {
       if (['KeyE', 'Space', 'Enter', 'NumpadEnter'].includes(e.code)) this.actionQueued = true;
       if (['ArrowUp', 'KeyW'].includes(e.code)) this.navQueued = -1;
       if (['ArrowDown', 'KeyS'].includes(e.code)) this.navQueued = 1;
+      if (['ArrowLeft', 'KeyA'].includes(e.code)) this.navHQueued = -1;
+      if (['ArrowRight', 'KeyD'].includes(e.code)) this.navHQueued = 1;
+      if (e.code === 'KeyQ') this.spellQueued = true;
+      if (['KeyI', 'Tab', 'Escape'].includes(e.code)) {
+        this.menuQueued = true;
+        e.preventDefault();
+      }
     });
 
+    if (!touchControls) return;
     scene.input.addPointer(1);
     scene.input.on('pointerdown', this.onDown, this);
     scene.input.on('pointermove', this.onMove, this);
@@ -107,6 +119,27 @@ export class InputManager {
     const nav = this.navQueued;
     this.navQueued = 0;
     return nav;
+  }
+
+  /** -1 (esquerda), 1 (direita) ou 0, uma vez por toque de tecla. Usado em abas. */
+  navHPressed(): number {
+    const nav = this.navHQueued;
+    this.navHQueued = 0;
+    return nav;
+  }
+
+  /** Q: trocar de feitiço. */
+  spellCyclePressed(): boolean {
+    const p = this.spellQueued;
+    this.spellQueued = false;
+    return p;
+  }
+
+  /** I, Tab ou Esc: abrir ou fechar o grimório. */
+  menuPressed(): boolean {
+    const p = this.menuQueued;
+    this.menuQueued = false;
+    return p;
   }
 
   /** Verdadeiro uma única vez por toque no botão ou tecla (E, Espaço, Enter). */

@@ -1,4 +1,12 @@
 {
-  "varinha": { "name": "Varinha de aprendiz", "description": "Ainda não sabe nenhum feitiço. Mas brilha bonito." },
-  "grimorio": { "name": "Grimório", "description": "Um livro de feitiços vazio. Por enquanto." }
+  "varinha": { "name": "Varinha de aprendiz", "kind": "objeto", "description": "Presente do Trinco. Brilha bonito, e agora até faz feitiços." },
+  "grimorio": { "name": "Grimório", "kind": "objeto", "description": "Seu livro de magia. Ele se enche sozinho quando você aprende algo novo." },
+  "abobora": { "name": "Abóbora", "kind": "ingrediente", "description": "Ingrediente favorito da cozinha do castelo. Vira cerveja de abóbora, escondidinho e muito mais." },
+  "gelo-seco": { "name": "Gelo seco", "kind": "ingrediente", "description": "Faz a fumaça mágica dos drinks do castelo. Não encoste com a mão!" },
+  "suco-colorido": { "name": "Suco colorido", "kind": "ingrediente", "description": "Base dos drinks bruxos coloridos. Cada gole muda de cor." },
+  "cacau": { "name": "Cacau", "kind": "ingrediente", "description": "Para os chocolates do Espaço Doces Bruxos." },
+  "folha-mandragora": { "name": "Folha de mandrágora", "kind": "ingrediente", "description": "Colhida com cuidado: mandrágoras odeiam ser acordadas." },
+  "drink-fumegante": { "name": "Drink Bruxo Fumegante", "kind": "pocao", "description": "O drink colorido que solta fumaça do copo. A fumaça acorda chamas adormecidas." },
+  "cerveja-abobora": { "name": "Cerveja de Abóbora", "kind": "pocao", "description": "Clássico do castelo, na versão sem álcool para aprendizes. Dá coragem." },
+  "sobremesa-mandragora": { "name": "Sobremesa Mandrágora", "kind": "pocao", "description": "A sobremesa famosa da casa. Dizem que quem come entende o idioma das plantas." }
 }

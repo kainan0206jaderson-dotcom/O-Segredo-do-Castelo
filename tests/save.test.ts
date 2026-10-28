@@ -28,6 +28,18 @@ describe('SaveManager', () => {
     expect(new SaveManager(store).load()).toBeUndefined();
   });
 
+  it('converte um save da etapa 2 (versão 1) para a versão atual', () => {
+    const store = new MemoryStorage();
+    const v1 = { version: 1, map: 'map.recepcao', spawn: 'inicio', flags: { casa: 'astucia' }, quests: {}, inventory: { varinha: 1 }, playTimeMs: 10 };
+    store.setItem(SAVE_KEY, JSON.stringify(v1));
+    const s = new SaveManager(store).load()!;
+    expect(s.version).toBe(2);
+    expect(s.flags.casa).toBe('astucia');
+    expect(s.spells).toEqual([]);
+    expect(s.recipes).toEqual([]);
+    expect(s.challenges).toEqual({});
+  });
+
   it('funciona sem armazenamento (navegação privada)', () => {
     const m = new SaveManager(undefined);
     expect(m.save(newGame('m', 's'))).toBe(false);

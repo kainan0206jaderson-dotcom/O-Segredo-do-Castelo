@@ -8,6 +8,8 @@ export type Condition =
   | { questDone: string }
   | { questActive: string }
   | { hasItem: string }
+  | { hasSpell: string }
+  | { knowsRecipe: string }
   | { not: Condition }
   | { all: Condition[] }
   | { any: Condition[] };
@@ -18,7 +20,9 @@ export type Effect =
   | { takeItem: string; count?: number }
   | { startQuest: string }
   | { advanceQuest: string; to: string }
-  | { completeQuest: string };
+  | { completeQuest: string }
+  | { learnSpell: string }
+  | { learnRecipe: string };
 
 export interface DialogueChoice {
   text: string;
@@ -42,12 +46,47 @@ export interface DialogueDef {
   nodes: Record<string, DialogueNode>;
 }
 
+export interface QuestStageDef {
+  id: string;
+  objective: string;
+  /** Quando a condição vale, a missão avança sozinha para a etapa "then" (ou termina, se "then" faltar). */
+  completeWhen?: Condition;
+  then?: string;
+}
+
 export interface QuestDef {
   title: string;
-  stages: { id: string; objective: string }[];
+  stages: QuestStageDef[];
 }
 
 export interface ItemDef {
   name: string;
+  kind: 'objeto' | 'ingrediente' | 'pocao';
   description: string;
+}
+
+export interface SpellDef {
+  name: string;
+  /** "principal" faz parte da história; "extra" se aprende em desafios opcionais. */
+  kind: 'principal' | 'extra';
+  description: string;
+  /** Tipo de alvo no mapa que o feitiço afeta ("vela", "trancado"...), ou "nenhum". */
+  target: string;
+  fx: string;
+}
+
+export interface RecipeDef {
+  ingredients: Record<string, number>;
+  result: string;
+}
+
+export interface ChallengeDef {
+  title: string;
+  description: string;
+  map: string;
+  requires?: Condition;
+  lockedText: string;
+  timeLimitMs: number;
+  targets: string[];
+  reward: Effect[];
 }

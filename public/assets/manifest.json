@@ -77,6 +77,13 @@
           ],
           "frameRate": 6,
           "repeat": -1
+        },
+        "apagada": {
+          "frames": [
+            4
+          ],
+          "frameRate": 1,
+          "repeat": 0
         }
       }
     },
@@ -176,6 +183,75 @@
           ],
           "frameRate": 3,
           "repeat": -1
+        }
+      }
+    },
+    "ui.icones": {
+      "url": "ui/icones.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {},
+      "frameNames": {
+        "abobora": 0,
+        "gelo-seco": 1,
+        "suco-colorido": 2,
+        "cacau": 3,
+        "folha-mandragora": 4,
+        "drink-fumegante": 5,
+        "cerveja-abobora": 6,
+        "sobremesa-mandragora": 7,
+        "varinha": 8,
+        "grimorio": 9,
+        "lumen": 10,
+        "fogos-bruxos": 11,
+        "bolsa": 12,
+        "bloqueado": 13
+      }
+    },
+    "npc.dona-brasa": {
+      "url": "sprites/dona-brasa.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 3,
+          "repeat": -1
+        },
+        "talk": {
+          "frames": [
+            2,
+            3
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
+    },
+    "prop.quadro-desafios": {
+      "url": "sprites/quadro-desafios.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {}
+    },
+    "fx.fogos": {
+      "url": "fx/fogos.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {
+        "burst": {
+          "frames": [
+            0,
+            1,
+            2,
+            3,
+            4
+          ],
+          "frameRate": 12,
+          "repeat": 0
         }
       }
     }

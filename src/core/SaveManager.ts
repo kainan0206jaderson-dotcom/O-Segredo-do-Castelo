@@ -10,7 +10,10 @@ export interface KeyValueStorage {
 }
 
 /** Converte saves antigos para o formato atual. Cada versão nova ganha um passo aqui. */
-const migrations: Record<number, (s: Record<string, unknown>) => Record<string, unknown>> = {};
+const migrations: Record<number, (s: Record<string, unknown>) => Record<string, unknown>> = {
+  // v1 -> v2 (etapa 3): feitiços, receitas e desafios
+  1: (s) => ({ ...s, version: 2, spells: [], selectedSpell: null, recipes: [], challenges: {} }),
+};
 
 export class SaveManager {
   constructor(private readonly storage: KeyValueStorage | undefined = SaveManager.browserStorage()) {}
@@ -39,6 +42,7 @@ export class SaveManager {
       const s = data as unknown as GameState;
       if (typeof s.map !== 'string' || typeof s.flags !== 'object' || typeof s.quests !== 'object') return undefined;
       return { ...s, version: SAVE_VERSION, inventory: s.inventory ?? {}, playTimeMs: s.playTimeMs ?? 0 };
+      // (campos novos de versões futuras entram nas migrações acima, não aqui)
     } catch {
       return undefined;
     }
