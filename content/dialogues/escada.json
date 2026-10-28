@@ -1,0 +1,32 @@
+{
+  "id": "escada",
+  "speaker": "✦",
+  "entries": [
+    {
+      "when": {
+        "flag": "ato:1:fim"
+      },
+      "start": "aberta"
+    },
+    {
+      "when": {
+        "questActive": "o-selo"
+      },
+      "start": "pista"
+    },
+    {
+      "start": "fechada"
+    }
+  ],
+  "nodes": {
+    "fechada": {
+      "text": "Um selo de fuligem cobre a escada para o segundo andar. Não dá para passar."
+    },
+    "pista": {
+      "text": "O selo de fuligem cobre a escada. Os quatro pedestais em volta parecem esperar alguma coisa."
+    },
+    "aberta": {
+      "text": "A escada para o segundo andar está livre. Lá em cima, alguém espera... (O Ato 2 chega na próxima etapa do jogo.)"
+    }
+  }
+}

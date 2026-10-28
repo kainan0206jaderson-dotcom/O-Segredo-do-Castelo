@@ -1,0 +1,10 @@
+{
+  "coragem": { "name": "Coragem", "virtue": "coragem", "capa": "capa-coragem",
+    "description": "A mesa de quem acende a primeira vela no escuro. Capa da casa: +1 de vida." },
+  "inteligencia": { "name": "Inteligência", "virtue": "inteligência", "capa": "capa-inteligencia",
+    "description": "A mesa de quem pergunta \"por quê?\" até o livro acabar. Capa da casa: +2 de energia mágica." },
+  "astucia": { "name": "Astúcia", "virtue": "astúcia", "capa": "capa-astucia",
+    "description": "A mesa de quem sempre acha o atalho. Capa da casa: anda mais rápido." },
+  "lealdade": { "name": "Lealdade", "virtue": "lealdade", "capa": "capa-lealdade",
+    "description": "A mesa de quem nunca deixa um amigo para trás. Capa da casa: energia volta mais rápido." }
+}

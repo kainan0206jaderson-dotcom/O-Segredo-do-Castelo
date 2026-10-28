@@ -1,12 +1,138 @@
 {
-  "varinha": { "name": "Varinha de aprendiz", "kind": "objeto", "description": "Presente do Trinco. Brilha bonito, e agora até faz feitiços." },
-  "grimorio": { "name": "Grimório", "kind": "objeto", "description": "Seu livro de magia. Ele se enche sozinho quando você aprende algo novo." },
-  "abobora": { "name": "Abóbora", "kind": "ingrediente", "description": "Ingrediente favorito da cozinha do castelo. Vira cerveja de abóbora, escondidinho e muito mais." },
-  "gelo-seco": { "name": "Gelo seco", "kind": "ingrediente", "description": "Faz a fumaça mágica dos drinks do castelo. Não encoste com a mão!" },
-  "suco-colorido": { "name": "Suco colorido", "kind": "ingrediente", "description": "Base dos drinks bruxos coloridos. Cada gole muda de cor." },
-  "cacau": { "name": "Cacau", "kind": "ingrediente", "description": "Para os chocolates do Espaço Doces Bruxos." },
-  "folha-mandragora": { "name": "Folha de mandrágora", "kind": "ingrediente", "description": "Colhida com cuidado: mandrágoras odeiam ser acordadas." },
-  "drink-fumegante": { "name": "Drink Bruxo Fumegante", "kind": "pocao", "description": "O drink colorido que solta fumaça do copo. A fumaça acorda chamas adormecidas." },
-  "cerveja-abobora": { "name": "Cerveja de Abóbora", "kind": "pocao", "description": "Clássico do castelo, na versão sem álcool para aprendizes. Dá coragem." },
-  "sobremesa-mandragora": { "name": "Sobremesa Mandrágora", "kind": "pocao", "description": "A sobremesa famosa da casa. Dizem que quem come entende o idioma das plantas." }
+  "varinha": {
+    "name": "Varinha de aprendiz",
+    "kind": "objeto",
+    "description": "Presente do Trinco. Brilha bonito, e agora até faz feitiços."
+  },
+  "grimorio": {
+    "name": "Grimório",
+    "kind": "objeto",
+    "description": "Seu livro de magia. Ele se enche sozinho quando você aprende algo novo."
+  },
+  "abobora": {
+    "name": "Abóbora",
+    "kind": "ingrediente",
+    "description": "Ingrediente favorito da cozinha do castelo. Vira cerveja de abóbora, escondidinho e muito mais."
+  },
+  "gelo-seco": {
+    "name": "Gelo seco",
+    "kind": "ingrediente",
+    "description": "Faz a fumaça mágica dos drinks do castelo. Não encoste com a mão!"
+  },
+  "suco-colorido": {
+    "name": "Suco colorido",
+    "kind": "ingrediente",
+    "description": "Base dos drinks bruxos coloridos. Cada gole muda de cor."
+  },
+  "cacau": {
+    "name": "Cacau",
+    "kind": "ingrediente",
+    "description": "Para os chocolates do Espaço Doces Bruxos."
+  },
+  "folha-mandragora": {
+    "name": "Folha de mandrágora",
+    "kind": "ingrediente",
+    "description": "Colhida com cuidado: mandrágoras odeiam ser acordadas."
+  },
+  "drink-fumegante": {
+    "name": "Drink Bruxo Fumegante",
+    "kind": "pocao",
+    "description": "O drink colorido que solta fumaça do copo. A fumaça acorda chamas adormecidas. Não é para beber: é para acordar chamas."
+  },
+  "cerveja-abobora": {
+    "name": "Cerveja de Abóbora",
+    "kind": "pocao",
+    "description": "Clássico do castelo, na versão sem álcool para aprendizes. Beber devolve 4 de energia mágica.",
+    "use": [
+      {
+        "restoreEnergy": 4
+      }
+    ]
+  },
+  "sobremesa-mandragora": {
+    "name": "Sobremesa Mandrágora",
+    "kind": "pocao",
+    "description": "A sobremesa famosa da casa. Comer devolve 3 de vida (e dizem que você passa a entender as plantas).",
+    "use": [
+      {
+        "heal": 3
+      }
+    ]
+  },
+  "capa-coragem": {
+    "name": "Capa da Coragem",
+    "kind": "equipamento",
+    "slot": "capa",
+    "sheet": "player.aprendiz-coragem",
+    "bonus": {
+      "vida": 1
+    },
+    "description": "Vermelha como brasa. +1 de vida."
+  },
+  "capa-inteligencia": {
+    "name": "Capa da Inteligência",
+    "kind": "equipamento",
+    "slot": "capa",
+    "sheet": "player.aprendiz-inteligencia",
+    "bonus": {
+      "energia": 2
+    },
+    "description": "Azul como tinta de pena. +2 de energia mágica."
+  },
+  "capa-astucia": {
+    "name": "Capa da Astúcia",
+    "kind": "equipamento",
+    "slot": "capa",
+    "sheet": "player.aprendiz-astucia",
+    "bonus": {
+      "velocidade": 0.15
+    },
+    "description": "Verde como folha de mandrágora. Você anda mais rápido."
+  },
+  "capa-lealdade": {
+    "name": "Capa da Lealdade",
+    "kind": "equipamento",
+    "slot": "capa",
+    "sheet": "player.aprendiz-lealdade",
+    "bonus": {
+      "regen": 700
+    },
+    "description": "Dourada como vela acesa. A energia mágica volta mais rápido."
+  },
+  "capa-estrelada": {
+    "name": "Capa Estrelada",
+    "kind": "equipamento",
+    "slot": "capa",
+    "sheet": "player.aprendiz-estrelada",
+    "bonus": {
+      "vida": 1,
+      "energia": 1
+    },
+    "description": "Presente da Dama do Chá, bordada com estrelas. +1 de vida e +1 de energia."
+  },
+  "pedra-coragem": {
+    "name": "Pedra da Coragem",
+    "kind": "objeto",
+    "description": "Uma das quatro pedras do selo. Quente ao toque."
+  },
+  "pedra-inteligencia": {
+    "name": "Pedra da Inteligência",
+    "kind": "objeto",
+    "description": "Uma das quatro pedras do selo. Parece estar pensando."
+  },
+  "pedra-astucia": {
+    "name": "Pedra da Astúcia",
+    "kind": "objeto",
+    "description": "Uma das quatro pedras do selo. Escorrega da mão quando você não está olhando."
+  },
+  "pedra-lealdade": {
+    "name": "Pedra da Lealdade",
+    "kind": "objeto",
+    "description": "Uma das quatro pedras do selo. Segue você mesmo se você a deixar cair."
+  },
+  "chaves-trinco": {
+    "name": "Molho de chaves do Trinco",
+    "kind": "objeto",
+    "description": "Umas trinta chaves. Nenhuma tem etiqueta. Típico."
+  }
 }

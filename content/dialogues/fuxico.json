@@ -1,0 +1,173 @@
+{
+  "id": "fuxico",
+  "speaker": "Elfo Fuxico",
+  "entries": [
+    {
+      "when": {
+        "flag": "ato:1:fim"
+      },
+      "start": "livre"
+    },
+    {
+      "when": {
+        "questStage": "o-selo",
+        "stage": "colocar-pedras"
+      },
+      "start": "pedestais"
+    },
+    {
+      "when": {
+        "all": [
+          {
+            "questActive": "o-selo"
+          },
+          {
+            "not": {
+              "hasItem": "pedra-coragem"
+            }
+          },
+          {
+            "not": {
+              "flag": "encaixe:map.hall:pedestal-coragem"
+            }
+          }
+        ]
+      },
+      "start": "coragem"
+    },
+    {
+      "when": {
+        "all": [
+          {
+            "questActive": "o-selo"
+          },
+          {
+            "not": {
+              "flag": "moldura:charada"
+            }
+          }
+        ]
+      },
+      "start": "inteligencia"
+    },
+    {
+      "when": {
+        "all": [
+          {
+            "questActive": "o-selo"
+          },
+          {
+            "not": {
+              "hasItem": "pedra-astucia"
+            }
+          },
+          {
+            "not": {
+              "flag": "encaixe:map.hall:pedestal-astucia"
+            }
+          }
+        ]
+      },
+      "start": "astucia"
+    },
+    {
+      "when": {
+        "questActive": "o-selo"
+      },
+      "start": "lealdade"
+    },
+    {
+      "when": {
+        "questStage": "o-diretor",
+        "stage": "ir-ao-hall"
+      },
+      "start": "hall"
+    },
+    {
+      "when": {
+        "questStage": "o-diretor",
+        "stage": "falar-com-diretor"
+      },
+      "start": "gabinete"
+    },
+    {
+      "when": {
+        "questStage": "o-diretor",
+        "stage": "abrir-grade"
+      },
+      "start": "grade"
+    },
+    {
+      "when": {
+        "questStage": "o-diretor",
+        "stage": "espantar-sombras"
+      },
+      "start": "sombras"
+    },
+    {
+      "when": {
+        "questActive": "o-diretor"
+      },
+      "start": "corredor"
+    },
+    {
+      "when": {
+        "questActive": "luz-na-cozinha"
+      },
+      "start": "cozinha"
+    },
+    {
+      "when": {
+        "questActive": "primeira-noite"
+      },
+      "start": "moldura"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Eu sou o Fuxico, elfo da limpeza. Ouço tudo enquanto varro. Se travar em alguma coisa, me pergunte!"
+    },
+    "livre": {
+      "text": "O selo quebrou! Agora o castelo é todo seu: explore, vença os desafios do quadro e ajude quem pedir. O Ato 2 começa lá em cima, em breve."
+    },
+    "pedestais": {
+      "text": "Pedras na mão? Os pedestais ficam no Hall da Escada, fim oeste do corredor. Cada um tem o símbolo de uma casa."
+    },
+    "coragem": {
+      "text": "A Pedra da Coragem está no próprio Hall da Escada, cercada de sombrinhas. Coragem, né? Lumen nelas!"
+    },
+    "inteligencia": {
+      "text": "Dom Moldura vive se gabando de uma pedra atrás da moldura. Ele adora uma charada..."
+    },
+    "astucia": {
+      "text": "Vi uma pedra brilhando atrás dos caixotes, no canto leste do Corredor dos Quadros. Caixote é leve... levitável, sabe?"
+    },
+    "lealdade": {
+      "text": "O Trinco anda resmungando que perdeu as chaves. Quem ajuda um amigo sempre ganha alguma coisa."
+    },
+    "hall": {
+      "text": "O diretor passou correndo para o Hall da Escada, no fim oeste do corredor. Parecia preocupado."
+    },
+    "gabinete": {
+      "text": "A grade abriu! O gabinete do diretor fica logo ali, no meio do corredor, ao norte."
+    },
+    "grade": {
+      "text": "Estátua só anda para frente quando você empurra. Pense antes de empurrar! Se travar num canto, saia da sala e volte."
+    },
+    "sombras": {
+      "text": "Sombrinhas no corredor? Lumen nelas! Fique de frente e lance. Se a energia acabar, espere um pouco."
+    },
+    "corredor": {
+      "text": "O gabinete do diretor fica no Corredor dos Quadros. A porta é a oeste daqui."
+    },
+    "cozinha": {
+      "text": "A Dona Brasa, na cozinha a leste, está desesperada sem velas. Vai lá!"
+    },
+    "moldura": {
+      "text": "Procurando o Dom Moldura? É o quadro de bigode no meio da parede norte."
+    }
+  }
+}

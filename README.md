@@ -37,6 +37,12 @@ A arte atual é provisória e gerada por `tools/gen_placeholder_assets.py`.
   receitas reais da casa, grimório com abas (Bolsa, Feitiços, Receitas, Missões),
   segunda missão (Luz na Cozinha, com a fada cozinheira Dona Brasa) e o primeiro
   desafio opcional (Velas do Salão), que ensina o feitiço extra Fogos Bruxos.
+- Etapa 4: Ato 1 completo. Novas salas (Corredor dos Quadros, Gabinete do Diretor,
+  Hall da Escada), o Prof. Arquimedes e a escolha da casa com capa própria, Levitar,
+  estátuas para empurrar, sombrinhas para espantar, pedestais das quatro pedras,
+  aparições rápidas de Morgana, níveis com vida, energia e poder, tutoriais curtos,
+  ficha do aprendiz no grimório, missão secundária (Dama do Chá) e a Corrida de
+  Levitação. Depois do fim do ato o castelo fica livre para explorar.
 
 ## Conteúdo do jogo
 
@@ -48,5 +54,8 @@ Textos, diálogos, missões e itens ficam em `content/` como JSON, sem código:
 - `content/spells.json`: feitiços principais e extras, com o que cada um afeta.
 - `content/recipes.json`: receitas do caldeirão (ingredientes e resultado).
 - `content/challenges.json`: desafios opcionais de exploração, tempo, alvos e recompensa.
+- `content/houses.json`: as quatro casas e a capa de cada uma.
+- `content/progression.json`: níveis (experiência, vida, energia, poder) e recarga de energia.
+- `content/tutorials.json`: tutoriais curtos que aparecem na primeira vez de cada coisa.
 
 `npm test` verifica se toda fala, item, missão e diálogo citado existe.

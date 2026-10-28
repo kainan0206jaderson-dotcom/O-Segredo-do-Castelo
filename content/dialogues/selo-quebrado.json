@@ -1,0 +1,32 @@
+{
+  "id": "selo-quebrado",
+  "speaker": "✦",
+  "entries": [
+    {
+      "start": "a"
+    }
+  ],
+  "nodes": {
+    "a": {
+      "text": "As quatro pedras brilham ao mesmo tempo. O selo de fuligem racha... e vira poeira!",
+      "next": "b"
+    },
+    "b": {
+      "speaker": "Morgana (voz)",
+      "text": "Então você quebrou o primeiro selo. Que fofo.",
+      "next": "c"
+    },
+    "c": {
+      "speaker": "Morgana (voz)",
+      "text": "Lá em cima, os professores não vão te ajudar tão fácil. E o diretor... bom, ele está muito bem guardado.",
+      "effects": [
+        {
+          "completeQuest": "o-selo"
+        },
+        {
+          "endAct": 1
+        }
+      ]
+    }
+  }
+}

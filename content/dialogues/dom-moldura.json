@@ -2,24 +2,153 @@
   "id": "dom-moldura",
   "speaker": "Dom Moldura",
   "entries": [
-    { "when": { "questStage": "primeira-noite", "stage": "falar-com-quadro" }, "start": "relato" },
-    { "when": { "questDone": "primeira-noite" }, "start": "depois" },
-    { "start": "ocioso" }
+    {
+      "when": {
+        "questStage": "primeira-noite",
+        "stage": "falar-com-quadro"
+      },
+      "start": "relato"
+    },
+    {
+      "when": {
+        "all": [
+          {
+            "questActive": "o-selo"
+          },
+          {
+            "not": {
+              "flag": "moldura:charada"
+            }
+          }
+        ]
+      },
+      "start": "enigma"
+    },
+    {
+      "when": {
+        "flag": "ato:1:fim"
+      },
+      "start": "fim-ato"
+    },
+    {
+      "when": {
+        "questActive": "o-selo"
+      },
+      "start": "selo"
+    },
+    {
+      "when": {
+        "questDone": "primeira-noite"
+      },
+      "start": "depois"
+    },
+    {
+      "start": "ocioso"
+    }
   ],
   "nodes": {
-    "ocioso": { "text": "Hum? Ah, um visitante. Estou posando. Por favor, não me tire do foco." },
-    "relato": { "text": "Ah, finalmente alguém pergunta! Ninguém conversa com os quadros hoje em dia.", "next": "relato-2" },
+    "ocioso": {
+      "text": "Hum? Ah, um visitante. Estou posando. Por favor, não me tire do foco."
+    },
+    "relato": {
+      "text": "Ah, finalmente alguém pergunta! Ninguém conversa com os quadros hoje em dia.",
+      "next": "relato-2"
+    },
     "relato-2": {
       "text": "Eu vi tudo, claro. Quer a versão curta ou a versão dramática?",
       "choices": [
-        { "text": "A curta, por favor.", "next": "curta" },
-        { "text": "A dramática!", "next": "dramatica" }
+        {
+          "text": "A curta, por favor.",
+          "next": "curta"
+        },
+        {
+          "text": "A dramática!",
+          "next": "dramatica"
+        }
       ]
     },
-    "curta": { "text": "Uma luz fria desceu da torre, as velas apagaram e o Arquimedes sumiu. Fim.", "next": "fim", "effects": [{ "setFlag": "ouviu-moldura", "value": true }] },
-    "dramatica": { "text": "Era meia-noite! Um brilho GELADO desceu da torre como neve brava! As velas tremeram, gritaram (bem baixinho) e se apagaram!", "next": "dramatica-2" },
-    "dramatica-2": { "text": "E o nobre Professor Arquimedes... PUF! Desapareceu! Eu teria desmaiado, se quadros desmaiassem.", "next": "fim", "effects": [{ "setFlag": "ouviu-moldura", "value": true }] },
-    "fim": { "text": "Conte ao Trinco. Ele tem as chaves, e eu tenho só esta moldura.", "effects": [{ "advanceQuest": "primeira-noite", "to": "voltar-ao-trinco" }] },
-    "depois": { "text": "Se encontrar o Arquimedes, diga que o meu lado esquerdo continua sendo o melhor." }
+    "curta": {
+      "text": "Uma luz fria desceu da torre, as velas apagaram e o Arquimedes se trancou no gabinete. Fim.",
+      "next": "fim",
+      "effects": [
+        {
+          "setFlag": "ouviu-moldura",
+          "value": true
+        }
+      ]
+    },
+    "dramatica": {
+      "text": "Era meia-noite! Um brilho GELADO desceu da torre como neve brava! As velas tremeram, gritaram (bem baixinho) e se apagaram!",
+      "next": "dramatica-2"
+    },
+    "dramatica-2": {
+      "text": "E o nobre Professor Arquimedes correu para o gabinete e trancou a porta! Com TRÊS voltas na chave! Eu teria desmaiado, se quadros desmaiassem.",
+      "next": "fim",
+      "effects": [
+        {
+          "setFlag": "ouviu-moldura",
+          "value": true
+        }
+      ]
+    },
+    "fim": {
+      "text": "Conte ao Trinco. Ele tem as chaves, e eu tenho só esta moldura.",
+      "effects": [
+        {
+          "advanceQuest": "primeira-noite",
+          "to": "voltar-ao-trinco"
+        }
+      ]
+    },
+    "depois": {
+      "text": "Se encontrar o Arquimedes, diga que o meu lado esquerdo continua sendo o melhor."
+    },
+    "enigma": {
+      "text": "Uma pedra? A Pedra da Inteligência? Talvez eu saiba onde ela está. Talvez esteja atrás da minha moldura. Mas só conto para quem resolver a minha charada!",
+      "next": "charada"
+    },
+    "charada": {
+      "text": "Tenho cidades, mas nenhuma casa. Tenho rios, mas nenhuma água. Tenho florestas, mas nenhuma árvore. O que eu sou?",
+      "choices": [
+        {
+          "text": "Um sonho.",
+          "next": "errou"
+        },
+        {
+          "text": "Um mapa.",
+          "next": "acertou"
+        },
+        {
+          "text": "Um quadro, tipo você.",
+          "next": "errou-quadro"
+        }
+      ]
+    },
+    "errou": {
+      "text": "Errou! Mas quadros têm paciência infinita. Literalmente: eu não tenho mais nada pra fazer.",
+      "next": "charada"
+    },
+    "errou-quadro": {
+      "text": "Que elogio! Mas não. Eu tenho UM rio, pintado ao fundo, e ele está cheio de água. Tente de novo.",
+      "next": "charada"
+    },
+    "acertou": {
+      "text": "UM MAPA! Bravo! A pedra estava mesmo atrás da moldura. Pode pegar, só não amasse a tela.",
+      "effects": [
+        {
+          "giveItem": "pedra-inteligencia"
+        },
+        {
+          "setFlag": "moldura:charada",
+          "value": true
+        }
+      ]
+    },
+    "selo": {
+      "text": "O diretor engolido pela fuligem? Que cena! Pena que eu estava virado para o lado errado."
+    },
+    "fim-ato": {
+      "text": "Eu vi tudo pela moldura: o selo virou poeira! Vou pedir para me pintarem uma cena disso. Comigo no centro, claro."
+    }
   }
 }

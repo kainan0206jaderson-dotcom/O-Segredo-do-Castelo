@@ -1,0 +1,91 @@
+{
+  "id": "dama-cha",
+  "speaker": "Dama do Chá",
+  "entries": [
+    {
+      "when": {
+        "questDone": "cha-da-dama"
+      },
+      "start": "obrigada"
+    },
+    {
+      "when": {
+        "all": [
+          {
+            "questStage": "cha-da-dama",
+            "stage": "entregar-sobremesa"
+          },
+          {
+            "hasItem": "sobremesa-mandragora"
+          }
+        ]
+      },
+      "start": "entrega"
+    },
+    {
+      "when": {
+        "questActive": "cha-da-dama"
+      },
+      "start": "lembrete"
+    },
+    {
+      "start": "pedido"
+    }
+  ],
+  "nodes": {
+    "pedido": {
+      "text": "Psiu! Aprendiz! Faz cem anos que eu seguro esta xícara de chá e nunca tive nada para acompanhar.",
+      "next": "pedido-2"
+    },
+    "pedido-2": {
+      "text": "Uma Sobremesa Mandrágora cairia tão bem... Folha de mandrágora e cacau no caldeirão. Traria uma para mim?",
+      "choices": [
+        {
+          "text": "Claro, Dama!",
+          "next": "aceitou",
+          "effects": [
+            {
+              "startQuest": "cha-da-dama"
+            },
+            {
+              "learnRecipe": "sobremesa-mandragora"
+            }
+          ]
+        },
+        {
+          "text": "Agora não dá.",
+          "next": "recusou"
+        }
+      ]
+    },
+    "aceitou": {
+      "text": "Que amor! Tem um vaso de mandrágora no gabinete do diretor. Puxe a folha com cuidado: elas gritam."
+    },
+    "recusou": {
+      "text": "Tudo bem, eu espero. Sou ótima em esperar. É basicamente a única coisa que eu faço."
+    },
+    "lembrete": {
+      "text": "Folha de mandrágora e cacau, querido aprendiz. A xícara já está esfriando. Há cem anos."
+    },
+    "entrega": {
+      "text": "Ohhh! Que cheiro! Tome, em troca, esta capa estrelada. Eu bordei enquanto esperava. Tive tempo.",
+      "effects": [
+        {
+          "takeItem": "sobremesa-mandragora"
+        },
+        {
+          "giveItem": "capa-estrelada"
+        },
+        {
+          "completeQuest": "cha-da-dama"
+        },
+        {
+          "tutorial": "ficha"
+        }
+      ]
+    },
+    "obrigada": {
+      "text": "A melhor sobremesa dos últimos cem anos. E a única, mas isso é detalhe."
+    }
+  }
+}

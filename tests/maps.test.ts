@@ -47,7 +47,7 @@ describe('mapas', () => {
     }
   });
 
-  it('as 3 salas da etapa 1 estão conectadas a partir da recepção', () => {
+  it('todas as salas estão conectadas a partir da recepção', () => {
     const seen = new Set(['map.recepcao']);
     const queue = ['map.recepcao'];
     while (queue.length) {
@@ -56,6 +56,6 @@ describe('mapas', () => {
         if (!seen.has(t)) { seen.add(t); queue.push(t); }
       }
     }
-    expect([...seen].sort()).toEqual(['map.cozinha', 'map.grande-salao', 'map.recepcao']);
+    expect([...seen].sort()).toEqual(Object.keys(maps).sort());
   });
 });

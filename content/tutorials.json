@@ -1,0 +1,73 @@
+{
+  "controles": {
+    "title": "Andar e conversar",
+    "pages": [
+      { "text": "Ande com as setas ou W A S D. Fique de frente para alguém e aperte E para conversar.",
+        "touch": "Arraste o dedo na metade esquerda da tela para andar. Fique de frente para alguém e toque na estrela para conversar." },
+      { "text": "O objetivo da missão fica no canto de cima. Aperte I para abrir o grimório, com sua bolsa, feitiços e missões.",
+        "touch": "O objetivo da missão fica no canto de cima. Toque na bolsa, no canto direito, para abrir o grimório." }
+    ]
+  },
+  "feiticos": {
+    "title": "Lançar feitiços",
+    "pages": [
+      { "icon": "lumen", "text": "Fique de frente para o alvo e aperte E para lançar o feitiço escolhido. Q troca de feitiço.",
+        "touch": "Fique de frente para o alvo e toque na estrela para lançar. Toque no nome do feitiço, no canto, para trocar." },
+      { "icon": "energia", "text": "Cada feitiço gasta energia mágica, a barra azul embaixo dos corações. Ela volta sozinha, aos pouquinhos." }
+    ]
+  },
+  "caldeirao": {
+    "title": "O caldeirão",
+    "pages": [
+      { "icon": "drink-fumegante", "text": "Escolha até 3 ingredientes da bolsa e aperte Mexer. As receitas que você conhece estão no grimório. Se a mistura não combinar, nada se perde." }
+    ]
+  },
+  "desafio": {
+    "title": "Desafios do quadro",
+    "pages": [
+      { "icon": "fogos-bruxos", "text": "Os desafios são opcionais. Vencer ensina feitiços extras, que não estão em livro nenhum. Perdeu? Tente quantas vezes quiser." }
+    ]
+  },
+  "sombras": {
+    "title": "Sombrinhas!",
+    "pages": [
+      { "icon": "coracao", "text": "Sombrinhas de fuligem tiram 1 coração quando encostam em você. O Lumen espanta: lance o feitiço de frente para elas." },
+      { "icon": "poder", "text": "Quanto maior o seu poder, menos feitiços cada uma aguenta. Se a vida acabar, você só desmaia e acorda na entrada da sala." }
+    ]
+  },
+  "empurrar": {
+    "title": "Coisas pesadas",
+    "pages": [
+      { "text": "Estátuas são pesadas demais para magia. Ande contra uma delas e ela anda um quadrado para o mesmo lado.",
+        "touch": "Estátuas são pesadas demais para magia. Empurre o joystick contra uma delas e ela anda um quadrado para o mesmo lado." },
+      { "text": "Encurralou uma estátua no canto? Saia da sala e volte: tudo volta ao lugar." }
+    ]
+  },
+  "levitar": {
+    "title": "Levitar",
+    "pages": [
+      { "icon": "levitar", "text": "Escolha Levitar e lance de frente para um objeto leve, como um cálice ou um caixote. Ele flutua e segue você." },
+      { "text": "Lance de novo para soltar o objeto bem à sua frente. Soltou em cima de uma bandeja ou pedestal? Ele se encaixa." }
+    ]
+  },
+  "ficha": {
+    "title": "Ficha do aprendiz",
+    "pages": [
+      { "icon": "poder", "text": "Na aba Aprendiz do grimório você vê seu nível, vida, energia e poder. Missões, desafios e sombrinhas espantadas dão experiência." },
+      { "icon": "capa-coragem", "text": "Na aba Bolsa, escolha uma capa e aperte E para vestir. Cada capa muda sua roupa e dá um bônus diferente.",
+        "touch": "Na aba Bolsa, toque duas vezes numa capa para vestir. Cada capa muda sua roupa e dá um bônus diferente." }
+    ]
+  },
+  "corrida": {
+    "title": "Corrida de Levitação",
+    "pages": [
+      { "icon": "levitar", "text": "Os 3 cálices estão espalhados pelo salão. Levite um, leve até uma bandeja perto do quadro e solte em cima dela. Um de cada vez!" }
+    ]
+  },
+  "pedestais": {
+    "title": "Os pedestais",
+    "pages": [
+      { "icon": "pedra-coragem", "text": "Cada pedestal tem o símbolo de uma casa. Fique de frente para ele com a pedra certa na bolsa e aperte E." }
+    ]
+  }
+}

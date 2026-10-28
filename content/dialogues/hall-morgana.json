@@ -1,0 +1,59 @@
+{
+  "id": "hall-morgana",
+  "speaker": "Prof. Arquimedes",
+  "entries": [
+    {
+      "start": "a"
+    }
+  ],
+  "nodes": {
+    "a": {
+      "text": "Veja o selo da escada, aprendiz. Era dourado. Agora está cinza como fuligem.",
+      "next": "b"
+    },
+    "b": {
+      "speaker": "???",
+      "text": "Cinza combina muito mais com este castelo, diretor.",
+      "next": "c"
+    },
+    "c": {
+      "text": "Morgana?! Você não devia estar aqui. Ninguém sobe aquela escada sem permissão!",
+      "next": "d"
+    },
+    "d": {
+      "speaker": "Morgana Cinzel",
+      "text": "E você não devia abrir as portas do castelo para qualquer um. Vamos ver se ele ainda te obedece...",
+      "next": "e"
+    },
+    "e": {
+      "speaker": "✦",
+      "text": "Uma nuvem de fuligem engole o diretor. Quando a fumaça se desfaz, ele não está mais lá.",
+      "next": "f",
+      "effects": [
+        {
+          "setFlag": "arquimedes:sumiu",
+          "value": true
+        },
+        {
+          "completeQuest": "o-diretor"
+        }
+      ]
+    },
+    "f": {
+      "speaker": "Morgana Cinzel",
+      "text": "Quatro pedras, quatro mesas, um selo. Boa sorte, aprendiz. Vai precisar.",
+      "effects": [
+        {
+          "startQuest": "o-selo"
+        },
+        {
+          "setFlag": "visto:morgana-hall",
+          "value": true
+        },
+        {
+          "tutorial": "pedestais"
+        }
+      ]
+    }
+  }
+}

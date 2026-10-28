@@ -14,6 +14,8 @@ export class Hud {
   private spellIcon: Phaser.GameObjects.Image;
   private spellName: Phaser.GameObjects.Text;
   private timer: Phaser.GameObjects.Text;
+  private vitals: Phaser.GameObjects.GameObject[] = [];
+  private vitalsKey = '';
   private queue: string[] = [];
   private showingNotice = false;
   onSpellTap?: () => void;
@@ -59,6 +61,31 @@ export class Hud {
     this.spellIcon.setFrame(assets().frameOf(ICONS, spell.id) ?? 0);
     this.spellName.setText(spell.name);
     this.scene.tweens.add({ targets: this.spellBox, scale: { from: 1.15, to: 1 }, duration: 150 });
+  }
+
+  /** Corações (vida), gotas (energia mágica) e nível, embaixo do feitiço. */
+  setVitals(v: { vida: number; vidaMax: number; energia: number; energiaMax: number; level: number }): void {
+    const key = `${v.vida}/${v.vidaMax}/${v.energia}/${v.energiaMax}/${v.level}`;
+    if (key === this.vitalsKey) return;
+    const hurt = this.vitalsKey && v.vida < Number(this.vitalsKey.split('/')[0]);
+    this.vitalsKey = key;
+    this.vitals.forEach((o) => o.destroy());
+    this.vitals = [];
+    const right = GAME_WIDTH - 8;
+    const add = <T extends Phaser.GameObjects.Components.ScrollFactor & Phaser.GameObjects.Components.Depth & Phaser.GameObjects.GameObject>(o: T) => {
+      o.setScrollFactor(0).setDepth(1500);
+      this.vitals.push(o);
+      return o;
+    };
+    for (let i = 0; i < v.vidaMax; i++) {
+      add(this.scene.add.image(right - (v.vidaMax - i) * 9 + 4, 34, 'ui.vitais', i < v.vida ? 0 : 1));
+    }
+    for (let i = 0; i < v.energiaMax; i++) {
+      add(this.scene.add.image(right - (v.energiaMax - i) * 7 + 4, 44, 'ui.vitais', i < v.energia ? 2 : 3).setScale(0.85));
+    }
+    add(this.scene.add.text(right - v.vidaMax * 9 - 4, 34, `Nv ${v.level}`, textStyle(8, COLORS.gold, { stroke: '#18142a', strokeThickness: 3 }))
+      .setOrigin(1, 0.5).setResolution(TEXT_RES));
+    if (hurt) this.scene.cameras.main.flash(120, 120, 20, 30);
   }
 
   setTimer(text: string | undefined): void {
