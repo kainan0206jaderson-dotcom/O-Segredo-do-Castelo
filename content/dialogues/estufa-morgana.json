@@ -1,0 +1,34 @@
+{
+  "id": "estufa-morgana",
+  "speaker": "Morgana Cinzel",
+  "entries": [
+    {
+      "start": "a"
+    }
+  ],
+  "nodes": {
+    "a": {
+      "text": "Plantinhas! Que lindo. Seria uma pena se ficassem... no escuro.",
+      "speaker": "Morgana Cinzel",
+      "next": "a-2"
+    },
+    "a-2": {
+      "text": "Procurando cartinhas velhas, aprendiz? Papel queima rapidinho, sabia?",
+      "speaker": "Morgana Cinzel",
+      "next": "a-3"
+    },
+    "a-3": {
+      "text": "A Morgana estala os dedos e some numa nuvem cinza. Sombrinhas surgem entre os canteiros!",
+      "speaker": "✦",
+      "effects": [
+        {
+          "setFlag": "visto:morgana-estufa",
+          "value": true
+        },
+        {
+          "tutorial": "sombras"
+        }
+      ]
+    }
+  }
+}

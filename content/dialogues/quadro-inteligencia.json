@@ -1,0 +1,27 @@
+{
+  "id": "quadro-inteligencia",
+  "speaker": "✦",
+  "entries": [
+    {
+      "start": "a"
+    }
+  ],
+  "nodes": {
+    "a": {
+      "text": "Um raio de luz sai da parede e bate num bloco. Do outro lado, um cristal apagado espera.",
+      "next": "a-2"
+    },
+    "a-2": {
+      "text": "Três espelhos e cinco suportes. Nem todo suporte ajuda: pense antes de levitar.",
+      "effects": [
+        {
+          "setFlag": "visto:quadro-inteligencia",
+          "value": true
+        },
+        {
+          "tutorial": "espelhos"
+        }
+      ]
+    }
+  }
+}

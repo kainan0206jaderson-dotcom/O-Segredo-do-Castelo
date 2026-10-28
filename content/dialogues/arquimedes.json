@@ -1,7 +1,13 @@
 {
   "id": "arquimedes",
-  "speaker": "Prof. Arquimedes",
+  "speaker": "Ministro Bonfatt",
   "entries": [
+    {
+      "when": {
+        "flag": "jogo:fim"
+      },
+      "start": "pos-jogo"
+    },
     {
       "when": {
         "questStage": "o-diretor",
@@ -36,7 +42,7 @@
   ],
   "nodes": {
     "intro": {
-      "text": "Ah! O aprendiz que acendeu a cozinha da Dona Brasa! Entre, entre. Sou o Prof. Arquimedes, diretor deste castelo.",
+      "text": "Ah! O aprendiz que acendeu a cozinha da Dona Brasa! Entre, entre. Sou Bartholomeu Bonfatt, Ministro da Magia. Cuido deste castelo e de tudo o que mora nele.",
       "next": "intro-2"
     },
     "intro-2": {
@@ -152,6 +158,9 @@
     "casa-lealdade": {
       "text": "A mesa da Lealdade! Quem nunca deixa um amigo para trás. Esta capa recupera sua energia mais rápido.",
       "next": "levitar"
+    },
+    "pos-jogo": {
+      "text": "Guardião do Castelo! O castelo é todo seu: desafios, receitas, cantinhos escondidos. Volte sempre que quiser."
     }
   }
 }

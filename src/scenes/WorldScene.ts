@@ -9,6 +9,8 @@ import { DEFAULT_SHEET, Player, type Facing } from '../entities/Player';
 import { Thing } from '../entities/Thing';
 import { Candle } from '../entities/Candle';
 import { Creature } from '../entities/Creature';
+import { Sentinel } from '../entities/Sentinel';
+import { Boss, type BossPhase } from '../entities/Boss';
 import { InputManager } from '../input/InputManager';
 import { DialogueRunner } from '../systems/DialogueRunner';
 import { ChallengeRunner } from '../systems/ChallengeRunner';
@@ -20,6 +22,8 @@ import type { Condition, DialogueDef } from '../types/content';
 import { DialogueBox } from '../ui/DialogueBox';
 import { Hud } from '../ui/Hud';
 import { Puzzles, type SocketSpot } from '../world/Puzzles';
+import { Beam } from '../world/Beam';
+import { Darkness, type Light } from '../world/Darkness';
 import { CauldronScene } from './CauldronScene';
 import { GrimoireScene } from './GrimoireScene';
 import { GAME_HEIGHT, GAME_WIDTH, TILE_SIZE } from '../config/game';
@@ -29,6 +33,28 @@ export interface WorldData {
   spawn?: string;
   /** Voltou de um desmaio: mostra o aviso ao entrar. */
   fainted?: boolean;
+  /** Foi visto por uma sentinela e voltou ao último ponto seguro. */
+  caught?: boolean;
+}
+
+interface DialMeta {
+  group: string;
+  house: number;
+  answer: number;
+  start: number;
+  activeWhen?: Condition;
+  inactiveText: string;
+}
+
+interface LockMeta {
+  when?: Condition;
+  lockedText: string;
+}
+
+interface Painting {
+  sprite: Phaser.GameObjects.Sprite;
+  index: number;
+  doneFlag: string;
 }
 
 interface Trigger {
@@ -48,6 +74,12 @@ const SPELL_RANGE = 28;
 const START_CHALLENGE_FLAG = 'desafio:iniciar';
 const INVULNERABLE_MS = 1100;
 const WIND_MS = 5000;
+const SHIELD_MS = 3200;
+const REVEAL_RADIUS = 96;
+const REVEAL_MS = 3800;
+const ORB_SPEED = 78;
+const BOSS_FLAG = 'boss:fase';
+const BOSS_START_FLAG = 'boss:iniciar';
 
 /** Lê uma condição guardada como texto JSON numa propriedade do Tiled. */
 function cond(o: Phaser.Types.Tilemaps.TiledObject): Condition | undefined {
@@ -80,6 +112,22 @@ export class WorldScene extends Phaser.Scene {
   private invulnerableUntil = 0;
   private knockUntil = 0;
   private windUntil = 0;
+  private shieldUntil = 0;
+  private shield?: Phaser.GameObjects.Arc;
+  private hiddenThings: { thing: Thing; flag: string }[] = [];
+  private dials = new Map<Thing, DialMeta>();
+  private locks = new Map<Thing, LockMeta>();
+  private paintings: Painting[] = [];
+  private sentinels: Sentinel[] = [];
+  private checkpoints: { zone: Phaser.Geom.Rectangle; spawn: string }[] = [];
+  private checkpoint?: string;
+  private beam?: Beam;
+  private darkness?: Darkness;
+  private boss?: Boss;
+  private bossWhen?: Condition;
+  private orbs!: Phaser.Physics.Arcade.Group;
+  private wave = 0;
+  private doorNoticeAt = 0;
 
   constructor() {
     super('World');
@@ -103,6 +151,20 @@ export class WorldScene extends Phaser.Scene {
     this.invulnerableUntil = 0;
     this.knockUntil = 0;
     this.windUntil = 0;
+    this.shieldUntil = 0;
+    this.shield = undefined;
+    this.hiddenThings = [];
+    this.dials = new Map();
+    this.locks = new Map();
+    this.paintings = [];
+    this.sentinels = [];
+    this.checkpoints = [];
+    this.checkpoint = data.spawn;
+    this.beam = undefined;
+    this.darkness = undefined;
+    this.boss = undefined;
+    this.bossWhen = undefined;
+    this.wave = 0;
 
     const s = session.state;
     const mapDef = assets().map(data.map);
@@ -126,15 +188,28 @@ export class WorldScene extends Phaser.Scene {
       occupied: (tx, ty) => this.things.some((t) => t.isPresent && t.body
         && Math.floor(t.x / TILE_SIZE) === tx && Math.floor((t.y - 1) / TILE_SIZE) === ty),
     });
+    this.orbs = this.physics.add.group();
+    this.physics.add.collider(this.orbs, this.walls, (o) => o.destroy());
+    this.physics.add.overlap(this.player, this.orbs, (_p, o) => this.hitByOrb(o as Phaser.Physics.Arcade.Sprite));
     this.buildObjects(objects);
+    if (prop<boolean>(map.properties, 'escuro')) this.darkness = new Darkness(this, map.widthInPixels, map.heightInPixels);
 
     // portas: zonas que levam a outro mapa e a um ponto de chegada
     for (const o of objects.filter((o) => o.type === 'door')) {
       const zone = this.add.zone(o.x! + o.width! / 2, o.y! + o.height! / 2, o.width!, o.height!);
       this.physics.add.existing(zone, true);
-      this.physics.add.overlap(this.player, zone, () =>
-        this.goTo({ map: prop(o.properties, 'target')!, spawn: prop(o.properties, 'spawn') }),
-      );
+      const when = cond(o);
+      const locked = prop<string>(o.properties, 'locked');
+      this.physics.add.overlap(this.player, zone, () => {
+        if (when && !check(when, session.state)) {
+          if (locked && this.time.now > this.doorNoticeAt) {
+            this.doorNoticeAt = this.time.now + 2500;
+            this.hud.notify(locked);
+          }
+          return;
+        }
+        this.goTo({ map: prop(o.properties, 'target')!, spawn: prop(o.properties, 'spawn') });
+      });
     }
 
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
@@ -162,6 +237,8 @@ export class WorldScene extends Phaser.Scene {
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.events.off(Phaser.Scenes.Events.RESUME));
 
     if (data.fainted) this.hud.notify('Você desmaiou... e acordou aqui. Vida e energia de volta!');
+    if (data.caught) this.hud.notify('Uma sentinela viu você! De volta ao último ponto seguro.');
+    this.resumeBossFight();
     if (!seenTutorial(s, 'controles')) this.queueTutorial('controles');
 
     // salvamento automático a cada sala
@@ -173,14 +250,17 @@ export class WorldScene extends Phaser.Scene {
 
   private buildObjects(objects: Phaser.Types.Tilemaps.TiledObject[]): void {
     const s = session.state;
+    let beamSource: { tx: number; ty: number; dx: number; dy: number } | undefined;
+    let beamTarget: { name: string; tx: number; ty: number; sprite: Phaser.GameObjects.Sprite } | undefined;
+    const bossSpots: { x: number; y: number }[] = [];
     for (const o of objects) {
       if (this.puzzles.build(o)) continue;
       const sprite = prop<string>(o.properties, 'sprite');
-      const when = cond(o);
+      let when = cond(o);
       switch (o.type) {
         case 'prop': {
           if (!sprite) break;
-          const p = this.add.sprite(o.x!, o.y!, sprite).setOrigin(0.5, 1).setDepth(o.y!);
+          const p = this.add.sprite(o.x!, o.y!, sprite, prop<number>(o.properties, 'frame') ?? 0).setOrigin(0.5, 1).setDepth(o.y!);
           if (assets().hasAnimation(sprite, 'idle')) p.play({ key: AssetRegistry.animKey(sprite, 'idle'), startFrame: Phaser.Math.Between(0, 2) });
           break;
         }
@@ -194,6 +274,7 @@ export class WorldScene extends Phaser.Scene {
           const t = new Thing(this, o.x!, o.y!, {
             kind: 'npc', name: o.name, sheet: sprite!, ref: prop(o.properties, 'dialogue')!, when,
             onWall: prop<boolean>(o.properties, 'wall') ?? false, solid: !prop<boolean>(o.properties, 'wall'),
+            ghost: assets().isGhost(sprite!), bodySize: prop<boolean>(o.properties, 'wide') ? [30, 10] : undefined,
           });
           if (t.body) this.physics.add.collider(this.player, t);
           this.things.push(t);
@@ -202,7 +283,15 @@ export class WorldScene extends Phaser.Scene {
         case 'pickup': {
           if (s.flags[this.pickupFlag(o.name)]) break;
           const item = prop(o.properties, 'item')!;
-          this.things.push(new Thing(this, o.x!, o.y!, { kind: 'pickup', name: o.name, sheet: 'ui.icones', frame: assets().frameOf('ui.icones', item), ref: item, when }));
+          // cartas escondidas só aparecem depois de Revelar
+          const hiddenFlag = prop<boolean>(o.properties, 'oculto') ? this.revealFlag(o.name) : undefined;
+          if (hiddenFlag) when = when ? { all: [when, { flag: hiddenFlag }] } : { flag: hiddenFlag };
+          const t = new Thing(this, o.x!, o.y!, {
+            kind: 'pickup', name: o.name, sheet: 'ui.icones', frame: assets().frameOf('ui.icones', item), ref: item, when,
+            extra: prop(o.properties, 'dialogue'),
+          });
+          this.things.push(t);
+          if (hiddenFlag) this.hiddenThings.push({ thing: t, flag: hiddenFlag });
           break;
         }
         case 'station': {
@@ -230,11 +319,17 @@ export class WorldScene extends Phaser.Scene {
         }
         case 'creature': {
           const group = prop<string>(o.properties, 'group') ?? '';
-          if (s.flags[this.creatureFlag(group)]) break;
-          const c = new Creature(this, o.x!, o.y!, sprite!, o.name, group, prop<number>(o.properties, 'hp') ?? 2, when);
+          const challenge = prop<string>(o.properties, 'challenge');
+          if (!challenge && s.flags[this.creatureFlag(group)]) break;
+          const c = new Creature(this, o.x!, o.y!, sprite!, o.name, group, {
+            hp: prop<number>(o.properties, 'hp') ?? 2, when, challenge,
+            hidden: prop<boolean>(o.properties, 'oculto'), still: prop<boolean>(o.properties, 'parado'),
+          });
           this.physics.add.collider(c, this.walls);
           for (const g of this.puzzles.gates) this.physics.add.collider(c, g.sprite);
-          this.physics.add.overlap(this.player, c, () => this.touchCreature(c));
+          if (c.still) this.physics.add.collider(this.player, c);
+          else this.physics.add.overlap(this.player, c, () => this.touchCreature(c));
+          if (challenge) c.setPresent(false);
           this.creatures.push(c);
           break;
         }
@@ -247,11 +342,118 @@ export class WorldScene extends Phaser.Scene {
           });
           break;
         }
+        case 'canteiro': {
+          const t = new Thing(this, o.x!, o.y!, { kind: 'planter', name: o.name, sheet: 'prop.canteiro', ref: o.name, solid: true });
+          t.showFrame(this.planterState(t));
+          this.physics.add.collider(this.player, t);
+          this.things.push(t);
+          break;
+        }
+        case 'dial': {
+          const group = prop<string>(o.properties, 'group') ?? '';
+          const house = prop<number>(o.properties, 'house') ?? 0;
+          const t = new Thing(this, o.x!, o.y!, { kind: 'dial', name: o.name, sheet: 'prop.mostrador', ref: group, solid: true });
+          const raw = prop<string>(o.properties, 'activeWhen');
+          this.dials.set(t, {
+            group, house, answer: prop<number>(o.properties, 'answer') ?? 0, start: prop<number>(o.properties, 'start') ?? 0,
+            activeWhen: raw ? (JSON.parse(raw) as Condition) : undefined,
+            inactiveText: prop<string>(o.properties, 'inactive') ?? 'Não se mexe.',
+          });
+          const sym = Number(s.flags[this.dialFlag(o.name)] ?? prop<number>(o.properties, 'start') ?? 0);
+          t.showFrame(house * 4 + sym);
+          this.physics.add.collider(this.player, t);
+          this.things.push(t);
+          break;
+        }
+        case 'lock': {
+          const t = new Thing(this, o.x!, o.y!, { kind: 'lock', name: o.name, sheet: sprite ?? 'prop.porta-trancada', ref: o.name, solid: true, bodySize: [32, 10] });
+          this.locks.set(t, { when, lockedText: prop<string>(o.properties, 'locked') ?? 'A tranca não cede.' });
+          if (s.flags[this.lockFlag(o.name)]) this.openLock(t, false);
+          this.physics.add.collider(this.player, t);
+          this.things.push(t);
+          break;
+        }
+        case 'sentinel': {
+          this.sentinels.push(new Sentinel(this, o.x!, o.y!, sprite ?? 'npc.olho',
+            prop<'x' | 'y'>(o.properties, 'axis') ?? 'x', (prop<number>(o.properties, 'range') ?? 4) * TILE_SIZE, prop<number>(o.properties, 'speed') ?? 30));
+          break;
+        }
+        case 'checkpoint': {
+          this.checkpoints.push({ zone: new Phaser.Geom.Rectangle(o.x!, o.y!, o.width!, o.height!), spawn: prop<string>(o.properties, 'spawn')! });
+          break;
+        }
+        case 'beam-source': {
+          this.add.sprite(o.x!, o.y!, sprite ?? 'prop.fonte-luz').setOrigin(0.5, 1).setDepth(o.y!);
+          beamSource = {
+            tx: Math.floor(o.x! / TILE_SIZE), ty: Math.floor((o.y! - 1) / TILE_SIZE),
+            dx: prop<number>(o.properties, 'dx') ?? 1, dy: prop<number>(o.properties, 'dy') ?? 0,
+          };
+          break;
+        }
+        case 'beam-target': {
+          const spr = this.add.sprite(o.x!, o.y!, sprite ?? 'prop.cristal', 0).setOrigin(0.5, 1).setDepth(o.y!);
+          this.physics.add.existing(spr, true);
+          (spr.body as Phaser.Physics.Arcade.StaticBody).setSize(12, 6).setOffset(2, 18);
+          this.physics.add.collider(this.player, spr);
+          beamTarget = { name: o.name, tx: Math.floor(o.x! / TILE_SIZE), ty: Math.floor((o.y! - 1) / TILE_SIZE), sprite: spr };
+          break;
+        }
+        case 'painting': {
+          const index = prop<number>(o.properties, 'index') ?? 0;
+          const spr = this.add.sprite(o.x!, o.y!, sprite ?? 'prop.quadro-portal', index * 2).setOrigin(0.5, 1).setDepth(1);
+          this.paintings.push({ sprite: spr, index, doneFlag: prop<string>(o.properties, 'doneFlag') ?? '' });
+          break;
+        }
+        case 'boss-spot': {
+          bossSpots.push({ x: o.x!, y: o.y! });
+          break;
+        }
       }
     }
     for (const g of new Set(this.puzzles.plates.map((p) => p.group))) {
       if (s.flags[this.plateFlag(g)]) this.puzzles.restoreSolved(g);
     }
+    for (const sk of this.puzzles.sockets.filter((x) => x.mode === 'levitar' && !x.turn)) {
+      if (s.flags[this.socketFlag(sk.name)]) this.puzzles.restoreLevitated(sk.name);
+    }
+    if (beamSource && beamTarget) {
+      if (s.flags[this.beamFlag(beamTarget.name)]) beamTarget.sprite.setFrame(1);
+      else this.beam = new Beam(this, this.walls, beamSource, beamTarget, this.puzzles.sockets.filter((x) => x.turn));
+    }
+    const bossObj = objects.find((o) => o.type === 'boss');
+    this.bossWhen = bossObj ? cond(bossObj) : undefined;
+    if (bossObj && check(this.bossWhen, s)) {
+      const sheet = prop<string>(bossObj.properties, 'sprite') ?? 'npc.morgana';
+      this.boss = new Boss(this, bossObj.x!, bossObj.y!, sheet, [{ x: bossObj.x!, y: bossObj.y! }, ...bossSpots], {
+        fire: (x, y, tx, ty) => this.fireOrb(x, y, tx, ty),
+        summon: () => this.summonShadows(),
+        phaseOver: (ph) => this.onBossPhaseOver(ph),
+      });
+    }
+  }
+
+  private revealFlag(name: string): string {
+    return `revelado:${this.mapKey}:${name}`;
+  }
+
+  private dialFlag(name: string): string {
+    return `mostrador:${this.mapKey}:${name}`;
+  }
+
+  private lockFlag(name: string): string {
+    return `trancado:${this.mapKey}:${name}`;
+  }
+
+  private beamFlag(name: string): string {
+    return `luz:${this.mapKey}:${name}`;
+  }
+
+  private planterFlag(name: string): string {
+    return `canteiro:${this.mapKey}:${name}`;
+  }
+
+  private planterState(t: Thing): number {
+    return Number(session.state.flags[this.planterFlag(t.thingName)] ?? 0);
   }
 
   private candleFlag(name: string): string {
@@ -349,7 +551,7 @@ export class WorldScene extends Phaser.Scene {
     const act = this.actQueue.shift();
     if (act) {
       this.player.halt();
-      this.scene.launch('ActCard', { act });
+      this.scene.launch(act === '3' ? 'Ending' : 'ActCard', { act });
       this.scene.pause();
       return true;
     }
@@ -369,7 +571,9 @@ export class WorldScene extends Phaser.Scene {
     clampVitals(session.state, db);
     this.applyOutfit();
     this.refreshPresence(true);
+    this.refreshPaintings();
     this.refreshHud();
+    this.refreshBossBar();
     session.save();
   }
 
@@ -385,11 +589,23 @@ export class WorldScene extends Phaser.Scene {
       if (!on && this.near === t) this.near = undefined;
     }
     for (const c of this.creatures) {
-      if (!c.active) continue;
+      if (!c.active || c.challenge) continue; // levas da aula aparecem só durante o desafio
       const on = check(c.when, s);
       if (on === c.isPresent) continue;
       c.setPresent(on);
       if (on && animate) this.puff(c.x, c.y - 6);
+    }
+    // Morgana convencida sai do duelo
+    if (this.boss && this.boss.phase === 'parada' && !check(this.bossWhen, s)) {
+      this.puff(this.boss.x, this.boss.y - 12);
+      this.boss.destroy();
+      this.boss = undefined;
+      // as sombrinhas que ela chamou vão embora junto
+      for (const c of this.creatures.filter((x) => x.group === 'invocadas')) {
+        this.puff(c.x, c.y - 6);
+        c.destroy();
+      }
+      this.creatures = this.creatures.filter((x) => x.active);
     }
   }
 
@@ -435,13 +651,27 @@ export class WorldScene extends Phaser.Scene {
     switch (t.kind) {
       case 'npc':
         return this.startDialogue(dialogues[t.ref], t);
-      case 'pickup':
+      case 'pickup': {
         session.state.flags[this.pickupFlag(t.thingName)] = true;
         this.showNotices(apply({ giveItem: t.ref }, session.state, db));
         this.things = this.things.filter((x) => x !== t);
+        this.hiddenThings = this.hiddenThings.filter((h) => h.thing !== t);
         this.near = undefined;
+        const after = t.extra;
         t.remove();
-        return this.afterStateChange();
+        this.afterStateChange();
+        if (after) this.startDialogue(dialogues[after]);
+        return;
+      }
+      case 'planter':
+        return this.usePlanter(t);
+      case 'dial':
+        return this.turnDial(t);
+      case 'lock':
+        if (session.state.flags[this.lockFlag(t.thingName)]) return this.hud.notify('A porta está aberta.');
+        // de frente para a porta, a ação lança Abrir se ele estiver escolhido
+        if (session.state.selectedSpell === 'abrir') return this.castSpell();
+        return this.hud.notify(`${this.locks.get(t)?.lockedText ?? 'Trancada com magia.'} Quem sabe um feitiço...`);
       case 'station':
         return this.useStation(t);
       case 'challenge':
@@ -487,6 +717,75 @@ export class WorldScene extends Phaser.Scene {
     }
   }
 
+  // ---------- estufa, observatório e portas trancadas
+
+  private usePlanter(t: Thing): void {
+    const s = session.state;
+    const st = this.planterState(t);
+    const flag = this.planterFlag(t.thingName);
+    if (st === 0) {
+      if (!s.inventory['semente-mandragora']) {
+        this.hud.notify('Precisa de uma Semente de Mandrágora. O saco de sementes fica perto da porta.');
+        return;
+      }
+      apply({ takeItem: 'semente-mandragora' }, s, db);
+      s.flags[flag] = 1;
+      t.showFrame(1);
+      this.hud.notify('Semente plantada! Agora ela quer luz.');
+      this.queueTutorial('estufa');
+    } else if (st === 1) {
+      // de frente para o canteiro a ação conversaria com ele; com Lumen escolhido, lança o feitiço
+      if (s.selectedSpell === 'lumen') return this.castSpell();
+      this.hud.notify('A semente quer luz: lance Lumen nela!');
+      return;
+    } else {
+      s.flags[flag] = 0;
+      t.showFrame(0);
+      const counter = `colheitas:${this.mapKey}`;
+      s.flags[counter] = Number(s.flags[counter] ?? 0) + 1;
+      this.showNotices(apply({ giveItem: 'folha-mandragora' }, s, db));
+      this.puff(t.x, t.y - 8);
+    }
+    this.afterStateChange();
+  }
+
+  private turnDial(t: Thing): void {
+    const s = session.state;
+    const meta = this.dials.get(t)!;
+    const solvedFlag = `signos:${this.mapKey}:${meta.group}`;
+    if (s.flags[solvedFlag]) return this.hud.notify('As estrelas já estão alinhadas.');
+    if (!check(meta.activeWhen, s)) return this.hud.notify(meta.inactiveText);
+    const sym = (Number(s.flags[this.dialFlag(t.thingName)] ?? meta.start) + 1) % 4;
+    s.flags[this.dialFlag(t.thingName)] = sym;
+    t.showFrame(meta.house * 4 + sym);
+    this.tweens.add({ targets: t, scaleX: { from: 0.6, to: 1 }, duration: 160 });
+    const group = [...this.dials.entries()].filter(([, m]) => m.group === meta.group);
+    const solved = group.every(([d, m]) => Number(s.flags[this.dialFlag(d.thingName)] ?? m.start) === m.answer);
+    if (solved) {
+      s.flags[solvedFlag] = true;
+      this.cameras.main.flash(500, 220, 230, 255);
+      this.hud.notify('As constelações se alinham!');
+    }
+    this.afterStateChange();
+  }
+
+  private openLock(t: Thing, animate = true): void {
+    t.showFrame(1);
+    (t.body as Phaser.Physics.Arcade.StaticBody).enable = false;
+    if (!animate) return;
+    session.state.flags[this.lockFlag(t.thingName)] = true;
+    this.cameras.main.shake(200, 0.004);
+    this.puff(t.x, t.y - 16);
+    this.hud.notify('Click! A porta se abriu.');
+  }
+
+  private refreshPaintings(): void {
+    for (const p of this.paintings) {
+      const done = Boolean(p.doneFlag && session.state.flags[p.doneFlag]);
+      p.sprite.setFrame(p.index * 2 + (done ? 1 : 0));
+    }
+  }
+
   private onPlatesSolved(group: string): void {
     const flag = this.plateFlag(group);
     if (session.state.flags[flag]) return;
@@ -497,8 +796,13 @@ export class WorldScene extends Phaser.Scene {
   }
 
   private onLevitatedIntoSocket(sk: SocketSpot): void {
-    if (this.challenge?.isTarget(sk.name)) this.challenge.hitTarget(sk.name, session.state, db);
     this.cameras.main.flash(120, 250, 214, 92);
+    if (this.challenge?.isTarget(sk.name)) return void this.challenge.hitTarget(sk.name, session.state, db);
+    if (sk.turn) return; // suportes de espelho: quem decide é o raio de luz
+    // atris da biblioteca e afins: o encaixe fica guardado no save
+    session.state.flags[this.socketFlag(sk.name)] = true;
+    if (this.puzzles.groupFilled(sk.group)) this.hud.notify('Tudo no lugar!');
+    this.afterStateChange();
   }
 
   private offerChallenge(board: Thing): void {
@@ -528,6 +832,10 @@ export class WorldScene extends Phaser.Scene {
     this.challenge = new ChallengeRunner(id, def);
     if (def.kind === 'acender') for (const c of this.candles) if (def.targets.includes(c.targetName)) c.setLit(false);
     if (def.kind === 'levitar') this.puzzles.resetKind('calice');
+    if (def.kind === 'espectral') {
+      this.wave = 0;
+      this.activateWave();
+    }
     this.cameras.main.flash(250, 20, 10, 40);
     this.hud.notify('Valendo!');
     if (def.tutorial) this.queueTutorial(def.tutorial);
@@ -551,6 +859,13 @@ export class WorldScene extends Phaser.Scene {
     } else {
       this.hud.notify('O tempo acabou! Tente de novo no quadro.');
       if (def.kind === 'acender') for (const c of this.candles) if (def.targets.includes(c.targetName)) c.setLit(true);
+      if (def.kind === 'espectral') {
+        // os espectros que sobraram voltam a se esconder: recomeça a sala
+        this.challenge = undefined;
+        this.afterStateChange();
+        this.time.delayedCall(1500, () => this.goTo({ map: this.mapKey, spawn: this.checkpoint ?? this.entry.spawn }));
+        return;
+      }
     }
     if (def.kind === 'levitar') this.time.delayedCall(1200, () => this.puzzles.resetKind('calice'));
     this.challenge = undefined;
@@ -585,10 +900,16 @@ export class WorldScene extends Phaser.Scene {
     this.refreshHud();
     if (!spellId || !spell) return;
 
+    this.darkness?.flash(at.x, at.y, 64, 700);
+
     if (spell.self === 'velocidade') {
       this.windUntil = this.time.now + WIND_MS;
       this.applyOutfit();
       this.hud.notify('Passo de Vento!');
+      return;
+    }
+    if (spell.self === 'escudo') {
+      this.raiseShield();
       return;
     }
     if (spell.target === 'levitavel') {
@@ -601,15 +922,32 @@ export class WorldScene extends Phaser.Scene {
       this.puzzles.lift(l);
       return;
     }
+    if (spell.target === 'oculto') return this.reveal();
+    if (spell.target === 'trancado') return this.castOpen(at);
 
-    // luz espanta sombrinhas
+    // luz espanta sombrinhas e espectros, acerta a Morgana e faz a mandrágora crescer
     if (spellId === 'lumen' || spellId === 'fogos-bruxos') {
       const now = this.time.now;
-      const hit = this.creatures.filter((c) => c.isPresent && Phaser.Math.Distance.Between(at.x, at.y, c.x, c.y - 6) < SPELL_RANGE + 6);
+      const boss = this.boss;
+      if (boss && boss.canBeHit(now) && Phaser.Math.Distance.Between(at.x, at.y, boss.x, boss.y - 12) < SPELL_RANGE + 16) {
+        boss.hit(now);
+        this.cameras.main.shake(120, 0.004);
+        return this.afterStateChange();
+      }
+      const hit = this.creatures.filter((c) => c.canBeHit(now) && Phaser.Math.Distance.Between(at.x, at.y, c.x, c.y - 6) < SPELL_RANGE + 6);
       for (const c of hit) {
         if (c.takeHit(stats(s, db).poder, this.player, now)) this.banishCreature(c);
       }
       if (hit.length) return this.afterStateChange();
+      const planter = this.things.find((t) => t.kind === 'planter' && this.planterState(t) === 1
+        && Phaser.Math.Distance.Between(at.x, at.y, t.x, t.y - 6) < SPELL_RANGE);
+      if (planter && spellId === 'lumen') {
+        s.flags[this.planterFlag(planter.thingName)] = 2;
+        planter.showFrame(2);
+        this.tweens.add({ targets: planter, scaleY: { from: 0.4, to: 1 }, duration: 400, ease: 'Back.out' });
+        this.hud.notify('A mandrágora cresceu! Colha com a ação.');
+        return this.afterStateChange();
+      }
     }
 
     const target = this.candles
@@ -630,26 +968,192 @@ export class WorldScene extends Phaser.Scene {
     c.destroy();
     this.creatures = this.creatures.filter((x) => x !== c);
     this.showNotices(apply({ giveXp: db.progression.creatureXp }, session.state, db).filter((n) => n.kind !== 'xp'));
-    this.hud.notify(`Sombrinha espantada! +${db.progression.creatureXp} exp`);
+    this.hud.notify(`${c.hidden ? 'Espectro' : c.still ? 'Âncora' : 'Sombrinha'} espantad${c.still ? 'a' : c.hidden ? 'o' : 'a'}! +${db.progression.creatureXp} exp`);
     const left = this.creatures.filter((x) => x.group === c.group);
-    if (!left.length && c.group) {
-      session.state.flags[this.creatureFlag(c.group)] = true;
-      this.hud.notify('A sala ficou clara de novo.');
+    if (left.length || !c.group) return;
+    if (c.challenge) {
+      // aula de Criaturas Espectrais: a leva acabou
+      const ch = this.challenge;
+      if (!ch || ch.id !== c.challenge) return;
+      ch.hitTarget(c.group, session.state, db);
+      if (ch.status === 'running') {
+        this.wave += 1;
+        this.hud.notify('Próxima leva!');
+        this.time.delayedCall(900, () => this.activateWave());
+      }
+      return;
     }
+    session.state.flags[this.creatureFlag(c.group)] = true;
+    this.hud.notify(c.still ? 'As correntes se partiram!' : 'A sala ficou clara de novo.');
+  }
+
+  /** Mostra os espectros da leva atual do desafio. */
+  private activateWave(): void {
+    const ch = this.challenge;
+    if (!ch || ch.status !== 'running') return;
+    const group = db.challenges[ch.id].targets[this.wave];
+    for (const c of this.creatures.filter((x) => x.challenge === ch.id && x.group === group)) {
+      c.setPresent(true);
+      this.puff(c.x, c.y - 6);
+    }
+  }
+
+  // ---------- Revelar, Escudo e Abrir
+
+  private reveal(): void {
+    const now = this.time.now;
+    const p = this.player;
+    const ring = this.add.circle(p.x, p.y - 8, 4).setStrokeStyle(2, 0xc8a0ff, 0.9).setDepth(1300);
+    this.tweens.add({ targets: ring, radius: REVEAL_RADIUS, alpha: 0, duration: 500, onComplete: () => ring.destroy() });
+    let found = 0;
+    for (const h of this.hiddenThings) {
+      if (session.state.flags[h.flag] || Phaser.Math.Distance.Between(p.x, p.y, h.thing.x, h.thing.y) > REVEAL_RADIUS) continue;
+      session.state.flags[h.flag] = true;
+      found += 1;
+    }
+    let ghosts = 0;
+    for (const c of this.creatures) {
+      if (c.hidden && c.isPresent && Phaser.Math.Distance.Between(p.x, p.y, c.x, c.y) < REVEAL_RADIUS * 1.4) {
+        c.reveal(now + REVEAL_MS);
+        ghosts += 1;
+      }
+    }
+    if (this.boss?.phase === 'fase2') {
+      this.boss.reveal(now + REVEAL_MS - 600);
+      ghosts += 1;
+    }
+    if (found) this.hud.notify('Algo escondido apareceu!');
+    else if (!ghosts) this.hud.notify('Nada escondido por aqui.');
+    this.afterStateChange();
+  }
+
+  private raiseShield(): void {
+    this.shieldUntil = this.time.now + SHIELD_MS;
+    if (!this.shield) {
+      this.shield = this.add.circle(this.player.x, this.player.y - 10, 15, 0x78c8f0, 0.18).setStrokeStyle(1.5, 0xbeebff, 0.9);
+    }
+    this.shield.setVisible(true).setScale(0.3);
+    this.tweens.add({ targets: this.shield, scale: 1, duration: 160, ease: 'Back.out' });
+    this.queueTutorial('escudo');
+  }
+
+  private get shielded(): boolean {
+    return this.time.now < this.shieldUntil;
+  }
+
+  private castOpen(at: Phaser.Math.Vector2): void {
+    const s = session.state;
+    const lock = [...this.locks.keys()]
+      .filter((t) => !s.flags[this.lockFlag(t.thingName)])
+      .find((t) => Phaser.Math.Distance.Between(at.x, at.y, t.x, t.y - 6) < SPELL_RANGE + 10);
+    if (!lock) {
+      this.hud.notify('Nada trancado por perto.');
+      return;
+    }
+    const meta = this.locks.get(lock)!;
+    if (!check(meta.when, s)) {
+      this.hud.notify(meta.lockedText);
+      return;
+    }
+    this.openLock(lock);
+    this.afterStateChange();
+  }
+
+  // ---------- duelo com a Morgana
+
+  private fireOrb(x: number, y: number, tx: number, ty: number): void {
+    const orb = this.orbs.create(x, y, 'fx.orbe') as Phaser.Physics.Arcade.Sprite;
+    orb.play(AssetRegistry.animKey('fx.orbe', 'idle')).setDepth(1100);
+    (orb.body as Phaser.Physics.Arcade.Body).setCircle(3, 1, 1);
+    const v = new Phaser.Math.Vector2(tx - x, ty - y).setLength(ORB_SPEED);
+    orb.setVelocity(v.x, v.y);
+    this.time.delayedCall(4500, () => orb.active && orb.destroy());
+  }
+
+  private hitByOrb(orb: Phaser.Physics.Arcade.Sprite): void {
+    if (!orb.active) return;
+    orb.destroy();
+    if (this.shielded) {
+      const spark = this.add.circle(orb.x, orb.y, 2, 0xbeebff).setDepth(1200);
+      this.tweens.add({ targets: spark, radius: 8, alpha: 0, duration: 200, onComplete: () => spark.destroy() });
+      return;
+    }
+    this.damagePlayer(orb.x, orb.y);
+  }
+
+  private summonShadows(): void {
+    const b = this.boss!;
+    for (let i = 0; i < 2; i++) {
+      const c = new Creature(this, b.x + (i ? 40 : -40), b.y + 20, 'npc.sombrinha', `invocada-${i}`, 'invocadas', { hp: 2 });
+      this.physics.add.collider(c, this.walls);
+      this.physics.add.overlap(this.player, c, () => this.touchCreature(c));
+      this.creatures.push(c);
+      this.puff(c.x, c.y - 6);
+    }
+  }
+
+  private onBossPhaseOver(phase: BossPhase): void {
+    for (const o of this.orbs.getChildren().slice()) o.destroy();
+    // guarda a fase vencida: se o jogo fechar no meio da conversa, ela recomeça daqui
+    session.state.flags[BOSS_FLAG] = `${phase}-fim`;
+    session.save();
+    this.refreshBossBar();
+    this.time.delayedCall(500, () => this.startDialogue(dialogues[phase === 'fase1' ? 'morgana-fase2' : 'morgana-argumentos']));
+  }
+
+  /** Voltou para a sala da torre no meio do duelo (desmaio): retoma a fase. */
+  private resumeBossFight(): void {
+    const phase = session.state.flags[BOSS_FLAG];
+    if (!this.boss) return;
+    if (phase === 'fase1-fim' || phase === 'fase2-fim') {
+      this.time.delayedCall(800, () => this.startDialogue(dialogues[phase === 'fase1-fim' ? 'morgana-fase2' : 'morgana-argumentos']));
+      return;
+    }
+    if (phase !== 'fase1' && phase !== 'fase2') return;
+    this.time.delayedCall(1200, () => this.boss?.start(phase, this.time.now));
+  }
+
+  private refreshBossBar(): void {
+    const b = this.boss;
+    if (!b || !b.active || b.phase === 'parada') return this.hud.setBoss(undefined);
+    this.hud.setBoss({ name: `Morgana Cinzel (${b.phase === 'fase1' ? '1' : '2'}/2)`, frac: b.hp / b.maxHp });
   }
 
   private touchCreature(c: Creature): void {
     const now = this.time.now;
-    if (!c.isPresent || now < this.invulnerableUntil || this.dialogue || this.transitioning) return;
+    if (!c.isPresent || c.still || now < this.invulnerableUntil || this.dialogue || this.transitioning) return;
+    if (this.shielded) {
+      c.recoil(this.player, now);
+      return;
+    }
+    c.recoil(this.player, now);
+    this.damagePlayer(c.x, c.y);
+  }
+
+  /** Tira 1 coração, empurra o aprendiz para longe e dá um tempinho sem dano. */
+  private damagePlayer(fromX: number, fromY: number): void {
+    const now = this.time.now;
+    if (now < this.invulnerableUntil || this.dialogue || this.transitioning) return;
     this.invulnerableUntil = now + INVULNERABLE_MS;
     this.knockUntil = now + 160;
-    const away = new Phaser.Math.Vector2(this.player.x - c.x, this.player.y - c.y).setLength(150);
+    const away = new Phaser.Math.Vector2(this.player.x - fromX, this.player.y - fromY).setLength(150);
     this.player.setVelocity(away.x, away.y);
-    c.recoil(this.player, now);
     this.tweens.add({ targets: this.player, alpha: 0.3, duration: 90, yoyo: true, repeat: 5, onComplete: () => this.player.setAlpha(1) });
     const fainted = hurt(session.state, 1);
     this.refreshHud();
     if (fainted) this.faint();
+  }
+
+  /** Visto por uma sentinela: volta ao último ponto seguro da sala. */
+  private caught(): void {
+    if (this.transitioning) return;
+    this.transitioning = true;
+    this.player.halt();
+    this.cameras.main.flash(250, 170, 110, 220);
+    this.cameras.main.fadeOut(500, 24, 20, 42);
+    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () =>
+      this.scene.restart({ map: this.mapKey, spawn: this.checkpoint ?? this.entry.spawn, caught: true }),
+    );
   }
 
   private faint(): void {
@@ -662,7 +1166,7 @@ export class WorldScene extends Phaser.Scene {
     session.save();
     this.cameras.main.fadeOut(600, 10, 6, 20);
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () =>
-      this.scene.restart({ map: this.mapKey, spawn: this.entry.spawn, fainted: true }),
+      this.scene.restart({ map: this.mapKey, spawn: this.checkpoint ?? this.entry.spawn, fainted: true }),
     );
   }
 
@@ -761,7 +1265,52 @@ export class WorldScene extends Phaser.Scene {
       delete session.state.flags[START_CHALLENGE_FLAG];
       this.startChallenge(start);
     }
+    // diálogos do duelo pedem a próxima fase da Morgana
+    const phase = session.state.flags[BOSS_START_FLAG];
+    if (phase === 'fase1' || phase === 'fase2') {
+      delete session.state.flags[BOSS_START_FLAG];
+      session.state.flags[BOSS_FLAG] = phase;
+      this.boss?.start(phase, this.time.now);
+    }
     this.afterStateChange();
+  }
+
+  /** Sentinelas, raio de luz, escuridão, escudo e Morgana. */
+  private updateExtras(time: number, delta: number): void {
+    const p = this.player;
+    for (const cp of this.checkpoints) if (cp.zone.contains(p.x, p.y - 4)) this.checkpoint = cp.spawn;
+    for (const sn of this.sentinels) {
+      sn.update(delta);
+      if (sn.sees(p)) return this.caught();
+    }
+    if (this.beam && this.beam.update(time)) {
+      const t = this.beam.target;
+      session.state.flags[this.beamFlag(t.name)] = true;
+      t.sprite.setFrame(1);
+      this.beam.clear();
+      this.beam = undefined;
+      this.cameras.main.flash(400, 250, 240, 170);
+      this.hud.notify('O cristal acendeu!');
+      this.afterStateChange();
+    }
+    if (this.shield) {
+      const on = this.shielded;
+      this.shield.setVisible(on).setPosition(p.x, p.y - 10).setDepth(p.depth + 1);
+      if (on && this.shieldUntil - time < 700) this.shield.setAlpha(Math.floor(time / 90) % 2 ? 0.3 : 1);
+      else this.shield.setAlpha(1);
+    }
+    if (this.boss) {
+      const before = this.boss.hp;
+      this.boss.update(time, p);
+      if (before !== this.boss.hp) this.refreshBossBar();
+    }
+    this.darkness?.update(this.lightSources());
+  }
+
+  private lightSources(): Light[] {
+    const out: Light[] = [{ x: this.player.x, y: this.player.y - 8, r: 46 }];
+    for (const c of this.candles) if (c.lit) out.push({ x: c.x, y: c.y - 10, r: 58 });
+    return out;
   }
 
   update(time: number, delta: number): void {
@@ -803,6 +1352,8 @@ export class WorldScene extends Phaser.Scene {
     else this.player.setDepth(this.player.y);
     this.puzzles.update(dir, delta);
     for (const c of this.creatures) c.think(this.player, time, delta);
+    this.updateExtras(time, delta);
+    if (this.transitioning) return;
     this.checkTriggers();
     if (this.dialogue) return;
 

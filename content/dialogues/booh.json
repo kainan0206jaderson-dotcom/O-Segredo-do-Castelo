@@ -1,0 +1,50 @@
+{
+  "id": "booh",
+  "speaker": "Booh",
+  "entries": [
+    {
+      "when": {
+        "flag": "jogo:fim"
+      },
+      "start": "fim"
+    },
+    {
+      "when": {
+        "flag": "ouviu:lenda"
+      },
+      "start": "de-novo"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "BUUU! ...Assustou? Não? Poxa. Sou o Booh. Eu assusto as pessoas desde... bom, desde sempre.",
+      "next": "oi-2"
+    },
+    "oi-2": {
+      "text": "Quer saber um segredo? Lá fora dizem que este castelo tem só 5 anos.",
+      "next": "oi-3"
+    },
+    "oi-3": {
+      "text": "Mas nós, fantasmas, sabemos a verdade: por séculos, bruxos antigos esconderam este castelo aqui em São Paulo. Há 5 anos ele se revelou, na hora certa, para os não-mágicos, os bruxos e os elfos desta era.",
+      "next": "oi-4"
+    },
+    "oi-4": {
+      "text": "Se alguém perguntar, foi o Booh que contou. Buuu!",
+      "effects": [
+        {
+          "setFlag": "ouviu:lenda",
+          "value": true
+        }
+      ]
+    },
+    "de-novo": {
+      "text": "Buuu! Ainda não assustei você? Vou treinar com as velas. Elas tremem fácil."
+    },
+    "fim": {
+      "text": "Guardião do Castelo! Vou contar para todos os fantasmas. E para as velas. E para o Fuxico, que conta para todo mundo."
+    }
+  }
+}

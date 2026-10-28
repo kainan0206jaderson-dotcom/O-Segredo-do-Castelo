@@ -1,0 +1,59 @@
+{
+  "id": "telescopio",
+  "speaker": "Telescópio",
+  "entries": [
+    {
+      "when": {
+        "questStage": "cartas-de-amelia",
+        "stage": "olhar-telescopio"
+      },
+      "start": "abrir"
+    },
+    {
+      "when": {
+        "flag": "signos:map.observatorio:estrelas"
+      },
+      "start": "visto"
+    },
+    {
+      "start": "nublado"
+    }
+  ],
+  "nodes": {
+    "abrir": {
+      "text": "Você olha pelo telescópio. As quatro constelações brilham juntas e formam uma chave no céu.",
+      "speaker": "✦",
+      "next": "abrir-2"
+    },
+    "abrir-2": {
+      "text": "Uma chave de estrelas! É o feitiço Abrir. Gire a varinha como uma fechadura... ABRIR!",
+      "speaker": "Profa. Amélia",
+      "next": "abrir-3"
+    },
+    "abrir-3": {
+      "text": "Com ele, a porta da Galeria não segura a gente. Vamos!",
+      "speaker": "Profa. Amélia",
+      "effects": [
+        {
+          "learnSpell": "abrir"
+        },
+        {
+          "tutorial": "abrir"
+        },
+        {
+          "advanceQuest": "cartas-de-amelia",
+          "to": "abrir-galeria"
+        },
+        {
+          "giveXp": 30
+        }
+      ]
+    },
+    "visto": {
+      "text": "As constelações continuam lindas. A chave de estrelas brilha bem no meio."
+    },
+    "nublado": {
+      "text": "Pelo telescópio, só fuligem. As estrelas estão desalinhadas."
+    }
+  }
+}

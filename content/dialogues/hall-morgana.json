@@ -1,6 +1,6 @@
 {
   "id": "hall-morgana",
-  "speaker": "Prof. Arquimedes",
+  "speaker": "Ministro Bonfatt",
   "entries": [
     {
       "start": "a"
@@ -13,7 +13,7 @@
     },
     "b": {
       "speaker": "???",
-      "text": "Cinza combina muito mais com este castelo, diretor.",
+      "text": "Cinza combina muito mais com este castelo, ministro.",
       "next": "c"
     },
     "c": {
@@ -27,7 +27,7 @@
     },
     "e": {
       "speaker": "✦",
-      "text": "Uma nuvem de fuligem engole o diretor. Quando a fumaça se desfaz, ele não está mais lá.",
+      "text": "Uma nuvem de fuligem engole o ministro. Quando a fumaça se desfaz, ele não está mais lá.",
       "next": "f",
       "effects": [
         {

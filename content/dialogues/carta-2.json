@@ -1,0 +1,20 @@
+{
+  "id": "carta-2",
+  "speaker": "Carta",
+  "entries": [
+    {
+      "start": "a"
+    }
+  ],
+  "nodes": {
+    "a": {
+      "text": "Outro pedaço de carta. Tem cheiro de terra da estufa:",
+      "speaker": "✦",
+      "next": "a-2"
+    },
+    "a-2": {
+      "text": "\"...você sempre foi a melhor da turma. Coragem, inteligência, astúcia, lealdade: tinha um pouco de cada...\"",
+      "speaker": "Carta do Bonfatt"
+    }
+  }
+}

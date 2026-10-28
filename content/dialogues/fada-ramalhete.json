@@ -1,0 +1,66 @@
+{
+  "id": "fada-ramalhete",
+  "speaker": "Fada Ramalhete",
+  "entries": [
+    {
+      "when": {
+        "questStage": "mandragoras",
+        "stage": "contar-a-fada"
+      },
+      "start": "fim"
+    },
+    {
+      "when": {
+        "questDone": "mandragoras"
+      },
+      "start": "depois"
+    },
+    {
+      "when": {
+        "questActive": "mandragoras"
+      },
+      "start": "dica"
+    },
+    {
+      "start": "intro"
+    }
+  ],
+  "nodes": {
+    "intro": {
+      "text": "Uma visita! Sou a Fada Ramalhete, prima da Dona Brasa. Ela cozinha, eu planto. Juntas, a gente janta muito bem.",
+      "next": "intro-2"
+    },
+    "intro-2": {
+      "text": "Minhas mandrágoras não querem nascer: a fuligem deixou a estufa sem luz.",
+      "next": "intro-3"
+    },
+    "intro-3": {
+      "text": "Pegue uma semente no saco perto da porta, plante num canteiro e lance Lumen nela. Três colheitas e eu te ensino uma receita!",
+      "effects": [
+        {
+          "startQuest": "mandragoras"
+        }
+      ]
+    },
+    "dica": {
+      "text": "Semente no canteiro, Lumen na semente, e pronto! Ela grita um pouquinho na colheita. É normal."
+    },
+    "fim": {
+      "text": "Três mandrágoras! A estufa até ficou mais verde. Tome a receita da Poção de Vigor: folha de mandrágora e suco colorido. Devolve vida!",
+      "effects": [
+        {
+          "learnRecipe": "pocao-vigor"
+        },
+        {
+          "completeQuest": "mandragoras"
+        },
+        {
+          "giveXp": 20
+        }
+      ]
+    },
+    "depois": {
+      "text": "Pode plantar quando quiser! Mandrágora nunca é demais. Quer dizer, é sim, mas a gente dá um jeito."
+    }
+  }
+}

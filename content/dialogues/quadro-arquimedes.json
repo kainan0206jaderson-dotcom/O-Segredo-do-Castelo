@@ -1,0 +1,66 @@
+{
+  "id": "quadro-arquimedes",
+  "speaker": "Ministro Bonfatt",
+  "entries": [
+    {
+      "when": {
+        "flag": "jogo:fim"
+      },
+      "start": "fim"
+    },
+    {
+      "when": {
+        "all": [
+          {
+            "hasItem": "emblema-coragem"
+          },
+          {
+            "hasItem": "emblema-inteligencia"
+          },
+          {
+            "hasItem": "emblema-astucia"
+          },
+          {
+            "hasItem": "emblema-lealdade"
+          }
+        ]
+      },
+      "start": "pronto"
+    },
+    {
+      "when": {
+        "flag": "amelia:capturada"
+      },
+      "start": "virtudes"
+    },
+    {
+      "start": "retrato"
+    }
+  ],
+  "nodes": {
+    "virtudes": {
+      "text": "Psst! Aqui, no retrato! Sou eu, o Bonfatt. Sim, de verdade. A Morgana me prendeu na minha própria pintura. Que falta de educação.",
+      "next": "virtudes-2"
+    },
+    "virtudes-2": {
+      "text": "Cada quadro é uma prova de uma virtude. Entre neles: é só andar até a moldura.",
+      "next": "virtudes-3"
+    },
+    "virtudes-3": {
+      "text": "Coragem: no escuro. Inteligência: um raio de luz. Astúcia: olhos que vigiam. Lealdade: a Amélia precisa de você.",
+      "next": "virtudes-4"
+    },
+    "virtudes-4": {
+      "text": "Com os quatro emblemas, a barreira a leste cai e o caminho até o Coração do Castelo se abre."
+    },
+    "pronto": {
+      "text": "Os quatro emblemas! Siga para o Coração do Castelo, a leste. E, aprendiz... seja gentil com a Morgana. Ela já foi minha melhor aluna."
+    },
+    "retrato": {
+      "text": "Um retrato do Ministro Bonfatt. O chapéu pontudo quase sai da moldura."
+    },
+    "fim": {
+      "text": "Ah, que alívio sair dessa moldura! Ainda sinto cheiro de tinta no chapéu."
+    }
+  }
+}

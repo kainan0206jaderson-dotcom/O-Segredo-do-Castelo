@@ -1,0 +1,131 @@
+{
+  "id": "espelho",
+  "speaker": "Espelho",
+  "entries": [
+    {
+      "when": {
+        "flag": "amelia:livre"
+      },
+      "start": "vazio"
+    },
+    {
+      "when": {
+        "all": [
+          {
+            "questStage": "cartas-de-amelia",
+            "stage": "libertar-amelia"
+          }
+        ]
+      },
+      "start": "libertar"
+    },
+    {
+      "when": {
+        "all": [
+          {
+            "questStage": "cartas-de-amelia",
+            "stage": "achar-cartas"
+          },
+          {
+            "flag": "visto:espelho"
+          }
+        ]
+      },
+      "start": "falta"
+    },
+    {
+      "when": {
+        "questActive": "cartas-de-amelia"
+      },
+      "start": "preso"
+    },
+    {
+      "start": "reflexo"
+    }
+  ],
+  "nodes": {
+    "preso": {
+      "text": "...aprendiz... aqui... no espelho...",
+      "speaker": "Profa. Amélia",
+      "next": "preso-2"
+    },
+    "preso-2": {
+      "text": "Sou a Amélia. A Morgana me prendeu entre dois mundos: nem lá, nem cá. Muito desconfortável, aliás.",
+      "speaker": "Profa. Amélia",
+      "next": "preso-3"
+    },
+    "preso-3": {
+      "text": "Antes de sumir, escondi pedaços de cartas pelo andar. Cartas do Bonfatt. Ache três e leia para mim aqui.",
+      "speaker": "Profa. Amélia",
+      "next": "preso-4"
+    },
+    "preso-4": {
+      "text": "Uma está nesta biblioteca, uma na sala da aula, uma na estufa. Use Revelar. Eu espero. Não tenho muita escolha.",
+      "speaker": "Profa. Amélia",
+      "effects": [
+        {
+          "setFlag": "visto:espelho",
+          "value": true
+        }
+      ]
+    },
+    "falta": {
+      "text": "Ainda faltam cartas... uma na biblioteca, uma na sala da aula, uma na estufa. Revelar mostra o que eu escondi.",
+      "speaker": "Profa. Amélia"
+    },
+    "libertar": {
+      "text": "Você lê as três cartas em voz alta. As palavras do ministro brilham no vidro.",
+      "speaker": "✦",
+      "next": "libertar-2"
+    },
+    "libertar-2": {
+      "text": "\"...o castelo só fica de pé com as quatro virtudes juntas...\" Isso! As palavras dele são mais fortes que a fuligem!",
+      "speaker": "Profa. Amélia",
+      "next": "libertar-3"
+    },
+    "libertar-3": {
+      "text": "O espelho estala. Uma forma pálida e azulada atravessa o vidro e flutua para fora.",
+      "speaker": "✦",
+      "next": "libertar-4"
+    },
+    "libertar-4": {
+      "text": "Livre! Bom, quase: ainda estou meio transparente. Detalhe.",
+      "speaker": "Profa. Amélia",
+      "next": "libertar-5"
+    },
+    "libertar-5": {
+      "text": "Um presente por me tirar de lá. Braço firme, pensamento de bolha... ESCUDO! Protege de sombrinhas e de feitiços da Morgana.",
+      "speaker": "Profa. Amélia",
+      "next": "libertar-6"
+    },
+    "libertar-6": {
+      "text": "A última carta está no Observatório, ao norte. Ela explica os mostradores das estrelas. Agora que estou livre, eles vão girar.",
+      "speaker": "Profa. Amélia",
+      "effects": [
+        {
+          "setFlag": "amelia:livre",
+          "value": true
+        },
+        {
+          "learnSpell": "escudo"
+        },
+        {
+          "tutorial": "escudo"
+        },
+        {
+          "advanceQuest": "cartas-de-amelia",
+          "to": "alinhar-estrelas"
+        },
+        {
+          "giveXp": 30
+        }
+      ]
+    },
+    "vazio": {
+      "text": "Só um espelho agora. Seu cabelo está ótimo, aliás."
+    },
+    "reflexo": {
+      "text": "Um espelho alto, com moldura de prata. Por um segundo, o reflexo parece se mexer sozinho."
+    }
+  }
+}

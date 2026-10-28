@@ -30,6 +30,7 @@ export function check(cond: Condition | undefined, s: GameState): boolean {
   if ('all' in cond) return cond.all.every((c) => check(c, s));
   if ('any' in cond) return cond.any.some((c) => check(c, s));
   if ('not' in cond) return !check(cond.not, s);
+  if ('flagAtLeast' in cond) return Number(s.flags[cond.flagAtLeast] ?? 0) >= cond.n;
   if ('flag' in cond) return cond.eq === undefined ? Boolean(s.flags[cond.flag]) : s.flags[cond.flag] === cond.eq;
   if ('questStage' in cond) {
     const q = s.quests[cond.questStage];
@@ -188,7 +189,8 @@ export function tickQuests(s: GameState, db: ContentDb): Notice[] {
 /** Objetivo da missão ativa mais recente, para mostrar na tela. */
 export function currentObjective(s: GameState, db: ContentDb): { quest: string; objective: string } | undefined {
   const active = Object.entries(s.quests).filter(([, p]) => !p.done);
-  const last = active.at(-1);
+  // a história vem primeiro; missões secundárias aparecem quando não há principal ativa
+  const last = active.filter(([id]) => db.quests[id]?.kind !== 'secundaria').at(-1) ?? active.at(-1);
   if (!last) return undefined;
   const [id, p] = last;
   const q = need(db.quests, id, 'missão');

@@ -34,7 +34,7 @@
     "requires": {
       "hasSpell": "levitar"
     },
-    "lockedText": "Você precisa conhecer o feitiço Levitar. Quem ensina é o Prof. Arquimedes.",
+    "lockedText": "Você precisa conhecer o feitiço Levitar. Quem ensina é o Ministro Bonfatt.",
     "timeLimitMs": 75000,
     "kind": "levitar",
     "targets": [
@@ -51,5 +51,31 @@
       }
     ],
     "tutorial": "corrida"
+  },
+  "aula-espectral": {
+    "title": "Aula de Criaturas Espectrais",
+    "description": "Três levas de espectros invisíveis. Revelar para ver, Lumen para espantar. Cuidado: eles tocam e machucam!",
+    "map": "map.sala-espectral",
+    "requires": {
+      "hasSpell": "revelar"
+    },
+    "lockedText": "O Prof. Aristóteles ainda não ensinou o feitiço Revelar. Fale com ele na Biblioteca.",
+    "timeLimitMs": 150000,
+    "kind": "espectral",
+    "targets": [
+      "leva-1",
+      "leva-2",
+      "leva-3"
+    ],
+    "reward": [
+      {
+        "setFlag": "aula:vencida",
+        "value": true
+      },
+      {
+        "giveXp": 60
+      }
+    ],
+    "tutorial": "aula"
   }
 }

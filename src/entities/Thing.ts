@@ -3,7 +3,7 @@ import { AssetRegistry } from '../core/AssetRegistry';
 import { assets } from '../core/registry';
 import type { Condition } from '../types/content';
 
-export type ThingKind = 'npc' | 'pickup' | 'station' | 'challenge' | 'socket';
+export type ThingKind = 'npc' | 'pickup' | 'station' | 'challenge' | 'socket' | 'planter' | 'dial' | 'lock';
 
 export interface ThingOptions {
   kind: ThingKind;
@@ -19,6 +19,10 @@ export interface ThingOptions {
   when?: Condition;
   /** Texto extra do objeto no mapa (ex.: ingredientes da despensa). */
   extra?: string;
+  /** Tamanho da caixa de colisão, quando não é a padrão (portas trancadas). */
+  bodySize?: [number, number];
+  /** Fantasma: flutua e pisca de leve. */
+  ghost?: boolean;
 }
 
 /** Qualquer coisa com que o jogador interage pela ação: NPCs, itens no chão, caldeirão, quadro de desafios. */
@@ -48,12 +52,17 @@ export class Thing extends Phaser.GameObjects.Sprite {
     if (opts.solid) {
       scene.physics.add.existing(this, true);
       const body = this.body as Phaser.Physics.Arcade.StaticBody;
-      body.setSize(12, 6).setOffset((this.width - 12) / 2, this.height - 6);
+      const [bw, bh] = opts.bodySize ?? [12, 6];
+      body.setSize(bw, bh).setOffset((this.width - bw) / 2, this.height - bh);
     }
     this.alert = scene.add.sprite(x, y - this.height - 4, 'ui.alerta').setDepth(1400).setVisible(false);
     this.alert.play(AssetRegistry.animKey('ui.alerta', 'idle'));
     if (opts.kind === 'pickup') {
       scene.tweens.add({ targets: this, y: y - 2, duration: 700, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
+    }
+    if (opts.ghost) {
+      scene.tweens.add({ targets: this, y: y - 3, duration: 1300, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
+      scene.tweens.add({ targets: this, alpha: { from: 0.95, to: 0.6 }, duration: 1700, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
     }
     this.playAnim('idle');
   }
@@ -78,6 +87,12 @@ export class Thing extends Phaser.GameObjects.Sprite {
 
   setTalking(on: boolean): void {
     this.playAnim(on ? 'talk' : 'idle');
+  }
+
+  /** Muda o quadro parado (canteiro que cresce, mostrador que gira, porta que abre). */
+  showFrame(frame: number): void {
+    this.stop();
+    this.setFrame(frame);
   }
 
   remove(): void {

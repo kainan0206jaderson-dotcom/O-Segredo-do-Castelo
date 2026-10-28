@@ -31,6 +31,8 @@ export interface SocketSpot {
   accepts: string;
   mode: 'levitar' | 'item';
   dialogue?: string;
+  /** Suporte de espelho do enigma da luz: para onde o espelho vira o raio. */
+  turn?: '/' | '\\';
   x: number;
   y: number;
   filled: boolean;
@@ -106,10 +108,11 @@ export class Puzzles {
       }
       case 'socket': {
         if (prop<string>(o.properties, 'mode') !== 'levitar') return false; // pedestais viram Thing na cena
-        this.scene.add.sprite(o.x!, o.y!, sprite!, 0).setOrigin(0.5, 1).setDepth(3);
+        const turn = prop<'/' | '\\'>(o.properties, 'turn');
+        this.scene.add.sprite(o.x!, o.y!, sprite!, turn === '\\' ? 1 : 0).setOrigin(0.5, 1).setDepth(3);
         this.sockets.push({
           name: o.name, group, accepts: prop<string>(o.properties, 'accepts')!, mode: 'levitar',
-          x: o.x!, y: o.y!, filled: false,
+          x: o.x!, y: o.y!, filled: false, turn,
         });
         return true;
       }
@@ -134,6 +137,16 @@ export class Puzzles {
     const f = assets().frameOf('ui.icones', s.accepts);
     s.icon = this.scene.add.image(s.x, s.y - 26, 'ui.icones', f ?? 0).setDepth(s.y + 1);
     this.scene.tweens.add({ targets: s.icon, y: s.y - 28, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
+  }
+
+  /** Encaixe de levitar já preenchido num save: põe um objeto do tipo certo nele. */
+  restoreLevitated(name: string): void {
+    const s = this.sockets.find((x) => x.name === name && x.mode === 'levitar');
+    if (!s || s.filled) return;
+    const l = this.levitables.find((x) => x.kind === s.accepts && x.state === 'parado');
+    if (!l) return;
+    s.filled = true;
+    l.socket(s.x, s.y - 2);
   }
 
   groupFilled(group: string): boolean {

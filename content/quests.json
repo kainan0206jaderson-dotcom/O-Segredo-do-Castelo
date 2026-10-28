@@ -4,8 +4,14 @@
     "kind": "principal",
     "xp": 20,
     "stages": [
-      { "id": "falar-com-quadro", "objective": "Fale com o quadro vivo no Grande Salão." },
-      { "id": "voltar-ao-trinco", "objective": "Conte ao Trinco o que o quadro disse." }
+      {
+        "id": "falar-com-quadro",
+        "objective": "Fale com o quadro vivo no Grande Salão."
+      },
+      {
+        "id": "voltar-ao-trinco",
+        "objective": "Conte ao Trinco o que o quadro disse."
+      }
     ]
   },
   "luz-na-cozinha": {
@@ -13,28 +19,80 @@
     "kind": "principal",
     "xp": 30,
     "stages": [
-      { "id": "ir-a-cozinha", "objective": "Vá até a Cozinha Bruxa, a leste do Grande Salão." },
-      { "id": "preparar-drink", "objective": "Prepare um Drink Bruxo Fumegante no caldeirão: suco colorido + gelo seco.",
-        "completeWhen": { "hasItem": "drink-fumegante" }, "then": "entregar-drink" },
-      { "id": "entregar-drink", "objective": "Leve o drink para a Dona Brasa." },
-      { "id": "acender-velas", "objective": "Acenda as 2 velas da cozinha com Lumen (troque o feitiço e use a ação).",
-        "completeWhen": { "all": [{ "flag": "vela:map.cozinha:vela-a" }, { "flag": "vela:map.cozinha:vela-b" }] }, "then": "falar-com-brasa" },
-      { "id": "falar-com-brasa", "objective": "Volte a falar com a Dona Brasa." }
+      {
+        "id": "ir-a-cozinha",
+        "objective": "Vá até a Cozinha Bruxa, a leste do Grande Salão."
+      },
+      {
+        "id": "preparar-drink",
+        "objective": "Prepare um Drink Bruxo Fumegante no caldeirão: suco colorido + gelo seco.",
+        "completeWhen": {
+          "hasItem": "drink-fumegante"
+        },
+        "then": "entregar-drink"
+      },
+      {
+        "id": "entregar-drink",
+        "objective": "Leve o drink para a Dona Brasa."
+      },
+      {
+        "id": "acender-velas",
+        "objective": "Acenda as 2 velas da cozinha com Lumen (troque o feitiço e use a ação).",
+        "completeWhen": {
+          "all": [
+            {
+              "flag": "vela:map.cozinha:vela-a"
+            },
+            {
+              "flag": "vela:map.cozinha:vela-b"
+            }
+          ]
+        },
+        "then": "falar-com-brasa"
+      },
+      {
+        "id": "falar-com-brasa",
+        "objective": "Volte a falar com a Dona Brasa."
+      }
     ]
   },
   "o-diretor": {
-    "title": "O Diretor do Castelo",
+    "title": "O Ministro da Magia",
     "kind": "principal",
     "xp": 40,
     "stages": [
-      { "id": "ir-ao-corredor", "objective": "Vá ao Corredor dos Quadros (porta oeste do Grande Salão) e procure o gabinete do Prof. Arquimedes.",
-        "completeWhen": { "flag": "visto:morgana-corredor" }, "then": "espantar-sombras" },
-      { "id": "espantar-sombras", "objective": "Espante as sombrinhas com Lumen!",
-        "completeWhen": { "flag": "criaturas:map.corredor:sombras" }, "then": "abrir-grade" },
-      { "id": "abrir-grade", "objective": "Empurre as duas estátuas até as placas do chão para abrir a grade do gabinete.",
-        "completeWhen": { "flag": "placas:map.corredor:grade" }, "then": "falar-com-diretor" },
-      { "id": "falar-com-diretor", "objective": "Converse com o Prof. Arquimedes no gabinete." },
-      { "id": "ir-ao-hall", "objective": "Siga o Prof. Arquimedes até o Hall da Escada, no fim oeste do corredor." }
+      {
+        "id": "ir-ao-corredor",
+        "objective": "Vá ao Corredor dos Quadros (porta oeste do Grande Salão) e procure o gabinete do Ministro Bonfatt.",
+        "completeWhen": {
+          "flag": "visto:morgana-corredor"
+        },
+        "then": "espantar-sombras"
+      },
+      {
+        "id": "espantar-sombras",
+        "objective": "Espante as sombrinhas com Lumen!",
+        "completeWhen": {
+          "flag": "criaturas:map.corredor:sombras"
+        },
+        "then": "abrir-grade"
+      },
+      {
+        "id": "abrir-grade",
+        "objective": "Empurre as duas estátuas até as placas do chão para abrir a grade do gabinete.",
+        "completeWhen": {
+          "flag": "placas:map.corredor:grade"
+        },
+        "then": "falar-com-diretor"
+      },
+      {
+        "id": "falar-com-diretor",
+        "objective": "Converse com o Ministro Bonfatt no gabinete."
+      },
+      {
+        "id": "ir-ao-hall",
+        "objective": "Siga o Ministro Bonfatt até o Hall da Escada, no fim oeste do corredor."
+      }
     ]
   },
   "o-selo": {
@@ -42,14 +100,59 @@
     "kind": "principal",
     "xp": 80,
     "stages": [
-      { "id": "reunir-pedras", "objective": "Reúna as 4 pedras das casas: Coragem, Inteligência, Astúcia e Lealdade. O Elfo Fuxico, no Grande Salão, dá dicas.",
-        "completeWhen": { "all": [
-          { "any": [{ "hasItem": "pedra-coragem" }, { "flag": "encaixe:map.hall:pedestal-coragem" }] },
-          { "any": [{ "hasItem": "pedra-inteligencia" }, { "flag": "encaixe:map.hall:pedestal-inteligencia" }] },
-          { "any": [{ "hasItem": "pedra-astucia" }, { "flag": "encaixe:map.hall:pedestal-astucia" }] },
-          { "any": [{ "hasItem": "pedra-lealdade" }, { "flag": "encaixe:map.hall:pedestal-lealdade" }] }
-        ] }, "then": "colocar-pedras" },
-      { "id": "colocar-pedras", "objective": "Coloque as 4 pedras nos pedestais do Hall da Escada." }
+      {
+        "id": "reunir-pedras",
+        "objective": "Reúna as 4 pedras das casas: Coragem, Inteligência, Astúcia e Lealdade. O Elfo Fuxico, no Grande Salão, dá dicas.",
+        "completeWhen": {
+          "all": [
+            {
+              "any": [
+                {
+                  "hasItem": "pedra-coragem"
+                },
+                {
+                  "flag": "encaixe:map.hall:pedestal-coragem"
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "hasItem": "pedra-inteligencia"
+                },
+                {
+                  "flag": "encaixe:map.hall:pedestal-inteligencia"
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "hasItem": "pedra-astucia"
+                },
+                {
+                  "flag": "encaixe:map.hall:pedestal-astucia"
+                }
+              ]
+            },
+            {
+              "any": [
+                {
+                  "hasItem": "pedra-lealdade"
+                },
+                {
+                  "flag": "encaixe:map.hall:pedestal-lealdade"
+                }
+              ]
+            }
+          ]
+        },
+        "then": "colocar-pedras"
+      },
+      {
+        "id": "colocar-pedras",
+        "objective": "Coloque as 4 pedras nos pedestais do Hall da Escada."
+      }
     ]
   },
   "chaves-do-trinco": {
@@ -57,11 +160,26 @@
     "kind": "principal",
     "xp": 30,
     "stages": [
-      { "id": "perguntar-a-brasa", "objective": "Pergunte à Dona Brasa, na cozinha, se ela viu as chaves do Trinco." },
-      { "id": "fazer-cerveja", "objective": "Prepare uma Cerveja de Abóbora (abóbora + gelo seco). A despensa da cozinha tem ingredientes.",
-        "completeWhen": { "hasItem": "cerveja-abobora" }, "then": "entregar-cerveja" },
-      { "id": "entregar-cerveja", "objective": "Leve a Cerveja de Abóbora para a Dona Brasa." },
-      { "id": "devolver-chaves", "objective": "Devolva as chaves ao Trinco, na Recepção." }
+      {
+        "id": "perguntar-a-brasa",
+        "objective": "Pergunte à Dona Brasa, na cozinha, se ela viu as chaves do Trinco."
+      },
+      {
+        "id": "fazer-cerveja",
+        "objective": "Prepare uma Cerveja de Abóbora (abóbora + gelo seco). A despensa da cozinha tem ingredientes.",
+        "completeWhen": {
+          "hasItem": "cerveja-abobora"
+        },
+        "then": "entregar-cerveja"
+      },
+      {
+        "id": "entregar-cerveja",
+        "objective": "Leve a Cerveja de Abóbora para a Dona Brasa."
+      },
+      {
+        "id": "devolver-chaves",
+        "objective": "Devolva as chaves ao Trinco, na Recepção."
+      }
     ]
   },
   "cha-da-dama": {
@@ -69,9 +187,206 @@
     "kind": "secundaria",
     "xp": 30,
     "stages": [
-      { "id": "fazer-sobremesa", "objective": "Faça uma Sobremesa Mandrágora (folha de mandrágora + cacau) para a Dama do Chá. Tem mandrágora no vaso do gabinete.",
-        "completeWhen": { "hasItem": "sobremesa-mandragora" }, "then": "entregar-sobremesa" },
-      { "id": "entregar-sobremesa", "objective": "Leve a Sobremesa Mandrágora para a Dama do Chá, no Corredor dos Quadros." }
+      {
+        "id": "fazer-sobremesa",
+        "objective": "Faça uma Sobremesa Mandrágora (folha de mandrágora + cacau) para a Dama do Chá. Tem mandrágora no vaso do gabinete.",
+        "completeWhen": {
+          "hasItem": "sobremesa-mandragora"
+        },
+        "then": "entregar-sobremesa"
+      },
+      {
+        "id": "entregar-sobremesa",
+        "objective": "Leve a Sobremesa Mandrágora para a Dama do Chá, no Corredor dos Quadros."
+      }
+    ]
+  },
+  "cartas-de-amelia": {
+    "title": "As cartas da Amélia",
+    "kind": "principal",
+    "xp": 80,
+    "stages": [
+      {
+        "id": "falar-com-aristoteles",
+        "objective": "Fale com o Prof. Aristóteles na Biblioteca."
+      },
+      {
+        "id": "aula-espectral",
+        "objective": "Vença a aula de Criaturas Espectrais, na sala a leste da Biblioteca.",
+        "completeWhen": {
+          "flag": "aula:vencida"
+        },
+        "then": "achar-cartas"
+      },
+      {
+        "id": "achar-cartas",
+        "objective": "Ache 3 cartas brancas escondidas: Biblioteca, sala da aula e Estufa (oeste). Use Revelar.",
+        "completeWhen": {
+          "all": [
+            {
+              "hasItem": "carta-amelia-1"
+            },
+            {
+              "hasItem": "carta-amelia-2"
+            },
+            {
+              "hasItem": "carta-amelia-3"
+            }
+          ]
+        },
+        "then": "libertar-amelia"
+      },
+      {
+        "id": "libertar-amelia",
+        "objective": "Leve as cartas ao espelho da Biblioteca."
+      },
+      {
+        "id": "alinhar-estrelas",
+        "objective": "No Observatório (norte da Biblioteca), ache a última carta e alinhe as quatro constelações.",
+        "completeWhen": {
+          "flag": "signos:map.observatorio:estrelas"
+        },
+        "then": "olhar-telescopio"
+      },
+      {
+        "id": "olhar-telescopio",
+        "objective": "Olhe pelo telescópio do Observatório."
+      },
+      {
+        "id": "abrir-galeria",
+        "objective": "Destranque a porta da Galeria (norte da Biblioteca) com o feitiço Abrir.",
+        "completeWhen": {
+          "flag": "trancado:map.biblioteca:porta-galeria"
+        },
+        "then": "entrar-galeria"
+      },
+      {
+        "id": "entrar-galeria",
+        "objective": "Entre na Galeria dos Quadros."
+      }
+    ]
+  },
+  "as-virtudes": {
+    "title": "As quatro virtudes",
+    "kind": "principal",
+    "xp": 120,
+    "stages": [
+      {
+        "id": "juntar-emblemas",
+        "objective": "Entre nos quatro quadros da Galeria e traga os emblemas das virtudes.",
+        "completeWhen": {
+          "all": [
+            {
+              "hasItem": "emblema-coragem"
+            },
+            {
+              "hasItem": "emblema-inteligencia"
+            },
+            {
+              "hasItem": "emblema-astucia"
+            },
+            {
+              "hasItem": "emblema-lealdade"
+            }
+          ]
+        },
+        "then": "ir-ao-coracao"
+      },
+      {
+        "id": "ir-ao-coracao",
+        "objective": "Passe pela barreira a leste da Galeria até o Coração do Castelo.",
+        "completeWhen": {
+          "flag": "visto:morgana-duelo"
+        },
+        "then": "enfrentar-morgana"
+      },
+      {
+        "id": "enfrentar-morgana",
+        "objective": "Duelo! Lumen quando a Morgana cansar; Revelar quando ela sumir.",
+        "completeWhen": {
+          "flag": "morgana:convencida"
+        },
+        "then": "acender-coracao"
+      },
+      {
+        "id": "acender-coracao",
+        "objective": "Toque o Coração do Castelo."
+      }
+    ]
+  },
+  "mandragoras": {
+    "title": "Mandrágoras da Fada",
+    "kind": "secundaria",
+    "xp": 40,
+    "stages": [
+      {
+        "id": "colher",
+        "objective": "Plante e colha 3 mandrágoras na Estufa (semente no canteiro, depois Lumen).",
+        "completeWhen": {
+          "flagAtLeast": "colheitas:map.estufa",
+          "n": 3
+        },
+        "then": "contar-a-fada"
+      },
+      {
+        "id": "contar-a-fada",
+        "objective": "Conte para a Fada Ramalhete."
+      }
+    ]
+  },
+  "livros-fujoes": {
+    "title": "Livros fujões",
+    "kind": "secundaria",
+    "xp": 40,
+    "stages": [
+      {
+        "id": "guardar-livros",
+        "objective": "Leve os 3 livros fujões até os atris da parede oeste da Biblioteca (Levitar).",
+        "completeWhen": {
+          "all": [
+            {
+              "flag": "encaixe:map.biblioteca:atril-1"
+            },
+            {
+              "flag": "encaixe:map.biblioteca:atril-2"
+            },
+            {
+              "flag": "encaixe:map.biblioteca:atril-3"
+            }
+          ]
+        },
+        "then": "contar-ao-aristoteles"
+      },
+      {
+        "id": "contar-ao-aristoteles",
+        "objective": "Conte para o Prof. Aristóteles."
+      }
+    ]
+  },
+  "esconde-esconde": {
+    "title": "Esconde-esconde dos gnomos",
+    "kind": "secundaria",
+    "xp": 30,
+    "stages": [
+      {
+        "id": "procurar",
+        "objective": "Ache o Mish Mish (cheiro de livro velho) e o Wish Wish (vive contando estrelas).",
+        "completeWhen": {
+          "all": [
+            {
+              "flag": "gnomo:mish-mish"
+            },
+            {
+              "flag": "gnomo:wish-wish"
+            }
+          ]
+        },
+        "then": "contar-a-mary"
+      },
+      {
+        "id": "contar-a-mary",
+        "objective": "Conte para a Mary, na Recepção."
+      }
     ]
   }
 }

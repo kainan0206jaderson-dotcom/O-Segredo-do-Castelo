@@ -18,7 +18,7 @@
   "revelar": {
     "name": "Revelar",
     "kind": "principal",
-    "description": "Mostra passagens e objetos escondidos. Ensinado pela Professora Amélia.",
+    "description": "Mostra coisas escondidas e espectros invisíveis por perto. Ensinado pelo Prof. Aristóteles.",
     "target": "oculto",
     "fx": "fx.fagulha",
     "cost": 2
@@ -26,15 +26,16 @@
   "escudo": {
     "name": "Escudo",
     "kind": "principal",
-    "description": "Uma bolha de luz que protege de travessuras mágicas.",
+    "description": "Uma bolha de luz que protege de sombrinhas e orbes de fuligem por alguns segundos. Ensinado pela Profa. Amélia.",
     "target": "nenhum",
     "fx": "fx.fagulha",
-    "cost": 2
+    "cost": 2,
+    "self": "escudo"
   },
   "abrir": {
     "name": "Abrir",
     "kind": "principal",
-    "description": "Destranca portas e baús encantados.",
+    "description": "Destranca portas encantadas. Uma chave feita de estrelas.",
     "target": "trancado",
     "fx": "fx.fagulha",
     "cost": 1

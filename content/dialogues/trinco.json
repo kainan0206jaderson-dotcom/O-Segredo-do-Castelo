@@ -85,7 +85,7 @@
       "next": "sumico"
     },
     "sumico": {
-      "text": "Mas olha, hoje a noite tá esquisita. As velas estão apagando sozinhas, e o Professor Arquimedes se trancou no gabinete desde o jantar!",
+      "text": "Mas olha, hoje a noite tá esquisita. As velas estão apagando sozinhas, e o Ministro Bonfatt se trancou no gabinete desde o jantar!",
       "next": "mesa-ok"
     },
     "mesa-ok": {
@@ -135,7 +135,7 @@
       "text": "Grimório na mão, varinha no bolso... Agora sim parece um bruxo de verdade! Quase. A Dona Brasa tá te esperando na cozinha."
     },
     "diretor": {
-      "text": "O Arquimedes quer te ver? Uau. O gabinete fica no Corredor dos Quadros, pela porta oeste do Grande Salão. Bate antes de entrar!"
+      "text": "O Bonfatt quer te ver? Uau. O gabinete fica no Corredor dos Quadros, pela porta oeste do Grande Salão. Bate antes de entrar!"
     },
     "chaves": {
       "text": "Aprendiz! Desastre! Perdi meu molho de chaves! Sem chave, sem porta. Sem porta, sem castelo. Sem castelo... sem emprego!",
@@ -173,7 +173,7 @@
       ]
     },
     "selo": {
-      "text": "O diretor sumiu numa nuvem de fuligem?! Eu SABIA que essa noite tava esquisita. Junta as quatro pedras e quebra esse selo, aprendiz!"
+      "text": "O ministro sumiu numa nuvem de fuligem?! Eu SABIA que essa noite tava esquisita. Junta as quatro pedras e quebra esse selo, aprendiz!"
     },
     "fim-ato": {
       "text": "O selo quebrou! A escada tá livre! Eu ia subir com você, mas... alguém tem que cuidar da recepção. É. Isso. Boa sorte!"

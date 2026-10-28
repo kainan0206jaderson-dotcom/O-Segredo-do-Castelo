@@ -4,6 +4,8 @@ export type FlagValue = string | number | boolean;
 
 export type Condition =
   | { flag: string; eq?: FlagValue }
+  /** Flag numérica (contador) com valor mínimo. */
+  | { flagAtLeast: string; n: number }
   | { questStage: string; stage: string }
   | { questDone: string }
   | { questActive: string }
@@ -106,7 +108,7 @@ export interface SpellDef {
   /** Energia mágica gasta a cada uso. */
   cost: number;
   /** Feitiços sem alvo podem ter um efeito no próprio aprendiz. */
-  self?: 'velocidade';
+  self?: 'velocidade' | 'escudo';
 }
 
 export interface RecipeDef {
@@ -121,8 +123,11 @@ export interface ChallengeDef {
   requires?: Condition;
   lockedText: string;
   timeLimitMs: number;
-  /** "acender": velas com Lumen; "levitar": levar objetos flutuando até os encaixes. */
-  kind: 'acender' | 'levitar';
+  /**
+   * "acender": velas com Lumen; "levitar": levar objetos flutuando até os encaixes;
+   * "espectral": levas de espectros invisíveis (alvos = grupos de criaturas, uma leva por vez).
+   */
+  kind: 'acender' | 'levitar' | 'espectral';
   targets: string[];
   reward: Effect[];
   /** Tutorial mostrado antes da primeira tentativa. */

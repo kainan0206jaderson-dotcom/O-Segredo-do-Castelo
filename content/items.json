@@ -134,5 +134,75 @@
     "name": "Molho de chaves do Trinco",
     "kind": "objeto",
     "description": "Umas trinta chaves. Nenhuma tem etiqueta. Típico."
+  },
+  "carta-amelia-1": {
+    "name": "Carta branca 1/4",
+    "kind": "objeto",
+    "description": "Pedaço de uma carta do Ministro Bonfatt: \"Querida M., hoje acendi uma vela por você...\""
+  },
+  "carta-amelia-2": {
+    "name": "Carta branca 2/4",
+    "kind": "objeto",
+    "description": "Pedaço de uma carta do Ministro Bonfatt: \"...você sempre foi a melhor da turma...\""
+  },
+  "carta-amelia-3": {
+    "name": "Carta branca 3/4",
+    "kind": "objeto",
+    "description": "Pedaço de uma carta do Ministro Bonfatt: \"...ninguém foi esquecido. Volte quando quiser.\""
+  },
+  "carta-amelia-4": {
+    "name": "Carta branca 4/4",
+    "kind": "objeto",
+    "description": "Pedaço de uma carta do Ministro Bonfatt: \"...coragem é a chama, inteligência é o livro, astúcia é a lua, lealdade é o coração.\""
+  },
+  "semente-mandragora": {
+    "name": "Semente de mandrágora",
+    "kind": "ingrediente",
+    "description": "Plante num canteiro da Estufa e lance Lumen. Ela cresce resmungando."
+  },
+  "pocao-vigor": {
+    "name": "Poção de Vigor",
+    "kind": "pocao",
+    "description": "Verde e borbulhante. Beber devolve 4 de vida.",
+    "use": [
+      {
+        "heal": 4
+      }
+    ]
+  },
+  "elixir-estelar": {
+    "name": "Elixir Estelar",
+    "kind": "pocao",
+    "description": "Tem gosto de noite fresca. Beber devolve 5 de energia mágica.",
+    "use": [
+      {
+        "restoreEnergy": 5
+      }
+    ]
+  },
+  "livro-coracao": {
+    "name": "Livro do Coração",
+    "kind": "objeto",
+    "description": "Presente do Ministro Bonfatt. Guarda a história da noite em que o castelo voltou a brilhar."
+  },
+  "emblema-coragem": {
+    "name": "Emblema da Coragem",
+    "kind": "objeto",
+    "description": "Uma chama que nunca apaga. Abre a barreira da Galeria."
+  },
+  "emblema-inteligencia": {
+    "name": "Emblema da Inteligência",
+    "kind": "objeto",
+    "description": "Um livrinho que folheia sozinho. Abre a barreira da Galeria."
+  },
+  "emblema-astucia": {
+    "name": "Emblema da Astúcia",
+    "kind": "objeto",
+    "description": "Uma lua que brilha de lado. Abre a barreira da Galeria."
+  },
+  "emblema-lealdade": {
+    "name": "Emblema da Lealdade",
+    "kind": "objeto",
+    "description": "Um coração que bate junto com o seu. Abre a barreira da Galeria."
   }
 }

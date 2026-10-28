@@ -1,0 +1,31 @@
+{
+  "id": "morgana-fase2",
+  "speaker": "Morgana Cinzel",
+  "entries": [
+    {
+      "start": "a"
+    }
+  ],
+  "nodes": {
+    "a": {
+      "text": "Ai! Tá bom, você sabe usar Lumen. Grande coisa.",
+      "speaker": "Morgana Cinzel",
+      "next": "a-2"
+    },
+    "a-2": {
+      "text": "Vamos ver se acerta o que não vê! E trouxe amiguinhos para brincar com você.",
+      "speaker": "Morgana Cinzel",
+      "next": "a-3"
+    },
+    "a-3": {
+      "text": "A Morgana fica invisível. Revelar mostra onde ela está!",
+      "speaker": "✦",
+      "effects": [
+        {
+          "setFlag": "boss:iniciar",
+          "value": "fase2"
+        }
+      ]
+    }
+  }
+}

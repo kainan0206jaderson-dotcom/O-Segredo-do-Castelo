@@ -1,0 +1,14 @@
+{
+  "id": "barreira",
+  "speaker": "Barreira",
+  "entries": [
+    {
+      "start": "a"
+    }
+  ],
+  "nodes": {
+    "a": {
+      "text": "Uma parede de luz cinza zumbe na frente da porta. Quatro buracos em forma de emblema brilham nela."
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "id": "emblema-inteligencia",
+  "speaker": "✦",
+  "entries": [
+    {
+      "start": "a"
+    }
+  ],
+  "nodes": {
+    "a": {
+      "text": "Um emblema em forma de livro, que folheia sozinho.",
+      "next": "a-2"
+    },
+    "a-2": {
+      "text": "Emblema da Inteligência guardado! Volte para a Galeria pela porta do quadro."
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "id": "emblema-coragem",
+  "speaker": "✦",
+  "entries": [
+    {
+      "start": "a"
+    }
+  ],
+  "nodes": {
+    "a": {
+      "text": "Um emblema em forma de chama, quentinho como fogueira.",
+      "next": "a-2"
+    },
+    "a-2": {
+      "text": "Emblema da Coragem guardado! Volte para a Galeria pela porta do quadro."
+    }
+  }
+}

@@ -1,0 +1,23 @@
+{
+  "id": "morgana-final",
+  "speaker": "Morgana Cinzel",
+  "entries": [
+    {
+      "when": {
+        "flag": "jogo:fim"
+      },
+      "start": "fim"
+    },
+    {
+      "start": "a"
+    }
+  ],
+  "nodes": {
+    "a": {
+      "text": "Vá logo, toque o Coração, antes que eu mude de ideia. Brincadeira. Quase."
+    },
+    "fim": {
+      "text": "O castelo brilhando de novo... Até que cinza não combinava tanto assim."
+    }
+  }
+}

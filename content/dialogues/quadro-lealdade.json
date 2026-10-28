@@ -1,0 +1,24 @@
+{
+  "id": "quadro-lealdade",
+  "speaker": "✦",
+  "entries": [
+    {
+      "start": "a"
+    }
+  ],
+  "nodes": {
+    "a": {
+      "text": "A Amélia está no meio do quadro, presa por correntes de fuligem.",
+      "next": "a-2"
+    },
+    "a-2": {
+      "text": "As correntes saem de três âncoras. Lumen nelas, até quebrarem!",
+      "effects": [
+        {
+          "setFlag": "visto:quadro-lealdade",
+          "value": true
+        }
+      ]
+    }
+  }
+}
