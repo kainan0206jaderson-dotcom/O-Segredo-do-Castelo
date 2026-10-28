@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
 import { assets } from '../core/registry';
-import { GAME_HEIGHT, GAME_WIDTH } from '../config/game';
+import { GAME_HEIGHT, GAME_WIDTH, START_MAP, START_SPAWN } from '../config/game';
 
 export class PreloadScene extends Phaser.Scene {
   constructor() {
@@ -28,6 +28,6 @@ export class PreloadScene extends Phaser.Scene {
     for (const { key, sheet, def } of assets().animations()) {
       this.anims.create({ key, frames: this.anims.generateFrameNumbers(sheet, { frames: def.frames }), frameRate: def.frameRate, repeat: def.repeat });
     }
-    this.scene.start('World', { map: 'map.grande-salao' });
+    this.scene.start('World', { map: START_MAP, spawn: START_SPAWN });
   }
 }

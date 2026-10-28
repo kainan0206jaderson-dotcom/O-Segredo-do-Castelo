@@ -7,12 +7,60 @@
       "frameWidth": 16,
       "frameHeight": 24,
       "animations": {
-        "idle-down": { "frames": [0, 1], "frameRate": 2, "repeat": -1 },
-        "walk-down": { "frames": [2, 3, 4, 5], "frameRate": 8, "repeat": -1 },
-        "idle-up": { "frames": [6, 7], "frameRate": 2, "repeat": -1 },
-        "walk-up": { "frames": [8, 9, 10, 11], "frameRate": 8, "repeat": -1 },
-        "idle-side": { "frames": [12, 13], "frameRate": 2, "repeat": -1 },
-        "walk-side": { "frames": [14, 15, 16, 17], "frameRate": 8, "repeat": -1 }
+        "idle-down": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-down": {
+          "frames": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-up": {
+          "frames": [
+            6,
+            7
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-up": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-side": {
+          "frames": [
+            12,
+            13
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-side": {
+          "frames": [
+            14,
+            15,
+            16,
+            17
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
       }
     },
     "prop.vela": {
@@ -20,14 +68,76 @@
       "frameWidth": 16,
       "frameHeight": 16,
       "animations": {
-        "idle": { "frames": [0, 1, 2, 3], "frameRate": 6, "repeat": -1 }
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameRate": 6,
+          "repeat": -1
+        }
+      }
+    },
+    "prop.caldeirao": {
+      "url": "sprites/caldeirao.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1,
+            2
+          ],
+          "frameRate": 4,
+          "repeat": -1
+        }
+      }
+    },
+    "fx.fagulha": {
+      "url": "fx/fagulha.png",
+      "frameWidth": 8,
+      "frameHeight": 8,
+      "animations": {
+        "burst": {
+          "frames": [
+            0,
+            1,
+            2,
+            3
+          ],
+          "frameRate": 14,
+          "repeat": 0
+        }
       }
     }
   },
   "tilesets": {
-    "tiles.castelo": { "url": "tilesets/castelo.png", "tiledName": "castelo" }
+    "tiles.castelo": {
+      "url": "tilesets/castelo.png",
+      "tiledName": "castelo"
+    }
   },
   "maps": {
-    "map.grande-salao": { "url": "maps/grande-salao.tmj", "tilesets": ["tiles.castelo"] }
+    "map.recepcao": {
+      "url": "maps/recepcao.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.grande-salao": {
+      "url": "maps/grande-salao.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.cozinha": {
+      "url": "maps/cozinha.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    }
   }
 }

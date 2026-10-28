@@ -198,61 +198,148 @@ tile(9, banner((40, 140, 80)))      # Astúcia
 tile(10, banner((200, 160, 40)))    # Lealdade
 TS.save(os.path.join(ROOT, "tilesets", "castelo.png"))
 
-# ---------- Mapa Tiled (.tmj) do Grande Salão (provisório)
-W, H = 40, 24
-FLOOR, FLOOR2, CARPET, TOP, FACE, WOOD, WIN, B1, B2, B3, B4 = [i + 1 for i in range(11)]
-floor = []
-walls = []
-for y in range(H):
-    for x in range(W):
-        f = FLOOR2 if (x * 3 + y * 5) % 11 == 0 else FLOOR
-        if 17 <= x <= 22 and 4 <= y <= H - 2:
-            f = CARPET
-        w = 0
-        if y == 0 or x == 0 or x == W - 1 or y == H - 1:
-            w = TOP
-        elif y in (1, 2):
-            w = FACE
-            if y == 1 and x in (6, 14, 25, 33):
-                w = WIN
-            if y == 1 and x in (9, 12, 27, 30):
-                w = [B1, B2, B3, B4][[9, 12, 27, 30].index(x)]
-        # mesas das casas (madeira, colidem)
-        for mx in (6, 12, 26, 32):
-            if mx <= x <= mx + 2 and 8 <= y <= 15:
-                w = WOOD
-        if (x, y) in ((19, 23), (20, 23)):
-            w = 0  # porta sul
-        floor.append(f)
-        walls.append(w)
-
-objects = [
-    {"id": 1, "name": "spawn", "type": "spawn", "x": 20 * 16, "y": 20 * 16, "width": 0, "height": 0, "point": True},
+# ---------- Fagulha de magia (8x8, 4 quadros) e caldeirão (16x16, 3 quadros)
+SPARK = [
+    ["........", "........", "...y....", "..yYy...", "...y....", "........", "........", "........"],
+    ["........", "...y....", "...Y....", ".yYYYy..", "...Y....", "...y....", "........", "........"],
+    ["...y....", "........", ".y.Y.y..", "..YYY...", ".y.Y.y..", "........", "...y....", "........"],
+    ["........", ".y...y..", "........", "...y....", "........", ".y...y..", "........", "........"],
 ]
-oid = 2
-for cx, cy in [(5, 4), (34, 4), (5, 19), (34, 19), (16, 5), (23, 5)]:
-    objects.append({"id": oid, "name": "vela", "type": "prop",
-                    "properties": [{"name": "sprite", "type": "string", "value": "prop.vela"}],
-                    "x": cx * 16 + 8, "y": cy * 16 + 8, "width": 0, "height": 0, "point": True})
-    oid += 1
+spark = Image.new("RGBA", (32, 8), (0, 0, 0, 0))
+for i, rows in enumerate(SPARK):
+    draw(spark, i * 8, 0, rows)
+spark.save(os.path.join(ROOT, "fx", "fagulha.png"))
 
-tmj = {
-    "type": "map", "version": "1.10", "tiledversion": "1.10.2", "orientation": "orthogonal",
-    "renderorder": "right-down", "width": W, "height": H, "tilewidth": 16, "tileheight": 16,
-    "infinite": False, "nextlayerid": 4, "nextobjectid": oid,
-    "layers": [
-        {"id": 1, "name": "chao", "type": "tilelayer", "width": W, "height": H, "x": 0, "y": 0, "opacity": 1, "visible": True, "data": floor},
-        {"id": 2, "name": "paredes", "type": "tilelayer", "width": W, "height": H, "x": 0, "y": 0, "opacity": 1, "visible": True, "data": walls},
-        {"id": 3, "name": "objetos", "type": "objectgroup", "draworder": "topdown", "x": 0, "y": 0, "opacity": 1, "visible": True, "objects": objects},
-    ],
-    "tilesets": [{
-        "firstgid": 1, "name": "castelo", "image": "../tilesets/castelo.png",
-        "imagewidth": 128, "imageheight": 32, "tilewidth": 16, "tileheight": 16,
-        "tilecount": 16, "columns": 8, "margin": 0, "spacing": 0,
-        "tiles": [{"id": t - 1, "properties": [{"name": "collides", "type": "bool", "value": True}]}
-                  for t in (TOP, FACE, WOOD, WIN, B1, B2, B3, B4)],
-    }],
-}
-with open(os.path.join(ROOT, "maps", "grande-salao.tmj"), "w") as fh:
-    json.dump(tmj, fh)
+P.update({"g": (90, 200, 110), "G": (170, 240, 160), "m": (52, 50, 64), "M": (86, 84, 100)})
+POT = [
+    "................", "................", "................",
+    "................", "................",
+    "...kkkkkkkkkk...", "..kgGgggggGggk..", "..kMkkkkkkkkMk..",
+    ".kmMmmmmmmmmMmk.", ".kmMmmmmmmmmMmk.", ".kmmmmmmmmmmmmk.",
+    "..kmmmmmmmmmmk..", "...kkkkkkkkkk...", "...kok....kok...", "...kyk....kyk...", "....k......k....",
+]
+BUBBLES = [["......G.........", ".........g......", "....g....G......"],
+           ["........G.......", "....G...........", "......g...g....."],
+           [".........g......", ".....g...G......", "....G.....g....."]]
+pot = Image.new("RGBA", (48, 16), (0, 0, 0, 0))
+for i, b in enumerate(BUBBLES):
+    rows = POT[:2] + b + POT[5:]
+    draw(pot, i * 16, 0, rows)
+pot.save(os.path.join(ROOT, "sprites", "caldeirao.png"))
+
+# ---------- Mapas Tiled (.tmj), gerados a partir de uma descrição de cada sala
+FLOOR, FLOOR2, CARPET, TOP, FACE, WOOD, WIN, B1, B2, B3, B4 = [i + 1 for i in range(11)]
+COLLIDES = (TOP, FACE, WOOD, WIN, B1, B2, B3, B4)
+
+
+def build_room(name, title, w, h, doors, tables=(), carpet=None, windows=(), banners=(), props=(), spawns=()):
+    """doors: (lado N/S/L/O, posição, mapa destino, chegada no destino, nome desta chegada)."""
+    floor, walls = [], []
+    for y in range(h):
+        for x in range(w):
+            f = FLOOR2 if (x * 3 + y * 5) % 11 == 0 else FLOOR
+            if carpet and carpet[0] <= x <= carpet[2] and carpet[1] <= y <= carpet[3]:
+                f = CARPET
+            wl = 0
+            if y == 0 or x == 0 or x == w - 1 or y == h - 1:
+                wl = TOP
+            elif y in (1, 2):
+                wl = FACE
+                if y == 1 and x in windows:
+                    wl = WIN
+                if y == 1 and x in [b[0] for b in banners]:
+                    wl = dict(banners)[x]
+            for (tx, ty, tw, th) in tables:
+                if tx <= x < tx + tw and ty <= y < ty + th:
+                    wl = WOOD
+            floor.append(f)
+            walls.append(wl)
+
+    objects, oid = [], 1
+
+    def obj(**kw):
+        nonlocal oid
+        kw.setdefault("width", 0)
+        kw.setdefault("height", 0)
+        kw["id"] = oid
+        oid += 1
+        objects.append(kw)
+
+    for side, pos, target, target_spawn, arrive in doors:
+        # abertura de 2 tiles na parede; a zona da porta fica na borda externa
+        if side in "NS":
+            ys = (0, 1, 2) if side == "N" else (h - 1,)
+            for yy in ys:
+                for xx in (pos, pos + 1):
+                    walls[yy * w + xx] = 0
+            zy = 0 if side == "N" else h - 1
+            obj(name=f"porta-{arrive}", type="door", x=pos * 16, y=zy * 16, width=32, height=16,
+                properties=[{"name": "target", "type": "string", "value": target},
+                            {"name": "spawn", "type": "string", "value": target_spawn}])
+            sy = 4 if side == "N" else h - 2
+            obj(name=arrive, type="spawn", x=(pos + 1) * 16, y=sy * 16, point=True,
+                properties=[{"name": "facing", "type": "string", "value": "down" if side == "N" else "up"}])
+        else:
+            xx = w - 1 if side == "L" else 0
+            for yy in (pos, pos + 1):
+                walls[yy * w + xx] = 0
+            obj(name=f"porta-{arrive}", type="door", x=xx * 16, y=pos * 16, width=16, height=32,
+                properties=[{"name": "target", "type": "string", "value": target},
+                            {"name": "spawn", "type": "string", "value": target_spawn}])
+            sx = w - 3 if side == "L" else 2
+            obj(name=arrive, type="spawn", x=sx * 16 + 8, y=(pos + 1) * 16 + 8, point=True,
+                properties=[{"name": "facing", "type": "string", "value": "side"}])
+
+    for (sname, sx, sy) in spawns:
+        obj(name=sname, type="spawn", x=sx * 16 + 8, y=sy * 16, point=True,
+            properties=[{"name": "facing", "type": "string", "value": "up"}])
+    for (sprite, px, py) in props:
+        obj(name=sprite, type="prop", x=px * 16 + 8, y=py * 16 + 16, point=True,
+            properties=[{"name": "sprite", "type": "string", "value": sprite}])
+
+    tmj = {
+        "type": "map", "version": "1.10", "tiledversion": "1.10.2", "orientation": "orthogonal",
+        "renderorder": "right-down", "width": w, "height": h, "tilewidth": 16, "tileheight": 16,
+        "infinite": False, "nextlayerid": 4, "nextobjectid": oid,
+        "properties": [{"name": "nome", "type": "string", "value": title}],
+        "layers": [
+            {"id": 1, "name": "chao", "type": "tilelayer", "width": w, "height": h, "x": 0, "y": 0, "opacity": 1, "visible": True, "data": floor},
+            {"id": 2, "name": "paredes", "type": "tilelayer", "width": w, "height": h, "x": 0, "y": 0, "opacity": 1, "visible": True, "data": walls},
+            {"id": 3, "name": "objetos", "type": "objectgroup", "draworder": "topdown", "x": 0, "y": 0, "opacity": 1, "visible": True, "objects": objects},
+        ],
+        "tilesets": [{
+            "firstgid": 1, "name": "castelo", "image": "../tilesets/castelo.png",
+            "imagewidth": 128, "imageheight": 32, "tilewidth": 16, "tileheight": 16,
+            "tilecount": 16, "columns": 8, "margin": 0, "spacing": 0,
+            "tiles": [{"id": t - 1, "properties": [{"name": "collides", "type": "bool", "value": True}]} for t in COLLIDES],
+        }],
+    }
+    with open(os.path.join(ROOT, "maps", f"{name}.tmj"), "w") as fh:
+        json.dump(tmj, fh)
+
+
+# Recepção: onde o jogador chega; porta norte para o Grande Salão
+build_room("recepcao", "Recepção", 20, 13,
+           doors=[("N", 9, "map.grande-salao", "da-recepcao", "do-salao")],
+           carpet=(9, 3, 10, 11), windows=(4, 15),
+           props=[("prop.vela", 3, 4), ("prop.vela", 16, 4)],
+           spawns=[("inicio", 9, 10)])
+
+# Grande Salão: quatro mesas das casas; sul = Recepção, leste = Cozinha
+build_room("grande-salao", "Grande Salão", 40, 24,
+           doors=[("S", 19, "map.recepcao", "do-salao", "da-recepcao"),
+                  ("L", 11, "map.cozinha", "do-salao", "da-cozinha")],
+           tables=[(6, 8, 3, 8), (12, 8, 3, 8), (25, 8, 3, 8), (31, 8, 3, 8)],
+           carpet=(17, 4, 22, 22), windows=(6, 14, 25, 33),
+           banners=[(9, B1), (12, B2), (27, B3), (30, B4)],
+           props=[("prop.vela", 5, 4), ("prop.vela", 34, 4), ("prop.vela", 5, 19),
+                  ("prop.vela", 34, 19), ("prop.vela", 16, 5), ("prop.vela", 23, 5)])
+
+# Cozinha bruxa: caldeirões; oeste = Grande Salão
+build_room("cozinha", "Cozinha Bruxa", 22, 14,
+           doors=[("O", 6, "map.grande-salao", "da-cozinha", "do-salao")],
+           tables=[(8, 6, 6, 2)], windows=(5, 16),
+           props=[("prop.caldeirao", 5, 9), ("prop.caldeirao", 16, 9), ("prop.caldeirao", 16, 4),
+                  ("prop.vela", 10, 5), ("prop.vela", 12, 5)])
+
 print("assets provisórios gerados em", os.path.abspath(ROOT))

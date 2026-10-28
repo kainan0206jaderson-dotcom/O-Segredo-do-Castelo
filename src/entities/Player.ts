@@ -2,13 +2,13 @@ import Phaser from 'phaser';
 import { AssetRegistry } from '../core/AssetRegistry';
 import { PLAYER_SPEED } from '../config/game';
 
-type Facing = 'down' | 'up' | 'side';
+export type Facing = 'down' | 'up' | 'side';
 const SHEET = 'player.aprendiz';
 
 export class Player extends Phaser.Physics.Arcade.Sprite {
   private facing: Facing = 'down';
 
-  constructor(scene: Phaser.Scene, x: number, y: number) {
+  constructor(scene: Phaser.Scene, x: number, y: number, facing: Facing = 'down') {
     super(scene, x, y, SHEET, 0);
     scene.add.existing(this);
     scene.physics.add.existing(this);
@@ -16,7 +16,8 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     const body = this.body as Phaser.Physics.Arcade.Body;
     body.setSize(10, 6).setOffset(3, 17);
     this.setOrigin(0.5, 1);
-    this.play(AssetRegistry.animKey(SHEET, 'idle-down'));
+    this.facing = facing;
+    this.play(AssetRegistry.animKey(SHEET, `idle-${facing}`));
   }
 
   move(dir: Phaser.Math.Vector2): void {
@@ -28,5 +29,16 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     }
     this.play(AssetRegistry.animKey(SHEET, `${moving ? 'walk' : 'idle'}-${this.facing}`), true);
     this.setDepth(this.y);
+  }
+
+  halt(): void {
+    this.move(new Phaser.Math.Vector2());
+  }
+
+  /** Ponto logo à frente do personagem, usado para interações e feitiços. */
+  frontPoint(distance = 12): Phaser.Math.Vector2 {
+    const dx = this.facing === 'side' ? (this.flipX ? -1 : 1) : 0;
+    const dy = this.facing === 'down' ? 1 : this.facing === 'up' ? -1 : 0;
+    return new Phaser.Math.Vector2(this.x + dx * distance, this.y - 8 + dy * distance);
   }
 }

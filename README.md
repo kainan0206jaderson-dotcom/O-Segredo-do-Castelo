@@ -21,7 +21,13 @@ todos os quadros citados existem na imagem.
 
 A arte atual é provisória e gerada por `tools/gen_placeholder_assets.py`.
 
+## Controles
+
+- PC: WASD ou setas para andar; E, Espaço ou Enter para a ação.
+- Celular (só na horizontal): toque e arraste na metade esquerda para andar; botão de estrela para a ação.
+
 ## Estado
 
-Etapa 0 (fundação): personagem animado andando no Grande Salão com colisão, câmera,
-teclado e joystick de toque.
+- Etapa 0: personagem animado, colisão, câmera, AssetRegistry.
+- Etapa 1: três salas conectadas (Recepção, Grande Salão, Cozinha Bruxa) com portas,
+  transição, nome da sala, joystick e botão de ação no celular, aviso para girar a tela.
