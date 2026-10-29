@@ -48,10 +48,12 @@ export class VisualScene extends Phaser.Scene {
       { label: 'Cabelo', opts: opcoesCabelo, get: () => idx(opcoesCabelo(), v().cabelo), set: (i) => put({ cabelo: opcoesCabelo()[i].id }) },
       { label: 'Roupa', opts: opcoesRoupa, get: () => v().roupa, set: (i) => put({ roupa: i }) },
       { label: 'Pronto' },
+      // no Novo jogo dá para voltar para a escolha do personagem
+      ...(this.back === 'Title' ? [{ label: 'Voltar' }] : []),
     ];
 
     const w = 300;
-    const h = 150;
+    const h = 52 + this.rows.length * 24;
     const x0 = (GAME_WIDTH - w) / 2;
     const y0 = (GAME_HEIGHT - h) / 2;
     this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.6).setOrigin(0).setInteractive();
@@ -91,7 +93,10 @@ export class VisualScene extends Phaser.Scene {
   private change(dir: number): void {
     const r = this.rows[this.sel];
     if (!r.opts) {
-      if (dir === 0) this.close();
+      if (dir === 0) {
+        if (r.label === 'Voltar') this.goBack();
+        else this.close();
+      }
       return;
     }
     const n = r.opts().length;
@@ -116,6 +121,12 @@ export class VisualScene extends Phaser.Scene {
     });
   }
 
+  /** Volta para a escolha do personagem (Novo jogo), pelo histórico como o gesto do celular. */
+  private goBack(): void {
+    audio.sfx('blip');
+    history.back();
+  }
+
   private close(): void {
     audio.sfx('confirmar');
     session.save();
@@ -133,6 +144,9 @@ export class VisualScene extends Phaser.Scene {
     const h = this.controls.navHPressed();
     if (h) this.change(h);
     if (this.controls.actionPressed()) this.change(0);
-    if (this.controls.menuPressed()) this.close();
+    if (this.controls.menuPressed()) {
+      if (this.back === 'Title') this.goBack();
+      else this.close();
+    }
   }
 }
