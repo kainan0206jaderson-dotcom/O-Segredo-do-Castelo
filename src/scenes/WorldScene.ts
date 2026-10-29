@@ -235,6 +235,8 @@ export class WorldScene extends Phaser.Scene {
       const when = cond(o);
       const locked = prop<string>(o.properties, 'locked');
       this.physics.add.overlap(this.player, zone, () => {
+        // empurrado por um golpe não conta como entrar na porta (a chegada fica bem na soleira)
+        if (this.time.now < this.knockUntil) return;
         if (when && !check(when, session.state)) {
           if (locked && this.time.now > this.doorNoticeAt) {
             this.doorNoticeAt = this.time.now + 2500;
