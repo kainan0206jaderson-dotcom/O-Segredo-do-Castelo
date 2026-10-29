@@ -97,7 +97,7 @@ export class EndingScene extends Phaser.Scene {
 
     this.line = this.add.text(GAME_WIDTH / 2, 70, '', textStyle(10, COLORS.text, { align: 'center', wordWrap: { width: GAME_WIDTH - 60 }, lineSpacing: 4 }))
       .setOrigin(0.5).setResolution(TEXT_RES);
-    this.add.text(GAME_WIDTH / 2, GAME_HEIGHT - 12, InputManager.isTouchDevice(this) ? 'toque para continuar' : 'E para continuar',
+    this.add.text(GAME_WIDTH / 2, GAME_HEIGHT - 12, InputManager.isTouchDevice(this) ? 'toque para continuar' : 'Espaço para continuar',
       textStyle(7, COLORS.muted)).setOrigin(0.5).setResolution(TEXT_RES);
     this.time.delayedCall(3000, () => {
       this.busy = false;

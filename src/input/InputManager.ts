@@ -46,7 +46,11 @@ export class InputManager {
     // então ação e navegação são guardadas no próprio evento de tecla
     kb.on('keydown', (e: KeyboardEvent) => {
       if (e.repeat) return;
-      if (['KeyE', 'Space', 'Enter', 'NumpadEnter'].includes(e.code)) this.actionQueued = true;
+      // Espaço é a tecla de ação principal; E e Enter continuam valendo
+      if (['Space', 'KeyE', 'Enter', 'NumpadEnter'].includes(e.code)) {
+        this.actionQueued = true;
+        if (e.code === 'Space') e.preventDefault();
+      }
       if (['ArrowUp', 'KeyW'].includes(e.code)) this.navQueued = -1;
       if (['ArrowDown', 'KeyS'].includes(e.code)) this.navQueued = 1;
       if (['ArrowLeft', 'KeyA'].includes(e.code)) this.navHQueued = -1;

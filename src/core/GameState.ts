@@ -35,6 +35,8 @@ export interface GameState {
   equipment: { capa?: string; amuleto?: string };
   /** Aprendiz menino ou menina (saves antigos não têm: contam como menino). */
   aparencia?: 'menino' | 'menina';
+  /** Nome que o jogador escolheu. Sem nome, vale o padrão da aparência (Orion ou Estela). */
+  nome?: string;
   /** Pele, cabelo e roupa escolhidos na tela de Visual (ver core/visual.ts). */
   visual?: { pele: string; cabelo: string; roupa: number };
   /** Modo Kids (o jogo guia até o objetivo e fica mais leve) ou Normal. Saves antigos: Normal. */

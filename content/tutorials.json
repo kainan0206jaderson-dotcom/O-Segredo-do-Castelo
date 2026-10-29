@@ -3,7 +3,7 @@
     "title": "Andar e conversar",
     "pages": [
       {
-        "text": "Ande com as setas ou W A S D. Fique de frente para alguém e aperte E para conversar.",
+        "text": "Ande com W A S D ou com as setinhas do teclado. Fique de frente para alguém ou algum objeto e aperte Espaço para conversar ou pegar.",
         "touch": "Arraste o dedo na metade esquerda da tela para andar. Fique de frente para alguém e toque na estrela para conversar."
       },
       {
@@ -17,7 +17,7 @@
     "pages": [
       {
         "icon": "lumen",
-        "text": "Fique de frente para o alvo e aperte E para lançar o feitiço escolhido. Q troca de feitiço.",
+        "text": "Fique de frente para o alvo e aperte Espaço para lançar o feitiço escolhido. Q troca de feitiço.",
         "touch": "Fique de frente para o alvo e toque na estrela para lançar. Toque no nome do feitiço, no canto, para trocar."
       },
       {
@@ -90,7 +90,7 @@
       },
       {
         "icon": "capa-coragem",
-        "text": "Na aba Bolsa, escolha uma capa e aperte E para vestir. Cada capa muda sua roupa e dá um bônus diferente.",
+        "text": "Na aba Bolsa, escolha uma capa e aperte Espaço para vestir. Cada capa muda sua roupa e dá um bônus diferente.",
         "touch": "Na aba Bolsa, toque duas vezes numa capa para vestir. Cada capa muda sua roupa e dá um bônus diferente."
       }
     ]
@@ -109,7 +109,7 @@
     "pages": [
       {
         "icon": "pedra-coragem",
-        "text": "Cada pedestal tem o símbolo de uma casa. Fique de frente para ele com a pedra certa na bolsa e aperte E."
+        "text": "Cada pedestal tem o símbolo de uma casa. Fique de frente para ele com a pedra certa na bolsa e aperte Espaço."
       }
     ]
   },

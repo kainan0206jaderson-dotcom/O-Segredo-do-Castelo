@@ -71,7 +71,7 @@
     "final-lenda": {
       "speaker": "Ministro Bonfatt",
       "next": "final-5",
-      "text": "Por séculos, bruxos antigos esconderam este castelo aqui em São Paulo. Há 5 anos ele se revelou, na hora certa, para os não-mágicos, os bruxos e os elfos desta era. O Coração escolhe quem vai cuidar dele daqui pra frente. E escolheu você."
+      "text": "Por séculos, bruxos antigos esconderam este castelo aqui em São Paulo. Há 5 anos ele se revelou, na hora certa, para os não-mágicos, os bruxos e os elfos desta era. O Coração escolhe quem vai cuidar dele daqui pra frente. E escolheu você, {nome}."
     }
   }
 }

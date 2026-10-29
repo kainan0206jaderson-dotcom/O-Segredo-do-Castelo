@@ -6,7 +6,8 @@ import { COLORS, TEXT_RES, textStyle } from '../ui/theme';
 import { audio } from '../audio/Audio';
 import { addLogo } from '../ui/logo';
 import { AssetRegistry } from '../core/AssetRegistry';
-import type { Aparencia } from '../core/aparencia';
+import { limparNome, nomePadrao, type Aparencia } from '../core/aparencia';
+import { NameField } from '../ui/NameField';
 
 /** Tela inicial: Continuar (se houver jogo salvo) ou Novo jogo. */
 export class TitleScene extends Phaser.Scene {
@@ -17,7 +18,7 @@ export class TitleScene extends Phaser.Scene {
   private confirmingNew = false;
   private leaving = false;
   /** Escolha do aprendiz (menino ou menina) aberta no Novo jogo. */
-  private chooser?: { look: Aparencia; parts: Phaser.GameObjects.GameObject[]; labels: Phaser.GameObjects.Text[]; kids: Phaser.GameObjects.Sprite[] };
+  private chooser?: { look: Aparencia; parts: Phaser.GameObjects.GameObject[]; labels: Phaser.GameObjects.Text[]; kids: Phaser.GameObjects.Sprite[]; nome: NameField };
   private footer!: Phaser.GameObjects.Text;
   /** Gesto/botão "voltar" do celular: cada tela aberta (escolha, Visual) empilha um passo no histórico. */
   private readonly onPopState = () => this.stepBack();
@@ -109,36 +110,40 @@ export class TitleScene extends Phaser.Scene {
     this.openChooser();
   }
 
-  /** "Quem é você?": aprendiz menino ou menina, lado a lado. */
+  /** "Quem é você?": aprendiz menino ou menina, lado a lado, e o nome logo embaixo. */
   private openChooser(): void {
     this.texts.forEach((t) => t.setVisible(false));
     this.footer.setVisible(false);
     history.pushState({ tela: 'escolha' }, '');
     const looks: Aparencia[] = ['menino', 'menina'];
-    const title = this.add.text(GAME_WIDTH / 2, 112, 'Quem é você?', textStyle(13, COLORS.text)).setOrigin(0.5).setResolution(TEXT_RES);
+    const title = this.add.text(GAME_WIDTH / 2, 104, 'Quem é você?', textStyle(13, COLORS.text)).setOrigin(0.5).setResolution(TEXT_RES);
     const parts: Phaser.GameObjects.GameObject[] = [title];
     const kids: Phaser.GameObjects.Sprite[] = [];
     const labels: Phaser.GameObjects.Text[] = [];
     looks.forEach((look, i) => {
-      const x = GAME_WIDTH / 2 + (i === 0 ? -60 : 60);
+      const x = GAME_WIDTH / 2 + (i === 0 ? -64 : 64);
       const sheet = look === 'menina' ? 'player.aprendiza' : 'player.aprendiz';
-      const kid = this.add.sprite(x, 206, sheet).setOrigin(0.5, 1).setScale(3)
+      const kid = this.add.sprite(x, 190, sheet).setOrigin(0.5, 1).setScale(3)
         .setInteractive({ useHandCursor: true })
         // tocar só seleciona (o outro fica apagado); para seguir, o botão OK
         .on('pointerdown', () => this.pickLook(look));
       kid.play(AssetRegistry.animKey(sheet, 'idle-down'));
-      const label = this.add.text(x, 214, look === 'menina' ? 'Estela' : 'Menino', textStyle(11, COLORS.text)).setOrigin(0.5, 0).setResolution(TEXT_RES);
+      const label = this.add.text(x, 194, '', textStyle(10, COLORS.text)).setOrigin(0.5, 0).setResolution(TEXT_RES)
+        .setInteractive({ useHandCursor: true }).on('pointerdown', () => this.pickLook(look));
       kids.push(kid);
       labels.push(label);
       parts.push(kid, label);
     });
-    const button = (x: number, text: string, run: () => void) => this.add.text(x, 246, text, textStyle(12, COLORS.text, {
+    const nomeLabel = this.add.text(GAME_WIDTH / 2 - 64, 224, 'Seu nome:', textStyle(10, COLORS.muted)).setOrigin(1, 0.5).setResolution(TEXT_RES);
+    parts.push(nomeLabel);
+    const nome = new NameField(this, GAME_WIDTH / 2 + 4, 224, 120, nomePadrao('menino'), () => this.confirmLook());
+    const button = (x: number, text: string, run: () => void) => this.add.text(x, 250, text, textStyle(12, COLORS.text, {
       backgroundColor: '#2a2140', padding: { left: 10, right: 10, top: 4, bottom: 4 },
     })).setOrigin(0.5).setResolution(TEXT_RES).setInteractive({ useHandCursor: true }).on('pointerdown', run);
     const back = button(GAME_WIDTH / 2 - 70, '◂ Voltar', () => this.goBack());
     const ok = button(GAME_WIDTH / 2 + 70, 'OK ▸', () => this.confirmLook()).setColor(COLORS.gold);
     parts.push(back, ok);
-    this.chooser = { look: 'menino', parts, labels, kids };
+    this.chooser = { look: 'menino', parts, labels, kids, nome };
     this.pickLook('menino', true);
   }
 
@@ -159,10 +164,12 @@ export class TitleScene extends Phaser.Scene {
     if (this.scene.isActive('Visual') || this.scene.isPaused('Visual')) {
       this.scene.stop('Visual');
       this.scene.resume();
+      this.chooser?.nome.setVisible(true);
       return;
     }
     if (!this.chooser) return;
     this.chooser.parts.forEach((o) => o.destroy());
+    this.chooser.nome.destroy();
     this.chooser = undefined;
     this.texts.forEach((t) => t.setVisible(true));
     this.footer.setVisible(true);
@@ -174,9 +181,12 @@ export class TitleScene extends Phaser.Scene {
     const c = this.chooser;
     if (!c) return;
     if (look !== c.look && !silent) audio.sfx('blip');
+    // o nome sugerido acompanha a aparência, a não ser que o jogador já tenha digitado outro
+    const typed = c.nome.value.trim();
+    if (!typed || typed === nomePadrao(c.look)) c.nome.el.value = nomePadrao(look);
     c.look = look;
     const i = look === 'menina' ? 1 : 0;
-    c.labels.forEach((t, j) => t.setColor(j === i ? COLORS.gold : COLORS.muted).setText(`${j === i ? '▸ ' : ''}${j === 1 ? 'Estela' : 'Menino'}${j === i ? ' ◂' : ''}`));
+    c.labels.forEach((t, j) => t.setColor(j === i ? COLORS.gold : COLORS.muted).setText(`${j === i ? '▸ ' : ''}${j === 1 ? 'Menina' : 'Menino'}${j === i ? ' ◂' : ''}`));
     c.kids.forEach((k, j) => k.setAlpha(j === i ? 1 : 0.55));
   }
 
@@ -187,6 +197,10 @@ export class TitleScene extends Phaser.Scene {
     // o jogo novo só é salvo no "Pronto" do Visual; voltando antes, o save antigo continua
     session.startNew(false);
     session.state.aparencia = c.look;
+    // o nome padrão não é guardado: assim ele acompanha se a aparência mudar nas Opções
+    const nome = limparNome(c.nome.value);
+    session.state.nome = nome && nome !== nomePadrao(c.look) ? nome : undefined;
+    c.nome.setVisible(false);
     history.pushState({ tela: 'visual' }, '');
     // depois de escolher, a tela de Visual (pele, cabelo, roupa); ao fechar, começa o prólogo
     this.scene.launch('Visual', { back: 'Title' });
