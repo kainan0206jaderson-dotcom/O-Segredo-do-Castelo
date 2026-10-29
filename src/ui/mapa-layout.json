@@ -1,0 +1,165 @@
+{
+ "w": 480,
+ "h": 270,
+ "salas": {
+  "map.hall": {
+   "x": 14,
+   "y": 108,
+   "w": 44,
+   "h": 28,
+   "nome": "Hall da Escada",
+   "rotulo": "b",
+   "dx": 0
+  },
+  "map.corredor": {
+   "x": 62,
+   "y": 110,
+   "w": 68,
+   "h": 20,
+   "nome": "Corredor",
+   "rotulo": "b",
+   "dx": 0
+  },
+  "map.gabinete": {
+   "x": 80,
+   "y": 80,
+   "w": 32,
+   "h": 22,
+   "nome": "Gabinete",
+   "rotulo": "t",
+   "dx": 0
+  },
+  "map.grande-salao": {
+   "x": 134,
+   "y": 102,
+   "w": 56,
+   "h": 36,
+   "nome": "Grande Salão",
+   "rotulo": "t",
+   "dx": 0
+  },
+  "map.cozinha": {
+   "x": 194,
+   "y": 106,
+   "w": 44,
+   "h": 28,
+   "nome": "Cozinha",
+   "rotulo": "b",
+   "dx": 0
+  },
+  "map.recepcao": {
+   "x": 142,
+   "y": 148,
+   "w": 40,
+   "h": 26,
+   "nome": "Recepção",
+   "rotulo": "b",
+   "dx": 0
+  },
+  "map.porao": {
+   "x": 194,
+   "y": 156,
+   "w": 44,
+   "h": 28,
+   "nome": "Porão",
+   "rotulo": "b",
+   "dx": 0
+  },
+  "map.estufa": {
+   "x": 282,
+   "y": 188,
+   "w": 44,
+   "h": 28,
+   "nome": "Estufa",
+   "rotulo": "b",
+   "dx": 0
+  },
+  "map.biblioteca": {
+   "x": 330,
+   "y": 186,
+   "w": 56,
+   "h": 32,
+   "nome": "Biblioteca",
+   "rotulo": "b",
+   "dx": -16
+  },
+  "map.sala-espectral": {
+   "x": 390,
+   "y": 188,
+   "w": 44,
+   "h": 28,
+   "nome": "Aula",
+   "rotulo": "b",
+   "dx": 0
+  },
+  "map.observatorio": {
+   "x": 322,
+   "y": 150,
+   "w": 40,
+   "h": 28,
+   "nome": "Observatório",
+   "rotulo": "e",
+   "dx": 0
+  },
+  "map.galeria": {
+   "x": 340,
+   "y": 116,
+   "w": 64,
+   "h": 28,
+   "nome": "Galeria",
+   "rotulo": "e",
+   "dx": 0
+  },
+  "map.coracao": {
+   "x": 408,
+   "y": 116,
+   "w": 48,
+   "h": 32,
+   "nome": "Coração",
+   "rotulo": "b",
+   "dx": 0
+  },
+  "map.quadro-coragem": {
+   "x": 342,
+   "y": 101,
+   "w": 14,
+   "h": 11,
+   "nome": "",
+   "rotulo": "b"
+  },
+  "map.quadro-inteligencia": {
+   "x": 358,
+   "y": 101,
+   "w": 14,
+   "h": 11,
+   "nome": "",
+   "rotulo": "b"
+  },
+  "map.quadro-astucia": {
+   "x": 374,
+   "y": 101,
+   "w": 14,
+   "h": 11,
+   "nome": "",
+   "rotulo": "b"
+  },
+  "map.quadro-lealdade": {
+   "x": 390,
+   "y": 101,
+   "w": 14,
+   "h": 11,
+   "nome": "",
+   "rotulo": "b"
+  },
+  "_escadas": {
+   "hall": [
+    36,
+    97
+   ],
+   "biblioteca": [
+    358,
+    234
+   ]
+  }
+ }
+}

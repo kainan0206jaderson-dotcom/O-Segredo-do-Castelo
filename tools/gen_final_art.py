@@ -18,6 +18,9 @@ import art_decor  # noqa: E402
 import art_prologo  # noqa: E402
 import art_logo  # noqa: E402
 import art_visual  # noqa: E402
+import art_mapa  # noqa: E402
+import art_icones32  # noqa: E402
+import art_bolsa  # noqa: E402
 
 # ---------------------------------------------------------------- tileset 8x4
 
@@ -410,7 +413,7 @@ for name in sorted(os.listdir(os.path.join(ROOT, "maps"))):
 
 new_icons = art_people.render_all()
 art_visual.render_visual()
-decor = art_decor.render_decor(HOUSE, CREST) + art_prologo.render_prologo() + art_logo.render_logo()
+decor = art_decor.render_decor(HOUSE, CREST) + art_prologo.render_prologo() + art_logo.render_logo() + art_mapa.render_mapa() + art_bolsa.render_bolsa()
 
 # ---------------------------------------------------------------- manifesto
 
@@ -422,6 +425,12 @@ manifest["spritesheets"]["ui.icones"]["frameNames"].update(new_icons)
 for key, url, w, h in (("prop.bau", "sprites/bau.png", 16, 16), ("prop.alcapao", "sprites/alcapao.png", 16, 16),
                        ("prop.escada-porao", "sprites/escada-porao.png", 16, 16), *decor):
     manifest["spritesheets"][key] = {"url": url, "frameWidth": w, "frameHeight": h, "animations": {}}
+with open(mpath, "w") as fh:
+    json.dump(manifest, fh, indent=2, ensure_ascii=False)
+# ícones grandes: desenhados depois do manifesto, porque seguem a ordem final de ui.icones
+for key, url, w, h in art_icones32.render_icones32():
+    manifest["spritesheets"][key] = {"url": url, "frameWidth": w, "frameHeight": h, "animations": {},
+                                     "frameNames": manifest["spritesheets"]["ui.icones"]["frameNames"]}
 with open(mpath, "w") as fh:
     json.dump(manifest, fh, indent=2, ensure_ascii=False)
 print("arte definitiva gerada")

@@ -1810,6 +1810,92 @@
           "repeat": -1
         }
       }
+    },
+    "ui.mapa": {
+      "url": "ui/mapa.png",
+      "frameWidth": 480,
+      "frameHeight": 270,
+      "animations": {}
+    },
+    "ui.mapa-marcas": {
+      "url": "ui/mapa-marcas.png",
+      "frameWidth": 11,
+      "frameHeight": 11,
+      "animations": {}
+    },
+    "ui.bolsa": {
+      "url": "ui/bolsa.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "animations": {}
+    },
+    "ui.couro": {
+      "url": "ui/couro.png",
+      "frameWidth": 64,
+      "frameHeight": 64,
+      "animations": {}
+    },
+    "ui.bolso": {
+      "url": "ui/bolso.png",
+      "frameWidth": 36,
+      "frameHeight": 36,
+      "animations": {}
+    },
+    "ui.icones32": {
+      "url": "ui/icones32.png",
+      "frameWidth": 32,
+      "frameHeight": 32,
+      "animations": {},
+      "frameNames": {
+        "abobora": 0,
+        "gelo-seco": 1,
+        "suco-colorido": 2,
+        "cacau": 3,
+        "folha-mandragora": 4,
+        "drink-fumegante": 5,
+        "cerveja-abobora": 6,
+        "sobremesa-mandragora": 7,
+        "varinha": 8,
+        "grimorio": 9,
+        "lumen": 10,
+        "fogos-bruxos": 11,
+        "bolsa": 12,
+        "bloqueado": 13,
+        "revelar": 14,
+        "escudo": 15,
+        "abrir": 16,
+        "levitar": 17,
+        "passo-de-vento": 18,
+        "coracao": 19,
+        "energia": 20,
+        "poder": 21,
+        "chaves-trinco": 22,
+        "capa-coragem": 23,
+        "capa-inteligencia": 24,
+        "capa-astucia": 25,
+        "capa-lealdade": 26,
+        "capa-estrelada": 27,
+        "pedra-coragem": 28,
+        "pedra-inteligencia": 29,
+        "pedra-astucia": 30,
+        "pedra-lealdade": 31,
+        "carta-amelia-1": 32,
+        "carta-amelia-2": 33,
+        "carta-amelia-3": 34,
+        "carta-amelia-4": 35,
+        "semente-mandragora": 36,
+        "pocao-vigor": 37,
+        "elixir-estelar": 38,
+        "livro-coracao": 39,
+        "emblema-coragem": 40,
+        "emblema-inteligencia": 41,
+        "emblema-astucia": 42,
+        "emblema-lealdade": 43,
+        "mapa-dos-segredos": 44,
+        "estrela-perdida": 45,
+        "amuleto-estelar": 46,
+        "chave-do-porao": 47
+      }
     }
   },
   "tilesets": {
