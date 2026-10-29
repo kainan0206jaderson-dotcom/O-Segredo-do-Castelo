@@ -1408,6 +1408,42 @@
       "frameWidth": 16,
       "frameHeight": 28,
       "animations": {}
+    },
+    "prologo.ceu": {
+      "url": "sprites/prologo-ceu.png",
+      "frameWidth": 640,
+      "frameHeight": 270,
+      "animations": {}
+    },
+    "prologo.cidade-longe": {
+      "url": "sprites/prologo-cidade-longe.png",
+      "frameWidth": 1280,
+      "frameHeight": 110,
+      "animations": {}
+    },
+    "prologo.cidade-perto": {
+      "url": "sprites/prologo-cidade-perto.png",
+      "frameWidth": 1640,
+      "frameHeight": 150,
+      "animations": {}
+    },
+    "prologo.castelo": {
+      "url": "sprites/prologo-castelo.png",
+      "frameWidth": 240,
+      "frameHeight": 230,
+      "animations": {}
+    },
+    "prologo.quarto": {
+      "url": "sprites/prologo-quarto.png",
+      "frameWidth": 640,
+      "frameHeight": 270,
+      "animations": {}
+    },
+    "ui.logo": {
+      "url": "ui/logo.png",
+      "frameWidth": 378,
+      "frameHeight": 83,
+      "animations": {}
     }
   },
   "tilesets": {

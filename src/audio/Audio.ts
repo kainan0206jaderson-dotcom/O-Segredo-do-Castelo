@@ -290,8 +290,9 @@ class AudioEngine {
   // ---------- música
 
   /** Troca a música (com fade). A mesma faixa de novo não recomeça. */
-  music(track: Track): void {
-    if (track === this.track) return;
+  /** Troca a música. Com restart, recomeça do início mesmo que já esteja tocando. */
+  music(track: Track, restart = false): void {
+    if (track === this.track && !restart) return;
     this.track = track;
     if (this.ctx) this.startSong();
   }
@@ -306,11 +307,11 @@ class AudioEngine {
     const g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, ctx.currentTime);
     // instrumentos com ataque suave soam mais baixo que o chiptune antigo: ganho extra
-    g.gain.setTargetAtTime(2, ctx.currentTime + 0.3, 0.4);
+    g.gain.setTargetAtTime(2, ctx.currentTime, 0.12);
     g.connect(this.musicBus!);
     this.songGain = g;
     this.step = 0;
-    this.nextAt = ctx.currentTime + 0.35;
+    this.nextAt = ctx.currentTime + 0.06;
     if (this.timer === undefined) this.timer = window.setInterval(() => this.schedule(), 25);
   }
 

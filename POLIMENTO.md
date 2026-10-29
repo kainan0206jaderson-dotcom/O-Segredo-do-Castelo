@@ -48,3 +48,10 @@
   - Cerimônia final: personagens com animação de comemoração e confete; créditos com música.
   - Quadros-portais: entrada com efeito de "mergulhar na tinta".
   - Cone de visão dos olhos atravessa paredes no desenho (a visão em si não muda); cortar o facho na parede.
+- Prólogo (filminho de abertura):
+  - Rostos maiores em close (aprendiz, Morgana, Trinco) em vez de só os bonecos pequenos.
+  - Narração gravada ou "bip" de voz junto da legenda.
+  - Mais cenas da caminhada (metrô, praça, gato na janela) se o kainan quiser um filme mais longo.
+  - Aprendiz com o visual escolhido pelo jogador (hoje é sempre o mesmo).
+  - Dragão do topo do castelo: soltar uma fumacinha ou faísca pela boca aberta de vez em quando.
+  - Letreiro da tela inicial: placa balançando de leve e lampadinhas com padrões diferentes (corrida, piscar tudo).
