@@ -11,6 +11,7 @@ import { ActCardScene } from './scenes/ActCardScene';
 import { EndingScene } from './scenes/EndingScene';
 import { OptionsScene } from './scenes/OptionsScene';
 import { MapScene } from './scenes/MapScene';
+import { PrologueScene } from './scenes/PrologueScene';
 import { setupMobileScreen } from './ui/mobile';
 import { session } from './core/session';
 import { audio } from './audio/Audio';
@@ -47,7 +48,7 @@ const game = new Phaser.Game({
   physics: { default: 'arcade', arcade: { debug: false } },
   scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
   input: { activePointers: 2 },
-  scene: [BootScene, PreloadScene, TitleScene, WorldScene, GrimoireScene, CauldronScene, TutorialScene, ActCardScene, EndingScene, OptionsScene, MapScene],
+  scene: [BootScene, PreloadScene, TitleScene, WorldScene, GrimoireScene, CauldronScene, TutorialScene, ActCardScene, EndingScene, OptionsScene, MapScene, PrologueScene],
 });
 
 setupMobileScreen();

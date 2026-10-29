@@ -28,6 +28,7 @@ export class TitleScene extends Phaser.Scene {
     this.options = [
       ...(hasSave ? [{ label: 'Continuar', run: () => this.continueGame() }] : []),
       { label: 'Novo jogo', run: () => this.newGame(hasSave) },
+      { label: 'Prólogo', run: () => this.watchPrologue() },
       { label: 'Opções', run: () => this.openOptions() },
     ];
     this.texts = this.options.map((o, i) =>
@@ -40,6 +41,11 @@ export class TitleScene extends Phaser.Scene {
     this.controls = new InputManager(this);
     this.select(0);
     audio.music('titulo');
+  }
+
+  private watchPrologue(): void {
+    audio.sfx('confirmar');
+    this.scene.start('Prologue', { then: 'titulo' });
   }
 
   private openOptions(): void {
@@ -73,7 +79,7 @@ export class TitleScene extends Phaser.Scene {
     }
     audio.sfx('confirmar');
     session.startNew();
-    this.scene.start('World', { map: session.state.map, spawn: session.state.spawn });
+    this.scene.start('Prologue', { then: 'jogo' });
   }
 
   update(): void {

@@ -15,6 +15,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from art_lib import ROOT, hsh, mix, ramp  # noqa: E402
 import art_people  # noqa: E402
 import art_decor  # noqa: E402
+import art_prologo  # noqa: E402
 
 # ---------------------------------------------------------------- tileset 8x4
 
@@ -406,7 +407,7 @@ for name in sorted(os.listdir(os.path.join(ROOT, "maps"))):
 # ---------------------------------------------------------------- personagens
 
 new_icons = art_people.render_all()
-decor = art_decor.render_decor(HOUSE, CREST)
+decor = art_decor.render_decor(HOUSE, CREST) + art_prologo.render_prologo()
 
 # ---------------------------------------------------------------- manifesto
 
