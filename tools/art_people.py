@@ -199,7 +199,7 @@ LEGS_SIDE = {
 }
 
 
-# Aprendiz menina, a Estela [FICÇÃO]: roupas em tons claros, cabelo comprido caindo pelos ombros (de frente), pelas costas
+# Aprendiz menina, a Estela [FICÇÃO]: roupa bege off-white com detalhes azul-marinho [KAINAN], cabelo comprido caindo pelos ombros (de frente), pelas costas
 # (de trás) e num rabo de cavalo (de lado), laço rosa no chapéu e a barra do manto mais rodada.
 def with_row(rows, i, row):
     return rows[:i] + [row] + rows[i + 1:]
@@ -233,6 +233,7 @@ BODY_SIDE_F = [
     "...kqpPpppqk....",
 ]
 MENINA_PAL = {"r": (232, 96, 150), "R": (255, 168, 204)}
+NAVY = [(26, 34, 74), (40, 54, 112), (66, 86, 156)]
 
 
 def player_frame(head, body, legs, bob):
@@ -242,9 +243,16 @@ def player_frame(head, body, legs, bob):
 
 
 def render_player(name, robe, menina=False):
+    extra = {}
     if menina:
-        robe = mix(robe, (255, 255, 255), 0.42)  # roupas da Estela em tons mais claros que as do menino
-    pal = {**BASE_PAL, **robe_pal(robe), **(MENINA_PAL if menina else {})}
+        if name == "base":
+            # roupa da Estela: bege quase off-white, com aba do chapéu, laço e cinto azul-marinho
+            robe = (226, 214, 188)
+            extra = {"Q": NAVY[0], "r": NAVY[1], "R": NAVY[2], "l": NAVY[0], "L": NAVY[1]}
+        else:
+            robe = mix(robe, (255, 255, 255), 0.42)  # capas das casas em tons mais claros que as do menino
+            extra = {"l": NAVY[0], "L": NAVY[1]}
+    pal = {**BASE_PAL, **robe_pal(robe), **(MENINA_PAL if menina else {}), **extra}
     seq = [("stand", 0), ("stand", 1), ("l", 0), ("mid", 1), ("r", 0), ("mid", 1)]
     sheet = Image.new("RGBA", (96, 72), (0, 0, 0, 0))
     if menina:
