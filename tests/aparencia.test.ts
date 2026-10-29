@@ -23,3 +23,22 @@ describe('aparência do aprendiz', () => {
     expect(noGenero('Boa noite, aprendiz.')).toBe('Boa noite, aprendiz.');
   });
 });
+
+describe('visual do aprendiz', () => {
+  it('tabela de cores tem as opções pedidas (2 roupas por personagem)', async () => {
+    const { opcoesPele, opcoesCabelo, opcoesRoupa } = await import('../src/core/visual');
+    expect(opcoesPele().length).toBeGreaterThanOrEqual(4);
+    expect(opcoesCabelo().length).toBeGreaterThanOrEqual(4);
+    expect(opcoesRoupa()).toHaveLength(2);
+    session.state.aparencia = 'menina';
+    expect(opcoesRoupa()).toHaveLength(2);
+    expect(opcoesRoupa()[0].mapa).toEqual({});
+    delete session.state.aparencia;
+  });
+
+  it('sem o jogo carregado, a folha continua a padrão', () => {
+    session.state.visual = { pele: 'negra', cabelo: 'loiro', roupa: 1 };
+    expect(playerSheet('player.aprendiz')).toBe('player.aprendiz');
+    delete session.state.visual;
+  });
+});

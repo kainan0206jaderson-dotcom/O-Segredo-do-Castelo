@@ -27,6 +27,10 @@ export class TitleScene extends Phaser.Scene {
     this.confirmingNew = false;
     this.leaving = false;
     this.chooser = undefined;
+    this.events.off(Phaser.Scenes.Events.RESUME);
+    this.events.on(Phaser.Scenes.Events.RESUME, (_s: Phaser.Scene, data?: { from?: string }) => {
+      if (data?.from === 'visual') this.toPrologue('jogo');
+    });
     // céu do prólogo descido, para a lua ficar ao lado do menu e não atrás do letreiro;
     // em cima, a cor do topo do céu com estrelinhas piscando
     this.cameras.main.setBackgroundColor('#0b0a20');
@@ -136,7 +140,9 @@ export class TitleScene extends Phaser.Scene {
     session.startNew();
     session.state.aparencia = c.look;
     session.save();
-    this.toPrologue('jogo');
+    // depois de escolher, a tela de Visual (pele, cabelo, roupa); ao fechar, começa o prólogo
+    this.scene.launch('Visual', { back: 'Title' });
+    this.scene.pause();
   }
 
   /** Escurece a tela inicial antes do prólogo, para ele começar num fade in limpo. */

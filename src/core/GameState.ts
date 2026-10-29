@@ -35,6 +35,8 @@ export interface GameState {
   equipment: { capa?: string; amuleto?: string };
   /** Aprendiz menino ou menina (saves antigos não têm: contam como menino). */
   aparencia?: 'menino' | 'menina';
+  /** Pele, cabelo e roupa escolhidos na tela de Visual (ver core/visual.ts). */
+  visual?: { pele: string; cabelo: string; roupa: number };
   playTimeMs: number;
 }
 
