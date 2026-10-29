@@ -67,3 +67,7 @@
   - Narração em voz das dicas para quem ainda não lê bem.
   - Trilha de estrelinhas com som baixinho ("plim") quando muda de alvo.
   - Estrelas Perdidas: a trilha poderia apontar a mais próxima quando não há missão.
+- Mapa e bolsa:
+  - Mapa: rabisco da rota até o objetivo (no Modo Kids) e um zoom na sala atual ao tocar.
+  - Bolsa: arrastar itens para reorganizar os bolsinhos e uma aba "Favoritos".
+  - Caldeirão e HUD ainda usam os ícones pequenos; dá para trocar pelos de 32 px.
