@@ -1,4 +1,5 @@
 import { session } from './session';
+import { lookSheet } from './visual';
 
 /** Aparência do aprendiz, escolhida no Novo jogo e trocável nas Opções. A menina se chama Estela [FICÇÃO]. */
 export type Aparencia = 'menino' | 'menina';
@@ -7,10 +8,12 @@ export function aparencia(): Aparencia {
   return session.state.aparencia ?? 'menino';
 }
 
-/** Troca a folha do aprendiz ("player.aprendiz-coragem") pela da aprendiz menina, quando for o caso. */
+/** Folha do aprendiz ("player.aprendiz-coragem"): a da Estela quando for o caso, já com o visual escolhido. */
 export function playerSheet(sheet: string): string {
-  if (aparencia() !== 'menina' || !sheet.startsWith('player.aprendiz') || sheet.startsWith('player.aprendiza')) return sheet;
-  return sheet.replace('player.aprendiz', 'player.aprendiza');
+  if (!sheet.startsWith('player.aprendiz')) return sheet;
+  if (aparencia() === 'menina' && !sheet.startsWith('player.aprendiza')) sheet = sheet.replace('player.aprendiz', 'player.aprendiza');
+  // pele, cabelo e roupa escolhidos na tela de Visual
+  return lookSheet(sheet);
 }
 
 /** Falas que tratam o aprendiz no masculino e a versão para a aprendiz menina. */

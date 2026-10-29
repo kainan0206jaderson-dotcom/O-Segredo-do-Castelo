@@ -58,3 +58,4 @@
 - Aprendiz menina:
   - Retrato próprio no diálogo e na ficha (hoje só o boneco do mapa muda).
   - Mais opções de visual (cor do cabelo e da pele) na mesma tela de escolha.
+- Tela de Visual: sombra da pele mais natural nos tons escuros (hoje puxa um pouco para o laranja) e mais penteados.

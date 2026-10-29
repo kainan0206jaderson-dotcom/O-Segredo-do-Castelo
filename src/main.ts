@@ -15,6 +15,8 @@ import { PrologueScene } from './scenes/PrologueScene';
 import { setupMobileScreen } from './ui/mobile';
 import { session } from './core/session';
 import { audio } from './audio/Audio';
+import { initVisual } from './core/visual';
+import { VisualScene } from './scenes/VisualScene';
 
 // O canvas tem RENDER_ZOOM pixels reais por pixel de jogo. Toda câmera nova já nasce
 // ampliada e presa no canto, então cenas e HUD continuam usando coordenadas de jogo.
@@ -48,9 +50,10 @@ const game = new Phaser.Game({
   physics: { default: 'arcade', arcade: { debug: false } },
   scale: { mode: Phaser.Scale.FIT, autoCenter: Phaser.Scale.CENTER_BOTH },
   input: { activePointers: 2 },
-  scene: [BootScene, PreloadScene, TitleScene, WorldScene, GrimoireScene, CauldronScene, TutorialScene, ActCardScene, EndingScene, OptionsScene, MapScene, PrologueScene],
+  scene: [BootScene, PreloadScene, TitleScene, WorldScene, GrimoireScene, CauldronScene, TutorialScene, ActCardScene, EndingScene, OptionsScene, MapScene, PrologueScene, VisualScene],
 });
 
+initVisual(game);
 setupMobileScreen();
 audio.install();
 

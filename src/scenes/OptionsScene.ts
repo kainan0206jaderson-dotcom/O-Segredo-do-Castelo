@@ -65,6 +65,14 @@ export class OptionsScene extends Phaser.Scene {
           session.save();
           audio.sfx('menu');
         },
+      }, {
+        label: 'Visual',
+        change: (dir: number) => {
+          if (dir !== 0) return;
+          audio.sfx('confirmar');
+          this.scene.launch('Visual', { back: 'Options' });
+          this.scene.pause();
+        },
       }] : []),
       { label: 'Voltar', change: (dir) => dir === 0 && this.close() },
     ];

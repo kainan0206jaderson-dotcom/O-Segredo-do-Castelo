@@ -19,8 +19,10 @@ def check(name, rows, w, h):
         assert len(r) == w, f"{name}: linha {i} tem {len(r)} colunas: {r!r}"
 
 
-def paint(rows, pal, w, h, outline_soft=True):
-    """Pinta uma grade de letras e faz o contorno colorido."""
+def paint(rows, pal, w, h, outline_soft=True, ref_pal=None):
+    """Pinta uma grade de letras e faz o contorno colorido. ref_pal decide qual vizinho dá
+    o tom do contorno (padrão: a própria paleta); serve para as variações de cor do aprendiz
+    escolherem sempre o mesmo vizinho que a folha padrão."""
     im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
     px = im.load()
     for y, row in enumerate(rows):
@@ -48,10 +50,11 @@ def paint(rows, pal, w, h, outline_soft=True):
             for dx, dy in ((0, 1), (1, 0), (-1, 0), (0, -1)):
                 nx, ny = x + dx, y + dy
                 if 0 <= nx < w and 0 <= ny < h and rows[ny][nx] not in ".k":
-                    near.append(pal[rows[ny][nx]])
+                    near.append(rows[ny][nx])
             if not near:
                 continue
-            base = min(near, key=lambda c: sum(c[:3]))
+            ref = ref_pal or pal
+            base = pal[min(near, key=lambda ch: sum(ref[ch][:3]))]
             po[x, y] = mix(base, INK, 0.62) + (px[x, y][3],)
     return out
 
@@ -242,7 +245,9 @@ def player_frame(head, body, legs, bob):
     return rows
 
 
-def render_player(name, robe, menina=False):
+def player_sheet(name, robe, menina=False, skin=None, hair=None, roupa=None):
+    """Folha do aprendiz. skin, hair e roupa trocam a cor da pele, do cabelo e da roupa
+    principal (ver VISUAL e tools/art_visual.py)."""
     extra = {}
     if menina:
         if name == "base":
@@ -252,7 +257,16 @@ def render_player(name, robe, menina=False):
         else:
             robe = mix(robe, (255, 255, 255), 0.42)  # capas das casas em tons mais claros que as do menino
             extra = {"l": NAVY[0], "L": NAVY[1]}
+    ref_pal = {**BASE_PAL, **robe_pal(robe), **(MENINA_PAL if menina else {}), **extra}
+    if roupa and name == "base":
+        robe = roupa[0]
+        extra = {**extra, **roupa[1]}
     pal = {**BASE_PAL, **robe_pal(robe), **(MENINA_PAL if menina else {}), **extra}
+    if skin:
+        pal.update(skin_pal(skin))
+    if hair:
+        hr = ramp(hair)
+        pal.update({"h": hr[2], "H": hr[3], "j": hr[1]})
     seq = [("stand", 0), ("stand", 1), ("l", 0), ("mid", 1), ("r", 0), ("mid", 1)]
     sheet = Image.new("RGBA", (96, 72), (0, 0, 0, 0))
     if menina:
@@ -261,7 +275,7 @@ def render_player(name, robe, menina=False):
         dirs = ((HEAD_DOWN, BODY_DOWN, LEGS_DOWN), (HEAD_UP, BODY_UP, LEGS_DOWN), (HEAD_SIDE, BODY_SIDE, LEGS_SIDE))
     for r, (head, body, legs) in enumerate(dirs):
         for c, (leg, bob) in enumerate(seq):
-            sheet.paste(paint(player_frame(head, body, legs[leg], bob), pal, 16, 24), (c * 16, r * 24))
+            sheet.paste(paint(player_frame(head, body, legs[leg], bob), pal, 16, 24, ref_pal=ref_pal), (c * 16, r * 24))
     if name == "estrelada":
         # capa estrelada: pontinhos dourados no manto
         px = sheet.load()
@@ -270,6 +284,11 @@ def render_player(name, robe, menina=False):
             for x in range(96):
                 if px[x, y][3] and px[x, y][:3] in robe_cols and (x * 7 + y * 5) % 13 == 0:
                     px[x, y] = (255, 236, 150, 255)
+    return sheet
+
+
+def render_player(name, robe, menina=False):
+    sheet = player_sheet(name, robe, menina)
     prefix = "aprendiza" if menina else "aprendiz"
     save(sheet, f"sprites/{prefix if name == 'base' else prefix + '-' + name}.png")
 
