@@ -1,6 +1,6 @@
 import type { GameState } from '../core/GameState';
 import type {
-  ChallengeDef, Condition, Effect, HouseDef, ItemDef, ProgressionDef, QuestDef, RecipeDef, SpellDef, TutorialDef,
+  ChallengeDef, Condition, Effect, HouseDef, ItemDef, ProgressionDef, QuestDef, QuestStageDef, RecipeDef, SpellDef, TutorialDef,
 } from '../types/content';
 import { addXp, clampVitals, heal, restoreEnergy } from './progression';
 
@@ -187,8 +187,8 @@ export function tickQuests(s: GameState, db: ContentDb): Notice[] {
   return notices;
 }
 
-/** Objetivo da missão ativa mais recente, para mostrar na tela. */
-export function currentObjective(s: GameState, db: ContentDb): { quest: string; objective: string } | undefined {
+/** Etapa da missão ativa mais recente (a que aparece na tela). */
+function currentStage(s: GameState, db: ContentDb): { quest: QuestDef; stage: QuestStageDef } | undefined {
   const active = Object.entries(s.quests).filter(([, p]) => !p.done);
   // a história vem primeiro; missões secundárias aparecem quando não há principal ativa
   const last = active.filter(([id]) => db.quests[id]?.kind !== 'secundaria').at(-1) ?? active.at(-1);
@@ -196,7 +196,27 @@ export function currentObjective(s: GameState, db: ContentDb): { quest: string; 
   const [id, p] = last;
   const q = need(db.quests, id, 'missão');
   const stage = q.stages.find((st) => st.id === p.stage);
-  return stage && { quest: q.title, objective: stage.objective };
+  return stage && { quest: q, stage };
+}
+
+/** Objetivo da missão ativa mais recente, para mostrar na tela. */
+export function currentObjective(s: GameState, db: ContentDb): { quest: string; objective: string } | undefined {
+  const cur = currentStage(s, db);
+  return cur && { quest: cur.quest.title, objective: cur.stage.objective };
+}
+
+/** Modo Kids: o lugar (mapa + objeto) para onde a trilha de estrelinhas aponta agora. */
+export function guideTarget(s: GameState, db: ContentDb): { map: string; alvo: string } | undefined {
+  const guia = currentStage(s, db)?.stage.guia;
+  const hit = guia?.find((g) => check(g.when, s));
+  return hit && { map: hit.map, alvo: hit.alvo };
+}
+
+/** Modo Kids: a receita que a missão atual pede (quando a etapa termina ao ter o prato na bolsa). */
+export function wantedRecipe(s: GameState, db: ContentDb): string | undefined {
+  const done = currentStage(s, db)?.stage.completeWhen;
+  const item = done && 'hasItem' in done ? done.hasItem : undefined;
+  return item && Object.keys(db.recipes).find((id) => db.recipes[id].result === item);
 }
 
 /** Troca para o próximo feitiço conhecido. */

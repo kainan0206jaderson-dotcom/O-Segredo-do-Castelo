@@ -63,3 +63,7 @@
   - Mesas do Grande Salão ficam em frente às portas leste e oeste: o aprendiz chega na soleira e precisa contornar a mesa. Abrir um corredor de um tile entre a porta e a mesa, se o kainan achar apertado.
   - Ao chegar numa sala, um "passinho" de entrada (animação andando 1 tile para dentro) em vez de só parar na porta.
   - Músicas do castelo (castelo, lareira, corredores, ninar) revezam a cada 1 a 2 minutos; dá para fazer a escolha seguir a sala (lareira na cozinha, ninar à noite).
+- Modo Kids:
+  - Narração em voz das dicas para quem ainda não lê bem.
+  - Trilha de estrelinhas com som baixinho ("plim") quando muda de alvo.
+  - Estrelas Perdidas: a trilha poderia apontar a mais próxima quando não há missão.

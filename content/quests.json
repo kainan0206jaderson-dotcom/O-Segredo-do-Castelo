@@ -6,11 +6,23 @@
     "stages": [
       {
         "id": "falar-com-quadro",
-        "objective": "Fale com o quadro vivo no Grande Salão."
+        "objective": "Fale com o quadro vivo no Grande Salão.",
+        "guia": [
+          {
+            "map": "map.grande-salao",
+            "alvo": "dom-moldura"
+          }
+        ]
       },
       {
         "id": "voltar-ao-trinco",
-        "objective": "Conte ao Trinco o que o quadro disse."
+        "objective": "Conte ao Trinco o que o quadro disse.",
+        "guia": [
+          {
+            "map": "map.recepcao",
+            "alvo": "trinco"
+          }
+        ]
       }
     ]
   },
@@ -21,7 +33,13 @@
     "stages": [
       {
         "id": "ir-a-cozinha",
-        "objective": "Vá até a Cozinha Bruxa, a leste do Grande Salão."
+        "objective": "Vá até a Cozinha Bruxa, a leste do Grande Salão.",
+        "guia": [
+          {
+            "map": "map.cozinha",
+            "alvo": "dona-brasa"
+          }
+        ]
       },
       {
         "id": "preparar-drink",
@@ -29,11 +47,39 @@
         "completeWhen": {
           "hasItem": "drink-fumegante"
         },
-        "then": "entregar-drink"
+        "then": "entregar-drink",
+        "guia": [
+          {
+            "map": "map.cozinha",
+            "alvo": "despensa",
+            "when": {
+              "not": {
+                "all": [
+                  {
+                    "hasItem": "suco-colorido"
+                  },
+                  {
+                    "hasItem": "gelo-seco"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "map": "map.cozinha",
+            "alvo": "caldeirao"
+          }
+        ]
       },
       {
         "id": "entregar-drink",
-        "objective": "Leve o drink para a Dona Brasa."
+        "objective": "Leve o drink para a Dona Brasa.",
+        "guia": [
+          {
+            "map": "map.cozinha",
+            "alvo": "dona-brasa"
+          }
+        ]
       },
       {
         "id": "acender-velas",
@@ -48,11 +94,32 @@
             }
           ]
         },
-        "then": "falar-com-brasa"
+        "then": "falar-com-brasa",
+        "guia": [
+          {
+            "map": "map.cozinha",
+            "alvo": "vela-a",
+            "when": {
+              "not": {
+                "flag": "vela:map.cozinha:vela-a"
+              }
+            }
+          },
+          {
+            "map": "map.cozinha",
+            "alvo": "vela-b"
+          }
+        ]
       },
       {
         "id": "falar-com-brasa",
-        "objective": "Volte a falar com a Dona Brasa."
+        "objective": "Volte a falar com a Dona Brasa.",
+        "guia": [
+          {
+            "map": "map.cozinha",
+            "alvo": "dona-brasa"
+          }
+        ]
       }
     ]
   },
@@ -67,7 +134,13 @@
         "completeWhen": {
           "flag": "visto:morgana-corredor"
         },
-        "then": "espantar-sombras"
+        "then": "espantar-sombras",
+        "guia": [
+          {
+            "map": "map.corredor",
+            "alvo": "morgana-corredor"
+          }
+        ]
       },
       {
         "id": "espantar-sombras",
@@ -75,7 +148,13 @@
         "completeWhen": {
           "flag": "criaturas:map.corredor:sombras"
         },
-        "then": "abrir-grade"
+        "then": "abrir-grade",
+        "guia": [
+          {
+            "map": "map.corredor",
+            "alvo": "sombra-1"
+          }
+        ]
       },
       {
         "id": "abrir-grade",
@@ -83,15 +162,33 @@
         "completeWhen": {
           "flag": "placas:map.corredor:grade"
         },
-        "then": "falar-com-diretor"
+        "then": "falar-com-diretor",
+        "guia": [
+          {
+            "map": "map.corredor",
+            "alvo": "grade"
+          }
+        ]
       },
       {
         "id": "falar-com-diretor",
-        "objective": "Converse com o Ministro Bonfatt no gabinete."
+        "objective": "Converse com o Ministro Bonfatt no gabinete.",
+        "guia": [
+          {
+            "map": "map.gabinete",
+            "alvo": "arquimedes"
+          }
+        ]
       },
       {
         "id": "ir-ao-hall",
-        "objective": "Siga o Ministro Bonfatt até o Hall da Escada, no fim oeste do corredor."
+        "objective": "Siga o Ministro Bonfatt até o Hall da Escada, no fim oeste do corredor.",
+        "guia": [
+          {
+            "map": "map.hall",
+            "alvo": "arquimedes"
+          }
+        ]
       }
     ]
   },
@@ -147,11 +244,115 @@
             }
           ]
         },
-        "then": "colocar-pedras"
+        "then": "colocar-pedras",
+        "guia": [
+          {
+            "map": "map.hall",
+            "alvo": "pedra-coragem",
+            "when": {
+              "not": {
+                "any": [
+                  {
+                    "hasItem": "pedra-coragem"
+                  },
+                  {
+                    "flag": "encaixe:map.hall:pedestal-coragem"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "map": "map.grande-salao",
+            "alvo": "dom-moldura",
+            "when": {
+              "not": {
+                "any": [
+                  {
+                    "hasItem": "pedra-inteligencia"
+                  },
+                  {
+                    "flag": "encaixe:map.hall:pedestal-inteligencia"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "map": "map.corredor",
+            "alvo": "pedra-astucia",
+            "when": {
+              "not": {
+                "any": [
+                  {
+                    "hasItem": "pedra-astucia"
+                  },
+                  {
+                    "flag": "encaixe:map.hall:pedestal-astucia"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "map": "map.recepcao",
+            "alvo": "trinco",
+            "when": {
+              "not": {
+                "any": [
+                  {
+                    "hasItem": "pedra-lealdade"
+                  },
+                  {
+                    "flag": "encaixe:map.hall:pedestal-lealdade"
+                  }
+                ]
+              }
+            }
+          }
+        ]
       },
       {
         "id": "colocar-pedras",
-        "objective": "Coloque as 4 pedras nos pedestais do Hall da Escada."
+        "objective": "Coloque as 4 pedras nos pedestais do Hall da Escada.",
+        "guia": [
+          {
+            "map": "map.hall",
+            "alvo": "pedestal-coragem",
+            "when": {
+              "not": {
+                "flag": "encaixe:map.hall:pedestal-coragem"
+              }
+            }
+          },
+          {
+            "map": "map.hall",
+            "alvo": "pedestal-inteligencia",
+            "when": {
+              "not": {
+                "flag": "encaixe:map.hall:pedestal-inteligencia"
+              }
+            }
+          },
+          {
+            "map": "map.hall",
+            "alvo": "pedestal-astucia",
+            "when": {
+              "not": {
+                "flag": "encaixe:map.hall:pedestal-astucia"
+              }
+            }
+          },
+          {
+            "map": "map.hall",
+            "alvo": "pedestal-lealdade",
+            "when": {
+              "not": {
+                "flag": "encaixe:map.hall:pedestal-lealdade"
+              }
+            }
+          }
+        ]
       }
     ]
   },
@@ -162,7 +363,13 @@
     "stages": [
       {
         "id": "perguntar-a-brasa",
-        "objective": "Pergunte à Dona Brasa, na cozinha, se ela viu as chaves do Trinco."
+        "objective": "Pergunte à Dona Brasa, na cozinha, se ela viu as chaves do Trinco.",
+        "guia": [
+          {
+            "map": "map.cozinha",
+            "alvo": "dona-brasa"
+          }
+        ]
       },
       {
         "id": "fazer-cerveja",
@@ -170,15 +377,49 @@
         "completeWhen": {
           "hasItem": "cerveja-abobora"
         },
-        "then": "entregar-cerveja"
+        "then": "entregar-cerveja",
+        "guia": [
+          {
+            "map": "map.cozinha",
+            "alvo": "despensa",
+            "when": {
+              "not": {
+                "all": [
+                  {
+                    "hasItem": "abobora"
+                  },
+                  {
+                    "hasItem": "gelo-seco"
+                  }
+                ]
+              }
+            }
+          },
+          {
+            "map": "map.cozinha",
+            "alvo": "caldeirao"
+          }
+        ]
       },
       {
         "id": "entregar-cerveja",
-        "objective": "Leve a Cerveja de Abóbora para a Dona Brasa."
+        "objective": "Leve a Cerveja de Abóbora para a Dona Brasa.",
+        "guia": [
+          {
+            "map": "map.cozinha",
+            "alvo": "dona-brasa"
+          }
+        ]
       },
       {
         "id": "devolver-chaves",
-        "objective": "Devolva as chaves ao Trinco, na Recepção."
+        "objective": "Devolva as chaves ao Trinco, na Recepção.",
+        "guia": [
+          {
+            "map": "map.recepcao",
+            "alvo": "trinco"
+          }
+        ]
       }
     ]
   },
@@ -193,11 +434,41 @@
         "completeWhen": {
           "hasItem": "sobremesa-mandragora"
         },
-        "then": "entregar-sobremesa"
+        "then": "entregar-sobremesa",
+        "guia": [
+          {
+            "map": "map.gabinete",
+            "alvo": "folha-gabinete",
+            "when": {
+              "not": {
+                "hasItem": "folha-mandragora"
+              }
+            }
+          },
+          {
+            "map": "map.cozinha",
+            "alvo": "despensa",
+            "when": {
+              "not": {
+                "hasItem": "cacau"
+              }
+            }
+          },
+          {
+            "map": "map.cozinha",
+            "alvo": "caldeirao"
+          }
+        ]
       },
       {
         "id": "entregar-sobremesa",
-        "objective": "Leve a Sobremesa Mandrágora para a Dama do Chá, no Corredor dos Quadros."
+        "objective": "Leve a Sobremesa Mandrágora para a Dama do Chá, no Corredor dos Quadros.",
+        "guia": [
+          {
+            "map": "map.corredor",
+            "alvo": "dama-cha"
+          }
+        ]
       }
     ]
   },
@@ -208,7 +479,13 @@
     "stages": [
       {
         "id": "falar-com-aristoteles",
-        "objective": "Fale com o Prof. Aristóteles na Biblioteca."
+        "objective": "Fale com o Prof. Aristóteles na Biblioteca.",
+        "guia": [
+          {
+            "map": "map.biblioteca",
+            "alvo": "aristoteles"
+          }
+        ]
       },
       {
         "id": "aula-espectral",
@@ -216,7 +493,13 @@
         "completeWhen": {
           "flag": "aula:vencida"
         },
-        "then": "achar-cartas"
+        "then": "achar-cartas",
+        "guia": [
+          {
+            "map": "map.sala-espectral",
+            "alvo": "quadro-aula"
+          }
+        ]
       },
       {
         "id": "achar-cartas",
@@ -234,11 +517,46 @@
             }
           ]
         },
-        "then": "libertar-amelia"
+        "then": "libertar-amelia",
+        "guia": [
+          {
+            "map": "map.biblioteca",
+            "alvo": "carta-1",
+            "when": {
+              "not": {
+                "hasItem": "carta-amelia-1"
+              }
+            }
+          },
+          {
+            "map": "map.sala-espectral",
+            "alvo": "carta-3",
+            "when": {
+              "not": {
+                "hasItem": "carta-amelia-3"
+              }
+            }
+          },
+          {
+            "map": "map.estufa",
+            "alvo": "carta-2",
+            "when": {
+              "not": {
+                "hasItem": "carta-amelia-2"
+              }
+            }
+          }
+        ]
       },
       {
         "id": "libertar-amelia",
-        "objective": "Leve as cartas ao espelho da Biblioteca."
+        "objective": "Leve as cartas ao espelho da Biblioteca.",
+        "guia": [
+          {
+            "map": "map.biblioteca",
+            "alvo": "espelho"
+          }
+        ]
       },
       {
         "id": "alinhar-estrelas",
@@ -246,11 +564,32 @@
         "completeWhen": {
           "flag": "signos:map.observatorio:estrelas"
         },
-        "then": "olhar-telescopio"
+        "then": "olhar-telescopio",
+        "guia": [
+          {
+            "map": "map.observatorio",
+            "alvo": "carta-4",
+            "when": {
+              "not": {
+                "hasItem": "carta-amelia-4"
+              }
+            }
+          },
+          {
+            "map": "map.observatorio",
+            "alvo": "mostrador-1"
+          }
+        ]
       },
       {
         "id": "olhar-telescopio",
-        "objective": "Olhe pelo telescópio do Observatório."
+        "objective": "Olhe pelo telescópio do Observatório.",
+        "guia": [
+          {
+            "map": "map.observatorio",
+            "alvo": "telescopio"
+          }
+        ]
       },
       {
         "id": "abrir-galeria",
@@ -258,11 +597,23 @@
         "completeWhen": {
           "flag": "trancado:map.biblioteca:porta-galeria"
         },
-        "then": "entrar-galeria"
+        "then": "entrar-galeria",
+        "guia": [
+          {
+            "map": "map.biblioteca",
+            "alvo": "porta-galeria"
+          }
+        ]
       },
       {
         "id": "entrar-galeria",
-        "objective": "Entre na Galeria dos Quadros."
+        "objective": "Entre na Galeria dos Quadros.",
+        "guia": [
+          {
+            "map": "map.galeria",
+            "alvo": "captura-amelia"
+          }
+        ]
       }
     ]
   },
@@ -290,7 +641,63 @@
             }
           ]
         },
-        "then": "ir-ao-coracao"
+        "then": "ir-ao-coracao",
+        "guia": [
+          {
+            "map": "map.quadro-coragem",
+            "alvo": "emblema",
+            "when": {
+              "not": {
+                "hasItem": "emblema-coragem"
+              }
+            }
+          },
+          {
+            "map": "map.quadro-inteligencia",
+            "alvo": "cristal",
+            "when": {
+              "all": [
+                {
+                  "not": {
+                    "hasItem": "emblema-inteligencia"
+                  }
+                },
+                {
+                  "not": {
+                    "flag": "luz:map.quadro-inteligencia:cristal"
+                  }
+                }
+              ]
+            }
+          },
+          {
+            "map": "map.quadro-inteligencia",
+            "alvo": "emblema",
+            "when": {
+              "not": {
+                "hasItem": "emblema-inteligencia"
+              }
+            }
+          },
+          {
+            "map": "map.quadro-astucia",
+            "alvo": "emblema",
+            "when": {
+              "not": {
+                "hasItem": "emblema-astucia"
+              }
+            }
+          },
+          {
+            "map": "map.quadro-lealdade",
+            "alvo": "amelia",
+            "when": {
+              "not": {
+                "hasItem": "emblema-lealdade"
+              }
+            }
+          }
+        ]
       },
       {
         "id": "ir-ao-coracao",
@@ -298,7 +705,13 @@
         "completeWhen": {
           "flag": "visto:morgana-duelo"
         },
-        "then": "enfrentar-morgana"
+        "then": "enfrentar-morgana",
+        "guia": [
+          {
+            "map": "map.coracao",
+            "alvo": "duelo"
+          }
+        ]
       },
       {
         "id": "enfrentar-morgana",
@@ -310,7 +723,13 @@
       },
       {
         "id": "acender-coracao",
-        "objective": "Toque o Coração do Castelo."
+        "objective": "Toque o Coração do Castelo.",
+        "guia": [
+          {
+            "map": "map.coracao",
+            "alvo": "coracao"
+          }
+        ]
       }
     ]
   },
@@ -326,11 +745,32 @@
           "flagAtLeast": "colheitas:map.estufa",
           "n": 3
         },
-        "then": "contar-a-fada"
+        "then": "contar-a-fada",
+        "guia": [
+          {
+            "map": "map.estufa",
+            "alvo": "saco-sementes",
+            "when": {
+              "not": {
+                "hasItem": "semente-mandragora"
+              }
+            }
+          },
+          {
+            "map": "map.estufa",
+            "alvo": "canteiro-1"
+          }
+        ]
       },
       {
         "id": "contar-a-fada",
-        "objective": "Conte para a Fada Ramalhete."
+        "objective": "Conte para a Fada Ramalhete.",
+        "guia": [
+          {
+            "map": "map.estufa",
+            "alvo": "fada-ramalhete"
+          }
+        ]
       }
     ]
   },
@@ -355,11 +795,46 @@
             }
           ]
         },
-        "then": "contar-ao-aristoteles"
+        "then": "contar-ao-aristoteles",
+        "guia": [
+          {
+            "map": "map.biblioteca",
+            "alvo": "livro-1",
+            "when": {
+              "not": {
+                "flag": "encaixe:map.biblioteca:atril-1"
+              }
+            }
+          },
+          {
+            "map": "map.biblioteca",
+            "alvo": "livro-2",
+            "when": {
+              "not": {
+                "flag": "encaixe:map.biblioteca:atril-2"
+              }
+            }
+          },
+          {
+            "map": "map.biblioteca",
+            "alvo": "livro-3",
+            "when": {
+              "not": {
+                "flag": "encaixe:map.biblioteca:atril-3"
+              }
+            }
+          }
+        ]
       },
       {
         "id": "contar-ao-aristoteles",
-        "objective": "Conte para o Prof. Aristóteles."
+        "objective": "Conte para o Prof. Aristóteles.",
+        "guia": [
+          {
+            "map": "map.biblioteca",
+            "alvo": "aristoteles"
+          }
+        ]
       }
     ]
   },
@@ -381,11 +856,32 @@
             }
           ]
         },
-        "then": "contar-a-mary"
+        "then": "contar-a-mary",
+        "guia": [
+          {
+            "map": "map.biblioteca",
+            "alvo": "mish-mish",
+            "when": {
+              "not": {
+                "flag": "gnomo:mish-mish"
+              }
+            }
+          },
+          {
+            "map": "map.observatorio",
+            "alvo": "wish-wish"
+          }
+        ]
       },
       {
         "id": "contar-a-mary",
-        "objective": "Conte para a Mary, na Recepção."
+        "objective": "Conte para a Mary, na Recepção.",
+        "guia": [
+          {
+            "map": "map.recepcao",
+            "alvo": "mary"
+          }
+        ]
       }
     ]
   },
@@ -399,7 +895,13 @@
         "objective": "Uma chave velha... Procure um alçapão trancado pelo castelo (talvez onde se guarda comida?).",
         "completeWhen": {
           "flag": "visitou:map.porao"
-        }
+        },
+        "guia": [
+          {
+            "map": "map.cozinha",
+            "alvo": "porta-porao"
+          }
+        ]
       }
     ]
   },

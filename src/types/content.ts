@@ -67,6 +67,11 @@ export interface QuestStageDef {
   /** Quando a condição vale, a missão avança sozinha para a etapa "then" (ou termina, se "then" faltar). */
   completeWhen?: Condition;
   then?: string;
+  /**
+   * Modo Kids: para onde a trilha de estrelinhas aponta. Vale o primeiro alvo
+   * cuja condição é verdadeira (alvo = nome de um objeto do mapa).
+   */
+  guia?: { map: string; alvo: string; when?: Condition }[];
 }
 
 export interface QuestDef {

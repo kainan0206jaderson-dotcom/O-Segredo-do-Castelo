@@ -32,7 +32,13 @@ export class TitleScene extends Phaser.Scene {
     this.chooser = undefined;
     this.events.off(Phaser.Scenes.Events.RESUME);
     this.events.on(Phaser.Scenes.Events.RESUME, (_s: Phaser.Scene, data?: { from?: string }) => {
-      if (data?.from === 'visual') this.toPrologue('jogo');
+      // depois do Visual, a escolha do modo (Kids ou Normal); depois dela, o prólogo
+      if (data?.from === 'visual') {
+        history.pushState({ tela: 'modo' }, '');
+        this.scene.launch('Modo');
+        this.scene.pause();
+      }
+      if (data?.from === 'modo') this.toPrologue('jogo');
     });
     window.addEventListener('popstate', this.onPopState);
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => window.removeEventListener('popstate', this.onPopState));
@@ -142,9 +148,14 @@ export class TitleScene extends Phaser.Scene {
     history.back();
   }
 
-  /** Um passo para trás: do Visual para a escolha, da escolha para o menu. */
+  /** Um passo para trás: do modo para o Visual, do Visual para a escolha, da escolha para o menu. */
   private stepBack(): void {
     if (this.leaving) return;
+    if (this.scene.isActive('Modo')) {
+      this.scene.stop('Modo');
+      this.scene.launch('Visual', { back: 'Title' });
+      return;
+    }
     if (this.scene.isActive('Visual') || this.scene.isPaused('Visual')) {
       this.scene.stop('Visual');
       this.scene.resume();

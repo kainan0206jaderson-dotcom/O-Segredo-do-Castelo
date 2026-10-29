@@ -66,6 +66,14 @@ export class OptionsScene extends Phaser.Scene {
           audio.sfx('menu');
         },
       }, {
+        label: 'Modo',
+        value: () => (session.state.modo === 'kids' ? 'Kids' : 'Normal'),
+        change: () => {
+          session.state.modo = session.state.modo === 'kids' ? 'normal' : 'kids';
+          session.save();
+          audio.sfx('menu');
+        },
+      }, {
         label: 'Visual',
         change: (dir: number) => {
           if (dir !== 0) return;
@@ -91,7 +99,7 @@ export class OptionsScene extends Phaser.Scene {
         .setInteractive({ useHandCursor: true })
         .on('pointerdown', (p: Phaser.Input.Pointer) => {
           this.sel = i;
-          const dir = r.value && r.label !== 'Tela tremendo' && r.label !== 'Texto' && r.label !== 'Aprendiz' ? (p.x / RENDER_ZOOM < GAME_WIDTH / 2 ? -1 : 1) : 0;
+          const dir = r.value && r.label !== 'Tela tremendo' && r.label !== 'Texto' && r.label !== 'Aprendiz' && r.label !== 'Modo' ? (p.x / RENDER_ZOOM < GAME_WIDTH / 2 ? -1 : 1) : 0;
           r.change(dir);
           this.render();
         });

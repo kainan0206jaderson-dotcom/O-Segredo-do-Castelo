@@ -36,6 +36,8 @@ export class Boss extends Phaser.GameObjects.Sprite {
   constructor(
     scene: Phaser.Scene, x: number, y: number, readonly sheet: string,
     private readonly spots: { x: number; y: number }[], private readonly events: BossEvents,
+    /** Modo Kids: mais tempo entre os tiros e mais tempo cansada. */
+    private readonly slow = 1,
   ) {
     super(scene, x, y, sheet, 0);
     scene.add.existing(this);
@@ -106,12 +108,12 @@ export class Boss extends Phaser.GameObjects.Sprite {
       this.nextShotAt = now + 700;
     }
     if (now < this.nextShotAt) return;
-    this.nextShotAt = now + SHOT_MS[this.phase];
+    this.nextShotAt = now + SHOT_MS[this.phase] * this.slow;
     this.events.fire(this.x, this.baseY - 14, target.x, target.y - 8);
     this.shots += 1;
     if (this.phase === 'fase1' && this.shots >= SHOTS_BEFORE_REST) {
       this.shots = 0;
-      this.tiredUntil = now + TIRED_MS;
+      this.tiredUntil = now + TIRED_MS * this.slow;
     }
   }
 
