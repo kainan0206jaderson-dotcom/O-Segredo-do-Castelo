@@ -1444,6 +1444,372 @@
       "frameWidth": 378,
       "frameHeight": 83,
       "animations": {}
+    },
+    "player.aprendiza": {
+      "url": "sprites/aprendiza.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {
+        "idle-down": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-down": {
+          "frames": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-up": {
+          "frames": [
+            6,
+            7
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-up": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-side": {
+          "frames": [
+            12,
+            13
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-side": {
+          "frames": [
+            14,
+            15,
+            16,
+            17
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
+    },
+    "player.aprendiza-coragem": {
+      "url": "sprites/aprendiza-coragem.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {
+        "idle-down": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-down": {
+          "frames": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-up": {
+          "frames": [
+            6,
+            7
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-up": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-side": {
+          "frames": [
+            12,
+            13
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-side": {
+          "frames": [
+            14,
+            15,
+            16,
+            17
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
+    },
+    "player.aprendiza-inteligencia": {
+      "url": "sprites/aprendiza-inteligencia.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {
+        "idle-down": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-down": {
+          "frames": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-up": {
+          "frames": [
+            6,
+            7
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-up": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-side": {
+          "frames": [
+            12,
+            13
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-side": {
+          "frames": [
+            14,
+            15,
+            16,
+            17
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
+    },
+    "player.aprendiza-astucia": {
+      "url": "sprites/aprendiza-astucia.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {
+        "idle-down": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-down": {
+          "frames": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-up": {
+          "frames": [
+            6,
+            7
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-up": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-side": {
+          "frames": [
+            12,
+            13
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-side": {
+          "frames": [
+            14,
+            15,
+            16,
+            17
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
+    },
+    "player.aprendiza-lealdade": {
+      "url": "sprites/aprendiza-lealdade.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {
+        "idle-down": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-down": {
+          "frames": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-up": {
+          "frames": [
+            6,
+            7
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-up": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-side": {
+          "frames": [
+            12,
+            13
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-side": {
+          "frames": [
+            14,
+            15,
+            16,
+            17
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
+    },
+    "player.aprendiza-estrelada": {
+      "url": "sprites/aprendiza-estrelada.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {
+        "idle-down": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-down": {
+          "frames": [
+            2,
+            3,
+            4,
+            5
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-up": {
+          "frames": [
+            6,
+            7
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-up": {
+          "frames": [
+            8,
+            9,
+            10,
+            11
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        },
+        "idle-side": {
+          "frames": [
+            12,
+            13
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "walk-side": {
+          "frames": [
+            14,
+            15,
+            16,
+            17
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
     }
   },
   "tilesets": {

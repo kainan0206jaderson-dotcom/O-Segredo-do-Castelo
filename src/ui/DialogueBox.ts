@@ -4,6 +4,7 @@ import type { DialogueView } from '../systems/DialogueRunner';
 import { COLORS, TEXT_RES, textStyle } from './theme';
 import { charsPerSecond } from '../core/settings';
 import { audio } from '../audio/Audio';
+import { noGenero } from '../core/aparencia';
 
 const BOX_H = 64;
 const MARGIN = 8;
@@ -84,7 +85,7 @@ export class DialogueBox {
     const hasPortrait = this.setPortrait(PORTRAITS[view.speaker]);
     const shift = hasPortrait ? PORTRAIT + 8 : 0;
     this.bodyText.setX(this.bodyX + shift).setWordWrapWidth(this.wrap - shift);
-    this.fullText = view.text;
+    this.fullText = noGenero(view.text);
     this.shown = 0;
     this.bodyText.setText('');
     this.choices = view.choices;

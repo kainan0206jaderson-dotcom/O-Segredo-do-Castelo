@@ -199,17 +199,57 @@ LEGS_SIDE = {
 }
 
 
+# Aprendiz menina [FICÇÃO]: cabelo comprido caindo pelos ombros (de frente), pelas costas
+# (de trás) e num rabo de cavalo (de lado), laço rosa no chapéu e a barra do manto mais rodada.
+def with_row(rows, i, row):
+    return rows[:i] + [row] + rows[i + 1:]
+
+
+HEAD_DOWN_F = with_row(HEAD_DOWN, 6, "...kkqqppprRrkk.")  # laço rosa na fita do chapéu
+HEAD_UP_F = with_row(HEAD_UP, 6, "..kkPpprRrqqkk..")
+HEAD_SIDE_F = with_row(HEAD_SIDE, 6, "..kkqrRrppqqkk..")
+BODY_DOWN_F = [
+    "...khhpYYphhk...",
+    "..kqhHpYYpHhqk..",
+    "..kshjPpyPjhsk..",
+    "..kSkjpppppjkSk.",
+    "...kqlLLLLlqk...",
+    "..kqpPpppppPqqk.",
+]
+BODY_UP_F = [
+    "....khhhhhhhk...",
+    "...kqhhHhhhjqk..",
+    "..kspPjhhhjPpsk.",
+    "..kSkPpjjjpPkSk.",
+    "...kqllllllqk...",
+    "..kqpPppppPpqqk.",
+]
+BODY_SIDE_F = [
+    "..hhkcpYpk......",
+    "..hHkqpPppqk....",
+    "...hjqPppsqk....",
+    "....jqPppSqk....",
+    "....kqlLLllk....",
+    "...kqpPpppqk....",
+]
+MENINA_PAL = {"r": (232, 96, 150), "R": (255, 168, 204)}
+
+
 def player_frame(head, body, legs, bob):
     rows = shift_down(head + body, bob)[:21] + legs
     check("aprendiz", rows, 16, 24)
     return rows
 
 
-def render_player(name, robe):
-    pal = {**BASE_PAL, **robe_pal(robe)}
+def render_player(name, robe, menina=False):
+    pal = {**BASE_PAL, **robe_pal(robe), **(MENINA_PAL if menina else {})}
     seq = [("stand", 0), ("stand", 1), ("l", 0), ("mid", 1), ("r", 0), ("mid", 1)]
     sheet = Image.new("RGBA", (96, 72), (0, 0, 0, 0))
-    for r, (head, body, legs) in enumerate(((HEAD_DOWN, BODY_DOWN, LEGS_DOWN), (HEAD_UP, BODY_UP, LEGS_DOWN), (HEAD_SIDE, BODY_SIDE, LEGS_SIDE))):
+    if menina:
+        dirs = ((HEAD_DOWN_F, BODY_DOWN_F, LEGS_DOWN), (HEAD_UP_F, BODY_UP_F, LEGS_DOWN), (HEAD_SIDE_F, BODY_SIDE_F, LEGS_SIDE))
+    else:
+        dirs = ((HEAD_DOWN, BODY_DOWN, LEGS_DOWN), (HEAD_UP, BODY_UP, LEGS_DOWN), (HEAD_SIDE, BODY_SIDE, LEGS_SIDE))
+    for r, (head, body, legs) in enumerate(dirs):
         for c, (leg, bob) in enumerate(seq):
             sheet.paste(paint(player_frame(head, body, legs[leg], bob), pal, 16, 24), (c * 16, r * 24))
     if name == "estrelada":
@@ -220,7 +260,8 @@ def render_player(name, robe):
             for x in range(96):
                 if px[x, y][3] and px[x, y][:3] in robe_cols and (x * 7 + y * 5) % 13 == 0:
                     px[x, y] = (255, 236, 150, 255)
-    save(sheet, f"sprites/{'aprendiz' if name == 'base' else 'aprendiz-' + name}.png")
+    prefix = "aprendiza" if menina else "aprendiz"
+    save(sheet, f"sprites/{prefix if name == 'base' else prefix + '-' + name}.png")
 
 
 CAPAS = {
@@ -1117,6 +1158,7 @@ def render_secret_stuff():
 def render_all():
     for name, robe in CAPAS.items():
         render_player(name, robe)
+        render_player(name, robe, menina=True)
     render_npcs()
     render_small()
     render_props()

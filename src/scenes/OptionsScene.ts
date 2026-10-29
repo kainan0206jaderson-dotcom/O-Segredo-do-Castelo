@@ -4,6 +4,8 @@ import { InputManager } from '../input/InputManager';
 import { COLORS, TEXT_RES, textStyle } from '../ui/theme';
 import { settings, setSetting, type Settings } from '../core/settings';
 import { audio } from '../audio/Audio';
+import { session } from '../core/session';
+import { aparencia } from '../core/aparencia';
 
 const TEXT_SPEEDS: Settings['texto'][] = ['normal', 'rapido', 'instantaneo'];
 const SPEED_NAMES: Record<Settings['texto'], string> = { normal: 'Normal', rapido: 'Rápido', instantaneo: 'Na hora' };
@@ -54,11 +56,21 @@ export class OptionsScene extends Phaser.Scene {
           audio.sfx('menu');
         },
       },
+      // durante o jogo dá para trocar o aprendiz entre menino e menina
+      ...(this.back && this.back !== 'Title' ? [{
+        label: 'Aprendiz',
+        value: () => (aparencia() === 'menina' ? 'Menina' : 'Menino'),
+        change: () => {
+          session.state.aparencia = aparencia() === 'menina' ? 'menino' : 'menina';
+          session.save();
+          audio.sfx('menu');
+        },
+      }] : []),
       { label: 'Voltar', change: (dir) => dir === 0 && this.close() },
     ];
 
     const w = 260;
-    const h = 150;
+    const h = 50 + this.rows.length * 20;
     const x0 = (GAME_WIDTH - w) / 2;
     const y0 = (GAME_HEIGHT - h) / 2;
     this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x000000, 0.6).setOrigin(0).setInteractive();
@@ -71,7 +83,7 @@ export class OptionsScene extends Phaser.Scene {
         .setInteractive({ useHandCursor: true })
         .on('pointerdown', (p: Phaser.Input.Pointer) => {
           this.sel = i;
-          const dir = r.value && r.label !== 'Tela tremendo' && r.label !== 'Texto' ? (p.x / RENDER_ZOOM < GAME_WIDTH / 2 ? -1 : 1) : 0;
+          const dir = r.value && r.label !== 'Tela tremendo' && r.label !== 'Texto' && r.label !== 'Aprendiz' ? (p.x / RENDER_ZOOM < GAME_WIDTH / 2 ? -1 : 1) : 0;
           r.change(dir);
           this.render();
         });

@@ -8,6 +8,7 @@ import { db } from '../content';
 import { COLORS, TEXT_RES, textStyle } from '../ui/theme';
 import { flash } from '../ui/fx';
 import { audio } from '../audio/Audio';
+import { playerSheet } from '../core/aparencia';
 
 /** Quem sobe ao palco na cerimônia final, da esquerda para a direita. */
 const CAST: { sheet: string; name: string }[] = [
@@ -90,7 +91,7 @@ export class EndingScene extends Phaser.Scene {
         .setAlpha(0).setData('fade', 2000 + i * 160);
     });
     const outfit = session.state.equipment.capa ? db.items[session.state.equipment.capa]?.sheet : undefined;
-    this.actor(outfit ?? 'player.aprendiz', x0 + 3 * gap, y, 1900, true);
+    this.actor(playerSheet(outfit ?? 'player.aprendiz'), x0 + 3 * gap, y, 1900, true);
     this.children.list.filter((o) => o.getData('fade') !== undefined).forEach((o) =>
       this.tweens.add({ targets: o, alpha: 1, duration: 400, delay: o.getData('fade') as number }));
 

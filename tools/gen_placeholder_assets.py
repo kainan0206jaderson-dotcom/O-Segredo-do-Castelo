@@ -547,6 +547,11 @@ for name, (c, cl, cs) in CAPAS.items():
     im.save(os.path.join(ROOT, "sprites", f"aprendiz-{name}.png"))
     sheet_entry(f"player.aprendiz-{name}", f"sprites/aprendiz-{name}.png", 16, 24, player_anims)
 
+# ---------- Aprendiz menina: mesmas animações; a arte definitiva vem de tools/art_people.py
+for suffix in [""] + [f"-{n}" for n in CAPAS]:
+    Image.open(os.path.join(ROOT, "sprites", f"aprendiz{suffix}.png")).save(os.path.join(ROOT, "sprites", f"aprendiza{suffix}.png"))
+    sheet_entry(f"player.aprendiza{suffix}", f"sprites/aprendiza{suffix}.png", 16, 24, player_anims)
+
 # ---------- Prof. Arquimedes [KAINAN: estilo mago, chapéu e sobretudo; detalhes FICÇÃO]
 P.update({
     "3": (42, 46, 100), "4": (70, 78, 146), "5": (214, 170, 60),

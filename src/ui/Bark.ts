@@ -1,6 +1,7 @@
 import Phaser from 'phaser';
 import falasJson from '../../content/falas.json';
 import { TEXT_RES, textStyle } from './theme';
+import { noGenero } from '../core/aparencia';
 
 const falas = falasJson as unknown as Record<string, string[] | string>;
 
@@ -29,6 +30,7 @@ export class Bark {
   say(line: string | undefined, important = false): void {
     const now = this.scene.time.now;
     if (!line || (!important && now < this.quietUntil)) return;
+    line = noGenero(line);
     this.text.setText(line).setVisible(true).setAlpha(1);
     this.until = now + 1600 + line.length * 45;
     this.quietUntil = this.until + 2500;
