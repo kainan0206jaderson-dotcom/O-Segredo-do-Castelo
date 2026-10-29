@@ -18,7 +18,7 @@ interface Row {
 
 /**
  * Visual do aprendiz: pele, cabelo e roupa (duas por personagem), com o boneco girando ao
- * lado. Abre depois de escolher menino/Estela no Novo jogo e pelas Opções durante o jogo.
+ * lado. Abre depois de escolher Orion ou Estela no Novo jogo e pelas Opções durante o jogo.
  */
 export class VisualScene extends Phaser.Scene {
   private rows: Row[] = [];

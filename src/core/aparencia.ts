@@ -1,7 +1,7 @@
 import { session } from './session';
 import { lookSheet } from './visual';
 
-/** Aparência do aprendiz, escolhida no Novo jogo e trocável nas Opções. A menina se chama Estela [FICÇÃO]. */
+/** Aparência do aprendiz, escolhida no Novo jogo e trocável nas Opções. O menino se chama Orion e a menina, Estela [FICÇÃO]. */
 export type Aparencia = 'menino' | 'menina';
 
 export function aparencia(): Aparencia {

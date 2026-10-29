@@ -127,7 +127,7 @@ export class TitleScene extends Phaser.Scene {
         // tocar só seleciona (o outro fica apagado); para seguir, o botão OK
         .on('pointerdown', () => this.pickLook(look));
       kid.play(AssetRegistry.animKey(sheet, 'idle-down'));
-      const label = this.add.text(x, 214, look === 'menina' ? 'Estela' : 'Menino', textStyle(11, COLORS.text)).setOrigin(0.5, 0).setResolution(TEXT_RES);
+      const label = this.add.text(x, 214, look === 'menina' ? 'Estela' : 'Orion', textStyle(11, COLORS.text)).setOrigin(0.5, 0).setResolution(TEXT_RES);
       kids.push(kid);
       labels.push(label);
       parts.push(kid, label);
@@ -176,7 +176,7 @@ export class TitleScene extends Phaser.Scene {
     if (look !== c.look && !silent) audio.sfx('blip');
     c.look = look;
     const i = look === 'menina' ? 1 : 0;
-    c.labels.forEach((t, j) => t.setColor(j === i ? COLORS.gold : COLORS.muted).setText(`${j === i ? '▸ ' : ''}${j === 1 ? 'Estela' : 'Menino'}${j === i ? ' ◂' : ''}`));
+    c.labels.forEach((t, j) => t.setColor(j === i ? COLORS.gold : COLORS.muted).setText(`${j === i ? '▸ ' : ''}${j === 1 ? 'Estela' : 'Orion'}${j === i ? ' ◂' : ''}`));
     c.kids.forEach((k, j) => k.setAlpha(j === i ? 1 : 0.55));
   }
 

@@ -59,7 +59,7 @@ export class OptionsScene extends Phaser.Scene {
       // durante o jogo dá para trocar o aprendiz entre menino e menina
       ...(this.back && this.back !== 'Title' ? [{
         label: 'Aprendiz',
-        value: () => (aparencia() === 'menina' ? 'Estela' : 'Menino'),
+        value: () => (aparencia() === 'menina' ? 'Estela' : 'Orion'),
         change: () => {
           session.state.aparencia = aparencia() === 'menina' ? 'menino' : 'menina';
           session.save();
