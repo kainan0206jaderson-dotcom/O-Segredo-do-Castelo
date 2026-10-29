@@ -9,6 +9,7 @@ import { GAME_HEIGHT, GAME_WIDTH } from '../config/game';
 import { TEXT_RES, textStyle } from '../ui/theme';
 import { flash } from '../ui/fx';
 import { audio } from '../audio/Audio';
+import { nomeAprendiz } from '../core/aparencia';
 
 type Entry = { icon?: string; title: string; detail: string; muted?: boolean; use?: string; count?: number };
 const TABS = ['Aprendiz', 'Bolsa', 'Feitiços', 'Receitas', 'Missões'] as const;
@@ -188,6 +189,7 @@ export class GrimoireScene extends Phaser.Scene {
         const house = s.house ? db.houses[s.house] : undefined;
         const capa = s.equipment.capa ? db.items[s.equipment.capa] : undefined;
         return [
+          { icon: 'varinha', title: nomeAprendiz(), detail: `Aprendiz do Castelo Magia & Bruxaria${house ? `, da casa ${house.name}` : ''}.\n\nO nome foi escolhido no começo do jogo.` },
           { icon: 'poder', title: `Nível ${st.level}`, detail: st.nextXp ? `Experiência: ${s.xp} de ${st.nextXp} para o nível ${st.level + 1}.\n\nMissões, desafios e sombrinhas espantadas dão experiência.` : `Experiência: ${s.xp}. Nível máximo!` },
           { icon: 'coracao', title: `Vida ${s.vida}/${st.vidaMax}`, detail: 'Sombrinhas tiram vida. Se acabar, você desmaia e acorda na entrada da sala. Sobremesa Mandrágora devolve vida.' },
           { icon: 'energia', title: `Energia ${s.energia}/${st.energiaMax}`, detail: 'Cada feitiço gasta energia mágica. Ela volta sozinha, e a Cerveja de Abóbora acelera.' },

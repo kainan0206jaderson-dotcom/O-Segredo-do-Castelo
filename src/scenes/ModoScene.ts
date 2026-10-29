@@ -4,6 +4,8 @@ import { InputManager } from '../input/InputManager';
 import { COLORS, TEXT_RES, textStyle } from '../ui/theme';
 import { session } from '../core/session';
 import { audio } from '../audio/Audio';
+import { nomeFeio } from '../core/nomeFeio';
+import { aparencia, nomePadrao } from '../core/aparencia';
 
 type Modo = 'kids' | 'normal';
 
@@ -24,6 +26,7 @@ const CARDS: { modo: Modo; titulo: string; idade: string; texto: string }[] = [
  */
 export class ModoScene extends Phaser.Scene {
   private modo: Modo = 'kids';
+  private leaving = false;
   private cards: { box: Phaser.GameObjects.Rectangle; parts: Phaser.GameObjects.Text[] }[] = [];
   private controls!: InputManager;
 
@@ -33,6 +36,7 @@ export class ModoScene extends Phaser.Scene {
 
   create(): void {
     this.modo = session.state.modo ?? 'kids';
+    this.leaving = false;
     this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x0c0a1c, 0.94).setOrigin(0).setInteractive();
     this.add.text(GAME_WIDTH / 2, 40, 'Como você quer jogar?', textStyle(13, COLORS.text)).setOrigin(0.5).setResolution(TEXT_RES);
     const w = 170;
@@ -74,6 +78,23 @@ export class ModoScene extends Phaser.Scene {
   }
 
   private confirm(): void {
+    if (this.leaving) return;
+    const s = session.state;
+    // no Modo Kids, nome com palavrão não vale: avisa com jeitinho e usa o nome padrão
+    if (this.modo === 'kids' && s.nome && nomeFeio(s.nome)) {
+      this.leaving = true;
+      audio.sfx('erro');
+      s.nome = undefined;
+      this.add.rectangle(GAME_WIDTH / 2, GAME_HEIGHT / 2, 300, 54, 0x18142a, 0.97).setStrokeStyle(2, COLORS.panelBorder);
+      this.add.text(GAME_WIDTH / 2, GAME_HEIGHT / 2, `Ops! Esse nome não vale no Modo Kids.\nVocê vai se chamar ${nomePadrao(aparencia())}.`,
+        textStyle(10, COLORS.text, { align: 'center', lineSpacing: 4 })).setOrigin(0.5).setResolution(TEXT_RES);
+      this.time.delayedCall(2200, () => this.finish());
+      return;
+    }
+    this.finish();
+  }
+
+  private finish(): void {
     audio.sfx('confirmar');
     session.state.modo = this.modo;
     session.save();
@@ -82,6 +103,7 @@ export class ModoScene extends Phaser.Scene {
   }
 
   update(): void {
+    if (this.leaving) return;
     if (this.controls.navHPressed() || this.controls.navPressed()) this.pick(this.modo === 'kids' ? 'normal' : 'kids');
     if (this.controls.actionPressed()) this.confirm();
     if (this.controls.menuPressed()) this.goBack();

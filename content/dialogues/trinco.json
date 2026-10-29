@@ -89,7 +89,7 @@
       "next": "mesa-ok"
     },
     "mesa-ok": {
-      "text": "Tome, sua varinha. Não aponte para o meu nariz, por favor.",
+      "text": "Tome, sua varinha, {nome}. Não aponte para o meu nariz, por favor.",
       "effects": [
         {
           "giveItem": "varinha"
