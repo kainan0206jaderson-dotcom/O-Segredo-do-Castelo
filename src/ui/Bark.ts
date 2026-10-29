@@ -43,7 +43,12 @@ export class Bark {
 
   update(x: number, y: number): void {
     if (!this.text.visible) return;
-    this.text.setPosition(Math.round(x), Math.round(y));
+    // perto da parede, o balão não sai da tela
+    const view = this.scene.cameras.main.worldView;
+    const half = this.text.displayWidth / 2 + 2;
+    const cx = view.width > half * 2 ? Phaser.Math.Clamp(x, view.left + half, view.right - half) : x;
+    const cy = Math.max(y, view.top + this.text.displayHeight + 2);
+    this.text.setPosition(Math.round(cx), Math.round(cy));
     const left = this.until - this.scene.time.now;
     if (left <= 0) this.text.setVisible(false);
     else if (left < 300) this.text.setAlpha(left / 300);

@@ -15,7 +15,7 @@ import { InputManager } from '../input/InputManager';
 import { DialogueRunner } from '../systems/DialogueRunner';
 import { ChallengeRunner } from '../systems/ChallengeRunner';
 import {
-  apply, check, currentObjective, cycleSpell, seenTutorial, spellAffects, takeFromPantry, tickQuests, type Notice,
+  apply, check, currentObjective, cycleSpell, guideTarget, seenTutorial, spellAffects, takeFromPantry, tickQuests, type Notice,
 } from '../systems/rules';
 import { clampVitals, hurt, restoreEnergy, spendEnergy, stats } from '../systems/progression';
 import type { Condition, DialogueDef } from '../types/content';
@@ -32,6 +32,8 @@ import { audio, CASTELO_LISTA, type Sfx, type Track } from '../audio/Audio';
 import { Bark, pickLine } from '../ui/Bark';
 import { openChest, type LootTable } from '../systems/loot';
 import baus from '../../content/baus.json';
+import { nextGuidePoint, type MapObject } from '../systems/guia';
+import { GuideTrail } from '../world/GuideTrail';
 
 export interface WorldData {
   map: string;
@@ -76,6 +78,11 @@ interface Trigger {
 /** Ampliação extra do mundo em relação ao HUD. */
 const WORLD_SCALE = 1.25;
 const FADE_MS = 220;
+/** Modo Kids: dica depois de um tempo sem avançar, ampulhetas mais longas, olhos e Morgana mais lentos. */
+const KIDS_HINT_MS = 30000;
+const KIDS_TIME = 1.5;
+const KIDS_SENTINEL = 0.6;
+const KIDS_BOSS = 1.6;
 const TALK_RANGE = 20;
 const SPELL_RANGE = 28;
 const START_CHALLENGE_FLAG = 'desafio:iniciar';
@@ -118,6 +125,12 @@ function cond(o: Phaser.Types.Tilemaps.TiledObject): Condition | undefined {
 
 export class WorldScene extends Phaser.Scene {
   private mapKey = '';
+  /** Modo Kids: trilha até o objetivo e dica quando a criança fica parada. */
+  private guide?: GuideTrail;
+  private guidePoint?: { x: number; y: number };
+  private guideAt = 0;
+  private hintObjective = '';
+  private hintSince = 0;
   private entry: WorldData = { map: '' };
   private player!: Player;
   private walls!: Phaser.Tilemaps.TilemapLayer;
@@ -140,6 +153,7 @@ export class WorldScene extends Phaser.Scene {
   private regenMs = 0;
   private invulnerableUntil = 0;
   private knockUntil = 0;
+  private kidsHits = 0;
   /** Ao chegar por uma porta, o aprendiz fica parado na soleira um instante. */
   private arriveUntil = 0;
   private windUntil = 0;
@@ -259,6 +273,10 @@ export class WorldScene extends Phaser.Scene {
     this.hud.onSpellTap = () => this.changeSpell();
     this.hud.onMenuTap = () => this.openGrimoire();
     this.bark = new Bark(this);
+    this.guide = s.modo === 'kids' ? new GuideTrail(this) : undefined;
+    this.guidePoint = undefined;
+    this.guideAt = 0;
+    this.hintSince = this.time.now;
     this.stillSince = this.time.now;
     clampVitals(s, db);
     this.applyOutfit();
@@ -275,6 +293,12 @@ export class WorldScene extends Phaser.Scene {
     this.events.on(Phaser.Scenes.Events.RESUME, (_s: unknown, from?: { from?: string }) => {
       if (from?.from === 'cauldron') for (const t of CauldronScene.lastNotices) this.hud.notify(t);
       if (from?.from === 'grimoire') for (const t of GrimoireScene.lastNotices) this.hud.notify(t);
+      // o modo pode ter mudado nas Opções
+      if (session.state.modo === 'kids' && !this.guide) this.guide = new GuideTrail(this);
+      if (session.state.modo !== 'kids' && this.guide) {
+        this.guide.destroy();
+        this.guide = undefined;
+      }
       this.afterStateChange();
     });
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.events.off(Phaser.Scenes.Events.RESUME));
@@ -444,7 +468,8 @@ export class WorldScene extends Phaser.Scene {
         }
         case 'sentinel': {
           this.sentinels.push(new Sentinel(this, o.x!, o.y!, sprite ?? 'npc.olho',
-            prop<'x' | 'y'>(o.properties, 'axis') ?? 'x', (prop<number>(o.properties, 'range') ?? 4) * TILE_SIZE, prop<number>(o.properties, 'speed') ?? 30));
+            prop<'x' | 'y'>(o.properties, 'axis') ?? 'x', (prop<number>(o.properties, 'range') ?? 4) * TILE_SIZE,
+            (prop<number>(o.properties, 'speed') ?? 30) * (s.modo === 'kids' ? KIDS_SENTINEL : 1)));
           break;
         }
         case 'checkpoint': {
@@ -497,7 +522,7 @@ export class WorldScene extends Phaser.Scene {
         fire: (x, y, tx, ty) => this.fireOrb(x, y, tx, ty),
         summon: () => this.summonShadows(),
         phaseOver: (ph) => this.onBossPhaseOver(ph),
-      });
+      }, s.modo === 'kids' ? KIDS_BOSS : 1);
     }
   }
 
@@ -1005,7 +1030,7 @@ export class WorldScene extends Phaser.Scene {
 
   private startChallenge(id: string): void {
     const def = db.challenges[id];
-    this.challenge = new ChallengeRunner(id, def);
+    this.challenge = new ChallengeRunner(id, session.state.modo === 'kids' ? { ...def, timeLimitMs: def.timeLimitMs * KIDS_TIME } : def);
     if (def.kind === 'acender') for (const c of this.candles) if (def.targets.includes(c.targetName)) c.setLit(false);
     if (def.kind === 'levitar') this.puzzles.resetKind('calice');
     if (def.kind === 'espectral') {
@@ -1340,7 +1365,9 @@ export class WorldScene extends Phaser.Scene {
     this.tweens.add({ targets: this.player, alpha: 0.3, duration: 90, yoyo: true, repeat: 5, onComplete: () => this.player.setAlpha(1) });
     audio.sfx('dano');
     this.bark.say(pickLine('dano'));
-    const fainted = hurt(session.state, 1);
+    // Modo Kids: só um em cada dois toques tira coração
+    this.kidsHits += 1;
+    const fainted = session.state.modo === 'kids' && this.kidsHits % 2 === 1 ? false : hurt(session.state, 1);
     this.refreshHud();
     if (fainted) this.faint();
   }
@@ -1518,12 +1545,44 @@ export class WorldScene extends Phaser.Scene {
     return out;
   }
 
+  /** Objetos de uma sala (do mapa já carregado), para a trilha achar portas e alvos. */
+  private mapObjects(map: string): MapObject[] | undefined {
+    const data = this.cache.tilemap.get(map)?.data as { layers: { name: string; objects?: MapObject[] }[] } | undefined;
+    return data?.layers.find((l) => l.name === 'objetos')?.objects;
+  }
+
+  /** Modo Kids: recalcula para onde a trilha aponta e dá uma dica se a criança ficar parada. */
+  private updateGuide(time: number): void {
+    const s = session.state;
+    if (time >= this.guideAt) {
+      this.guideAt = time + 400;
+      const target = guideTarget(s, db);
+      // na sala do alvo, segue o objeto de verdade (pessoas e sombrinhas andam)
+      const live = target?.map === this.mapKey
+        ? [...this.things, ...this.creatures].find((t) => t.thingName === target.alvo && t.isPresent && t.visible)
+        : undefined;
+      this.guidePoint = live ? { x: live.x, y: live.y - 6 }
+        : target && nextGuidePoint(this.mapKey, target, s, (m) => this.mapObjects(m));
+    }
+    this.guide!.update({ x: this.player.x, y: this.player.y - 6 }, this.guidePoint, time);
+
+    const objective = currentObjective(s, db)?.objective ?? '';
+    if (objective !== this.hintObjective) {
+      this.hintObjective = objective;
+      this.hintSince = time;
+    } else if (objective && time - this.hintSince > KIDS_HINT_MS && !this.challenge) {
+      this.hintSince = time;
+      this.bark.say(`Psiu! ${objective} Siga as estrelinhas!`, true);
+    }
+  }
+
   update(time: number, delta: number): void {
     const s = session.state;
     s.playTimeMs += delta;
     if (this.transitioning) return;
 
     if (this.dialogue) {
+      this.guide?.hide();
       this.dialogueBox.update(delta);
       if (!this.dialogueBox.typing) this.talkingTo?.setTalking(false);
       const nav = this.controls.navPressed();
@@ -1568,6 +1627,7 @@ export class WorldScene extends Phaser.Scene {
       this.bark.say(pickLine('parado'));
     }
     this.bark.update(this.player.x, this.player.y - this.player.height - 2);
+    if (this.guide) this.updateGuide(time);
     this.puzzles.update(dir, delta);
     for (const c of this.creatures) c.think(this.player, time, delta);
     this.updateExtras(time, delta);

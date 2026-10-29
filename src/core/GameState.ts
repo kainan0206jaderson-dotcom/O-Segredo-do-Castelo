@@ -37,6 +37,8 @@ export interface GameState {
   aparencia?: 'menino' | 'menina';
   /** Pele, cabelo e roupa escolhidos na tela de Visual (ver core/visual.ts). */
   visual?: { pele: string; cabelo: string; roupa: number };
+  /** Modo Kids (o jogo guia até o objetivo e fica mais leve) ou Normal. Saves antigos: Normal. */
+  modo?: 'kids' | 'normal';
   playTimeMs: number;
 }
 

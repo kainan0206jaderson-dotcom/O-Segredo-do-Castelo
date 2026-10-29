@@ -4,6 +4,7 @@ import { session } from '../core/session';
 import { assets } from '../core/registry';
 import { InputManager } from '../input/InputManager';
 import { brew } from '../systems/brewing';
+import { wantedRecipe } from '../systems/rules';
 import { GAME_HEIGHT, GAME_WIDTH } from '../config/game';
 import { COLORS, TEXT_RES, textStyle } from '../ui/theme';
 import { shake, flash } from '../ui/fx';
@@ -40,6 +41,27 @@ export class CauldronScene extends Phaser.Scene {
     this.message = this.add.text(GAME_WIDTH / 2 + 60, 214, '', textStyle(9, COLORS.gold, { align: 'center', wordWrap: { width: 200 } })).setOrigin(0.5, 0).setResolution(TEXT_RES);
     this.controls = new InputManager(this, { touchControls: false });
     this.render();
+    if (session.state.modo === 'kids') this.helpKids();
+  }
+
+  /** Modo Kids: mostra a receita que a missão pede e já põe os ingredientes no caldeirão. */
+  private helpKids(): void {
+    const id = wantedRecipe(session.state, db);
+    if (!id) return;
+    const r = db.recipes[id];
+    const parts = Object.entries(r.ingredients).flatMap(([ing, n]) => Array<string>(n).fill(ing));
+    const names = parts.map((ing) => db.items[ing]?.name.toLowerCase() ?? ing).join(' + ');
+    const dish = db.items[r.result]?.name ?? id;
+    const missing = parts.filter((ing) => (session.state.inventory[ing] ?? 0) < parts.filter((x) => x === ing).length);
+    if (missing.length) {
+      this.message.setText(`${dish}: ${names}.\nFalta ${db.items[missing[0]]?.name.toLowerCase() ?? missing[0]}: a despensa da cozinha tem!`);
+      return;
+    }
+    this.slots = parts;
+    this.render();
+    this.sel = this.rows().findIndex((row) => row.label === '✦ Mexer');
+    this.render();
+    this.message.setText(`${dish}: ${names}.\nJá coloquei tudo no caldeirão. É só mexer!`);
   }
 
   private ingredients(): [string, number][] {
