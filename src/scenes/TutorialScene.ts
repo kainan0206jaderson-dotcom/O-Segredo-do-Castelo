@@ -59,7 +59,7 @@ export class TutorialScene extends Phaser.Scene {
     this.body_.setX(f !== undefined ? (GAME_WIDTH - 300) / 2 + 52 : (GAME_WIDTH - 300) / 2 + 14);
     this.body_.setWordWrapWidth(f !== undefined ? 236 : 274);
     const last = this.page === def.pages.length - 1;
-    const key = this.touch ? 'toque' : 'E';
+    const key = this.touch ? 'toque' : 'Espaço';
     this.pager.setText(`${def.pages.length > 1 ? `${this.page + 1}/${def.pages.length}   ` : ''}${key}: ${last ? 'entendi!' : 'continuar'}`);
   }
 

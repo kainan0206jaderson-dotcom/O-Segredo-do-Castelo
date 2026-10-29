@@ -35,7 +35,7 @@ export class ActCardScene extends Phaser.Scene {
     const title = this.add.text(GAME_WIDTH / 2, 96, a.title, textStyle(20, COLORS.gold, { fontStyle: 'bold' })).setOrigin(0.5).setResolution(TEXT_RES).setAlpha(0);
     const sub = this.add.text(GAME_WIDTH / 2, 124, a.subtitle, textStyle(11, COLORS.text)).setOrigin(0.5).setResolution(TEXT_RES).setAlpha(0);
     const next = this.add.text(GAME_WIDTH / 2, 168, a.next, textStyle(9, COLORS.muted, { align: 'center', lineSpacing: 4 })).setOrigin(0.5).setResolution(TEXT_RES).setAlpha(0);
-    const hint = this.add.text(GAME_WIDTH / 2, GAME_HEIGHT - 20, InputManager.isTouchDevice(this) ? 'toque para continuar' : 'E para continuar',
+    const hint = this.add.text(GAME_WIDTH / 2, GAME_HEIGHT - 20, InputManager.isTouchDevice(this) ? 'toque para continuar' : 'Espaço para continuar',
       textStyle(8, COLORS.muted)).setOrigin(0.5).setResolution(TEXT_RES).setAlpha(0);
     this.tweens.chain({
       tweens: [

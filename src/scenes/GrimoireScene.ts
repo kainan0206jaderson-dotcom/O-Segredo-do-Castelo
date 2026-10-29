@@ -315,7 +315,7 @@ export class GrimoireScene extends Phaser.Scene {
     if (ic) this.detailIcon.setTexture(ic.key, ic.frame).setScale(1.75 * ic.k);
     this.detailIcon.setPosition(rx + rw / 2, this.box.cy + 39);
     const touch = InputManager.isTouchDevice(this);
-    this.hint.setText(cur?.use ? `${touch ? 'Toque' : 'E'}: ${cur.use}` : '');
+    this.hint.setText(cur?.use ? `${touch ? 'Toque' : 'Espaço'}: ${cur.use}` : '');
     this.hintBtn.setVisible(Boolean(cur?.use));
   }
 
