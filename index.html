@@ -4,6 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
     <meta name="theme-color" content="#18142a" />
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <link rel="manifest" href="./manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="./icone-192.png" />
     <title>Magia &amp; Bruxaria: O Segredo do Castelo</title>
     <style>
       html, body { margin: 0; height: 100%; background: #18142a; overflow: hidden; touch-action: none; }
@@ -17,6 +22,19 @@
       #girar .icone { font-size: 48px; color: #fad65c; animation: girar 2s ease-in-out infinite; }
       @keyframes girar { 0%, 30% { transform: rotate(0deg); } 60%, 100% { transform: rotate(90deg); } }
       @media (orientation: portrait) and (pointer: coarse) { #girar { display: flex; } }
+      /* depois de girar: um toque e o jogo vai para a tela cheia (o navegador exige um toque) */
+      #tela-cheia {
+        display: none; position: fixed; inset: 0; z-index: 9; background: rgba(11, 10, 32, 0.92); color: #e8e0f0;
+        font: 15px/1.4 Georgia, serif; text-align: center; align-items: center; justify-content: center;
+        flex-direction: column; gap: 14px; padding: 24px;
+      }
+      #tela-cheia.on { display: flex; }
+      #tela-cheia button {
+        font: bold 18px "Pixelify Sans", Georgia, serif; color: #18142a; background: #fad65c; border: 3px solid #fff3c4;
+        border-radius: 10px; padding: 14px 28px; box-shadow: 0 4px 0 #a07a20; animation: pulsar 1.6s ease-in-out infinite;
+      }
+      #tela-cheia small { color: #b8acd0; max-width: 420px; }
+      @keyframes pulsar { 50% { transform: scale(1.06); } }
     </style>
   </head>
   <body>
@@ -24,6 +42,10 @@
     <div id="girar" role="alert">
       <div class="icone" aria-hidden="true">&#9647;</div>
       <div>Gire o celular para jogar na horizontal</div>
+    </div>
+    <div id="tela-cheia">
+      <button type="button">&#9654; Tocar para jogar</button>
+      <small></small>
     </div>
     <script type="module" src="/src/main.ts"></script>
   </body>

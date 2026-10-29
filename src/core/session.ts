@@ -11,9 +11,10 @@ class Session {
     return Boolean(this.saves.load());
   }
 
-  startNew(): void {
+  /** persist = false: começa o jogo novo sem gravar ainda (a tela de Visual grava no "Pronto"). */
+  startNew(persist = true): void {
     this.state = newGame(START_MAP, START_SPAWN);
-    this.saves.save(this.state);
+    if (persist) this.saves.save(this.state);
   }
 
   continue(): boolean {
