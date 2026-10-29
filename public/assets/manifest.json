@@ -1430,13 +1430,19 @@
     "prologo.castelo": {
       "url": "sprites/prologo-castelo.png",
       "frameWidth": 240,
-      "frameHeight": 210,
+      "frameHeight": 230,
       "animations": {}
     },
     "prologo.quarto": {
       "url": "sprites/prologo-quarto.png",
       "frameWidth": 640,
       "frameHeight": 270,
+      "animations": {}
+    },
+    "ui.logo": {
+      "url": "ui/logo.png",
+      "frameWidth": 378,
+      "frameHeight": 83,
       "animations": {}
     }
   },

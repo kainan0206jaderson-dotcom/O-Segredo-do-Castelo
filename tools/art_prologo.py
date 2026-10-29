@@ -209,9 +209,9 @@ def castle(w=240, h=210):
         window(tx + 17, 92, big=True)
         window(tx + 17, 132)
     # torre central alta (a da Morgana)
-    wall(100, 26, 139, 96)
-    cone(120, 26, 24, 34)
-    window(116, 44, big=True)  # a janela da torre
+    wall(100, 46, 139, 96)
+    battlement(100, 140, 46)  # topo reto: é ali que o dragão fica
+    window(116, 56, big=True)  # a janela da torre
     window(110, 72)
     window(126, 72)
     # portão em arco
@@ -239,7 +239,82 @@ def castle(w=240, h=210):
     # chão
     d.rectangle([0, ground + 1, w - 1, h - 1], fill=(40, 70, 52))
     d.rectangle([gx0 - 2, ground + 1, gx1 + 2, h - 1], fill=(110, 104, 130))
-    return save(im, "prologo-castelo.png")
+    # imagem final mais alta, com o dragão no topo da torre do meio (a base continua igual)
+    full = Image.new("RGBA", (w, h + DRAGON_TOP), (0, 0, 0, 0))
+    full.paste(im, (0, DRAGON_TOP))
+    dragon = dragon_statue()
+    full.alpha_composite(dragon, (120 - 30, DRAGON_TOP + 41 - dragon.height))
+    return save(full, "prologo-castelo.png")
+
+
+DRAGON_TOP = 20  # pixels a mais em cima do castelo para caber o dragão
+
+
+def dragon_statue():
+    """Dragão bege acinzentado sentado no topo da torre, asas abertas e boca aberta [KAINAN].
+    Desenhado com formas simples e depois sombreado e contornado pixel a pixel."""
+    w, h = 60, 52
+    im = Image.new("RGBA", (w, h), (0, 0, 0, 0))
+    d = ImageDraw.Draw(im)
+    base, light, hi, dark = (168, 158, 142), (198, 188, 170), (224, 216, 198), (112, 104, 94)
+    wing, wing_d, belly, mouth = (146, 134, 118), (118, 108, 96), (214, 202, 174), (120, 36, 40)
+    # asa de trás (mais escura) e asa da frente, abertas para cima
+    d.polygon([(26, 30), (20, 6), (16, 14), (10, 10), (12, 22), (20, 32)], fill=wing_d)
+    d.polygon([(32, 28), (44, 2), (58, 10), (54, 18), (56, 24), (48, 26), (46, 34), (36, 36)], fill=wing)
+    for a, b in (((44, 2), (40, 30)), ((58, 10), (44, 32)), ((56, 24), (46, 34))):
+        d.line([a, b], fill=wing_d)
+    d.line([(44, 2), (32, 28)], fill=base, width=2)  # osso da asa
+    # cauda enrolada descendo pela frente da torre
+    d.line([(38, 44), (48, 46), (54, 42), (52, 37), (48, 39)], fill=base, width=3)
+    # corpo sentado, coxa e patas
+    d.ellipse([22, 26, 42, 46], fill=base)
+    d.ellipse([30, 34, 44, 48], fill=base)
+    d.rectangle([24, 40, 28, 51], fill=base)
+    d.rectangle([33, 46, 41, 51], fill=base)
+    # peito claro com escamas
+    d.ellipse([22, 26, 30, 44], fill=belly)
+    # pescoço subindo para a esquerda
+    d.polygon([(24, 30), (31, 27), (22, 14), (16, 16)], fill=base)
+    # cabeça com a boca bem aberta (virada para a esquerda)
+    d.polygon([(14, 10), (24, 9), (25, 15), (17, 18)], fill=base)  # crânio
+    d.polygon([(15, 10), (4, 6), (2, 9), (15, 14)], fill=base)  # mandíbula de cima
+    d.polygon([(16, 16), (5, 18), (4, 21), (18, 18)], fill=base)  # mandíbula de baixo
+    d.polygon([(15, 14), (3, 10), (5, 17), (16, 16)], fill=mouth)  # dentro da boca
+    # chifres para trás
+    d.line([(22, 10), (30, 4)], fill=light, width=2)
+    d.line([(19, 9), (24, 2)], fill=light)
+    px = im.load()
+    # sombreado: luz de cima à esquerda
+    solid = lambda x, y: 0 <= x < w and 0 <= y < h and px[x, y][3] > 0
+    src = im.copy().load()
+    for y in range(h):
+        for x in range(w):
+            c = src[x, y]
+            if not c[3] or c[:3] == mouth:
+                continue
+            if not solid(x, y - 1) or not solid(x - 1, y):
+                px[x, y] = (hi if c[:3] == base else mix(c[:3], (255, 255, 255), 0.25)) + (255,)
+            elif not solid(x, y + 1) or not solid(x + 1, y):
+                px[x, y] = (dark if c[:3] in (base, belly) else wing_d) + (255,)
+    # escamas no peito e dentes
+    for y in range(29, 43, 3):
+        for x in range(23, 29):
+            if src[x, y][:3] == belly and src[x, y][3]:
+                px[x, y] = mix(belly, dark, 0.35) + (255,)
+    for x, y in ((5, 10), (8, 11), (11, 12), (6, 17), (9, 16), (12, 16)):
+        px[x, y] = (246, 242, 230, 255)
+    px[19, 12] = (250, 176, 60, 255)  # olho
+    px[20, 12] = (250, 176, 60, 255)
+    # contorno escuro
+    out = im.copy()
+    op = out.load()
+    for y in range(h):
+        for x in range(w):
+            if px[x, y][3]:
+                continue
+            if any(solid(x + dx, y + dy) for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))):
+                op[x, y] = INK + (255,)
+    return out
 
 
 # ---------------------------------------------------------------- quarto

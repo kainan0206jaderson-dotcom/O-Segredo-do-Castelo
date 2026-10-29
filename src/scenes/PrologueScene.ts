@@ -4,6 +4,7 @@ import { AssetRegistry } from '../core/AssetRegistry';
 import { session } from '../core/session';
 import { audio } from '../audio/Audio';
 import { COLORS, TEXT_RES, textStyle } from '../ui/theme';
+import { addLogo } from '../ui/logo';
 import { flash, shake } from '../ui/fx';
 
 const W = GAME_WIDTH;
@@ -57,7 +58,7 @@ export class PrologueScene extends Phaser.Scene {
     this.input.keyboard?.on('keydown-ESC', () => this.finish());
     this.input.keyboard?.on('keydown-ENTER', () => this.finish());
 
-    audio.music('titulo');
+    audio.music('titulo', true);
     this.cameras.main.fadeIn(800, 10, 9, 24);
     void this.play();
   }
@@ -76,16 +77,14 @@ export class PrologueScene extends Phaser.Scene {
   private async legend(): Promise<void> {
     const s = this.stage;
     s.add(this.add.image(W / 2, 0, 'prologo.ceu').setOrigin(0.5, 0));
-    const castle = this.add.image(W / 2, H - 40, 'prologo.castelo').setOrigin(0.5, 1).setTint(0x3a3270).setAlpha(0);
-    const shield = this.add.ellipse(W / 2, H - 120, 300, 230, 0x6a8cff, 0.08).setStrokeStyle(1, 0x9ab4ff, 0.6).setAlpha(0);
+    // o castelo (com o dragão no topo) um pouco menor, para caber inteiro na tela
+    const castle = this.add.image(W / 2, H - 40, 'prologo.castelo').setOrigin(0.5, 1).setScale(0.9).setTint(0x3a3270).setAlpha(0);
     const ground = this.add.rectangle(0, H - 40, W, 40, 0x141026).setOrigin(0);
-    s.add([castle, ground, shield]);
-    const wizards = [[W / 2 - 170, H - 46], [W / 2 + 170, H - 46], [W / 2, 30]].map(([x, y]) =>
+    s.add([castle, ground]);
+    const wizards = [[W / 2 - 170, H - 46], [W / 2 + 170, H - 46], [W / 2 + 150, 92]].map(([x, y]) =>
       this.add.image(x, y, 'prologo.bruxo').setOrigin(0.5, 1).setScale(2).setAlpha(0));
     s.add(wizards);
     this.tweens.add({ targets: castle, alpha: 0.85, duration: 2500 });
-    this.tweens.add({ targets: shield, alpha: 1, duration: 2500, delay: 800 });
-    this.tweens.add({ targets: shield, scaleX: 1.03, scaleY: 1.03, duration: 1400, yoyo: true, repeat: -1 });
     this.tweens.add({ targets: wizards, alpha: 1, duration: 1200, delay: 2600 });
     const sparkles = wizards.map((w) => this.add.particles(0, 0, 'prologo.brilho', {
       x: w.x, y: w.y - 28, lifespan: 1400, speed: { min: 10, max: 30 }, alpha: { start: 1, end: 0 },
@@ -207,9 +206,9 @@ export class PrologueScene extends Phaser.Scene {
     const left = castle.x - 120;
     const top = castle.y - 210;
     const towerX = left + 119;
-    const towerY = top + 50;
+    const towerY = top + 62;
     audio.music('quadros');
-    await this.zoomStage(2, towerX, towerY + 30, 1600);
+    await this.zoomStage(2, towerX, towerY, 1600);
     const soot = this.add.particles(towerX, towerY + 4, 'prologo.fuligem', {
       speed: { min: 4, max: 16 }, lifespan: 1800, alpha: { start: 0.7, end: 0 }, scale: { start: 1, end: 2 }, frequency: 80,
     });
@@ -262,17 +261,14 @@ export class PrologueScene extends Phaser.Scene {
   private async titleCard(): Promise<void> {
     const s = this.stage;
     s.add(this.add.image(W / 2, 0, 'prologo.ceu').setOrigin(0.5, 0).setAlpha(0.6));
-    const a = this.add.text(W / 2, H / 2 - 24, 'Magia & Bruxaria', textStyle(14, COLORS.muted)).setOrigin(0.5).setResolution(TEXT_RES).setAlpha(0);
-    const b = this.add.text(W / 2, H / 2, 'O Segredo do Castelo', textStyle(24, COLORS.gold, { stroke: '#3a3150', strokeThickness: 4 }))
-      .setOrigin(0.5).setResolution(TEXT_RES).setAlpha(0);
+    const logo = addLogo(this, W / 2, H / 2 - 48).setAlpha(0);
     const sparkle = this.add.particles(W / 2, H / 2, 'prologo.brilho', {
       x: { min: -120, max: 120 }, y: { min: -20, max: 20 }, lifespan: 1200, speedY: { min: -20, max: -5 }, alpha: { start: 1, end: 0 }, frequency: 50,
     });
-    s.add([sparkle, a, b]);
+    s.add([sparkle, logo]);
     this.cameras.main.fadeIn(700, 10, 9, 24);
     audio.sfx('nivel');
-    this.tweens.add({ targets: a, alpha: 1, duration: 900 });
-    await this.tween({ targets: b, alpha: 1, duration: 1200, delay: 400 });
+    await this.tween({ targets: logo, alpha: 1, duration: 1200, delay: 200 });
     await this.wait(2600);
     await this.fadeTo(900);
   }

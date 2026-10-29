@@ -4,6 +4,7 @@ import { InputManager } from '../input/InputManager';
 import { GAME_HEIGHT, GAME_WIDTH } from '../config/game';
 import { COLORS, TEXT_RES, textStyle } from '../ui/theme';
 import { audio } from '../audio/Audio';
+import { addLogo } from '../ui/logo';
 
 /** Tela inicial: Continuar (se houver jogo salvo) ou Novo jogo. */
 export class TitleScene extends Phaser.Scene {
@@ -12,6 +13,7 @@ export class TitleScene extends Phaser.Scene {
   private selected = 0;
   private controls!: InputManager;
   private confirmingNew = false;
+  private leaving = false;
 
   constructor() {
     super('Title');
@@ -19,10 +21,16 @@ export class TitleScene extends Phaser.Scene {
 
   create(): void {
     this.confirmingNew = false;
-    this.cameras.main.setBackgroundColor(COLORS.panel);
-    this.add.text(GAME_WIDTH / 2, 64, 'Magia & Bruxaria', textStyle(14, COLORS.muted)).setOrigin(0.5).setResolution(TEXT_RES);
-    this.add.text(GAME_WIDTH / 2, 88, 'O Segredo do Castelo', textStyle(24, COLORS.gold, { stroke: '#3a3150', strokeThickness: 4 }))
-      .setOrigin(0.5).setResolution(TEXT_RES);
+    this.leaving = false;
+    // céu do prólogo descido, para a lua ficar ao lado do menu e não atrás do letreiro;
+    // em cima, a cor do topo do céu com estrelinhas piscando
+    this.cameras.main.setBackgroundColor('#0b0a20');
+    this.add.image(GAME_WIDTH / 2, 96, 'prologo.ceu').setOrigin(0.5, 0);
+    for (let i = 0; i < 46; i++) {
+      const star = this.add.rectangle(Phaser.Math.Between(0, GAME_WIDTH), Phaser.Math.Between(0, 100), 1, 1, 0xe6e6ff, Phaser.Math.FloatBetween(0.3, 1));
+      this.tweens.add({ targets: star, alpha: 0.1, duration: Phaser.Math.Between(900, 2200), yoyo: true, repeat: -1, delay: Phaser.Math.Between(0, 1500) });
+    }
+    addLogo(this, GAME_WIDTH / 2, 14);
 
     const hasSave = session.hasSave();
     this.options = [
@@ -32,7 +40,7 @@ export class TitleScene extends Phaser.Scene {
       { label: 'Opções', run: () => this.openOptions() },
     ];
     this.texts = this.options.map((o, i) =>
-      this.add.text(GAME_WIDTH / 2, 150 + i * 24, o.label, textStyle(13, COLORS.text)).setOrigin(0.5).setResolution(TEXT_RES)
+      this.add.text(GAME_WIDTH / 2, 128 + i * 24, o.label, textStyle(13, COLORS.text)).setOrigin(0.5).setResolution(TEXT_RES)
         .setInteractive({ useHandCursor: true })
         .on('pointerover', () => this.select(i))
         .on('pointerdown', () => this.options[i].run()),
@@ -45,7 +53,7 @@ export class TitleScene extends Phaser.Scene {
 
   private watchPrologue(): void {
     audio.sfx('confirmar');
-    this.scene.start('Prologue', { then: 'titulo' });
+    this.toPrologue('titulo');
   }
 
   private openOptions(): void {
@@ -79,10 +87,19 @@ export class TitleScene extends Phaser.Scene {
     }
     audio.sfx('confirmar');
     session.startNew();
-    this.scene.start('Prologue', { then: 'jogo' });
+    this.toPrologue('jogo');
+  }
+
+  /** Escurece a tela inicial antes do prólogo, para ele começar num fade in limpo. */
+  private toPrologue(then: 'jogo' | 'titulo'): void {
+    if (this.leaving) return;
+    this.leaving = true;
+    this.cameras.main.fadeOut(500, 10, 9, 24);
+    this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.start('Prologue', { then }));
   }
 
   update(): void {
+    if (this.leaving) return;
     const nav = this.controls.navPressed();
     if (nav) {
       this.confirmingNew = false;
