@@ -1,6 +1,6 @@
 import { session } from './session';
 
-/** Aparência do aprendiz, escolhida no Novo jogo e trocável nas Opções. */
+/** Aparência do aprendiz, escolhida no Novo jogo e trocável nas Opções. A menina se chama Estela [FICÇÃO]. */
 export type Aparencia = 'menino' | 'menina';
 
 export function aparencia(): Aparencia {

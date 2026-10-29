@@ -199,7 +199,7 @@ LEGS_SIDE = {
 }
 
 
-# Aprendiz menina [FICÇÃO]: cabelo comprido caindo pelos ombros (de frente), pelas costas
+# Aprendiz menina, a Estela [FICÇÃO]: roupas em tons claros, cabelo comprido caindo pelos ombros (de frente), pelas costas
 # (de trás) e num rabo de cavalo (de lado), laço rosa no chapéu e a barra do manto mais rodada.
 def with_row(rows, i, row):
     return rows[:i] + [row] + rows[i + 1:]
@@ -242,6 +242,8 @@ def player_frame(head, body, legs, bob):
 
 
 def render_player(name, robe, menina=False):
+    if menina:
+        robe = mix(robe, (255, 255, 255), 0.42)  # roupas da Estela em tons mais claros que as do menino
     pal = {**BASE_PAL, **robe_pal(robe), **(MENINA_PAL if menina else {})}
     seq = [("stand", 0), ("stand", 1), ("l", 0), ("mid", 1), ("r", 0), ("mid", 1)]
     sheet = Image.new("RGBA", (96, 72), (0, 0, 0, 0))
