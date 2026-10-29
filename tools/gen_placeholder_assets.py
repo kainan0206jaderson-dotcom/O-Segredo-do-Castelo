@@ -1517,7 +1517,8 @@ def build_room(name, title, w, h, doors, tables=(), carpet=None, windows=(), ban
             obj(name=f"porta-{arrive}", type="door", x=xx * 16, y=pos * 16, width=16, height=32,
                 properties=[{"name": "target", "type": "string", "value": target},
                             {"name": "spawn", "type": "string", "value": target_spawn}] + more)
-            sx = w - 3 if side == "L" else 2
+            # chega logo na soleira, longe de mesas e bancos encostados na parede
+            sx = w - 2 if side == "L" else 1
             obj(name=arrive, type="spawn", x=sx * 16 + 8, y=(pos + 1) * 16 + 8, point=True,
                 properties=[{"name": "facing", "type": "string", "value": "side"}])
 
@@ -1639,7 +1640,7 @@ build_room("grande-salao", "Grande Salão", 28, 18,
            extra=[pt("npc", "fuxico", 14, 13, sprite="npc.fuxico", dialogue="fuxico", wall=False),
                   pt("levitavel", "calice-1", 2, 16, kind="calice", sprite="prop.calice"),
                   pt("levitavel", "calice-2", 25, 16, kind="calice", sprite="prop.calice"),
-                  pt("levitavel", "calice-3", 26, 9, kind="calice", sprite="prop.calice"),
+                  pt("levitavel", "calice-3", 25, 4, kind="calice", sprite="prop.calice"),
                   *[pt("socket", f"bandeja-{i + 1}", 5 + i * 2, 4, accepts="calice", mode="levitar", group="corrida", sprite="prop.bandeja") for i in range(3)],
                   zone("trigger", "morgana-salao", 1, 5, 3, 10, dialogue="salao-morgana", actor="npc.morgana", ax=104, ay=88,
                        when=ALL(QA("o-selo"), NOT(FL("visto:morgana-salao"))))])
@@ -1867,7 +1868,7 @@ build_room("coracao", "Coração do Castelo", 24, 16,
            extra=[pt("npc", "coracao", 11, 3, x=12 * 16, sprite="npc.coracao", dialogue="coracao", wall=False, wide=True),
                   pt("boss", "morgana", 12, 8, x=12 * 16, sprite="npc.morgana", when=NOT(CONVENCIDA)),
                   *[pt("boss-spot", f"ponto-{i + 1}", bx, by) for i, (bx, by) in enumerate([(6, 6), (18, 6), (6, 11), (18, 11)])],
-                  zone("trigger", "duelo", 2, 5, 3, 6, dialogue="morgana-duelo", when=NOT(FL("visto:morgana-duelo"))),
+                  zone("trigger", "duelo", 1, 5, 4, 6, dialogue="morgana-duelo", when=NOT(FL("visto:morgana-duelo"))),
                   pt("npc", "morgana-npc", 15, 7, sprite="npc.morgana", dialogue="morgana-final", wall=False, when=CONVENCIDA),
                   pt("npc", "amelia", 8, 7, sprite="npc.amelia", dialogue="amelia", wall=False, when=ALL(RESGATADA, CONVENCIDA)),
                   pt("npc", "aristoteles", 8, 10, sprite="npc.aristoteles", dialogue="aristoteles", wall=False, when=CONVENCIDA),

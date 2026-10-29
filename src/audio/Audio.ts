@@ -11,7 +11,10 @@ export type Sfx =
   | 'pegar' | 'missao' | 'nivel' | 'dano' | 'acerto' | 'espanto' | 'orbe' | 'enigma'
   | 'vitoria' | 'derrota' | 'desmaio' | 'coracao' | 'pocao' | 'erro';
 
-export type Track = 'titulo' | 'castelo' | 'biblioteca' | 'quadros' | 'duelo' | 'final';
+export type Track = 'titulo' | 'castelo' | 'lareira' | 'corredores' | 'ninar' | 'biblioteca' | 'quadros' | 'duelo' | 'final';
+
+/** Músicas de passear pelo castelo: revezam sozinhas, em ordem meio aleatória. */
+export const CASTELO_LISTA: Track[] = ['castelo', 'lareira', 'corredores', 'ninar'];
 
 type Wave = OscillatorType;
 
@@ -72,6 +75,37 @@ export const SONGS: Record<Track, Song> = {
       { inst: 'cordas', vol: 0.035, notes: holds('G3 A3 G3 E3 C4 A3 D4 G3', 6) },
     ],
   },
+  // castelo: perto da lareira, valsa lenta em fá maior com flauta e harpa
+  lareira: {
+    bpm: 92,
+    channels: [
+      { inst: 'flauta', vol: 0.08, notes: 'A4 . . G4 A4 C5 D5 . . C5 A4 . A#4 . . A4 G4 F4 G4 . . . . - A4 . . G4 A4 C5 E5 . . D5 C5 . D5 . C5 . A#4 G4 F4 . . . . -' },
+      { inst: 'harpa', vol: 0.1, notes: 'F2 C3 F3 A3 C4 A3 D2 A2 D3 F3 A3 F3 A#2 F3 A#3 D4 F4 D4 C3 G3 C4 E4 G4 E4 F2 C3 F3 A3 C4 A3 A2 E3 A3 C4 E4 C4 A#2 F3 D4 C3 G3 E4 F2 C3 F3 A3 F3 C3' },
+      { inst: 'celesta', vol: 0.05, notes: `${rep('-', 48)} F5 . . . . . A5 . . . . . G5 . . . . . E5 . . . . . F5 . . . . . C6 . . . . . A#5 . . G5 . . F5 . . . . .` },
+      { inst: 'cordas', vol: 0.035, notes: holds('A3 A3 A#3 G3 A3 A3 A#3 A3', 6) },
+      { inst: 'sino', vol: 0.03, notes: `${rep('-', 45)} C6 - -` },
+    ],
+  },
+  // castelo: passeio pelos corredores, ré maior em 4/4 tranquilo
+  corredores: {
+    bpm: 100,
+    channels: [
+      { inst: 'celesta', vol: 0.12, notes: 'F#5 . E5 D5 . . A4 . B4 . C#5 D5 . . F#5 . G5 . F#5 E5 . . D5 . E5 . . . . . - - F#5 . E5 D5 . . A5 . A5 . F#5 E5 . . C#5 . B4 . D5 . C#5 . E5 . D5 . . . . . - -' },
+      { inst: 'harpa', vol: 0.1, notes: 'D3 A3 D4 F#4 A4 F#4 D4 A3 B2 F#3 B3 D4 F#4 D4 B3 F#3 G2 D3 G3 B3 D4 B3 G3 D3 A2 E3 A3 C#4 E4 C#4 A3 E3 D3 A3 D4 F#4 A4 F#4 D4 A3 F#2 C#3 F#3 A3 C#4 A3 F#3 C#3 G2 D3 G3 B3 A2 E3 A3 C#4 D3 A3 D4 F#4 A4 - - -' },
+      { inst: 'flauta', vol: 0.055, notes: `${rep('-', 64)} ${holds('A5 F#5 G5 E5 F#5 C#6', 8)} B5 . . . A5 . . . ${hold('D6', 8)}` },
+      { inst: 'cordas', vol: 0.035, notes: holds('A3 B3 B3 C#4 A3 A3 B3 A3', 8) },
+    ],
+  },
+  // castelo: canção de ninar de caixinha de música, dó maior em 6/8 bem calmo
+  ninar: {
+    bpm: 80,
+    channels: [
+      { inst: 'celesta', vol: 0.13, notes: 'E5 . . D5 . C5 A4 . . C5 . E5 F5 . . E5 . D5 D5 . . . . - E5 . . D5 . C5 B4 . . G4 . B4 A4 . C5 . B4 D5 C5 . . . . -' },
+      { inst: 'harpa', vol: 0.09, notes: 'C3 G3 C4 G3 E4 G3 A2 E3 A3 E3 C4 E3 F2 C3 F3 C3 A3 C3 G2 D3 G3 D3 B3 D3 C3 G3 C4 G3 E4 G3 E2 B2 E3 B2 G3 B2 F2 C3 A3 G2 D3 B3 C3 G3 C4 G3 C4 -' },
+      { inst: 'coro', vol: 0.04, notes: holds('G3 A3 A3 B3 G3 G3 A3 G3', 6) },
+      { inst: 'sino', vol: 0.035, notes: `${rep('-', 21)} G6 ${rep('-', 26)}` },
+    ],
+  },
   // Ato 2: biblioteca calma e curiosa, lá menor com sexta maior (dórico), 4/4 lento
   biblioteca: {
     bpm: 84,
@@ -124,6 +158,9 @@ class AudioEngine {
   private musicBus?: GainNode;
   private noiseBuf?: AudioBuffer;
   private track?: Track;
+  /** Lista em revezamento (músicas do castelo) e quando trocar de faixa. */
+  private lista?: Track[];
+  private trocarEm = 0;
   private songGain?: GainNode;
   private step = 0;
   private nextAt = 0;
@@ -292,22 +329,37 @@ class AudioEngine {
   /** Troca a música (com fade). A mesma faixa de novo não recomeça. */
   /** Troca a música. Com restart, recomeça do início mesmo que já esteja tocando. */
   music(track: Track, restart = false): void {
+    this.lista = undefined;
     if (track === this.track && !restart) return;
     this.track = track;
     if (this.ctx) this.startSong();
   }
 
-  private startSong(): void {
+  /**
+   * Toca uma lista de músicas que se revezam: cada uma fica um minuto e pouco
+   * e, no fim de uma volta, passa para outra sorteada, com uma troca bem suave.
+   * Se já está tocando uma da lista, continua nela.
+   */
+  playlist(tracks: Track[]): void {
+    const same = this.lista && this.track && tracks.includes(this.track);
+    this.lista = tracks;
+    if (same) return;
+    this.track = sortear(tracks, this.track);
+    if (this.ctx) this.startSong();
+  }
+
+  private startSong(suave = false): void {
     const ctx = this.ctx!;
     const old = this.songGain;
     if (old) {
-      old.gain.setTargetAtTime(0.0001, ctx.currentTime, 0.25);
-      setTimeout(() => old.disconnect(), 1500);
+      old.gain.setTargetAtTime(0.0001, ctx.currentTime, suave ? 1.2 : 0.25);
+      setTimeout(() => old.disconnect(), suave ? 7000 : 1500);
     }
     const g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, ctx.currentTime);
     // instrumentos com ataque suave soam mais baixo que o chiptune antigo: ganho extra
-    g.gain.setTargetAtTime(2, ctx.currentTime, 0.12);
+    g.gain.setTargetAtTime(2, ctx.currentTime + (suave ? 1.5 : 0), suave ? 1 : 0.12);
+    this.trocarEm = ctx.currentTime + 70 + Math.random() * 40;
     g.connect(this.musicBus!);
     this.songGain = g;
     this.step = 0;
@@ -334,6 +386,12 @@ class AudioEngine {
       }
       this.step++;
       this.nextAt += stepS;
+      // fim de uma volta da música: na lista do castelo, pode ser hora de trocar
+      if (this.lista && this.step % songLength(song) === 0 && ctx.currentTime >= this.trocarEm) {
+        this.track = sortear(this.lista, this.track);
+        this.startSong(true);
+        return;
+      }
     }
   }
 
@@ -435,6 +493,17 @@ class AudioEngine {
     }
     for (const o of oscs) o.stop(end + 0.05);
   }
+}
+
+/** Passos de uma volta completa da música (o canal mais longo). */
+export function songLength(song: Song): number {
+  return Math.max(...song.channels.map((c) => parseChannel(c.notes).length));
+}
+
+/** Sorteia uma faixa da lista, sem repetir a que está tocando. */
+export function sortear(tracks: Track[], atual?: Track): Track {
+  const outras = tracks.length > 1 ? tracks.filter((t) => t !== atual) : tracks;
+  return outras[Math.floor(Math.random() * outras.length)];
 }
 
 const parsed = new Map<string, string[]>();

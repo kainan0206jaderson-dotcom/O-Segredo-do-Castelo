@@ -59,3 +59,7 @@
   - Retrato próprio no diálogo e na ficha (hoje só o boneco do mapa muda).
   - Mais opções de visual (cor do cabelo e da pele) na mesma tela de escolha.
 - Tela de Visual: sombra da pele mais natural nos tons escuros (hoje puxa um pouco para o laranja) e mais penteados.
+- Portas e música do castelo:
+  - Mesas do Grande Salão ficam em frente às portas leste e oeste: o aprendiz chega na soleira e precisa contornar a mesa. Abrir um corredor de um tile entre a porta e a mesa, se o kainan achar apertado.
+  - Ao chegar numa sala, um "passinho" de entrada (animação andando 1 tile para dentro) em vez de só parar na porta.
+  - Músicas do castelo (castelo, lareira, corredores, ninar) revezam a cada 1 a 2 minutos; dá para fazer a escolha seguir a sala (lareira na cozinha, ninar à noite).
