@@ -28,7 +28,7 @@ import { CauldronScene } from './CauldronScene';
 import { GrimoireScene } from './GrimoireScene';
 import { GAME_HEIGHT, GAME_WIDTH, RENDER_ZOOM, TILE_SIZE } from '../config/game';
 import { shake, flash } from '../ui/fx';
-import { audio, type Sfx, type Track } from '../audio/Audio';
+import { audio, CASTELO_LISTA, type Sfx, type Track } from '../audio/Audio';
 import { Bark, pickLine } from '../ui/Bark';
 import { openChest, type LootTable } from '../systems/loot';
 import baus from '../../content/baus.json';
@@ -140,6 +140,8 @@ export class WorldScene extends Phaser.Scene {
   private regenMs = 0;
   private invulnerableUntil = 0;
   private knockUntil = 0;
+  /** Ao chegar por uma porta, o aprendiz fica parado na soleira um instante. */
+  private arriveUntil = 0;
   private windUntil = 0;
   private shieldUntil = 0;
   private shield?: Phaser.GameObjects.Arc;
@@ -181,6 +183,7 @@ export class WorldScene extends Phaser.Scene {
     this.actQueue = [];
     this.invulnerableUntil = 0;
     this.knockUntil = 0;
+    this.arriveUntil = data.spawn && !data.caught && !data.fainted ? this.game.loop.time + FADE_MS + 450 : 0;
     this.windUntil = 0;
     this.shieldUntil = 0;
     this.shield = undefined;
@@ -263,7 +266,9 @@ export class WorldScene extends Phaser.Scene {
     this.refreshPresence(false);
     this.showRoomName(prop(map.properties, 'nome') ?? '');
     this.cameras.main.fadeIn(FADE_MS, 24, 20, 42);
-    audio.music(trackFor(data.map, s.flags[BOSS_FLAG]));
+    const track = trackFor(data.map, s.flags[BOSS_FLAG]);
+    if (track === 'castelo') audio.playlist(CASTELO_LISTA);
+    else audio.music(track);
     if (data.fainted) audio.sfx('desmaio');
 
     // ao voltar do caldeirão, do grimório, de um tutorial ou do fim de ato
@@ -1551,7 +1556,7 @@ export class WorldScene extends Phaser.Scene {
     if (this.controls.mapPressed()) return this.openMap();
     if (this.controls.spellCyclePressed()) this.changeSpell();
 
-    const dir = this.controls.direction();
+    const dir = time < this.arriveUntil ? new Phaser.Math.Vector2() : this.controls.direction();
     if (time >= this.knockUntil) this.player.move(dir);
     else this.player.setDepth(this.player.y);
     if (dir.lengthSq() > 0) {
