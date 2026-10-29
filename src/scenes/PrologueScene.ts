@@ -5,6 +5,7 @@ import { session } from '../core/session';
 import { audio } from '../audio/Audio';
 import { COLORS, TEXT_RES, textStyle } from '../ui/theme';
 import { addLogo } from '../ui/logo';
+import { noGenero, playerSheet } from '../core/aparencia';
 import { flash, shake } from '../ui/fx';
 
 const W = GAME_WIDTH;
@@ -15,7 +16,8 @@ const NEAR_Y = H - 150 - 20;
 const STREET_Y = NEAR_Y + 122;
 const NEAR_W = 1640;
 const LOT_X = 1280;
-const KID = 'player.aprendiz';
+/** Folha do aprendiz (menino ou menina, conforme a escolha no Novo jogo). */
+const KID = (): string => playerSheet('player.aprendiz');
 
 interface PrologueData {
   /** De onde o prólogo foi aberto: no "Novo jogo" ele termina no castelo; no título, volta ao título. */
@@ -102,8 +104,8 @@ export class PrologueScene extends Phaser.Scene {
     const s = this.stage;
     const ox = (W - 640) / 2;
     s.add(this.add.image(ox, 0, 'prologo.quarto').setOrigin(0));
-    const kid = this.add.sprite(ox + 320, 198, KID).setOrigin(0.5, 1).setScale(2);
-    kid.play(AssetRegistry.animKey(KID, 'idle-up'));
+    const kid = this.add.sprite(ox + 320, 198, KID()).setOrigin(0.5, 1).setScale(2);
+    kid.play(AssetRegistry.animKey(KID(), 'idle-up'));
     s.add(kid);
     const star = this.add.image(ox + 262, 46, 'prologo.estrela').setAlpha(0);
     const glow = this.add.image(star.x, star.y, 'prologo.halo').setAlpha(0).setBlendMode(Phaser.BlendModes.ADD);
@@ -121,7 +123,7 @@ export class PrologueScene extends Phaser.Scene {
       audio.sfx('blip');
       await this.tween({ targets: star, y: 96, duration: 120, yoyo: true });
     }
-    kid.play(AssetRegistry.animKey(KID, 'idle-down'));
+    kid.play(AssetRegistry.animKey(KID(), 'idle-down'));
     const bang = this.add.text(kid.x, kid.y - 52, '!', textStyle(16, COLORS.gold, { stroke: '#18142a', strokeThickness: 3 }))
       .setOrigin(0.5, 1).setResolution(TEXT_RES);
     s.add(bang);
@@ -133,7 +135,7 @@ export class PrologueScene extends Phaser.Scene {
     audio.sfx('revelar');
     await this.tween({ targets: star, x: kid.x + 40, y: kid.y - 40, duration: 900, ease: 'Sine.easeInOut' });
     await this.tween({ targets: star, x: kid.x - 40, y: kid.y - 60, duration: 700, ease: 'Sine.easeInOut' });
-    kid.play(AssetRegistry.animKey(KID, 'walk-side')).setFlipX(false);
+    kid.play(AssetRegistry.animKey(KID(), 'walk-side')).setFlipX(false);
     this.tweens.add({ targets: star, x: ox + 700, y: kid.y - 50, duration: 2200, ease: 'Sine.easeIn' });
     this.tweens.add({ targets: kid, x: ox + 640, duration: 3200, delay: 500 });
     await this.say('E ela queria ser seguida.', 3000);
@@ -150,7 +152,7 @@ export class PrologueScene extends Phaser.Scene {
     const asphalt = this.add.rectangle(0, NEAR_Y + 150, W, H - NEAR_Y - 150, 0x221e2e).setOrigin(0);
     const castle = this.add.image(0, STREET_Y - 2, 'prologo.castelo').setOrigin(0.5, 1).setAlpha(0);
     const near = this.add.image(0, NEAR_Y, 'prologo.cidade-perto').setOrigin(0);
-    const kid = this.add.sprite(W * 0.35, STREET_Y + 3, KID).setOrigin(0.5, 1);
+    const kid = this.add.sprite(W * 0.35, STREET_Y + 3, KID()).setOrigin(0.5, 1);
     const star = this.add.image(W * 0.55, STREET_Y - 30, 'prologo.estrela');
     const glow = this.add.image(star.x, star.y, 'prologo.halo').setBlendMode(Phaser.BlendModes.ADD).setAlpha(0.8);
     const trail = this.add.particles(0, 0, 'prologo.brilho', {
@@ -166,7 +168,7 @@ export class PrologueScene extends Phaser.Scene {
     place();
     this.events.on('update', place);
     this.tweens.add({ targets: star, y: star.y - 6, duration: 600, yoyo: true, repeat: -1, ease: 'Sine.easeInOut' });
-    kid.play(AssetRegistry.animKey(KID, 'walk-side'));
+    kid.play(AssetRegistry.animKey(KID(), 'walk-side'));
     this.cameras.main.fadeIn(900, 10, 9, 24);
 
     // caminhada: a cidade passa até o terreno vazio aparecer
@@ -174,7 +176,7 @@ export class PrologueScene extends Phaser.Scene {
     this.tweens.add({ targets: scroll, x: endScroll, duration: 11000, ease: 'Sine.easeInOut' });
     await this.say('Ruas, esquinas, postes piscando... e a estrela sem parar nem um segundo.', 5200);
     await this.say('Até um terreno vazio, desses em que ninguém nunca repara.', 5600);
-    kid.play(AssetRegistry.animKey(KID, 'idle-side'));
+    kid.play(AssetRegistry.animKey(KID(), 'idle-side'));
     this.hideCaption();
 
     // a revelação
@@ -231,10 +233,10 @@ export class PrologueScene extends Phaser.Scene {
     audio.music('castelo');
     await this.zoomStage(1, W / 2, H / 2, 1400);
     this.hideCaption();
-    kid.play(AssetRegistry.animKey(KID, 'walk-side'));
+    kid.play(AssetRegistry.animKey(KID(), 'walk-side'));
     const gateX = left + 120;
     await this.tween({ targets: kid, x: gateX - 26, duration: Math.max(600, (gateX - 26 - kid.x) * 22) });
-    kid.play(AssetRegistry.animKey(KID, 'idle-side'));
+    kid.play(AssetRegistry.animKey(KID(), 'idle-side'));
     const door = this.add.rectangle(left + 108, top + 178, 24, 26, 0xf6d27a).setOrigin(0).setAlpha(0);
     const trinco = this.add.sprite(gateX + 4, top + 204, 'npc.trinco').setOrigin(0.5, 1).setAlpha(0);
     trinco.play(AssetRegistry.animKey('npc.trinco', 'talk'));
@@ -243,7 +245,7 @@ export class PrologueScene extends Phaser.Scene {
     audio.sfx('porta');
     await this.tween({ targets: door, alpha: 0.9, duration: 600 });
     this.tweens.add({ targets: trinco, alpha: 1, x: gateX + 10, duration: 400 });
-    const bubble = this.add.text(gateX + 10, STREET_Y - 30, 'Opa, opa! Um aprendiz novo?', textStyle(8, '#18142a', {
+    const bubble = this.add.text(gateX + 10, STREET_Y - 30, noGenero('Opa, opa! Um aprendiz novo?'), textStyle(8, '#18142a', {
       backgroundColor: '#f0e8f8', padding: { left: 4, right: 4, top: 2, bottom: 2 },
     })).setOrigin(0.5, 1).setResolution(TEXT_RES);
     s.add(bubble);
@@ -251,7 +253,7 @@ export class PrologueScene extends Phaser.Scene {
     await this.say('Bem-vindo ao Castelo Magia & Bruxaria. A sua primeira noite vai ser... inesquecível.', 5000);
     bubble.destroy();
     trinco.play(AssetRegistry.animKey('npc.trinco', 'idle'));
-    kid.play(AssetRegistry.animKey(KID, 'walk-side'));
+    kid.play(AssetRegistry.animKey(KID(), 'walk-side'));
     this.tweens.add({ targets: kid, x: gateX, alpha: 0, duration: 900 });
     this.tweens.add({ targets: trinco, alpha: 0, duration: 900, delay: 300 });
     await this.fadeTo(1100);
@@ -288,6 +290,7 @@ export class PrologueScene extends Phaser.Scene {
     if (this.done) return;
     this.captionBg.setAlpha(1);
     this.caption.setText('');
+    text = noGenero(text);
     const per = Math.min(28, (ms * 0.45) / text.length);
     for (let i = 1; i <= text.length; i++) {
       this.time.delayedCall(i * per, () => this.caption.setText(text.slice(0, i)));

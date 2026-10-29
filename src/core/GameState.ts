@@ -33,6 +33,8 @@ export interface GameState {
   vida: number;
   energia: number;
   equipment: { capa?: string; amuleto?: string };
+  /** Aprendiz menino ou menina (saves antigos não têm: contam como menino). */
+  aparencia?: 'menino' | 'menina';
   playTimeMs: number;
 }
 

@@ -5,6 +5,8 @@ import { GAME_HEIGHT, GAME_WIDTH } from '../config/game';
 import { COLORS, TEXT_RES, textStyle } from '../ui/theme';
 import { audio } from '../audio/Audio';
 import { addLogo } from '../ui/logo';
+import { AssetRegistry } from '../core/AssetRegistry';
+import type { Aparencia } from '../core/aparencia';
 
 /** Tela inicial: Continuar (se houver jogo salvo) ou Novo jogo. */
 export class TitleScene extends Phaser.Scene {
@@ -14,6 +16,8 @@ export class TitleScene extends Phaser.Scene {
   private controls!: InputManager;
   private confirmingNew = false;
   private leaving = false;
+  /** Escolha do aprendiz (menino ou menina) aberta no Novo jogo. */
+  private chooser?: { look: Aparencia; parts: Phaser.GameObjects.GameObject[]; labels: Phaser.GameObjects.Text[]; kids: Phaser.GameObjects.Sprite[] };
 
   constructor() {
     super('Title');
@@ -22,6 +26,7 @@ export class TitleScene extends Phaser.Scene {
   create(): void {
     this.confirmingNew = false;
     this.leaving = false;
+    this.chooser = undefined;
     // céu do prólogo descido, para a lua ficar ao lado do menu e não atrás do letreiro;
     // em cima, a cor do topo do céu com estrelinhas piscando
     this.cameras.main.setBackgroundColor('#0b0a20');
@@ -86,7 +91,51 @@ export class TitleScene extends Phaser.Scene {
       return;
     }
     audio.sfx('confirmar');
+    this.openChooser();
+  }
+
+  /** "Quem é você?": aprendiz menino ou menina, lado a lado. */
+  private openChooser(): void {
+    this.texts.forEach((t) => t.setVisible(false));
+    const looks: Aparencia[] = ['menino', 'menina'];
+    const title = this.add.text(GAME_WIDTH / 2, 112, 'Quem é você?', textStyle(13, COLORS.text)).setOrigin(0.5).setResolution(TEXT_RES);
+    const parts: Phaser.GameObjects.GameObject[] = [title];
+    const kids: Phaser.GameObjects.Sprite[] = [];
+    const labels: Phaser.GameObjects.Text[] = [];
+    looks.forEach((look, i) => {
+      const x = GAME_WIDTH / 2 + (i === 0 ? -60 : 60);
+      const sheet = look === 'menina' ? 'player.aprendiza' : 'player.aprendiz';
+      const kid = this.add.sprite(x, 206, sheet).setOrigin(0.5, 1).setScale(3)
+        .setInteractive({ useHandCursor: true })
+        .on('pointerover', () => this.pickLook(look))
+        .on('pointerdown', () => { this.pickLook(look); this.confirmLook(); });
+      kid.play(AssetRegistry.animKey(sheet, 'idle-down'));
+      const label = this.add.text(x, 214, look === 'menina' ? 'Estela' : 'Menino', textStyle(11, COLORS.text)).setOrigin(0.5, 0).setResolution(TEXT_RES);
+      kids.push(kid);
+      labels.push(label);
+      parts.push(kid, label);
+    });
+    this.chooser = { look: 'menino', parts, labels, kids };
+    this.pickLook('menino', true);
+  }
+
+  private pickLook(look: Aparencia, silent = false): void {
+    const c = this.chooser;
+    if (!c) return;
+    if (look !== c.look && !silent) audio.sfx('blip');
+    c.look = look;
+    const i = look === 'menina' ? 1 : 0;
+    c.labels.forEach((t, j) => t.setColor(j === i ? COLORS.gold : COLORS.muted).setText(`${j === i ? '▸ ' : ''}${j === 1 ? 'Estela' : 'Menino'}${j === i ? ' ◂' : ''}`));
+    c.kids.forEach((k, j) => k.setAlpha(j === i ? 1 : 0.55));
+  }
+
+  private confirmLook(): void {
+    const c = this.chooser;
+    if (!c || this.leaving) return;
+    audio.sfx('confirmar');
     session.startNew();
+    session.state.aparencia = c.look;
+    session.save();
     this.toPrologue('jogo');
   }
 
@@ -100,6 +149,12 @@ export class TitleScene extends Phaser.Scene {
 
   update(): void {
     if (this.leaving) return;
+    if (this.chooser) {
+      const dir = this.controls.navPressed() || this.controls.navHPressed();
+      if (dir) this.pickLook(this.chooser.look === 'menino' ? 'menina' : 'menino');
+      if (this.controls.actionPressed()) this.confirmLook();
+      return;
+    }
     const nav = this.controls.navPressed();
     if (nav) {
       this.confirmingNew = false;

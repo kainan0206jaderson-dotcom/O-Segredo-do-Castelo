@@ -55,3 +55,6 @@
   - Aprendiz com o visual escolhido pelo jogador (hoje é sempre o mesmo).
   - Dragão do topo do castelo: soltar uma fumacinha ou faísca pela boca aberta de vez em quando.
   - Letreiro da tela inicial: placa balançando de leve e lampadinhas com padrões diferentes (corrida, piscar tudo).
+- Aprendiz menina:
+  - Retrato próprio no diálogo e na ficha (hoje só o boneco do mapa muda).
+  - Mais opções de visual (cor do cabelo e da pele) na mesma tela de escolha.
