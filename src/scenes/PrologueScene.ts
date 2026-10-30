@@ -135,9 +135,16 @@ export class PrologueScene extends Phaser.Scene {
     audio.sfx('revelar');
     await this.tween({ targets: star, x: kid.x + 40, y: kid.y - 40, duration: 900, ease: 'Sine.easeInOut' });
     await this.tween({ targets: star, x: kid.x - 40, y: kid.y - 60, duration: 700, ease: 'Sine.easeInOut' });
-    kid.play(AssetRegistry.animKey(KID(), 'walk-side')).setFlipX(false);
-    this.tweens.add({ targets: star, x: ox + 700, y: kid.y - 50, duration: 2200, ease: 'Sine.easeIn' });
-    this.tweens.add({ targets: kid, x: ox + 640, duration: 3200, delay: 500 });
+    this.tweens.add({ targets: star, x: ox + 700, y: kid.y - 20, duration: 2600, ease: 'Sine.easeIn' });
+    // o aprendiz desce para a frente do quarto antes de ir para a direita, para passar na frente da cama, e não por dentro dela
+    kid.play(AssetRegistry.animKey(KID(), 'walk-down'));
+    this.tweens.add({
+      targets: kid, y: 230, duration: 600,
+      onComplete: () => {
+        kid.play(AssetRegistry.animKey(KID(), 'walk-side')).setFlipX(false);
+        this.tweens.add({ targets: kid, x: ox + 680, duration: 2800 });
+      },
+    });
     await this.say('E ela queria ser seguida.', 3000);
     this.events.off('update', follow);
     await this.fadeTo(800);
