@@ -12,12 +12,12 @@
       "next": "b"
     },
     "b": {
-      "speaker": "Morgana (voz)",
+      "speaker": "Bellatrix (voz)",
       "text": "Então você quebrou o primeiro selo. Que fofo.",
       "next": "c"
     },
     "c": {
-      "speaker": "Morgana (voz)",
+      "speaker": "Bellatrix (voz)",
       "text": "Lá em cima, os professores não vão te ajudar tão fácil. E o ministro... bom, ele está muito bem guardado.",
       "effects": [
         {

@@ -17,11 +17,11 @@
       "next": "c"
     },
     "c": {
-      "text": "Morgana?! Você não devia estar aqui. Ninguém sobe aquela escada sem permissão!",
+      "text": "Bellatrix?! Você não devia estar aqui. Ninguém sobe aquela escada sem permissão!",
       "next": "d"
     },
     "d": {
-      "speaker": "Morgana Cinzel",
+      "speaker": "Bellatrix Lestrelle",
       "text": "E você não devia abrir as portas do castelo para qualquer um. Vamos ver se ele ainda te obedece...",
       "next": "e"
     },
@@ -40,7 +40,7 @@
       ]
     },
     "f": {
-      "speaker": "Morgana Cinzel",
+      "speaker": "Bellatrix Lestrelle",
       "text": "Quatro pedras, quatro mesas, um selo. Boa sorte, aprendiz. Vai precisar.",
       "effects": [
         {

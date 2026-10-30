@@ -208,7 +208,7 @@ def castle(w=240, h=210):
         cone(tx + 20, 70, 24, 40)
         window(tx + 17, 92, big=True)
         window(tx + 17, 132)
-    # torre central alta (a da Morgana)
+    # torre central alta (a da Bellatrix)
     wall(100, 46, 139, 96)
     battlement(100, 140, 46)  # topo reto: é ali que o dragão fica
     window(116, 56, big=True)  # a janela da torre

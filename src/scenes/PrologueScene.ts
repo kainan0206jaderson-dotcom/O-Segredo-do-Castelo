@@ -27,7 +27,7 @@ interface PrologueData {
 /**
  * Prólogo animado [FICÇÃO]: a lenda do castelo escondido em São Paulo, o aprendiz no
  * quarto, a Estrela Perdida que bate na janela, a caminhada pela cidade, o castelo
- * aparecendo no terreno vazio, a Morgana na torre e o Trinco abrindo o portão.
+ * aparecendo no terreno vazio, a Bellatrix na torre e o Trinco abrindo o portão.
  * Tudo com tweens sobre cenários em pixel art; dá para pular a qualquer momento.
  */
 export class PrologueScene extends Phaser.Scene {
@@ -143,7 +143,7 @@ export class PrologueScene extends Phaser.Scene {
     await this.fadeTo(800);
   }
 
-  /** 3 a 6. A cidade, o terreno vazio, o castelo surgindo, a Morgana na torre e o Trinco no portão. */
+  /** 3 a 6. A cidade, o terreno vazio, o castelo surgindo, a Bellatrix na torre e o Trinco no portão. */
   private async city(): Promise<void> {
     const s = this.stage;
     const scroll = { x: 0 };

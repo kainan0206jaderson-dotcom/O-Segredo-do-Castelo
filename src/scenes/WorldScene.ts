@@ -78,7 +78,7 @@ interface Trigger {
 /** Ampliação extra do mundo em relação ao HUD. */
 const WORLD_SCALE = 1.25;
 const FADE_MS = 220;
-/** Modo Kids: dica depois de um tempo sem avançar, ampulhetas mais longas, olhos e Morgana mais lentos. */
+/** Modo Kids: dica depois de um tempo sem avançar, ampulhetas mais longas, olhos e Bellatrix mais lentos. */
 const KIDS_HINT_MS = 30000;
 const KIDS_TIME = 1.5;
 const KIDS_SENTINEL = 0.6;
@@ -726,7 +726,7 @@ export class WorldScene extends Phaser.Scene {
       c.setPresent(on);
       if (on && animate) this.puff(c.x, c.y - 6);
     }
-    // Morgana convencida sai do duelo
+    // Bellatrix convencida sai do duelo
     if (this.boss && this.boss.phase === 'parada' && !check(this.bossWhen, s)) {
       this.puff(this.boss.x, this.boss.y - 12);
       this.boss.destroy();
@@ -1142,7 +1142,7 @@ export class WorldScene extends Phaser.Scene {
     if (spell.target === 'oculto') return this.reveal();
     if (spell.target === 'trancado') return this.castOpen(at);
 
-    // luz espanta sombrinhas e espectros, acerta a Morgana e faz a mandrágora crescer
+    // luz espanta sombrinhas e espectros, acerta a Bellatrix e faz a mandrágora crescer
     if (spellId === 'lumen' || spellId === 'fogos-bruxos') {
       const now = this.time.now;
       const boss = this.boss;
@@ -1283,7 +1283,7 @@ export class WorldScene extends Phaser.Scene {
     this.afterStateChange();
   }
 
-  // ---------- duelo com a Morgana
+  // ---------- duelo com a Bellatrix
 
   private fireOrb(x: number, y: number, tx: number, ty: number): void {
     audio.sfx('orbe');
@@ -1342,7 +1342,7 @@ export class WorldScene extends Phaser.Scene {
   private refreshBossBar(): void {
     const b = this.boss;
     if (!b || !b.active || b.phase === 'parada') return this.hud.setBoss(undefined);
-    this.hud.setBoss({ name: `Morgana Cinzel (${b.phase === 'fase1' ? '1' : '2'}/2)`, frac: b.hp / b.maxHp });
+    this.hud.setBoss({ name: `Bellatrix Lestrelle (${b.phase === 'fase1' ? '1' : '2'}/2)`, frac: b.hp / b.maxHp });
   }
 
   private touchCreature(c: Creature): void {
@@ -1497,7 +1497,7 @@ export class WorldScene extends Phaser.Scene {
       delete session.state.flags[START_CHALLENGE_FLAG];
       this.startChallenge(start);
     }
-    // diálogos do duelo pedem a próxima fase da Morgana
+    // diálogos do duelo pedem a próxima fase da Bellatrix
     const phase = session.state.flags[BOSS_START_FLAG];
     if (phase === 'fase1' || phase === 'fase2') {
       delete session.state.flags[BOSS_START_FLAG];
@@ -1508,7 +1508,7 @@ export class WorldScene extends Phaser.Scene {
     this.afterStateChange();
   }
 
-  /** Sentinelas, raio de luz, escuridão, escudo e Morgana. */
+  /** Sentinelas, raio de luz, escuridão, escudo e Bellatrix. */
   private updateExtras(time: number, delta: number): void {
     const p = this.player;
     for (const cp of this.checkpoints) if (cp.zone.contains(p.x, p.y - 4)) this.checkpoint = cp.spawn;

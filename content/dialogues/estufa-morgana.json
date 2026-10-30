@@ -1,6 +1,6 @@
 {
   "id": "estufa-morgana",
-  "speaker": "Morgana Cinzel",
+  "speaker": "Bellatrix Lestrelle",
   "entries": [
     {
       "start": "a"
@@ -9,16 +9,16 @@
   "nodes": {
     "a": {
       "text": "Plantinhas! Que lindo. Seria uma pena se ficassem... no escuro.",
-      "speaker": "Morgana Cinzel",
+      "speaker": "Bellatrix Lestrelle",
       "next": "a-2"
     },
     "a-2": {
       "text": "Procurando cartinhas velhas, aprendiz? Papel queima rapidinho, sabia?",
-      "speaker": "Morgana Cinzel",
+      "speaker": "Bellatrix Lestrelle",
       "next": "a-3"
     },
     "a-3": {
-      "text": "A Morgana estala os dedos e some numa nuvem cinza. Sombrinhas surgem entre os canteiros!",
+      "text": "A Bellatrix estala os dedos e some numa nuvem cinza. Sombrinhas surgem entre os canteiros!",
       "speaker": "✦",
       "effects": [
         {

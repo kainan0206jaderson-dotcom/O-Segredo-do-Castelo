@@ -19,7 +19,7 @@ const TIRED_MS = 2800;
 const INVISIBLE_ALPHA = 0.06;
 
 /**
- * Morgana no duelo final. Fase 1: atira orbes e cansa depois de alguns
+ * Bellatrix no duelo final. Fase 1: atira orbes e cansa depois de alguns
  * disparos (é a hora de acertar). Fase 2: fica invisível; Revelar mostra onde ela está.
  */
 export class Boss extends Phaser.GameObjects.Sprite {

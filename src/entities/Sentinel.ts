@@ -6,7 +6,7 @@ const HALF_ANGLE = Phaser.Math.DegToRad(28);
 const PAUSE_MS = 700;
 
 /**
- * Olho-sentinela da Morgana: patrulha em linha reta, vai e volta, e enxerga
+ * Olho-sentinela da Bellatrix: patrulha em linha reta, vai e volta, e enxerga
  * num cone à frente. Quem entra no cone é visto.
  */
 export class Sentinel extends Phaser.GameObjects.Sprite {

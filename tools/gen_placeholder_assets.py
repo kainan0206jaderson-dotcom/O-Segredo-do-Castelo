@@ -498,7 +498,7 @@ for f in range(5):
 fw.save(os.path.join(ROOT, "fx", "fogos.png"))
 
 # ====================================================================
-# ATO 1 (etapa 4): capas, Arquimedes, Morgana, Fuxico, Dama do Chá,
+# ATO 1 (etapa 4): capas, Arquimedes, Bellatrix, Fuxico, Dama do Chá,
 # sombrinhas, objetos de enigma, efeitos e ícones novos.
 # ====================================================================
 MANIFEST_PATH = os.path.join(ROOT, "manifest.json")
@@ -661,7 +661,7 @@ def aristoteles(bob, mouth):
 strip([aristoteles(0, False), aristoteles(1, False), aristoteles(0, True), aristoteles(0, False)], 16, 24).save(os.path.join(ROOT, "sprites", "aristoteles.png"))
 sheet_entry("npc.aristoteles", "sprites/aristoteles.png", 16, 24, IDLE_TALK)
 
-# ---------- Morgana Cinzel [FICÇÃO]: capuz cinza-fuligem, mecha prateada, olhos violeta
+# ---------- Bellatrix Lestrelle [FICÇÃO]: capuz cinza-fuligem, mecha prateada, olhos violeta
 P.update({"i": (52, 48, 60), "I": (84, 80, 96), "t": (30, 28, 38), "l": (200, 200, 214), "m": (170, 110, 220), "n": (232, 220, 226)})
 def morgana(bob, mouth):
     rows = [
@@ -1084,7 +1084,7 @@ def espectro(bob, hit=False):
 save_strip([espectro(0), espectro(1), espectro(0), espectro(-1), espectro(0, True)], "npc.espectro", "sprites/espectro.png",
            {"idle": {"frames": [0, 1, 2, 3], "frameRate": 5, "repeat": -1}, "hit": {"frames": [4], "frameRate": 1, "repeat": 0}})
 
-# Olho-sentinela da Morgana [FICÇÃO] (16x16): olho voador com asinhas; 2 quadros + piscada
+# Olho-sentinela da Bellatrix [FICÇÃO] (16x16): olho voador com asinhas; 2 quadros + piscada
 def olho(flap, blink=False):
     im = canvas(16, 16)
     d = ImageDraw.Draw(im)
@@ -1101,7 +1101,7 @@ def olho(flap, blink=False):
 save_strip([olho(0), olho(2), olho(0, True)], "npc.olho", "sprites/olho.png",
            {"idle": {"frames": [0, 1], "frameRate": 6, "repeat": -1}, "hit": {"frames": [2], "frameRate": 1, "repeat": 0}})
 
-# Orbe de fuligem (8x8), disparado pela Morgana
+# Orbe de fuligem (8x8), disparado pela Bellatrix
 def orbe(swap):
     im = canvas(8, 8)
     d = ImageDraw.Draw(im)
@@ -1608,7 +1608,9 @@ build_room("recepcao", "Recepção", 20, 13,
            tables=[(12, 6, 4, 1)],  # balcão da recepção, com o Trinco atrás
            props=[("prop.vela", 3, 4), ("prop.vela", 16, 4)],
            spawns=[("inicio", 9, 10)],
-           npcs=[("trinco", "npc.trinco", 13, 5, "trinco", False), ("mary", "npc.mary", 5, 7, "mary", False)],
+           npcs=[("trinco", "npc.trinco", 13, 5, "trinco", False), ("mary", "npc.mary", 5, 7, "mary", False),
+                 # mural com a lista oficial de professores [KAINAN]
+                 ("mural-professores", "prop.quadro-desafios", 7, 3, "mural-professores", True)],
            pickups=[("abobora-recepcao", "abobora", 3, 10)])
 
 # Grande Salão: as quatro mesas das casas, com toalha da casa e bancos; sul = Recepção, leste = Cozinha
@@ -1759,7 +1761,7 @@ build_room("sala-espectral", "Aula de Criaturas Espectrais", 22, 14,
                   pt("pickup", "carta-3", 19, 11, y=11 * 16 + 12, item="carta-amelia-3", oculto=True, dialogue="carta-3",
                      when=FL("aula:vencida"))])
 
-# Estufa: canteiros de mandrágora, a Fada Ramalhete e uma visita rápida da Morgana
+# Estufa: canteiros de mandrágora, a Fada Ramalhete e uma visita rápida da Bellatrix
 build_room("estufa", "Estufa", 22, 14,
            doors=[("L", 6, "map.biblioteca", "da-estufa", "da-biblioteca")],
            floor_tile=GRASS, windows=(3, 7, 11, 15),
@@ -1860,7 +1862,7 @@ build_room("quadro-lealdade", "Quadro da Lealdade", 22, 14,
                     for i, (cx, cy) in enumerate([(4, 9), (18, 9), (11, 11)])],
                   zone("trigger", "intro-lealdade", 8, 10, 6, 3, dialogue="quadro-lealdade", when=NOT(FL("visto:quadro-lealdade")))])
 
-# Coração do Castelo: o duelo com a Morgana e o final
+# Coração do Castelo: o duelo com a Bellatrix e o final
 build_room("coracao", "Coração do Castelo", 24, 16,
            doors=[("O", 7, "map.galeria", "do-coracao", "da-galeria")],
            floor_tile=STARS, carpet=(10, 4, 13, 13),
