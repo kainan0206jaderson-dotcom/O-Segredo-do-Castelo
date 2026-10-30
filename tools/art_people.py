@@ -317,7 +317,7 @@ def npc_frames(rows, pal, mouth_at, mouth_open, w=16, h=24, bob_from=0):
     return [paint(r, pal, w, h) for r in (rows, breathe, talk, rows)]
 
 
-# Ministro da Magia Bartholomeu Bonfatt [KAINAN: nome e cargo; visual de mago com chapéu e sobretudo]
+# Ministro da Magia Baltazar Bonfatti [KAINAN: nome e cargo; visual de mago com chapéu e sobretudo]
 # [FICÇÃO: bigode grisalho, faixa dourada no chapéu, medalha do Ministério]
 BONFATT = [
     "..........kk....",
@@ -636,6 +636,97 @@ def render_npcs():
     save(strip(fr, 16, 24), "sprites/amelia.png")
 
 
+# ======================================================================= professores
+# Professores do castelo [KAINAN: nomes e matérias, em content/professores.json]. Silhueta de
+# chapéu pontudo e túnica; cada um com as cores da sua ficha [FICÇÃO].
+PROF_M = [
+    "..........kk....",
+    ".........kAk....",
+    "........kaAk....",
+    ".......kzaAk....",
+    "......kzaaAk....",
+    ".....kzaaaaAk...",
+    "....kGGGGGGGGk..",
+    "..kkzzzzzzzzzzkk",
+    "...khhsssssshk..",
+    "...khseSsSeshk..",
+    "...khsssssssshk.",
+    "...khsssmssshk..",
+    "....khssssshk...",
+    "...kRrRcccRrRk..",
+    "..kRrrRwGwRrrRk.",
+    "..kRrrRwgwRrrRk.",
+    "..ksRrRwwwRrRsk.",
+    "..kSkRrRGRrRkSk.",
+    "...kRrrRwRrrRk..",
+    "...kRrrRGRrrRk..",
+    "...kQRrrRrrRQk..",
+    "....kQQQQQQQk...",
+    "....kNk...kNk...",
+    "....kkk...kkk...",
+]
+PROF_M[10] = "...khssssssshk.."
+PROF_BARBA = {11: "...khhhhmhhhhk..", 12: "....khhhhhhhk..."}
+PROF_F = [
+    "..........kk....",
+    ".........kAk....",
+    "........kaAk....",
+    ".......kzaAk....",
+    "......kzaaAk....",
+    ".....kzaaaaAk...",
+    "....kGGGGGGGGk..",
+    "..kkzzzzzzzzzzkk",
+    "...khhsssssshhk.",
+    "...khseSsSeshhk.",
+    "...khssssssshhk.",
+    "...khsssmssshhk.",
+    "...khhsssssshhk.",
+    "..khhRrRcccRrhhk",
+    "..khhrrRwGwRrhhk",
+    "..khkrrRwgwRrkhk",
+    "..ksRrrRwwwRrRsk",
+    "..kSkRrRGRrRkSk.",
+    "...kRrrRwRrrRk..",
+    "...kRrrRGRrrRk..",
+    "...kQRrrRrrRQk..",
+    "...kQQQQQQQQQk..",
+    "....kNk...kNk...",
+    "....kkk...kkk...",
+]
+
+
+def prof_pal(p):
+    hat, robe, hair = ramp(tuple(p["chapeu"])), ramp(tuple(p["roupa"])), ramp(tuple(p["cabelo"]))
+    pal = {
+        **skin_pal(tuple(p["pele"])),
+        "a": hat[2], "A": hat[3], "z": hat[1], "G": (230, 186, 70), "g": (255, 236, 150),
+        "h": hair[2], "e": (40, 30, 52), "w": (240, 236, 246), "c": mix(hair[3], (240, 236, 246), 0.5),
+        "R": robe[2], "r": robe[1], "Q": robe[0], "N": (60, 44, 40),
+    }
+    if p.get("fantasma"):
+        pal = {k: tuple(v[:3]) + (200,) for k, v in pal.items()}
+        pal["e"] = (30, 36, 70, 255)
+    return pal
+
+
+def render_professores():
+    with open(os.path.join(os.path.dirname(__file__), "..", "content", "professores.json"), encoding="utf-8") as f:
+        lista = json.load(f)["lista"]
+    for p in lista:
+        rows = list(PROF_F if p["sexo"] == "f" else PROF_M)
+        if p.get("barba"):
+            for i, r in PROF_BARBA.items():
+                rows[i] = r
+        pal = prof_pal(p)
+        if p.get("fantasma"):
+            talk = with_mouth(rows, 11, 8, "e")
+            frames = [paint(r, pal, 16, 24, False) for r in (rows, shift_down(rows, 1), talk, rows)]
+        else:
+            frames = npc_frames(rows, pal, (11, 8), "e")
+        save(strip(frames, 16, 24), f"sprites/prof-{p['id']}.png")
+    return lista
+
+
 # ======================================================================= pequenos (16x16)
 
 # Trinco, o duende da recepção [FICÇÃO]: orelhas pontudas, colete vermelho e molho de chaves
@@ -740,7 +831,7 @@ def render_small():
 # ======================================================================= objetos com personagem
 
 def render_portrait():
-    """Bonfatt no quadro da galeria (32x32): moldura dourada com cantos trabalhados."""
+    """Bonfatti no quadro da galeria (32x32): moldura dourada com cantos trabalhados."""
     bon = Image.open(os.path.join(ROOT, "sprites", "arquimedes.png")).convert("RGBA")
     gold = ramp((214, 166, 66))
 
@@ -1189,6 +1280,7 @@ def render_all():
         render_player(name, robe)
         render_player(name, robe, menina=True)
     render_npcs()
+    render_professores()
     render_small()
     render_props()
     render_furniture()

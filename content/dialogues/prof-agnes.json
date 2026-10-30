@@ -1,0 +1,28 @@
+{
+  "id": "prof-agnes",
+  "speaker": "Profa. Agnes Severo",
+  "entries": [
+    {
+      "when": {
+        "knowsRecipe": "cerveja-abobora"
+      },
+      "start": "sabe"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Agnes Severo, Poções. Você ainda não sabe a Cerveja de Abóbora? Inaceitável! Anote aí: abóbora com gelo seco.",
+      "effects": [
+        {
+          "learnRecipe": "cerveja-abobora"
+        }
+      ]
+    },
+    "sabe": {
+      "text": "Já sabe a Cerveja de Abóbora. Agora o segredo é mexer no sentido do relógio. Nunca ao contrário."
+    }
+  }
+}

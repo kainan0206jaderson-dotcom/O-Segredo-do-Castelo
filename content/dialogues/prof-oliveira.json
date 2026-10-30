@@ -1,0 +1,70 @@
+{
+  "id": "prof-oliveira",
+  "speaker": "Prof. Oliveira da Figueira",
+  "entries": [
+    {
+      "when": {
+        "flag": "prof:oliveira:varinha"
+      },
+      "start": "depois"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Oliveira da Figueira, fabricante de varinhas. Deixe-me ver a sua... Hmm, boa, mas pode ficar melhor. De que madeira você gosta?",
+      "choices": [
+        {
+          "text": "Figueira, firme e antiga",
+          "next": "pronto",
+          "effects": [
+            {
+              "setFlag": "varinha:madeira",
+              "value": "figueira"
+            }
+          ]
+        },
+        {
+          "text": "Ipê, florida e corajosa",
+          "next": "pronto",
+          "effects": [
+            {
+              "setFlag": "varinha:madeira",
+              "value": "ipe"
+            }
+          ]
+        },
+        {
+          "text": "Jacarandá, calma e sábia",
+          "next": "pronto",
+          "effects": [
+            {
+              "setFlag": "varinha:madeira",
+              "value": "jacaranda"
+            }
+          ]
+        }
+      ]
+    },
+    "pronto": {
+      "text": "Um polimento, um sopro de pó de estrela... pronto! Sua varinha está afinada. Sinta a energia!",
+      "effects": [
+        {
+          "giveXp": 25
+        },
+        {
+          "restoreEnergy": 99
+        },
+        {
+          "setFlag": "prof:oliveira:varinha",
+          "value": true
+        }
+      ]
+    },
+    "depois": {
+      "text": "Cuide bem dela. Varinha boa escolhe o bruxo tanto quanto o bruxo escolhe a varinha."
+    }
+  }
+}

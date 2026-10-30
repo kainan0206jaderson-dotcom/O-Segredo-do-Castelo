@@ -1,0 +1,56 @@
+{
+  "id": "prof-cerafum",
+  "speaker": "Prof. Cerafum Raíz",
+  "entries": [
+    {
+      "when": {
+        "flag": "prof:cerafum:quiz"
+      },
+      "start": "depois"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Eu sou o Cerafum Raíz. Planto neste castelo desde antes de ele ter telhado. Quer responder uma pergunta?",
+      "next": "quiz"
+    },
+    "quiz": {
+      "text": "Pergunta de Herbologia! Qual planta grita bem alto quando sai da terra?",
+      "choices": [
+        {
+          "text": "Abóbora",
+          "next": "errado"
+        },
+        {
+          "text": "Mandrágora",
+          "next": "certo",
+          "effects": [
+            {
+              "giveXp": 15
+            },
+            {
+              "setFlag": "prof:cerafum:quiz",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Cacau",
+          "next": "errado"
+        }
+      ]
+    },
+    "certo": {
+      "text": "Isso! Por isso a gente cobre as orelhas na hora de colher. Muito bem, {nome}!"
+    },
+    "errado": {
+      "text": "Hmm, não é bem isso. Pense mais um pouco e volte quando quiser tentar de novo."
+    },
+    "depois": {
+      "text": "As raízes desta estufa são mais velhas que eu. E olha que eu sou bem velho."
+    }
+  }
+}

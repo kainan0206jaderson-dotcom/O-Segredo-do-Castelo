@@ -5,6 +5,7 @@ import { COLORS, TEXT_RES, textStyle } from './theme';
 import { charsPerSecond } from '../core/settings';
 import { audio } from '../audio/Audio';
 import { noGenero } from '../core/aparencia';
+import professores from '../../content/professores.json';
 
 const BOX_H = 64;
 const MARGIN = 8;
@@ -12,12 +13,13 @@ const PORTRAIT = 40;
 
 /** Retrato de quem fala [nome no diálogo -> folha de sprite]. */
 const PORTRAITS: Record<string, string> = {
+  ...Object.fromEntries(professores.lista.map((p) => [p.nome, `npc.prof-${p.id}`])),
   'Trinco': 'npc.trinco',
   'Dom Moldura': 'npc.dom-moldura',
   'Dona Brasa': 'npc.dona-brasa',
   'Elfo Fuxico': 'npc.fuxico',
   'Dama do Chá': 'npc.dama-cha',
-  'Ministro Bonfatt': 'npc.arquimedes',
+  'Ministro Bonfatti': 'npc.arquimedes',
   'Bellatrix Lestrelle': 'npc.morgana',
   'Vulto encapuzado': 'npc.morgana',
   'Profa. Amélia': 'npc.amelia',

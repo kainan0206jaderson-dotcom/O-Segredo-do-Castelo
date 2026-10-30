@@ -1,0 +1,28 @@
+{
+  "id": "prof-wolfgang",
+  "speaker": "Prof. Wolfgang Straus",
+  "entries": [
+    {
+      "when": {
+        "knowsRecipe": "pocao-vigor"
+      },
+      "start": "sabe"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Wolfgang Straus! Poções fortes para aprendizes fortes. Poção de Vigor: folha de mandrágora com suco colorido. Anotou?",
+      "effects": [
+        {
+          "learnRecipe": "pocao-vigor"
+        }
+      ]
+    },
+    "sabe": {
+      "text": "Poção de Vigor devolve a vida. Sempre leve uma na bolsa antes de entrar num lugar escuro."
+    }
+  }
+}

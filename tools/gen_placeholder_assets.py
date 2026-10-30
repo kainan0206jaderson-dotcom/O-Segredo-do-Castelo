@@ -689,6 +689,12 @@ def morgana(bob, mouth):
 strip([morgana(0, False), morgana(1, False), morgana(0, True), morgana(1, False)], 16, 24).save(os.path.join(ROOT, "sprites", "morgana.png"))
 sheet_entry("npc.morgana", "sprites/morgana.png", 16, 24, IDLE_TALK)
 
+# ---------- Professores do castelo (content/professores.json): a arte vem de art_people.render_professores
+with open(os.path.join(os.path.dirname(__file__), "..", "content", "professores.json"), encoding="utf-8") as _f:
+    PROFESSORES = json.load(_f)["lista"]
+for _p in PROFESSORES:
+    sheet_entry(f"npc.prof-{_p['id']}", f"sprites/prof-{_p['id']}.png", 16, 24, IDLE_TALK, **({"ghost": True} if _p.get("fantasma") else {}))
+
 # ---------- Elfo Fuxico [FICÇÃO]: orelhas compridas, vassoura (16x16)
 P.update({"1": (150, 200, 120), "2": (110, 160, 90), "L": (90, 180, 80), "M": (60, 130, 60)})
 def fuxico(bob, mouth):
@@ -1463,6 +1469,9 @@ COLLIDES = (TOP, FACE, WOOD, WIN, B1, B2, B3, B4)
 def build_room(name, title, w, h, doors, tables=(), carpet=None, windows=(), banners=(), props=(), spawns=(), npcs=(),
                candles=(), pickups=(), stations=(), boards=(), extra=(), floor_tile=None, props_map=None, decor=()):
     """doors: (lado N/S/L/O, posição, mapa destino, chegada no destino, nome desta chegada[, propriedades extras])."""
+    # cada professor fica na sala da sua matéria (content/professores.json)
+    npcs = list(npcs) + [(f"prof-{p['id']}", f"npc.prof-{p['id']}", p["x"], p["y"], f"prof-{p['id']}", False)
+                         for p in PROFESSORES if p["sala"] == name]
     floor, walls = [], []
     for y in range(h):
         for x in range(w):

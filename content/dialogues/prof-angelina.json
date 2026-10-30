@@ -1,0 +1,36 @@
+{
+  "id": "prof-angelina",
+  "speaker": "Profa. Angelina Kalabares",
+  "entries": [
+    {
+      "when": {
+        "flag": "prof:angelina:semente"
+      },
+      "start": "depois"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Bem-vindo à Estufa, {nome}! Sou a Angelina Kalabares, de Herbologia. Aqui cada vaso tem uma história.",
+      "next": "oi-2"
+    },
+    "oi-2": {
+      "text": "Leve esta semente de mandrágora. Plante num canteiro vazio e cuide bem dela: mandrágora gosta de luz e de conversa.",
+      "effects": [
+        {
+          "giveItem": "semente-mandragora"
+        },
+        {
+          "setFlag": "prof:angelina:semente",
+          "value": true
+        }
+      ]
+    },
+    "depois": {
+      "text": "Dica de herbóloga: uma planta feliz cresce mais rápido com um pouco de Lumen por perto."
+    }
+  }
+}

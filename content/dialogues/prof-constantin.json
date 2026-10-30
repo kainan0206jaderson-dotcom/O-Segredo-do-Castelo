@@ -1,0 +1,35 @@
+{
+  "id": "prof-constantin",
+  "speaker": "Prof. Constantin Vólvok",
+  "entries": [
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Constantin Vólvok. Eu guardo este hall e a escada. Você parece cansado de tanta magia.",
+      "choices": [
+        {
+          "text": "Recuperar a energia mágica",
+          "next": "energia",
+          "effects": [
+            {
+              "restoreEnergy": 99
+            }
+          ]
+        },
+        {
+          "text": "Como defender o castelo?",
+          "next": "dica"
+        }
+      ]
+    },
+    "energia": {
+      "text": "Respire fundo. Inspire coragem, expire fuligem. Pronto, energia cheia."
+    },
+    "dica": {
+      "text": "Três regras: olhos abertos, Escudo pronto e nunca, NUNCA, deixe uma vela apagada para trás."
+    }
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "prof-ucker",
+  "speaker": "Prof. Ucker Broto",
+  "entries": [
+    {
+      "when": {
+        "flag": "prof:ucker:cacau"
+      },
+      "start": "depois"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Ucker Broto, Herbologia! Olha só o que nasceu na minha horta hoje cedo: cacau fresquinho. Fica com dois.",
+      "effects": [
+        {
+          "giveItem": "cacau",
+          "count": 2
+        },
+        {
+          "setFlag": "prof:ucker:cacau",
+          "value": true
+        }
+      ],
+      "next": "oi-2"
+    },
+    "oi-2": {
+      "text": "Com folha de mandrágora, vira Sobremesa Mandrágora. A Dona Brasa sabe a receita."
+    },
+    "depois": {
+      "text": "Psiu: os brotos crescem mais felizes quando ninguém está olhando. Eu finjo que não estou."
+    }
+  }
+}

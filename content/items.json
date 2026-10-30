@@ -138,22 +138,22 @@
   "carta-amelia-1": {
     "name": "Carta branca 1/4",
     "kind": "objeto",
-    "description": "Pedaço de uma carta do Ministro Bonfatt: \"Querida M., hoje acendi uma vela por você...\""
+    "description": "Pedaço de uma carta do Ministro Bonfatti: \"Querida M., hoje acendi uma vela por você...\""
   },
   "carta-amelia-2": {
     "name": "Carta branca 2/4",
     "kind": "objeto",
-    "description": "Pedaço de uma carta do Ministro Bonfatt: \"...você sempre foi a melhor da turma...\""
+    "description": "Pedaço de uma carta do Ministro Bonfatti: \"...você sempre foi a melhor da turma...\""
   },
   "carta-amelia-3": {
     "name": "Carta branca 3/4",
     "kind": "objeto",
-    "description": "Pedaço de uma carta do Ministro Bonfatt: \"...ninguém foi esquecido. Volte quando quiser.\""
+    "description": "Pedaço de uma carta do Ministro Bonfatti: \"...ninguém foi esquecido. Volte quando quiser.\""
   },
   "carta-amelia-4": {
     "name": "Carta branca 4/4",
     "kind": "objeto",
-    "description": "Pedaço de uma carta do Ministro Bonfatt: \"...coragem é a chama, inteligência é o livro, astúcia é a lua, lealdade é o coração.\""
+    "description": "Pedaço de uma carta do Ministro Bonfatti: \"...coragem é a chama, inteligência é o livro, astúcia é a lua, lealdade é o coração.\""
   },
   "semente-mandragora": {
     "name": "Semente de mandrágora",
@@ -183,7 +183,7 @@
   "livro-coracao": {
     "name": "Livro do Coração",
     "kind": "objeto",
-    "description": "Presente do Ministro Bonfatt. Guarda a história da noite em que o castelo voltou a brilhar."
+    "description": "Presente do Ministro Bonfatti. Guarda a história da noite em que o castelo voltou a brilhar."
   },
   "emblema-coragem": {
     "name": "Emblema da Coragem",

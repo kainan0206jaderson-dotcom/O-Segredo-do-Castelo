@@ -1,0 +1,56 @@
+{
+  "id": "prof-hector",
+  "speaker": "Prof. Hector Tallun",
+  "entries": [
+    {
+      "when": {
+        "flag": "prof:hector:quiz"
+      },
+      "start": "depois"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Hector Tallun, Feitiços! E aquele ali é meu irmão gêmeo, o Jackoby. Eu sou o bonito. Teste rápido?",
+      "next": "quiz"
+    },
+    "quiz": {
+      "text": "Aula de Feitiços! Qual feitiço acende velas e espanta sombrinhas?",
+      "choices": [
+        {
+          "text": "Abrir",
+          "next": "errado"
+        },
+        {
+          "text": "Lumen",
+          "next": "certo",
+          "effects": [
+            {
+              "giveXp": 15
+            },
+            {
+              "setFlag": "prof:hector:quiz",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Escudo",
+          "next": "errado"
+        }
+      ]
+    },
+    "certo": {
+      "text": "Perfeito! Lumen é o primeiro feitiço que todo aprendiz deveria saber."
+    },
+    "errado": {
+      "text": "Hmm, não é bem isso. Pense mais um pouco e volte quando quiser tentar de novo."
+    },
+    "depois": {
+      "text": "Dica: aperte Q para trocar de feitiço sem parar de andar."
+    }
+  }
+}

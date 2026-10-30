@@ -13,17 +13,17 @@
       "next": "a-2"
     },
     "a-2": {
-      "text": "Chegou longe, aprendiz. Mas o Coração do Castelo é meu agora.",
+      "text": "Chegou longe, aprendiz. Mas a Varinha Suprema dorme no Coração do Castelo, e eu vou levá-la ao Senhor das Sombras.",
       "speaker": "Bellatrix Lestrelle",
       "next": "a-3"
     },
     "a-3": {
-      "text": "Ninguém lembrou de mim quando ele escolheu os guardiões. Então ninguém mais vai ser escolhido!",
+      "text": "Ninguém lembrou de mim quando o castelo escolheu os guardiões. O Senhor das Sombras prometeu que eu nunca mais seria esquecida!",
       "speaker": "Bellatrix Lestrelle",
       "next": "a-4"
     },
     "a-4": {
-      "text": "Duelo de varinhas! Vamos ver se você é tão bom quanto o velho Bonfatt acha.",
+      "text": "Duelo de varinhas! Vamos ver se você é tão bom quanto o velho Bonfatti acha.",
       "speaker": "Bellatrix Lestrelle",
       "effects": [
         {

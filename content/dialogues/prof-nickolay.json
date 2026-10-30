@@ -1,0 +1,56 @@
+{
+  "id": "prof-nickolay",
+  "speaker": "Prof. Nickolay Gavony",
+  "entries": [
+    {
+      "when": {
+        "flag": "prof:nickolay:quiz"
+      },
+      "start": "depois"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Nickolay Gavony, guardião das criaturas do castelo. Gnomos, fadas, elfos... e umas sombrinhas mal-educadas.",
+      "next": "quiz"
+    },
+    "quiz": {
+      "text": "Criaturas Mágicas! O que espanta as sombrinhas do castelo?",
+      "choices": [
+        {
+          "text": "Barulho",
+          "next": "errado"
+        },
+        {
+          "text": "Luz",
+          "next": "certo",
+          "effects": [
+            {
+              "giveXp": 15
+            },
+            {
+              "setFlag": "prof:nickolay:quiz",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Água",
+          "next": "errado"
+        }
+      ]
+    },
+    "certo": {
+      "text": "Isso! Sombrinha não aguenta luz. Lumen nelas!"
+    },
+    "errado": {
+      "text": "Hmm, não é bem isso. Pense mais um pouco e volte quando quiser tentar de novo."
+    },
+    "depois": {
+      "text": "Os gnomos Mary, Mish Mish e Wish Wish adoram esconde-esconde. Se achar um, eles te dão presente."
+    }
+  }
+}

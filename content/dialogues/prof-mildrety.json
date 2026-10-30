@@ -1,0 +1,41 @@
+{
+  "id": "prof-mildrety",
+  "speaker": "Profa. Mildrety",
+  "entries": [
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Mildrety, guardiã das criaturas. As fadas da estufa me dão sementes, e eu troco com quem cuida bem das plantas.",
+      "choices": [
+        {
+          "text": "Trocar 1 folha de mandrágora por 1 semente",
+          "when": {
+            "hasItem": "folha-mandragora"
+          },
+          "next": "trocou",
+          "effects": [
+            {
+              "takeItem": "folha-mandragora"
+            },
+            {
+              "giveItem": "semente-mandragora"
+            }
+          ]
+        },
+        {
+          "text": "Contar das criaturas",
+          "next": "conta"
+        }
+      ]
+    },
+    "trocou": {
+      "text": "Uma semente nova, bem dorminhoca. Plante na Estufa."
+    },
+    "conta": {
+      "text": "Os elfos limpam, as fadas cozinham e os gnomos... bom, os gnomos se escondem. Cada um com seu talento."
+    }
+  }
+}

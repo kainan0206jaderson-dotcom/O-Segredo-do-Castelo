@@ -1,0 +1,55 @@
+{
+  "id": "prof-kassandra",
+  "speaker": "Profa. Kassandra Talbout",
+  "entries": [
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Kassandra Talbout. Leio a sorte nas folhas de chá. Escolha uma xícara.",
+      "choices": [
+        {
+          "text": "A xícara dourada",
+          "next": "a",
+          "effects": [
+            {
+              "setFlag": "prof:kassandra:sorte",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "A xícara azul",
+          "next": "b",
+          "effects": [
+            {
+              "setFlag": "prof:kassandra:sorte",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "A xícara lascada",
+          "next": "c",
+          "effects": [
+            {
+              "setFlag": "prof:kassandra:sorte",
+              "value": true
+            }
+          ]
+        }
+      ]
+    },
+    "a": {
+      "text": "As folhas formam uma chave. Uma porta trancada vai se abrir para você muito em breve."
+    },
+    "b": {
+      "text": "Uma vela acesa! Onde você passa, a luz volta. Continue assim."
+    },
+    "c": {
+      "text": "Hmm... um gnomo rindo? Você vai encontrar alguém escondido. Ou alguém vai te encontrar."
+    }
+  }
+}

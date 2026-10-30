@@ -1,0 +1,59 @@
+{
+  "id": "prof-lilith",
+  "speaker": "Profa. Lilith Snarke",
+  "entries": [
+    {
+      "when": {
+        "flag": "prof:lilith:quiz"
+      },
+      "start": "depois"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Lilith Snarke. Eu não gosto de bagunça na minha bancada. Mas gosto de aprendiz que estuda. Responda.",
+      "next": "quiz"
+    },
+    "quiz": {
+      "text": "Pergunta de Poções. O Drink Bruxo Fumegante leva suco colorido e...?",
+      "choices": [
+        {
+          "text": "Cacau",
+          "next": "errado"
+        },
+        {
+          "text": "Gelo seco",
+          "next": "certo",
+          "effects": [
+            {
+              "giveXp": 15
+            },
+            {
+              "setFlag": "prof:lilith:quiz",
+              "value": true
+            },
+            {
+              "giveItem": "suco-colorido"
+            }
+          ]
+        },
+        {
+          "text": "Abóbora",
+          "next": "errado"
+        }
+      ]
+    },
+    "certo": {
+      "text": "Correto. Leve também um suco colorido, para a próxima mistura."
+    },
+    "errado": {
+      "text": "Hmm, não é bem isso. Pense mais um pouco e volte quando quiser tentar de novo."
+    },
+    "depois": {
+      "text": "Poção boa é poção medida. Uma gota a mais e o caldeirão vira sopa."
+    }
+  }
+}

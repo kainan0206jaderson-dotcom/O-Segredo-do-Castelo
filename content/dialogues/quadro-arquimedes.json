@@ -1,6 +1,6 @@
 {
   "id": "quadro-arquimedes",
-  "speaker": "Ministro Bonfatt",
+  "speaker": "Ministro Bonfatti",
   "entries": [
     {
       "when": {
@@ -39,7 +39,7 @@
   ],
   "nodes": {
     "virtudes": {
-      "text": "Psst! Aqui, no retrato! Sou eu, o Bonfatt. Sim, de verdade. A Bellatrix me prendeu na minha própria pintura. Que falta de educação.",
+      "text": "Psst! Aqui, no retrato! Sou eu, o Bonfatti. Sim, de verdade. A Bellatrix me prendeu na minha própria pintura. Que falta de educação.",
       "next": "virtudes-2"
     },
     "virtudes-2": {
@@ -57,7 +57,7 @@
       "text": "Os quatro emblemas! Siga para o Coração do Castelo, a leste. E, {nome}... seja gentil com a Bellatrix. Ela já foi minha melhor aluna."
     },
     "retrato": {
-      "text": "Um retrato do Ministro Bonfatt. O chapéu pontudo quase sai da moldura."
+      "text": "Um retrato do Ministro Bonfatti. O chapéu pontudo quase sai da moldura."
     },
     "fim": {
       "text": "Ah, que alívio sair dessa moldura! Ainda sinto cheiro de tinta no chapéu."

@@ -1,0 +1,57 @@
+{
+  "id": "prof-lucio",
+  "speaker": "Prof. Lúcio Wilson",
+  "entries": [
+    {
+      "when": {
+        "flag": "prof:lucio:provou"
+      },
+      "start": "depois"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Lúcio Wilson, Poções. Estou estudando a Cerveja de Abóbora perfeita. Você me traz uma para provar?",
+      "choices": [
+        {
+          "text": "Entregar 1 Cerveja de Abóbora",
+          "when": {
+            "hasItem": "cerveja-abobora"
+          },
+          "next": "provou",
+          "effects": [
+            {
+              "takeItem": "cerveja-abobora"
+            },
+            {
+              "giveXp": 30
+            },
+            {
+              "giveItem": "elixir-estelar"
+            },
+            {
+              "setFlag": "prof:lucio:provou",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Ainda não tenho.",
+          "next": "nao"
+        }
+      ]
+    },
+    "provou": {
+      "text": "Hmm! Docinha, gelada, com um toque de fumaça. Nota dez! Tome um Elixir Estelar de agradecimento."
+    },
+    "nao": {
+      "text": "Abóbora com gelo seco, no caldeirão. Eu espero aqui, provando o ar."
+    },
+    "depois": {
+      "text": "Ainda sinto o gosto daquela cerveja. Você tem futuro em Poções, {nome}."
+    }
+  }
+}

@@ -2,35 +2,57 @@
   "id": "mural-professores",
   "speaker": "Mural dos Professores",
   "entries": [
-    { "start": "oi" }
+    {
+      "start": "oi"
+    }
   ],
   "nodes": {
     "oi": {
-      "text": "Um mural de madeira com o brasão do castelo: \"Professores do Castelo Magia & Bruxaria\". Embaixo, os nomes em letras douradas.",
+      "text": "Um mural de madeira com o brasão do castelo: \"Professores do Castelo Magia & Bruxaria\". Os nomes estão em letras douradas, separados por matéria.",
+      "next": "p0"
+    },
+    "p0": {
+      "text": "Diretora do Castelo: Merlina McLouth.",
       "next": "p1"
     },
     "p1": {
-      "text": "Angelina Kalabares · Antúrio Damas · Amélia · Aristóteles · Constantin Vólvok",
+      "text": "Herbologia: Angelina Kalabares · Antúrio Damas · Cerafum Raíz · Ucker Broto.",
       "next": "p2"
     },
     "p2": {
-      "text": "Delphy Lestrelle · Eulália Tulun · Hector Tallun · Jackoby Tallun · Kassandra Talbout",
+      "text": "Seres Espectrais: Amélia · Aristóteles · Mister Addam · Mustaffa Nox.",
       "next": "p3"
     },
     "p3": {
-      "text": "Leon Arctrus · Lilith Snarke · Lúcio Wilson · Merlina McLouth · Mildredy",
+      "text": "Defesa contra a Magia Sombria: Valkyria Vanderbelt · Constantin Vólvok · Delphy Lestrelle.",
       "next": "p4"
     },
     "p4": {
-      "text": "Mister Addam · Mutaffa Nox · Severo Grimm · Oliveira da Figueira · Ucker Broto",
+      "text": "Adivinhação: Eulália Tulun · Sibila Trelane · Kassandra Talbout · Morgana Le Fay.",
       "next": "p5"
     },
     "p5": {
-      "text": "Valkyria Vanderbelt · Victorini Straus · Violeta Relva · Wolfgang Straus · Morgana Le Fay",
+      "text": "Feitiços: Hector Tallun · Jackoby Tallun.",
+      "next": "p6"
+    },
+    "p6": {
+      "text": "Poções: Agnes Severo · Leon Arctrus · Lilith Snarke · Lúcio Wilson · Wolfgang Straus.",
+      "next": "p7"
+    },
+    "p7": {
+      "text": "Criaturas Mágicas: Nickolay Gavony · Mildrety.",
+      "next": "p8"
+    },
+    "p8": {
+      "text": "Varinhas: Oliveira da Figueira.",
+      "next": "p9"
+    },
+    "p9": {
+      "text": "Artefatos Mágicos: Baltazar Bonfatti.",
       "next": "fim"
     },
     "fim": {
-      "text": "No canto, alguém riscou um nome a giz e escreveu do lado: \"ex-aluna\". O nome é Bellatrix Lestrelle."
+      "text": "No canto, alguém riscou um nome a giz e escreveu do lado: \"ex-aluna\". O nome é Bellatrix Lestrelle. Dizem que ela voltou atrás da Varinha Suprema."
     }
   }
 }

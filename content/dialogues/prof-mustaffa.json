@@ -1,0 +1,60 @@
+{
+  "id": "prof-mustaffa",
+  "speaker": "Prof. Mustaffa Nox",
+  "entries": [
+    {
+      "when": {
+        "flag": "prof:mustaffa:quiz"
+      },
+      "start": "depois"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Boooa noite. Sou o Mustaffa Nox, professor de Seres Espectrais. Sim, eu também sou um. Prático, não?",
+      "next": "oi-2"
+    },
+    "oi-2": {
+      "text": "A Amélia, o Aristóteles, o Mister Addam e eu cuidamos desta matéria. Vamos ver se você prestou atenção.",
+      "next": "quiz"
+    },
+    "quiz": {
+      "text": "Aula de Seres Espectrais! Qual feitiço mostra o que está escondido, como os espectros?",
+      "choices": [
+        {
+          "text": "Levitar",
+          "next": "errado"
+        },
+        {
+          "text": "Revelar",
+          "next": "certo",
+          "effects": [
+            {
+              "giveXp": 15
+            },
+            {
+              "setFlag": "prof:mustaffa:quiz",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Lumen",
+          "next": "errado"
+        }
+      ]
+    },
+    "certo": {
+      "text": "Exato! Revelar tira o véu de tudo que se esconde. Até de professores fantasmas tímidos."
+    },
+    "errado": {
+      "text": "Hmm, não é bem isso. Pense mais um pouco e volte quando quiser tentar de novo."
+    },
+    "depois": {
+      "text": "Espectros não são maus. Só gostam de privacidade. Muito, muito privacidade."
+    }
+  }
+}

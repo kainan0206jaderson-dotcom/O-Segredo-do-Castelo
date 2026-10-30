@@ -39,12 +39,12 @@
     },
     "final-4": {
       "text": "Ufa! Nada como sair de um quadro. Aprendiz, você fez o que nenhum professor conseguiu.",
-      "speaker": "Ministro Bonfatt",
+      "speaker": "Ministro Bonfatti",
       "next": "final-lenda"
     },
     "final-5": {
       "text": "Fique com isto: o Livro do Coração. Ele guarda a história desta noite. E agora, ao Grande Salão!",
-      "speaker": "Ministro Bonfatt",
+      "speaker": "Ministro Bonfatti",
       "effects": [
         {
           "giveItem": "livro-coracao"
@@ -69,7 +69,7 @@
       "text": "O Coração do Castelo bate forte e dourado. Tum. Tum."
     },
     "final-lenda": {
-      "speaker": "Ministro Bonfatt",
+      "speaker": "Ministro Bonfatti",
       "next": "final-5",
       "text": "Por séculos, bruxos antigos esconderam este castelo aqui em São Paulo. Há 5 anos ele se revelou, na hora certa, para os não-mágicos, os bruxos e os elfos desta era. O Coração escolhe quem vai cuidar dele daqui pra frente. E escolheu você, {nome}."
     }

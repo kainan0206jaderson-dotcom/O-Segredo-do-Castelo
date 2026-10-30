@@ -1,0 +1,56 @@
+{
+  "id": "prof-jackoby",
+  "speaker": "Prof. Jackoby Tallun",
+  "entries": [
+    {
+      "when": {
+        "flag": "prof:jackoby:quiz"
+      },
+      "start": "depois"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Jackoby Tallun, o outro gêmeo de Feitiços. O de barba, para ninguém confundir. Vamos de pergunta?",
+      "next": "quiz"
+    },
+    "quiz": {
+      "text": "Agora eu! Qual feitiço faz um cálice flutuar até a bandeja?",
+      "choices": [
+        {
+          "text": "Revelar",
+          "next": "errado"
+        },
+        {
+          "text": "Levitar",
+          "next": "certo",
+          "effects": [
+            {
+              "giveXp": 15
+            },
+            {
+              "setFlag": "prof:jackoby:quiz",
+              "value": true
+            }
+          ]
+        },
+        {
+          "text": "Lumen",
+          "next": "errado"
+        }
+      ]
+    },
+    "certo": {
+      "text": "Muito bem! E não liga para o Hector: o bonito sou eu."
+    },
+    "errado": {
+      "text": "Hmm, não é bem isso. Pense mais um pouco e volte quando quiser tentar de novo."
+    },
+    "depois": {
+      "text": "Feitiço bom é feitiço treinado. Os desafios do Grande Salão são ótimos para isso."
+    }
+  }
+}
