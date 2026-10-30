@@ -430,7 +430,7 @@ ARISTOTELES_PAL = {
     "B": (44, 84, 164), "9": (74, 120, 206), "N": (54, 44, 40),
 }
 
-# Morgana Cinzel [FICÇÃO]: capuz cinza-fuligem, mecha prateada, olhos violeta
+# Bellatrix Lestrelle [FICÇÃO]: capuz cinza-fuligem, mecha prateada, olhos violeta
 MORGANA = [
     "................",
     "................",

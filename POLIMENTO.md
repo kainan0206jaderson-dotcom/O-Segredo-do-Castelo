@@ -4,7 +4,7 @@
 
 - Fonte em pixel (Pixelify Sans) em todos os textos, sem borrão.
 - Tileset definitivo com variações: lajotas, base de parede com tijolos, tapete com canto/borda/centro, frente das mesas, madeira, grama com flores, céu de estrelas e chão de tinta.
-- Todos os personagens, criaturas, objetos e ícones redesenhados à mão (Bonfatt, Amélia, Aristóteles, Morgana, fantasmas, gnomos, Trinco, Fuxico, Dona Brasa, Fada Ramalhete).
+- Todos os personagens, criaturas, objetos e ícones redesenhados à mão (Bonfatt, Amélia, Aristóteles, Bellatrix, fantasmas, gnomos, Trinco, Fuxico, Dona Brasa, Fada Ramalhete).
 - Sons e músicas: trilha por sala, música de título, duelo e final; sons de passos, portas, feitiços, diálogo (blip por letra) e alertas.
 - Diálogo com retrato de quem fala.
 - Cronômetro dos desafios fica vermelho e avisa "Faltam 10 segundos!" com tique.
@@ -28,7 +28,7 @@
 - Fogos Bruxos: mais cores e faíscas que caem devagar.
 - Dona Brasa: asas batendo e farinha voando quando ela fala.
 - Mesa da cozinha: panelas, tábuas e ingredientes em cima, não só madeira lisa.
-- Morgana: entrada com fumaça mais elaborada e capa esvoaçando; som próprio ao aparecer.
+- Bellatrix: entrada com fumaça mais elaborada e capa esvoaçando; som próprio ao aparecer.
 - Sombrinhas: olhos que piscam, rastro escuro e um "puf" de luz ao sumir.
 - Estátuas: som de pedra arrastando e poeira ao andar um quadrado.
 - Levitar: brilho embaixo do objeto e sombra no chão enquanto ele flutua.
@@ -43,13 +43,13 @@
   - Olhos-sentinela: piscar antes de virar e som de alerta ao ver o aprendiz.
   - Raio de luz: partículas no feixe e cristal acendendo com explosão de brilho.
   - Escudo: bolha com reflexo e som de "plim" ao rebater orbes.
-  - Morgana no duelo: poses próprias (atirar, cansada, sumindo) e música de chefe.
+  - Bellatrix no duelo: poses próprias (atirar, cansada, sumindo) e música de chefe.
   - Coração do Castelo: batida com tremor de tela e luz correndo pelas paredes no final.
   - Cerimônia final: personagens com animação de comemoração e confete; créditos com música.
   - Quadros-portais: entrada com efeito de "mergulhar na tinta".
   - Cone de visão dos olhos atravessa paredes no desenho (a visão em si não muda); cortar o facho na parede.
 - Prólogo (filminho de abertura):
-  - Rostos maiores em close (aprendiz, Morgana, Trinco) em vez de só os bonecos pequenos.
+  - Rostos maiores em close (aprendiz, Bellatrix, Trinco) em vez de só os bonecos pequenos.
   - Narração gravada ou "bip" de voz junto da legenda.
   - Mais cenas da caminhada (metrô, praça, gato na janela) se o kainan quiser um filme mais longo.
   - Aprendiz com o visual escolhido pelo jogador (hoje é sempre o mesmo).
@@ -71,3 +71,4 @@
   - Mapa: rabisco da rota até o objetivo (no Modo Kids) e um zoom na sala atual ao tocar.
   - Bolsa: arrastar itens para reorganizar os bolsinhos e uma aba "Favoritos".
   - Caldeirão e HUD ainda usam os ícones pequenos; dá para trocar pelos de 32 px.
+- Professores (lista oficial do kainan, 30/10): hoje eles aparecem no Mural dos Professores, na Recepção. Dá para dar a cada um um retrato, uma sala e uma fala própria quando o kainan passar como eles são.

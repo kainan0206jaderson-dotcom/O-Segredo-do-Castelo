@@ -1,6 +1,6 @@
 {
   "id": "morgana-duelo",
-  "speaker": "Morgana Cinzel",
+  "speaker": "Bellatrix Lestrelle",
   "entries": [
     {
       "start": "a"
@@ -14,17 +14,17 @@
     },
     "a-2": {
       "text": "Chegou longe, aprendiz. Mas o Coração do Castelo é meu agora.",
-      "speaker": "Morgana Cinzel",
+      "speaker": "Bellatrix Lestrelle",
       "next": "a-3"
     },
     "a-3": {
       "text": "Ninguém lembrou de mim quando ele escolheu os guardiões. Então ninguém mais vai ser escolhido!",
-      "speaker": "Morgana Cinzel",
+      "speaker": "Bellatrix Lestrelle",
       "next": "a-4"
     },
     "a-4": {
       "text": "Duelo de varinhas! Vamos ver se você é tão bom quanto o velho Bonfatt acha.",
-      "speaker": "Morgana Cinzel",
+      "speaker": "Bellatrix Lestrelle",
       "effects": [
         {
           "setFlag": "visto:morgana-duelo",

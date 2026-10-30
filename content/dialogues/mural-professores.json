@@ -1,0 +1,36 @@
+{
+  "id": "mural-professores",
+  "speaker": "Mural dos Professores",
+  "entries": [
+    { "start": "oi" }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Um mural de madeira com o brasão do castelo: \"Professores do Castelo Magia & Bruxaria\". Embaixo, os nomes em letras douradas.",
+      "next": "p1"
+    },
+    "p1": {
+      "text": "Angelina Kalabares · Antúrio Damas · Amélia · Aristóteles · Constantin Vólvok",
+      "next": "p2"
+    },
+    "p2": {
+      "text": "Delphy Lestrelle · Eulália Tulun · Hector Tallun · Jackoby Tallun · Kassandra Talbout",
+      "next": "p3"
+    },
+    "p3": {
+      "text": "Leon Arctrus · Lilith Snarke · Lúcio Wilson · Merlina McLouth · Mildredy",
+      "next": "p4"
+    },
+    "p4": {
+      "text": "Mister Addam · Mutaffa Nox · Severo Grimm · Oliveira da Figueira · Ucker Broto",
+      "next": "p5"
+    },
+    "p5": {
+      "text": "Valkyria Vanderbelt · Victorini Straus · Violeta Relva · Wolfgang Straus · Morgana Le Fay",
+      "next": "fim"
+    },
+    "fim": {
+      "text": "No canto, alguém riscou um nome a giz e escreveu do lado: \"ex-aluna\". O nome é Bellatrix Lestrelle."
+    }
+  }
+}

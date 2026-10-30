@@ -18,7 +18,7 @@ const PORTRAITS: Record<string, string> = {
   'Elfo Fuxico': 'npc.fuxico',
   'Dama do Chá': 'npc.dama-cha',
   'Ministro Bonfatt': 'npc.arquimedes',
-  'Morgana Cinzel': 'npc.morgana',
+  'Bellatrix Lestrelle': 'npc.morgana',
   'Vulto encapuzado': 'npc.morgana',
   'Profa. Amélia': 'npc.amelia',
   'Prof. Aristóteles': 'npc.aristoteles',

@@ -1,6 +1,6 @@
 {
   "id": "galeria-morgana",
-  "speaker": "Morgana Cinzel",
+  "speaker": "Bellatrix Lestrelle",
   "entries": [
     {
       "start": "a"
@@ -14,12 +14,12 @@
     },
     "a-2": {
       "text": "Bem-vindos à minha exposição!",
-      "speaker": "Morgana Cinzel",
+      "speaker": "Bellatrix Lestrelle",
       "next": "a-3"
     },
     "a-3": {
       "text": "A Amélia fica tão bem em moldura dourada, não acham? Vou pendurar ela no quadro da Lealdade.",
-      "speaker": "Morgana Cinzel",
+      "speaker": "Bellatrix Lestrelle",
       "next": "a-4"
     },
     "a-4": {
@@ -29,7 +29,7 @@
     },
     "a-5": {
       "text": "Quatro quadros, quatro provas. Duvido que alguém passe por todas. Até nunca, aprendiz!",
-      "speaker": "Morgana Cinzel",
+      "speaker": "Bellatrix Lestrelle",
       "effects": [
         {
           "setFlag": "amelia:capturada",

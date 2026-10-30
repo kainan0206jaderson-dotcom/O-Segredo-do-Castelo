@@ -715,7 +715,7 @@
       },
       {
         "id": "enfrentar-morgana",
-        "objective": "Duelo! Lumen quando a Morgana cansar; Revelar quando ela sumir.",
+        "objective": "Duelo! Lumen quando a Bellatrix cansar; Revelar quando ela sumir.",
         "completeWhen": {
           "flag": "morgana:convencida"
         },

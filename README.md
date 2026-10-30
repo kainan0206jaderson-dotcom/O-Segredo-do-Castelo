@@ -40,13 +40,13 @@ A arte atual é provisória e gerada por `tools/gen_placeholder_assets.py`.
 - Etapa 4: Ato 1 completo. Novas salas (Corredor dos Quadros, Gabinete do Diretor,
   Hall da Escada), o Ministro da Magia Bartholomeu Bonfatt e a escolha da casa com capa própria, Levitar,
   estátuas para empurrar, sombrinhas para espantar, pedestais das quatro pedras,
-  aparições rápidas de Morgana, níveis com vida, energia e poder, tutoriais curtos,
+  aparições rápidas de Bellatrix, níveis com vida, energia e poder, tutoriais curtos,
   ficha do aprendiz no grimório, missão secundária (Dama do Chá) e a Corrida de
   Levitação. Depois do fim do ato o castelo fica livre para explorar.
 - Etapa 5: Atos 2 e 3 e o final. Biblioteca, Aula de Criaturas Espectrais (desafio de
   três levas), Estufa, Observatório, Galeria dos Quadros, quatro quadros-provas e o Coração
   do Castelo. Feitiços Revelar, Escudo e Abrir; cartas da Amélia; duelo em duas fases com a
-  Morgana; cerimônia, créditos e jogo livre depois do final. Elenco do castelo: fantasmas
+  Bellatrix; cerimônia, créditos e jogo livre depois do final. Elenco do castelo: fantasmas
   Booh, Mister Addam e Dona Lágrima, gnomos Mary, Mish Mish e Wish Wish (missão do
   esconde-esconde) e a lenda do castelo escondido em São Paulo.
 

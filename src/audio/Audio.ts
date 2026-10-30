@@ -126,7 +126,7 @@ export const SONGS: Record<Track, Song> = {
       { inst: 'baixo', vol: 0.14, notes: 'E2 - - - E2 - - - D2 - - - D2 - - - C2 - - - C2 - - - B1 - - - B1 - B1 -' },
     ],
   },
-  // duelo com a Morgana: rápido, ré menor, cordas nervosas e celesta em alerta
+  // duelo com a Bellatrix: rápido, ré menor, cordas nervosas e celesta em alerta
   duelo: {
     bpm: 150,
     channels: [

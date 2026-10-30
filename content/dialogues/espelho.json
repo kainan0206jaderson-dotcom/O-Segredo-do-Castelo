@@ -50,7 +50,7 @@
       "next": "preso-2"
     },
     "preso-2": {
-      "text": "Sou a Amélia. A Morgana me prendeu entre dois mundos: nem lá, nem cá. Muito desconfortável, aliás.",
+      "text": "Sou a Amélia. A Bellatrix me prendeu entre dois mundos: nem lá, nem cá. Muito desconfortável, aliás.",
       "speaker": "Profa. Amélia",
       "next": "preso-3"
     },
@@ -94,7 +94,7 @@
       "next": "libertar-5"
     },
     "libertar-5": {
-      "text": "Um presente por me tirar de lá. Braço firme, pensamento de bolha... ESCUDO! Protege de sombrinhas e de feitiços da Morgana.",
+      "text": "Um presente por me tirar de lá. Braço firme, pensamento de bolha... ESCUDO! Protege de sombrinhas e de feitiços da Bellatrix.",
       "speaker": "Profa. Amélia",
       "next": "libertar-6"
     },

@@ -17,7 +17,7 @@ const CAST: { sheet: string; name: string }[] = [
   { sheet: 'npc.aristoteles', name: 'Aristóteles' },
   { sheet: 'npc.arquimedes', name: 'Bonfatt' },
   { sheet: 'npc.amelia', name: 'Amélia' },
-  { sheet: 'npc.morgana', name: 'Morgana' },
+  { sheet: 'npc.morgana', name: 'Bellatrix' },
   { sheet: 'npc.fuxico', name: 'Fuxico' },
 ];
 

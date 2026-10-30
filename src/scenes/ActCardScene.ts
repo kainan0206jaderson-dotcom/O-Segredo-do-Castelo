@@ -12,7 +12,7 @@ const ACTS: Record<string, { title: string; subtitle: string; next: string }> = 
   },
   '2': {
     title: 'Fim do Ato 2',
-    subtitle: 'A Morgana levou a Amélia para dentro dos quadros.',
+    subtitle: 'A Bellatrix levou a Amélia para dentro dos quadros.',
     next: 'Quatro quadros, quatro virtudes. Junte os emblemas na Galeria\ne abra o caminho até o Coração do Castelo.',
   },
 };
