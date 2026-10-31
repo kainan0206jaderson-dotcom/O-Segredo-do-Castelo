@@ -90,7 +90,7 @@ export class DialogueBox {
     this.fullText = noGenero(view.text);
     this.shown = 0;
     this.bodyText.setText('');
-    this.choices = view.choices;
+    this.choices = view.choices.map(noGenero);
     this.selected = 0;
     this.clearChoices();
     this.moreArrow.setVisible(false);

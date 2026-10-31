@@ -14,15 +14,19 @@
   ],
   "nodes": {
     "oi": {
-      "text": "Sou Merlina McLouth, diretora do Castelo Magia & Bruxaria. Que bom ter você aqui, {nome}.",
+      "text": "Então é você, {nome}! Sou Merlina McLouth, diretora do Castelo Magia & Bruxaria. Obrigada por nos tirar da Ala.",
       "next": "oi-2"
     },
     "oi-2": {
-      "text": "Esta noite a Bellatrix Lestrelle invadiu o castelo. Ela quer a Varinha Suprema, que dorme no Coração do Castelo.",
+      "text": "Esta noite a Bellatrix Lestrelle invadiu o castelo. Ela quer a Varinha Suprema, que dorme no Coração do Castelo, para entregar ao Senhor das Sombras.",
       "next": "oi-3"
     },
     "oi-3": {
-      "text": "Ela promete entregar a varinha ao Senhor das Sombras. Isso não pode acontecer. Os professores vão te ajudar: cada um, do seu jeito.",
+      "text": "O pior: ela enfeitiçou a fuligem para empurrar de volta qualquer professor. Só passa quem chegou hoje e a fuligem ainda não conhece. Ou seja... você.",
+      "next": "oi-4"
+    },
+    "oi-4": {
+      "text": "Mas você não vai estar {sozinho|sozinha}: cada professor vai te ajudar do seu jeito, com poções, dicas e treino. E sempre que precisar de um norte, fale comigo.",
       "effects": [
         {
           "giveXp": 20
@@ -31,7 +35,8 @@
           "setFlag": "prof:merlina:oi",
           "value": true
         }
-      ]
+      ],
+      "next": null
     },
     "depois": {
       "text": "Precisa de um norte? Agora o importante é: \"{objetivo}\""

@@ -53,7 +53,7 @@
     "tutorial": "corrida"
   },
   "aula-espectral": {
-    "title": "Aula de Criaturas Espectrais",
+    "title": "Aula de Seres Espectrais",
     "description": "Três levas de espectros invisíveis. Revelar para ver, Lumen para espantar. Cuidado: eles tocam e machucam!",
     "map": "map.sala-espectral",
     "requires": {

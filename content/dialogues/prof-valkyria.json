@@ -20,13 +20,13 @@
           ]
         },
         {
-          "text": "Estou bem, obrigado!",
+          "text": "Estou bem, obrigad{o|a}!",
           "next": "bem"
         }
       ]
     },
     "cura": {
-      "text": "Pronto, novinho em folha. Lembre: a melhor defesa é não estar onde o feitiço vai cair."
+      "text": "Pronto, novinh{o|a} em folha. Lembre: a melhor defesa é não estar onde o feitiço vai cair."
     },
     "bem": {
       "text": "Ótimo. Mas se precisar, estou aqui no corredor de guarda."

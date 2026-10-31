@@ -42,17 +42,31 @@ A arte atual é provisória e gerada por `tools/gen_placeholder_assets.py`.
   segunda missão (Luz na Cozinha, com a fada cozinheira Dona Brasa) e o primeiro
   desafio opcional (Velas do Salão), que ensina o feitiço extra Fogos Bruxos.
 - Etapa 4: Ato 1 completo. Novas salas (Corredor dos Quadros, Gabinete do Diretor,
-  Hall da Escada), o Ministro da Magia Bartholomeu Bonfatt e a escolha da casa com capa própria, Levitar,
+  Hall da Escada), o Ministro da Magia Baltazar Bonfatti e a escolha da casa com capa própria, Levitar,
   estátuas para empurrar, sombrinhas para espantar, pedestais das quatro pedras,
   aparições rápidas de Bellatrix, níveis com vida, energia e poder, tutoriais curtos,
   ficha do aprendiz no grimório, missão secundária (Dama do Chá) e a Corrida de
   Levitação. Depois do fim do ato o castelo fica livre para explorar.
-- Etapa 5: Atos 2 e 3 e o final. Biblioteca, Aula de Criaturas Espectrais (desafio de
+- Etapa 5: Atos 2 e 3 e o final. Biblioteca, Aula de Seres Espectrais (desafio de
   três levas), Estufa, Observatório, Galeria dos Quadros, quatro quadros-provas e o Coração
   do Castelo. Feitiços Revelar, Escudo e Abrir; cartas da Amélia; duelo em duas fases com a
   Bellatrix; cerimônia, créditos e jogo livre depois do final. Elenco do castelo: fantasmas
   Booh, Mister Addam e Dona Lágrima, gnomos Mary, Mish Mish e Wish Wish (missão do
   esconde-esconde) e a lenda do castelo escondido em São Paulo.
+
+## A história em uma página
+
+- O castelo sempre existiu em São Paulo, escondido por bruxos antigos, e se revelou à cidade há 5 anos.
+  Na primeira noite do aprendiz, uma Estrela Perdida o leva até lá e o castelo "acorda" para ele (prólogo).
+- Nessa noite, a Diretora Merlina e os professores estavam em reunião na Ala dos Professores. A Bellatrix
+  Lestrelle, ex-aluna do Ministro Bonfatti, apagou as velas e trancou a Ala e a escada com um selo de fuligem.
+  Por isso, no Ato 1, só o Bonfatti (que se trancou no gabinete), o Trinco, a Dona Brasa e os quadros ajudam.
+- O nome da vilã só aparece na cena do Hall. Quebrado o selo, os professores saem da Ala, mas a fuligem empurra
+  de volta quem já é do castelo: só o aprendiz, que chegou hoje, passa. Os professores ajudam do seu jeito.
+- As cartas brancas são do Bonfatti para a Bellatrix ("Querida B."). Ele pediu à Amélia que as entregasse; quando
+  a Bellatrix chegou, a Amélia rasgou e escondeu os pedaços. No final, são elas que convencem a vilã.
+- O Aristóteles ensina Seres Espectrais (sala ao lado da Biblioteca) e Literatura Mágica na Ala; nesta noite ele
+  está na Biblioteca e deixou um bilhete na sala de Literatura.
 
 ## Conteúdo do jogo
 
@@ -78,7 +92,10 @@ Textos, diálogos, missões e itens ficam em `content/` como JSON, sem código:
   pixels inteiros. PC 16:9 e celular deitado mostram a mesma altura de sala.
 - **HUD**: posições em `src/ui/hudLayout.ts`; `tests/hudLayout.test.ts` garante que nada se
   cobre nem corta de 480 a 640 de largura.
-- **Luz e sombra**: `src/world/Lighting.ts` (sombra no chão, halo das velas, luar nas janelas).
+- **Luz e sombra**: `src/world/Lighting.ts` (sombra no chão, halo das velas, facho de luar com poeira,
+  arandelas automáticas nas paredes) e `src/world/Darkness.ts` (camada de noite por sala com buracos e cor de luz).
+  A força e a cor da noite de cada sala ficam em `src/world/ambiente.ts`, e mudam com a história (a cozinha só
+  clareia depois que as velas acendem; depois do final, o castelo inteiro fica mais claro). Vinheta leve na câmera.
 - **Cenário**: `tools/art_cenario.py` (estantes, tapetes, mesa de leitura, candelabro, globo,
   pilha de livros, relógio, atril). Peças com vários quadros variam pelo lugar na sala.
 - **Progresso pelo EventBus** (`src/core/EventBus.ts`, `src/systems/progress.ts`): as regras

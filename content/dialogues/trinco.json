@@ -4,6 +4,12 @@
   "entries": [
     {
       "when": {
+        "flag": "jogo:fim"
+      },
+      "start": "pos-jogo"
+    },
+    {
+      "when": {
         "all": [
           {
             "questStage": "chaves-do-trinco",
@@ -85,7 +91,7 @@
       "next": "sumico"
     },
     "sumico": {
-      "text": "Mas olha, hoje a noite tá esquisita. As velas estão apagando sozinhas, e o Ministro Bonfatti se trancou no gabinete desde o jantar!",
+      "text": "Mas olha, hoje a noite tá esquisita. As velas estão apagando sozinhas, os professores entraram na Ala pra reunião e ninguém saiu, e o Ministro Bonfatti se trancou no gabinete desde o jantar!",
       "next": "mesa-ok"
     },
     "mesa-ok": {
@@ -132,7 +138,7 @@
       ]
     },
     "depois": {
-      "text": "Grimório na mão, varinha no bolso... Agora sim parece um bruxo de verdade! Quase. A Dona Brasa tá te esperando na cozinha."
+      "text": "Grimório na mão, varinha no bolso... Agora sim parece {um bruxo|uma bruxa} de verdade! Quase. A Dona Brasa tá te esperando na cozinha."
     },
     "diretor": {
       "text": "O Bonfatti quer te ver? Uau. O gabinete fica no Corredor dos Quadros, pela porta oeste do Grande Salão. Bate antes de entrar!"
@@ -176,7 +182,10 @@
       "text": "O ministro sumiu numa nuvem de fuligem?! Eu SABIA que essa noite tava esquisita. Junta as quatro pedras e quebra esse selo, aprendiz!"
     },
     "fim-ato": {
-      "text": "O selo quebrou! A escada tá livre! Eu ia subir com você, mas... alguém tem que cuidar da recepção. É. Isso. Boa sorte!"
+      "text": "O selo quebrou! A escada tá livre e os professores saíram da Ala! Eu ia subir com você, mas... alguém tem que cuidar da recepção. É. Isso. Boa sorte!"
+    },
+    "pos-jogo": {
+      "text": "{Guardião|Guardiã} do Castelo! E pensar que fui eu que abri o portão pra você. Vou contar isso pra todo mundo. Duas vezes."
     }
   }
 }

@@ -39,6 +39,7 @@ export function playerSheet(sheet: string): string {
 /** Falas que tratam o aprendiz no masculino e a versão para a aprendiz menina. */
 const FEMININO: [RegExp, string][] = [
   [/\bUm aprendiz novo\b/g, 'Uma aprendiz nova'],
+  [/\bum aprendiz novo\b/g, 'uma aprendiz nova'],
   [/\bMais um aprendiz\b/g, 'Mais uma aprendiz'],
   [/\bBem-vindo\b/g, 'Bem-vinda'],
   [/\bquerido aprendiz\b/g, 'querida aprendiz'],
@@ -62,11 +63,14 @@ export function setFalaProvider(key: string, fn: () => string): void {
   FALAS[key] = fn;
 }
 
-/** Ajusta uma fala ao aprendiz: troca {nome} pelo nome dele, {objetivo} e {estrela} pelo momento do jogo
- * e, para a menina, o masculino pelo feminino. */
+/** Ajusta uma fala ao aprendiz: troca {nome} pelo nome dele, {objetivo} e {estrela} pelo momento do jogo,
+ * {o|a} pela forma certa e, para a menina, o masculino pelo feminino. */
 export function noGenero(text: string): string {
   text = text.replace(/\{nome\}/g, nomeAprendiz());
   text = text.replace(/\{(objetivo|estrela)\}/g, (_, k: string) => FALAS[k]?.() ?? FALA_PADRAO[k]);
-  if (aparencia() !== 'menina') return text;
+  // {o|a}: forma do menino | forma da menina, escrita direto na fala ("cansad{o|a}", "{Guardião|Guardiã}")
+  const menina = aparencia() === 'menina';
+  text = text.replace(/\{([^{}|]*)\|([^{}|]*)\}/g, (_, m: string, f: string) => (menina ? f : m));
+  if (!menina) return text;
   return FEMININO.reduce((t, [re, to]) => t.replace(re, to), text);
 }

@@ -4,6 +4,12 @@
   "entries": [
     {
       "when": {
+        "flag": "jogo:fim"
+      },
+      "start": "fim"
+    },
+    {
+      "when": {
         "flag": "ato:1:fim"
       },
       "start": "livre"
@@ -131,7 +137,7 @@
       "text": "Eu sou o Fuxico, elfo da limpeza. Ouço tudo enquanto varro. Se travar em alguma coisa, me pergunte!"
     },
     "livre": {
-      "text": "O selo quebrou! Agora o castelo é todo seu: explore, vença os desafios do quadro e ajude quem pedir. O Ato 2 começa lá em cima, em breve."
+      "text": "O selo quebrou! Os professores saíram da Ala e a escada está livre: lá em cima ficam a Biblioteca e o resto do mistério. Explore, vença os desafios e ajude quem pedir."
     },
     "pedestais": {
       "text": "Pedras na mão? Os pedestais ficam no Hall da Escada, fim oeste do corredor. Cada um tem o símbolo de uma casa."
@@ -168,6 +174,9 @@
     },
     "moldura": {
       "text": "Procurando o Dom Moldura? É o quadro de bigode no meio da parede norte."
+    },
+    "fim": {
+      "text": "{Guardião|Guardiã} do Castelo! Já contei para o castelo inteiro. Duas vezes. Os quadros pediram uma terceira."
     }
   }
 }

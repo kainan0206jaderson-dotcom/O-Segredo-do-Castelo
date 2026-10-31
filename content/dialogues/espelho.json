@@ -55,8 +55,12 @@
       "next": "preso-3"
     },
     "preso-3": {
-      "text": "Antes de sumir, escondi pedaços de cartas pelo andar. Cartas do Bonfatti. Ache três e leia para mim aqui.",
+      "text": "Antes de sumir, escondi pedaços de cartas pelo andar. Cartas que o Bonfatti escreveu para uma ex-aluna e me pediu para entregar. Ela nunca quis ler.",
       "speaker": "Profa. Amélia",
+      "next": "preso-3b"
+    },
+    "preso-3b": {
+      "text": "Quando a Bellatrix chegou, rasguei tudo e escondi os pedaços, antes que ela queimasse. Ache três e leia para mim aqui.",
       "next": "preso-4"
     },
     "preso-4": {

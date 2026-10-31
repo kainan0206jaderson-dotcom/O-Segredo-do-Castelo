@@ -24,6 +24,7 @@ import { Hud } from '../ui/Hud';
 import { Puzzles, type SocketSpot } from '../world/Puzzles';
 import { Beam } from '../world/Beam';
 import { Darkness, type Light } from '../world/Darkness';
+import { ambienteDa } from '../world/ambiente';
 import { CauldronScene } from './CauldronScene';
 import { GrimoireScene } from './GrimoireScene';
 import { GAME_HEIGHT, GAME_WIDTH, RENDER_ZOOM, TILE_SIZE, WORLD_SCALE } from '../config/game';
@@ -37,7 +38,8 @@ import { setFalaProvider } from '../core/aparencia';
 import { nextGuidePoint, type MapObject } from '../systems/guia';
 import { GuideTrail } from '../world/GuideTrail';
 import { emitNotices } from '../systems/progress';
-import { dropShadow, torchHalo, windowLight } from '../world/Lighting';
+import { dropShadow, torchHalo, wallSconce, windowLight } from '../world/Lighting';
+import { hudLayout } from '../ui/hudLayout';
 
 export interface WorldData {
   map: string;
@@ -113,6 +115,8 @@ const HOUSE_COLORS: Record<string, number> = { coragem: 0xe04848, astucia: 0x48b
 
 /** Índice (gid) do tile de janela no tileset do castelo. */
 const WINDOW_TILE = 7;
+/** Tile da face lisa da parede de cima (onde cabem arandelas). */
+const WALL_FACE_TILE = 5;
 
 const ACT2_MAPS = ['map.biblioteca', 'map.sala-espectral', 'map.estufa', 'map.observatorio'];
 
@@ -192,6 +196,8 @@ export class WorldScene extends Phaser.Scene {
   private checkpoint?: string;
   private beam?: Beam;
   private darkness?: Darkness;
+  /** Luzes que não se mexem (janelas, tochas, caldeirões): abrem buracos na sombra da sala. */
+  private staticLights: Light[] = [];
   private boss?: Boss;
   private bossWhen?: Condition;
   private orbs!: Phaser.Physics.Arcade.Group;
@@ -235,6 +241,7 @@ export class WorldScene extends Phaser.Scene {
     this.checkpoint = data.spawn;
     this.beam = undefined;
     this.darkness = undefined;
+    this.staticLights = [];
     this.boss = undefined;
     this.bossWhen = undefined;
     this.wave = 0;
@@ -252,7 +259,8 @@ export class WorldScene extends Phaser.Scene {
       if (t.index !== WINDOW_TILE) return;
       let ty = t.y + 1;
       while (ty < t.y + 4 && this.walls.getTileAt(t.x, ty)?.collides) ty++;
-      windowLight(this, t.pixelX + 8, ty * TILE_SIZE);
+      const pool = windowLight(this, t.pixelX + 8, ty * TILE_SIZE);
+      this.staticLights.push({ ...pool, r: 46, i: 0.55, c: 0x6070ff });
     });
 
     const objects = map.getObjectLayer('objetos')?.objects ?? [];
@@ -273,7 +281,10 @@ export class WorldScene extends Phaser.Scene {
     this.physics.add.collider(this.orbs, this.walls, (o) => o.destroy());
     this.physics.add.overlap(this.player, this.orbs, (_p, o) => this.hitByOrb(o as Phaser.Physics.Arcade.Sprite));
     this.buildObjects(objects);
-    if (prop<boolean>(map.properties, 'escuro')) this.darkness = new Darkness(this, map.widthInPixels, map.heightInPixels);
+    if (!prop<boolean>(map.properties, 'escuro')) this.placeSconces(objects);
+    // toda sala tem a sua luz ambiente (é noite no castelo); as escuras de verdade ficam quase pretas
+    this.darkness = new Darkness(this, map.widthInPixels, map.heightInPixels, ambienteDa(data.map, s, prop<boolean>(map.properties, 'escuro')));
+    this.addVignette();
 
     // portas: zonas que levam a outro mapa e a um ponto de chegada
     for (const o of objects.filter((o) => o.type === 'door')) {
@@ -386,7 +397,10 @@ export class WorldScene extends Phaser.Scene {
           const flat = FLAT_PROPS.some((f) => sprite.startsWith(f));
           const p = this.add.sprite(o.x!, o.y!, sprite, Math.floor(frame)).setOrigin(0.5, 1).setDepth(sprite.startsWith('prop.tapete') ? 0.3 : o.y! + (prop<number>(o.properties, 'acima') ?? 0));
           if (assets().hasAnimation(sprite, 'idle')) p.play({ key: AssetRegistry.animKey(sprite, 'idle'), startFrame: Phaser.Math.Between(0, 2) });
-          if (LIGHT_PROPS.has(sprite)) torchHalo(this, o.x!, o.y! - p.height + 4);
+          if (LIGHT_PROPS.has(sprite)) {
+            torchHalo(this, o.x!, o.y! - p.height + 4, 24);
+            this.staticLights.push({ x: o.x!, y: o.y! - p.height + 6, r: 80, i: 0.95, c: 0xd88040 });
+          } else if (sprite === 'prop.caldeirao') this.cauldronGlow(o.x!, o.y!);
           else if (!flat) dropShadow(this, p, Math.min(28, p.width - 2));
           // móvel de enfeite que ocupa espaço: "solido" é a altura (em px) da base que bloqueia
           const solid = prop<number>(o.properties, 'solido');
@@ -431,6 +445,7 @@ export class WorldScene extends Phaser.Scene {
           const t = new Thing(this, o.x!, o.y!, {
             kind: 'station', name: o.name, sheet: sprite!, ref: prop(o.properties, 'station')!, solid: true, extra: prop(o.properties, 'gives'),
           });
+          if (sprite === 'prop.caldeirao') this.cauldronGlow(o.x!, o.y!);
           this.physics.add.collider(this.player, t);
           this.things.push(t);
           break;
@@ -638,8 +653,11 @@ export class WorldScene extends Phaser.Scene {
     const viewH = (GAME_HEIGHT * RENDER_ZOOM) / zoom;
     cam.setOrigin(0.5).setZoom(zoom);
     const bx = w < viewW ? -(viewW - w) / 2 : 0;
-    const by = h < viewH ? -(viewH - h) / 2 : 0;
-    cam.setBounds(bx, by, Math.max(w, viewW), Math.max(h, viewH));
+    // o painel de missão e a vida ocupam o topo da tela: a câmera pode subir um pouco além da
+    // parede de cima, para que professores e quadros de desafio encostados nela não fiquem embaixo do HUD
+    const hudTop = Math.round(hudLayout(GAME_WIDTH, GAME_HEIGHT).notice.y / WORLD_SCALE) - 4;
+    const by = h + hudTop <= viewH ? -Math.max((viewH - h) / 2, hudTop) : -hudTop;
+    cam.setBounds(bx, by, Math.max(w, viewW), Math.max(h - by, viewH));
     cam.startFollow(this.player, true, 0.15, 0.15);
     cam.setDeadzone(48, 32);
     cam.setRoundPixels(true);
@@ -792,6 +810,8 @@ export class WorldScene extends Phaser.Scene {
     clampVitals(session.state, db);
     this.applyOutfit();
     this.refreshPresence(true);
+    // a luz da sala muda com a história (cozinha acesa, sombrinhas espantadas, final)
+    this.darkness?.setAmbiente(ambienteDa(this.mapKey, session.state, this.darkness.escuro));
     this.refreshPaintings();
     this.refreshHud();
     this.refreshBossBar();
@@ -975,8 +995,13 @@ export class WorldScene extends Phaser.Scene {
 
   private useStation(t: Thing): void {
     if (t.ref === 'despensa') {
-      const got = takeFromPantry(session.state, db, (t.extra ?? '').split(',').filter(Boolean));
-      if (!got.length) this.hud.notify('Você já tem um de cada ingrediente da despensa.');
+      const { notices: got, readyInMs } = takeFromPantry(session.state, db, (t.extra ?? '').split(',').filter(Boolean));
+      if (!got.length) {
+        const min = Math.max(1, Math.ceil(readyInMs / 60000));
+        this.hud.notify(readyInMs
+          ? `A despensa está quase vazia. A Dona Brasa repõe em uns ${min} minuto${min > 1 ? 's' : ''}.`
+          : 'Você já tem um de cada ingrediente da despensa.');
+      }
       this.showNotices(got);
       return this.afterStateChange();
     }
@@ -1390,7 +1415,7 @@ export class WorldScene extends Phaser.Scene {
     const left = this.creatures.filter((x) => x.group === c.group);
     if (left.length || !c.group) return;
     if (c.challenge) {
-      // aula de Criaturas Espectrais: a leva acabou
+      // aula de Seres Espectrais: a leva acabou
       const ch = this.challenge;
       if (!ch || ch.id !== c.challenge) return;
       ch.hitTarget(c.group, session.state, db);
@@ -1743,9 +1768,64 @@ export class WorldScene extends Phaser.Scene {
   }
 
   private lightSources(): Light[] {
-    const out: Light[] = [{ x: this.player.x, y: this.player.y - 8, r: 46 }];
-    for (const c of this.candles) if (c.lit) out.push({ x: c.x, y: c.y - 10, r: 58 });
+    // na sala escura, só o aprendiz e as velas iluminam (é o desafio); nas outras, o aprendiz
+    // carrega uma luz fraquinha da varinha e janelas, tochas e caldeirões também clareiam
+    if (this.darkness?.escuro) {
+      const out: Light[] = [{ x: this.player.x, y: this.player.y - 8, r: 46 }];
+      for (const c of this.candles) if (c.lit) out.push({ x: c.x, y: c.y - 10, r: 58 });
+      return out;
+    }
+    const out: Light[] = [{ x: this.player.x, y: this.player.y - 10, r: 72, i: 0.6 }, ...this.staticLights];
+    for (const c of this.candles) if (c.lit) out.push({ x: c.x, y: c.y - 12, r: 80, i: 0.95, c: 0xd88040 });
     return out;
+  }
+
+  /**
+   * Arandelas na parede de cima, a cada poucos tiles: dão às salas pontos de luz quente
+   * entre as janelas. Pulam janelas, portas e lugares onde já há móvel encostado na parede.
+   */
+  private placeSconces(objects: Phaser.Types.Tilemaps.TiledObject[]): void {
+    const row = 1;
+    const busy = new Set<number>();
+    for (const o of objects) {
+      if (o.y! > 4 * TILE_SIZE) continue;
+      const tx = Math.floor(o.x! / TILE_SIZE);
+      const tw = Math.max(1, Math.ceil((o.width ?? 0) / TILE_SIZE));
+      for (let x = tx - 1; x <= tx + tw; x++) busy.add(x);
+    }
+    let last = -99;
+    for (let x = 2; x < this.walls.width - 2; x++) {
+      const face = (dx: number) => this.walls.getTileAt(x + dx, row)?.index === WALL_FACE_TILE;
+      if (!face(0) || !face(-1) || !face(1) || busy.has(x) || x - last < 5) continue;
+      const pos = wallSconce(this, x * TILE_SIZE + 8, row * TILE_SIZE + 15);
+      this.staticLights.push({ ...pos, r: 76, i: 0.85, c: 0xd88040 });
+      last = x;
+    }
+    // paredes de lado: uma arandela a cada 5 fileiras, longe das portas e dos móveis encostados
+    const doorsAt = objects.filter((o) => o.type === 'door');
+    const free = (tx: number, ty: number) => !objects.some((o) => Math.abs(o.x! / TILE_SIZE - (tx + 0.5)) < 1.6 && Math.abs(o.y! / TILE_SIZE - (ty + 0.5)) < 2.2)
+      && !doorsAt.some((d) => Math.abs((d.y! + d.height! / 2) / TILE_SIZE - (ty + 0.5)) < 3);
+    for (const [wall, inner, dx] of [[0, 1, 4], [this.walls.width - 1, this.walls.width - 2, 12]] as const) {
+      for (let ty = 5; ty < this.walls.height - 2; ty += 5) {
+        if (!this.walls.getTileAt(wall, ty)?.collides || this.walls.getTileAt(inner, ty)?.collides || !free(inner, ty)) continue;
+        const pos = wallSconce(this, inner * TILE_SIZE + dx - (dx > 8 ? 0 : 0), ty * TILE_SIZE + 12, true);
+        this.staticLights.push({ ...pos, r: 70, i: 0.8, c: 0xd88040 });
+      }
+    }
+  }
+
+  /** Brilho esverdeado de caldeirão borbulhando. */
+  private cauldronGlow(x: number, y: number): void {
+    torchHalo(this, x, y - 10, 16, 0x7cffa0);
+    this.staticLights.push({ x, y: y - 8, r: 46, i: 0.6, c: 0x40ff80 });
+  }
+
+  /** Cantos da tela um pouco mais escuros, para puxar o olhar para o meio (só no WebGL; o HUD fica de fora). */
+  private addVignette(): void {
+    if (this.renderer.type !== Phaser.WEBGL) return;
+    const cam = this.cameras.main;
+    cam.postFX.clear();
+    cam.postFX.addVignette(0.5, 0.5, 0.78, 0.38);
   }
 
   /** Objetos de uma sala (do mapa já carregado), para a trilha achar portas e alvos. */

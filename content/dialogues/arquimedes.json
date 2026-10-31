@@ -42,7 +42,7 @@
   ],
   "nodes": {
     "intro": {
-      "text": "Ah! O aprendiz que acendeu a cozinha da Dona Brasa! Entre, entre. Sou Baltazar Bonfatti, Ministro da Magia. Cuido deste castelo e de tudo o que mora nele.",
+      "text": "Ah! O aprendiz que acendeu a cozinha da Dona Brasa! Entre, entre. Sou Baltazar Bonfatti, Ministro da Magia. Vim para a cerimônia dos aprendizes novos... e olha a noite que me arrumaram.",
       "next": "intro-2"
     },
     "intro-2": {
@@ -50,7 +50,11 @@
       "next": "intro-3"
     },
     "intro-3": {
-      "text": "Alguém está apagando a luz do castelo, vela por vela. Primeiro a torre, depois a cozinha, hoje o corredor. Me tranquei aqui para descobrir quem.",
+      "text": "Alguém está apagando a luz do castelo, vela por vela. Primeiro a torre, depois a cozinha, agora o corredor.",
+      "next": "intro-4"
+    },
+    "intro-4": {
+      "text": "E a Diretora Merlina e os professores entraram na Ala para a reunião da noite e não saíram mais. Me tranquei aqui para descobrir quem está por trás disso.",
       "next": "chapeu"
     },
     "chapeu": {
@@ -129,7 +133,7 @@
       "next": "selo"
     },
     "selo": {
-      "text": "Agora, o mais importante. O selo da escada do segundo andar mudou de cor hoje à noite. Venha comigo ao Hall da Escada, no fim oeste do corredor.",
+      "text": "Agora, o mais importante. O selo da escada do segundo andar mudou de cor hoje à noite, e a porta da Ala fica no mesmo hall. Venha comigo ao Hall da Escada, no fim oeste do corredor.",
       "effects": [
         {
           "advanceQuest": "o-diretor",
@@ -166,7 +170,7 @@
       "next": "levitar"
     },
     "pos-jogo": {
-      "text": "Guardião do Castelo! O castelo é todo seu: desafios, receitas, cantinhos escondidos. Volte sempre que quiser."
+      "text": "{Guardião|Guardiã} do Castelo! O castelo é todo seu: desafios, receitas, cantinhos escondidos. Volte sempre que quiser."
     }
   }
 }

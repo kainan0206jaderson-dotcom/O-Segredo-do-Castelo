@@ -8,7 +8,7 @@
   ],
   "nodes": {
     "oi": {
-      "text": "Constantin Vólvok. Eu guardo este hall e a escada. Você parece cansado de tanta magia.",
+      "text": "Constantin Vólvok. Eu devia guardar este hall e a escada... e passei a noite trancado na Ala. Que vergonha. Você parece cansad{o|a} de tanta magia.",
       "choices": [
         {
           "text": "Recuperar a energia mágica",

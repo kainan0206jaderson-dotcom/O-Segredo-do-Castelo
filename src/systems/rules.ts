@@ -44,6 +44,7 @@ export function check(cond: Condition | undefined, s: GameState): boolean {
   if ('hasItem' in cond) return (s.inventory[cond.hasItem] ?? 0) > 0;
   if ('itemAtLeast' in cond) return (s.inventory[cond.itemAtLeast] ?? 0) >= cond.n;
   if ('hasSpell' in cond) return s.spells.includes(cond.hasSpell);
+  if ('challengeDone' in cond) return Boolean(s.challenges[cond.challengeDone]?.done);
   if ('knowsRecipe' in cond) return s.recipes.includes(cond.knowsRecipe);
   if ('house' in cond) return s.house === cond.house;
   if ('minLevel' in cond) return s.level >= cond.minLevel;
@@ -231,7 +232,28 @@ export function spellAffects(db: ContentDb, spellId: string, targetKind: string)
   return db.spells[spellId]?.target === targetKind;
 }
 
-/** Despensa da cozinha: dá 1 de cada ingrediente que ainda não está na bolsa (evita travar por falta de ingrediente). */
-export function takeFromPantry(s: GameState, db: ContentDb, gives: string[]): Notice[] {
-  return gives.filter((id) => !s.inventory[id]).flatMap((id) => apply({ giveItem: id }, s, db));
+/** Tempo (de jogo) que a Dona Brasa leva para repor um ingrediente da despensa. */
+export const PANTRY_RESTOCK_MS = 180000;
+
+/**
+ * Despensa da cozinha: dá 1 de cada ingrediente que não está na bolsa e já foi reposto.
+ * Cada ingrediente pego leva PANTRY_RESTOCK_MS para voltar: a despensa nunca deixa o jogo travar
+ * por falta de ingrediente, mas também não substitui procurar pelo castelo nem as trocas dos professores.
+ * readyInMs: quanto falta para o próximo ingrediente voltar (0 se nada está em falta).
+ */
+export function takeFromPantry(s: GameState, db: ContentDb, gives: string[]): { notices: Notice[]; readyInMs: number } {
+  const notices: Notice[] = [];
+  let readyInMs = 0;
+  for (const id of gives) {
+    if (s.inventory[id]) continue;
+    const at = s.flags[`despensa:${id}`];
+    const wait = typeof at === 'number' ? PANTRY_RESTOCK_MS - (s.playTimeMs - at) : 0;
+    if (wait > 0) {
+      readyInMs = readyInMs ? Math.min(readyInMs, wait) : wait;
+      continue;
+    }
+    s.flags[`despensa:${id}`] = s.playTimeMs;
+    notices.push(...apply({ giveItem: id }, s, db));
+  }
+  return { notices, readyInMs };
 }

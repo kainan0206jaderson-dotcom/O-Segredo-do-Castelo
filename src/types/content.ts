@@ -13,6 +13,8 @@ export type Condition =
   /** Quantidade mínima de um item na bolsa. */
   | { itemAtLeast: string; n: number }
   | { hasSpell: string }
+  /** Desafio já vencido pelo menos uma vez. */
+  | { challengeDone: string }
   | { knowsRecipe: string }
   | { house: string }
   | { minLevel: number }
@@ -50,6 +52,8 @@ export interface DialogueNode {
   speaker?: string;
   text: string;
   next?: string | null;
+  /** Próxima fala que depende do momento do jogo: vale a primeira cuja condição é verdadeira; sem nenhuma, vale "next". */
+  nextIf?: { when: Condition; next: string | null }[];
   choices?: DialogueChoice[];
   effects?: Effect[];
   /** Efeito de cena enquanto a fala aparece (ex.: "chapeu" põe o Chapéu das Virtudes no aprendiz). */

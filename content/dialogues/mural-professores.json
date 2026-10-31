@@ -49,10 +49,21 @@
     },
     "p9": {
       "text": "Artefatos Mágicos: Baltazar Bonfatti.",
-      "next": "fim"
+      "next": "fim-giz",
+      "nextIf": [
+        {
+          "when": {
+            "flag": "visto:morgana-hall"
+          },
+          "next": "fim"
+        }
+      ]
     },
     "fim": {
       "text": "No canto, alguém riscou um nome a giz e escreveu do lado: \"ex-aluna\". O nome é Bellatrix Lestrelle. Dizem que ela voltou atrás da Varinha Suprema."
+    },
+    "fim-giz": {
+      "text": "No canto, alguém riscou um nome a giz até ficar ilegível. Do lado, só dá para ler: \"ex-aluna\"."
     }
   }
 }

@@ -32,6 +32,6 @@ describe('ordem das casas', () => {
     const casa = d.nodes.casa;
     expect(casa.choices?.map((c) => c.effects?.find((e) => 'setHouse' in e))).toEqual(ORDEM.map((h) => ({ setHouse: h })));
     expect(casa.cena).toBe('chapeu');
-    expect(d.nodes['intro-3'].next).toBe('chapeu');
+    expect(d.nodes['intro-4'].next).toBe('chapeu');
   });
 });
