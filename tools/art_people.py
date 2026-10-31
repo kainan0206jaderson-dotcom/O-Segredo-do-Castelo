@@ -661,6 +661,31 @@ RAMALHETE_PAL = recolor(BRASA_PAL, W=(220, 244, 210), w=(170, 210, 160), h=(232,
                         R=(70, 150, 84), Q=(40, 100, 56))
 
 
+# Cada personagem alonga em lugares próprios (rosto, peito, mangas, saia, pernas) para ficar
+# com 2 tiles; fantasmas e fadas, que flutuam, alongam o corpo e ganham espaço em cima.
+NPC_REPS = {
+    "arquimedes": {10: 1, 14: 1, 15: 1, 18: 1, 19: 2, 20: 1, 22: 1},
+    "aristoteles": {6: 1, 13: 1, 15: 1, 17: 1, 19: 2, 20: 1, 22: 1},
+    "morgana": {6: 1, 13: 1, 15: 1, 17: 1, 18: 1, 20: 1, 21: 1, 22: 1},
+    "booh": {6: 1, 11: 1, 12: 1, 13: 1, 14: 1},
+    "addam": {8: 1, 13: 1, 14: 1, 16: 1, 17: 1, 18: 1},
+    "lagrima": {6: 1, 9: 1, 14: 1, 15: 1, 16: 1, 17: 1},
+    "dona-brasa": {6: 1, 13: 1, 15: 1, 16: 1, 18: 2, 21: 1},
+    "fada-ramalhete": {6: 1, 13: 1, 15: 1, 16: 1, 18: 2, 21: 1},
+    "amelia": {3: 1, 10: 1, 12: 1, 14: 1, 16: 1, 17: 1},
+}
+# folhas que saem daqui com 2 tiles (o manifesto é corrigido em gen_final_art.py)
+TALL_SHEETS = [f"npc.{k}" for k in NPC_REPS]
+
+
+def tall(rows, reps):
+    """Alonga com stretch() e completa até H linhas em cima (o boneco fica de pé no chão)."""
+    rows, at = stretch(rows, reps)
+    pad = H - len(rows)
+    assert pad >= 0, f"{len(rows)} linhas"
+    return ["." * 16] * pad + rows, lambda i: at(i) + pad
+
+
 def render_npcs():
     sets = [
         ("arquimedes", BONFATT, BONFATT_PAL, (11, 7), "XkkX", False),
@@ -673,19 +698,22 @@ def render_npcs():
         ("fada-ramalhete", BRASA, RAMALHETE_PAL, (9, 7), "mm", False),
     ]
     for key, rows, pal, (my, mx), mouth, ghost in sets:
+        rows, at = tall(rows, NPC_REPS[key])
+        my = at(my)
         if ghost:
             pal = {**pal, "0": (40, 28, 56, 255)}
             open_rows = with_mouth(rows, my, mx, mouth)
             open_rows = with_mouth(open_rows, my + 1, mx, mouth)
-            frames = [paint(r, pal, 16, 24, False) for r in (rows, shift_down(rows, 1), open_rows, rows)]
+            frames = [paint(r, pal, 16, H, False) for r in (rows, shift_down(rows, 1), open_rows, rows)]
         else:
-            frames = npc_frames(rows, pal, (my, mx), mouth)
-        save(strip(frames, 16, 24), f"sprites/{key}.png")
+            frames = npc_frames(rows, pal, (my, mx), mouth, h=H)
+        save(strip(frames, 16, H), f"sprites/{key}.png")
     # Amélia: 5 quadros (flutua em 3 alturas; falando)
-    talk = with_mouth(AMELIA, 6, 7, "mm")
-    talk = with_mouth(talk, 6, 7, "kk")
-    fr = [paint(r, AMELIA_PAL, 16, 24, False) for r in (AMELIA, shift_down(AMELIA, 1), shift_down(AMELIA, 2), shift_down(talk, 1), shift_down(AMELIA, 1))]
-    save(strip(fr, 16, 24), "sprites/amelia.png")
+    amelia, at = tall(AMELIA, NPC_REPS["amelia"])
+    talk = with_mouth(amelia, at(6), 7, "mm")
+    talk = with_mouth(talk, at(6), 7, "kk")
+    fr = [paint(r, AMELIA_PAL, 16, H, False) for r in (amelia, shift_down(amelia, 1), shift_down(amelia, 2), shift_down(talk, 1), shift_down(amelia, 1))]
+    save(strip(fr, 16, H), "sprites/amelia.png")
 
 
 # ======================================================================= professores

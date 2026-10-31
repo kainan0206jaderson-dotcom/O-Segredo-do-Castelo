@@ -245,7 +245,7 @@
     "npc.dona-brasa": {
       "url": "sprites/dona-brasa.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -597,7 +597,7 @@
     "npc.arquimedes": {
       "url": "sprites/arquimedes.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -620,7 +620,7 @@
     "npc.morgana": {
       "url": "sprites/morgana.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -887,7 +887,7 @@
     "npc.amelia": {
       "url": "sprites/amelia.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -913,7 +913,7 @@
     "npc.aristoteles": {
       "url": "sprites/aristoteles.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -1031,7 +1031,7 @@
     "npc.fada-ramalhete": {
       "url": "sprites/fada-ramalhete.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -1199,7 +1199,7 @@
     "npc.booh": {
       "url": "sprites/booh.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -1223,7 +1223,7 @@
     "npc.addam": {
       "url": "sprites/addam.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -1247,7 +1247,7 @@
     "npc.lagrima": {
       "url": "sprites/lagrima.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [

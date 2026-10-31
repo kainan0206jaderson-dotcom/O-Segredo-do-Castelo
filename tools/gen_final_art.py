@@ -425,6 +425,8 @@ mpath = os.path.join(ROOT, "manifest.json")
 with open(mpath) as fh:
     manifest = json.load(fh)
 manifest["status"] = "definitivo"
+for key in art_people.TALL_SHEETS:  # personagens redesenhados com 2 tiles de altura
+    manifest["spritesheets"][key]["frameHeight"] = art_people.H
 manifest["spritesheets"]["ui.icones"]["frameNames"].update(new_icons)
 for key, url, w, h in (("prop.bau", "sprites/bau.png", 16, 16), ("prop.alcapao", "sprites/alcapao.png", 16, 16),
                        ("prop.escada-porao", "sprites/escada-porao.png", 16, 16), *decor):
