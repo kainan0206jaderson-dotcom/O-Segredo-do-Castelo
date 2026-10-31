@@ -19,7 +19,7 @@ export class Player extends Phaser.Physics.Arcade.Sprite {
     scene.physics.add.existing(this);
     // caixa de colisão só nos pés, como em jogos top-down
     const body = this.body as Phaser.Physics.Arcade.Body;
-    body.setSize(10, 6).setOffset(3, 17);
+    body.setSize(10, 6).setOffset(3, this.height - 7);
     this.setOrigin(0.5, 1);
     this.facing = facing;
     this.play(AssetRegistry.animKey(playerSheet(sheet), `idle-${facing}`));

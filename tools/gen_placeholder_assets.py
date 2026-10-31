@@ -532,6 +532,7 @@ CAPAS = {
 }
 base = Image.open(os.path.join(ROOT, "sprites", "aprendiz.png")).convert("RGBA")
 player_anims = SHEETS["player.aprendiz"]["animations"]
+SHEETS["player.aprendiz"]["frameHeight"] = 32  # arte definitiva (art_people) tem 2 tiles
 for name, (c, cl, cs) in CAPAS.items():
     im = base.copy()
     swap = {ROBE["p"]: c, ROBE["P"]: cl, ROBE["q"]: cs}
@@ -545,12 +546,12 @@ for name, (c, cl, cs) in CAPAS.items():
                     nc = P["Y"]
                 px[x, y] = nc + (255,)
     im.save(os.path.join(ROOT, "sprites", f"aprendiz-{name}.png"))
-    sheet_entry(f"player.aprendiz-{name}", f"sprites/aprendiz-{name}.png", 16, 24, player_anims)
+    sheet_entry(f"player.aprendiz-{name}", f"sprites/aprendiz-{name}.png", 16, 32, player_anims)
 
 # ---------- Aprendiz menina: mesmas animações; a arte definitiva vem de tools/art_people.py
 for suffix in [""] + [f"-{n}" for n in CAPAS]:
     Image.open(os.path.join(ROOT, "sprites", f"aprendiz{suffix}.png")).save(os.path.join(ROOT, "sprites", f"aprendiza{suffix}.png"))
-    sheet_entry(f"player.aprendiza{suffix}", f"sprites/aprendiza{suffix}.png", 16, 24, player_anims)
+    sheet_entry(f"player.aprendiza{suffix}", f"sprites/aprendiza{suffix}.png", 16, 32, player_anims)
 
 # ---------- Prof. Arquimedes [KAINAN: estilo mago, chapéu e sobretudo; detalhes FICÇÃO]
 P.update({
@@ -693,7 +694,7 @@ sheet_entry("npc.morgana", "sprites/morgana.png", 16, 24, IDLE_TALK)
 with open(os.path.join(os.path.dirname(__file__), "..", "content", "professores.json"), encoding="utf-8") as _f:
     PROFESSORES = json.load(_f)["lista"]
 for _p in PROFESSORES:
-    sheet_entry(f"npc.prof-{_p['id']}", f"sprites/prof-{_p['id']}.png", 16, 24, IDLE_TALK, **({"ghost": True} if _p.get("fantasma") else {}))
+    sheet_entry(f"npc.prof-{_p['id']}", f"sprites/prof-{_p['id']}.png", 16, 32, IDLE_TALK, **({"ghost": True} if _p.get("fantasma") else {}))
 
 # ---------- Elfo Fuxico [FICÇÃO]: orelhas compridas, vassoura (16x16)
 P.update({"1": (150, 200, 120), "2": (110, 160, 90), "L": (90, 180, 80), "M": (60, 130, 60)})
