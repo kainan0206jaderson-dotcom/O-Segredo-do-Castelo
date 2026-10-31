@@ -32,7 +32,7 @@ export interface GameState {
   xp: number;
   vida: number;
   energia: number;
-  equipment: { capa?: string; amuleto?: string };
+  equipment: { capa?: string; amuleto?: string; anel?: string; broche?: string; pena?: string; medalha?: string };
   /** Aprendiz menino ou menina (saves antigos não têm: contam como menino). */
   aparencia?: 'menino' | 'menina';
   /** Nome que o jogador escolheu. Sem nome, vale o padrão da aparência (Orion ou Estela). */

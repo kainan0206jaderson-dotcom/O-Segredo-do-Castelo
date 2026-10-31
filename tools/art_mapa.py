@@ -29,7 +29,7 @@ RED_D = (112, 32, 30)
 SALAS = {
     "map.hall": (14, 108, "Hall da Escada", "b"),
     "map.corredor": (62, 110, "Corredor", "b"),
-    "map.gabinete": (80, 80, "Gabinete", "t"),
+    "map.gabinete": (98, 80, "Gabinete", "t"),
     "map.grande-salao": (134, 102, "Grande Salão", "t"),
     "map.cozinha": (194, 106, "Cozinha", "b"),
     "map.recepcao": (142, 148, "Recepção", "b"),
@@ -40,7 +40,20 @@ SALAS = {
     "map.observatorio": (322, 150, "Observatório", "e"),
     "map.galeria": (340, 116, "Galeria", "e"),
     "map.coracao": (408, 116, "Coração", "b"),
+    "map.ala-professores": (14, 56, "Ala dos Professores", "b"),
 }
+# salas de aula da Ala dos Professores: quadradinhos acima da Ala, ligados às portas do norte
+AULAS = {
+    "map.aula-feiticos": "Sala de Feitiços",
+    "map.aula-pocoes": "Masmorra de Poções",
+    "map.aula-herbologia": "Estufa de Aula",
+    "map.aula-adivinhacao": "Torre de Adivinhação",
+    "map.aula-literatura": "Sala de Literatura Mágica",
+    "map.aula-defesa": "Sala de Defesa",
+}
+AULA_W, AULA_H = 7, 5
+# nomes que desviam: o da Biblioteca da escadinha, o da Ala do corredor que desce para o Hall
+DX = {"map.biblioteca": -16, "map.ala-professores": 17}
 QUADROS = ["map.quadro-coragem", "map.quadro-inteligencia", "map.quadro-astucia", "map.quadro-lealdade"]
 QUADRO_W, QUADRO_H = 14, 11
 
@@ -408,7 +421,7 @@ def render_mapa():
         img, m = room_image(key, minis)
         rooms[key] = (img, m, ox, oy)
         layout[key] = {"x": ox, "y": oy, "w": img.width, "h": img.height, "nome": name, "rotulo": label,
-                       "dx": -16 if key == "map.biblioteca" else 0}  # o nome da Biblioteca desvia da escadinha
+                       "dx": DX.get(key, 0)}
 
     # passagens primeiro (as salas ficam por cima)
     doors = {k: door_points(k, m, ox, oy) for k, (_, m, ox, oy) in rooms.items()}
@@ -458,6 +471,22 @@ def render_mapa():
                 for y in range(fy + QUADRO_H, p["y"]):
                     if y % 2 == 0:
                         put(im, fx + QUADRO_W // 2, y, INK_L)
+
+    # aulas: miniatura da sala com moldura, um fio de tinta até a porta na Ala
+    for key, name in AULAS.items():
+        porta = next(d for d in doors["map.ala-professores"] if d["target"] == key)
+        img, m = room_image(key, minis)
+        thumb = img.resize((AULA_W, AULA_H), Image.BOX)
+        bx, by = porta["x"] - AULA_W // 2, porta["y"] - 5 - AULA_H
+        layout[key] = {"x": bx, "y": by, "w": AULA_W, "h": AULA_H, "nome": name, "rotulo": "n"}
+        for im, show in ((visited, True), (fog, False)):
+            vline(im, porta["x"], by + AULA_H + 1, porta["y"] - 1, INK)
+            rect(im, bx + 1, by + 1, bx + AULA_W, by + AULA_H, PAPER_DD)
+            if show:
+                im.alpha_composite(thumb, (bx, by))
+                frame(im, bx - 1, by - 1, bx + AULA_W, by + AULA_H, INK)
+            else:
+                fog_room(im, bx, by, AULA_W, AULA_H)
 
     # escadas: Hall (sobe) e Biblioteca (desce)
     hall = next(d for d in doors["map.hall"] if d["target"] == "map.biblioteca")

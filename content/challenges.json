@@ -112,5 +112,197 @@
         "giveItem": "pocao-vigor"
       }
     ]
+  },
+  "aula-feiticos": {
+    "title": "Aula de Feitiços",
+    "description": "As oito velas da sala vão se apagar. Acenda todas com Lumen antes que a ampulheta acabe.",
+    "map": "map.aula-feiticos",
+    "requires": {
+      "hasSpell": "lumen"
+    },
+    "lockedText": "Você precisa conhecer o feitiço Lumen para esta aula.",
+    "timeLimitMs": 30000,
+    "kind": "acender",
+    "targets": [
+      "vf-1",
+      "vf-2",
+      "vf-3",
+      "vf-4",
+      "vf-5",
+      "vf-6",
+      "vf-7",
+      "vf-8"
+    ],
+    "reward": [
+      {
+        "learnSpell": "onda-de-luz"
+      },
+      {
+        "giveXp": 60
+      }
+    ],
+    "repeatReward": [
+      {
+        "giveXp": 15
+      }
+    ],
+    "serie": "professores"
+  },
+  "aula-pocoes": {
+    "title": "Aula de Poções",
+    "description": "Leve os três frascos flutuando até os caldeirões antes que a ampulheta acabe. Sem derramar!",
+    "map": "map.aula-pocoes",
+    "requires": {
+      "hasSpell": "levitar"
+    },
+    "lockedText": "Você precisa conhecer o feitiço Levitar para esta aula.",
+    "timeLimitMs": 45000,
+    "kind": "levitar",
+    "levitavel": "frasco",
+    "targets": [
+      "caldeirao-1",
+      "caldeirao-2",
+      "caldeirao-3"
+    ],
+    "reward": [
+      {
+        "giveItem": "anel-caldeirao"
+      },
+      {
+        "giveItem": "elixir-estelar",
+        "count": 2
+      },
+      {
+        "giveXp": 60
+      }
+    ],
+    "repeatReward": [
+      {
+        "giveXp": 15
+      }
+    ],
+    "serie": "professores"
+  },
+  "aula-herbologia": {
+    "title": "Aula de Herbologia",
+    "description": "Plante as três mudas: leve os vasos flutuando até os canteiros antes que a ampulheta acabe.",
+    "map": "map.aula-herbologia",
+    "requires": {
+      "hasSpell": "levitar"
+    },
+    "lockedText": "Você precisa conhecer o feitiço Levitar para esta aula.",
+    "timeLimitMs": 45000,
+    "kind": "levitar",
+    "levitavel": "vaso",
+    "targets": [
+      "canteiro-a1",
+      "canteiro-a2",
+      "canteiro-a3"
+    ],
+    "reward": [
+      {
+        "giveItem": "broche-mandragora"
+      },
+      {
+        "giveXp": 60
+      }
+    ],
+    "repeatReward": [
+      {
+        "giveXp": 15
+      }
+    ],
+    "serie": "professores"
+  },
+  "aula-adivinhacao": {
+    "title": "Aula de Adivinhação",
+    "description": "Três levas de visões invisíveis. Revelar para ver o futuro, Lumen para dissipar. Elas machucam se encostarem!",
+    "map": "map.aula-adivinhacao",
+    "requires": {
+      "hasSpell": "revelar"
+    },
+    "lockedText": "Você precisa conhecer o feitiço Revelar para esta aula.",
+    "timeLimitMs": 120000,
+    "kind": "espectral",
+    "targets": [
+      "visao-1",
+      "visao-2",
+      "visao-3"
+    ],
+    "reward": [
+      {
+        "learnSpell": "estrela-guia"
+      },
+      {
+        "giveXp": 60
+      }
+    ],
+    "repeatReward": [
+      {
+        "giveXp": 15
+      }
+    ],
+    "serie": "professores"
+  },
+  "aula-literatura": {
+    "title": "Aula de Literatura Mágica",
+    "description": "Três livros fugiram das estantes! Leve cada um flutuando até um atril antes que a ampulheta acabe.",
+    "map": "map.aula-literatura",
+    "requires": {
+      "hasSpell": "levitar"
+    },
+    "lockedText": "Você precisa conhecer o feitiço Levitar para esta aula.",
+    "timeLimitMs": 50000,
+    "kind": "levitar",
+    "levitavel": "livro",
+    "targets": [
+      "atril-l1",
+      "atril-l2",
+      "atril-l3"
+    ],
+    "reward": [
+      {
+        "giveItem": "pena-encantada"
+      },
+      {
+        "giveXp": 60
+      }
+    ],
+    "repeatReward": [
+      {
+        "giveXp": 15
+      }
+    ],
+    "serie": "professores"
+  },
+  "aula-defesa": {
+    "title": "Aula de Defesa",
+    "description": "Três ataques de sombrinhas, cada um maior. Espante todas com Lumen; o Escudo ajuda a aguentar.",
+    "map": "map.aula-defesa",
+    "requires": {
+      "hasSpell": "escudo"
+    },
+    "lockedText": "Você precisa conhecer o feitiço Escudo para esta aula. Quem ensina é a Profa. Amélia.",
+    "timeLimitMs": 80000,
+    "kind": "espectral",
+    "targets": [
+      "ataque-1",
+      "ataque-2",
+      "ataque-3"
+    ],
+    "reward": [
+      {
+        "giveItem": "medalha-disciplina"
+      },
+      {
+        "giveXp": 60
+      }
+    ],
+    "repeatReward": [
+      {
+        "giveXp": 15
+      }
+    ],
+    "serie": "professores"
   }
 }

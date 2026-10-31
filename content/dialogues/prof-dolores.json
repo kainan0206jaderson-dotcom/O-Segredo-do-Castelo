@@ -1,0 +1,46 @@
+{
+  "id": "prof-dolores",
+  "speaker": "Profa. Dolores Rosatti",
+  "entries": [
+    {
+      "when": {
+        "flag": "serie:professores"
+      },
+      "start": "zap"
+    },
+    {
+      "when": {
+        "flag": "prof:dolores:oi"
+      },
+      "start": "depois"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Ora, ora, um aprendiz novo. Sou a Profa. Dolores Rosatti, Defesa. Aqui se fala baixinho, se anda devagar e se obedece sorrindo.",
+      "next": "oi-2"
+    },
+    "oi-2": {
+      "text": "Minha aula é um treino de verdade: três ataques de sombrinhas, um pior que o outro. Escudo erguido e Lumen na ponta da varinha.",
+      "next": "oi-3"
+    },
+    "oi-3": {
+      "text": "E um segredinho, querido. Quem completar as aulas das seis salas desta ala ganha o direito de aprender a zaparatar.",
+      "effects": [
+        {
+          "setFlag": "prof:dolores:oi",
+          "value": true
+        }
+      ]
+    },
+    "depois": {
+      "text": "O quadro de desafios fica na parede. Disciplina, querido. Disciplina e um sorriso."
+    },
+    "zap": {
+      "text": "Todas as seis aulas! Hum. Admito que estou... levemente impressionada. Use o Zaparatar com juízo e nunca nos corredores na hora do chá."
+    }
+  }
+}

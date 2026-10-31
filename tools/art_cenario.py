@@ -361,6 +361,29 @@ def virtue_hat():
     return outline(im)
 
 
+def potion_flask():
+    """Frasco de poção da aula da Profa. Lilith [FICÇÃO]: vidro redondo com líquido roxo,
+    rolha de cortiça e um brilho no vidro."""
+    w, h = 16, 16
+    im, px = canvas(w, h)
+    liq = ramp((150, 70, 190))
+    glass = (200, 220, 236)
+    for y in range(6, 15):
+        for x in range(3, 13):
+            if (x - 7.5) ** 2 / 25 + (y - 10.5) ** 2 / 16 <= 1:
+                put(px, x, y, (liq[3] if x < 7 else liq[2] if x < 10 else liq[1]) if y >= 9 else glass, w, h)
+    for y in range(3, 7):
+        for x in (6, 7, 8, 9):
+            put(px, x, y, glass, w, h)
+    for x in (6, 7, 8, 9):
+        put(px, x, 2, (150, 108, 64), w, h)
+        put(px, x, 1, (120, 84, 48), w, h)
+    put(px, 5, 10, (255, 255, 255), w, h)
+    put(px, 5, 11, (230, 240, 250), w, h)
+    put(px, 9, 12, liq[4], w, h)
+    return outline(im)
+
+
 def render_cenario():
     """Desenha os móveis novos e devolve as entradas do manifesto (chave, url, largura, altura)."""
     pecas = {
@@ -373,6 +396,7 @@ def render_cenario():
         "relogio": clock(),
         "atril": lectern(),
         "chapeu": virtue_hat(),
+        "frasco": potion_flask(),
     }
     sizes = {"estante": (16, 32), "tapete": (32, 16)}
     out = []

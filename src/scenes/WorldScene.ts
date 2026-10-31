@@ -46,6 +46,8 @@ export interface WorldData {
   fainted?: boolean;
   /** Foi visto por uma sentinela e voltou ao último ponto seguro. */
   caught?: boolean;
+  /** Chegou zaparatando: aparece no meio de um redemoinho. */
+  zaparatou?: boolean;
 }
 
 interface DialMeta {
@@ -92,6 +94,9 @@ const START_CHALLENGE_FLAG = 'desafio:iniciar';
 const INVULNERABLE_MS = 1100;
 const WIND_MS = 5000;
 const SHIELD_MS = 3200;
+/** Estrela-Guia: tempo da trilha acesa. Onda de Luz: alcance do anel. */
+const GUIDE_MS = 12000;
+const WAVE_R = 60;
 const REVEAL_RADIUS = 96;
 const REVEAL_MS = 3800;
 const ORB_SPEED = 78;
@@ -118,6 +123,7 @@ function spellSound(id: string | null | undefined): Sfx {
       return id;
     case 'fogos-bruxos': return 'fogos';
     case 'passo-de-vento': return 'vento';
+    case 'zaparatar': return 'blip';
     default: return 'blip';
   }
 }
@@ -142,6 +148,8 @@ export class WorldScene extends Phaser.Scene {
   private guide?: GuideTrail;
   private guidePoint?: { x: number; y: number };
   private guideAt = 0;
+  /** Até quando a trilha da Estrela-Guia fica acesa fora do Modo Kids. */
+  private guideUntil = 0;
   private hintObjective = '';
   private hintSince = 0;
   private entry: WorldData = { map: '' };
@@ -317,7 +325,14 @@ export class WorldScene extends Phaser.Scene {
     if (data.fainted) audio.sfx('desmaio');
 
     // ao voltar do caldeirão, do grimório, de um tutorial ou do fim de ato
-    this.events.on(Phaser.Scenes.Events.RESUME, (_s: unknown, from?: { from?: string }) => {
+    this.events.on(Phaser.Scenes.Events.RESUME, (_s: unknown, from?: { from?: string; destino?: string; zaparatar?: boolean }) => {
+      if (from?.zaparatar) {
+        if (from.destino) this.zaparatar(from.destino);
+        else {
+          restoreEnergy(session.state, db, db.spells.zaparatar.cost); // desistiu: não gasta
+          this.refreshHud();
+        }
+      }
       if (from?.from === 'cauldron') for (const t of CauldronScene.lastNotices) this.hud.notify(t);
       if (from?.from === 'grimoire') for (const t of GrimoireScene.lastNotices) this.hud.notify(t);
       // o modo pode ter mudado nas Opções
@@ -330,6 +345,7 @@ export class WorldScene extends Phaser.Scene {
     });
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.events.off(Phaser.Scenes.Events.RESUME));
 
+    if (data.zaparatou) this.zapAppear();
     if (data.fainted) this.hud.notify('Você desmaiou... e acordou aqui. Vida e energia de volta!');
     if (data.caught) this.hud.notify('Uma sentinela viu você! De volta ao último ponto seguro.');
     this.resumeBossFight();
@@ -826,6 +842,64 @@ export class WorldScene extends Phaser.Scene {
     this.refreshHud();
   }
 
+  /**
+   * Zaparatar [FICÇÃO]: o aprendiz gira, é espremido num redemoinho de fumaça e some com um
+   * estalo; na sala escolhida aparece do mesmo jeito, ao contrário (zapAppear).
+   */
+  private zaparatar(destino: string): void {
+    if (this.transitioning || this.dialogue) return;
+    this.transitioning = true;
+    const p = this.player;
+    p.halt();
+    audio.sfx('zaparatar');
+    this.zapSwirl(p.x, p.y - p.height / 2, false);
+    // gira cada vez mais rápido trocando de lado e afina até virar uma linha
+    let flips = 0;
+    this.time.addEvent({ delay: 45, repeat: 7, callback: () => p.setFlipX(++flips % 2 === 1) });
+    this.tweens.add({ targets: p, scaleX: 0.05, scaleY: p.scaleY * 1.35, duration: 360, ease: 'Cubic.in' });
+    this.time.delayedCall(370, () => {
+      p.setVisible(false);
+      flash(this.cameras.main, 120, 40, 30, 60);
+      shake(this.cameras.main, 90, 0.004);
+      this.cameras.main.fadeOut(260, 12, 10, 24);
+      this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () =>
+        this.scene.restart({ map: destino, zaparatou: true } satisfies WorldData));
+    });
+  }
+
+  private zapAppear(): void {
+    const p = this.player;
+    const sx = p.scaleX;
+    const sy = p.scaleY;
+    p.setScale(0.05, sy * 1.35);
+    this.zapSwirl(p.x, p.y - p.height / 2, true);
+    this.time.delayedCall(FADE_MS, () => {
+      audio.sfx('zaparatar');
+      this.tweens.add({ targets: p, scaleX: sx, scaleY: sy, duration: 300, ease: 'Back.out' });
+    });
+  }
+
+  /** Fumaça escura girando em volta do aprendiz; para dentro ao sumir, para fora ao aparecer. */
+  private zapSwirl(x: number, y: number, out: boolean): void {
+    for (let i = 0; i < 14; i++) {
+      const a = (i / 14) * Math.PI * 2;
+      const r = out ? 4 : 22;
+      const puff = this.add.circle(x + Math.cos(a) * r, y + Math.sin(a) * r * 0.6, Phaser.Math.Between(3, 6), i % 3 ? 0x2a2140 : 0x6a58a0, 0.85)
+        .setDepth(this.player.depth + 2);
+      const to = out ? 24 : 2;
+      const turn = { t: 0 };
+      this.tweens.add({
+        targets: turn, t: 1, duration: 420, delay: out ? FADE_MS : 0, ease: 'Sine.inOut',
+        onUpdate: () => {
+          const ang = a + turn.t * Math.PI * 1.5 * (out ? -1 : 1);
+          const rr = r + (to - r) * turn.t;
+          puff.setPosition(x + Math.cos(ang) * rr, y + Math.sin(ang) * rr * 0.6).setAlpha(0.85 * (out ? 1 - turn.t : 1 - turn.t * 0.6));
+        },
+        onComplete: () => puff.destroy(),
+      });
+    }
+  }
+
   private openMap(): void {
     if (!session.state.inventory['mapa-dos-segredos']) {
       this.bark.say('Se eu tivesse um mapa deste castelo...');
@@ -1108,7 +1182,7 @@ export class WorldScene extends Phaser.Scene {
     const def = db.challenges[id];
     this.challenge = new ChallengeRunner(id, session.state.modo === 'kids' ? { ...def, timeLimitMs: def.timeLimitMs * KIDS_TIME } : def);
     if (def.kind === 'acender') for (const c of this.candles) if (def.targets.includes(c.targetName)) c.setLit(false);
-    if (def.kind === 'levitar') this.puzzles.resetKind('calice');
+    if (def.kind === 'levitar') this.puzzles.resetKind(def.levitavel ?? 'calice');
     if (def.kind === 'espectral') {
       this.wave = 0;
       this.activateWave();
@@ -1154,7 +1228,7 @@ export class WorldScene extends Phaser.Scene {
         return;
       }
     }
-    if (def.kind === 'levitar') this.time.delayedCall(1200, () => this.puzzles.resetKind('calice'));
+    if (def.kind === 'levitar') this.time.delayedCall(1200, () => this.puzzles.resetKind(def.levitavel ?? 'calice'));
     this.challenge = undefined;
     this.afterStateChange();
   }
@@ -1201,6 +1275,28 @@ export class WorldScene extends Phaser.Scene {
     }
     if (spell.self === 'escudo') {
       this.raiseShield();
+      return;
+    }
+    if (spell.self === 'onda') return this.lightWave();
+    if (spell.self === 'guia') {
+      // Estrela-Guia: a trilha de estrelinhas do Modo Kids aparece por alguns segundos
+      this.guideUntil = this.time.now + GUIDE_MS;
+      this.guide ??= new GuideTrail(this);
+      this.guideAt = 0;
+      this.hud.notify('Siga as estrelinhas!');
+      return;
+    }
+    if (spell.self === 'zaparatar') {
+      if (this.challenge?.status === 'running' || this.boss) {
+        restoreEnergy(s, db, spell.cost);
+        this.refreshHud();
+        this.hud.notify('Agora não dá para zaparatar!');
+        return;
+      }
+      // o Mapa dos Segredos abre para escolher o destino (só salas já visitadas)
+      this.player.halt();
+      this.scene.launch('Map', { back: 'World', zaparatar: true });
+      this.scene.pause();
       return;
     }
     if (spell.target === 'levitavel') {
@@ -1255,6 +1351,32 @@ export class WorldScene extends Phaser.Scene {
     audio.sfx('acerto');
     if (this.challenge?.isTarget(target.targetName)) this.challenge.hitTarget(target.targetName, s, db);
     else s.flags[this.candleFlag(target.targetName)] = true;
+    this.afterStateChange();
+  }
+
+  /**
+   * Onda de Luz: um anel de luz sai do aprendiz e acerta tudo em volta, não só o que está na
+   * frente: espanta sombrinhas e espectros visíveis e acende as velas apagadas por perto.
+   */
+  private lightWave(): void {
+    const s = session.state;
+    const p = this.player;
+    const cy = p.y - 10;
+    const ring = this.add.circle(p.x, cy, 6).setStrokeStyle(3, 0xfff0a8, 1).setDepth(p.depth + 2);
+    const glow = this.add.circle(p.x, cy, 6, 0xfff0a8, 0.25).setDepth(p.depth + 1).setBlendMode(Phaser.BlendModes.ADD);
+    this.tweens.add({ targets: [ring, glow], radius: WAVE_R, alpha: 0, duration: 420, ease: 'Cubic.out', onComplete: () => { ring.destroy(); glow.destroy(); } });
+    this.darkness?.flash(p.x, cy, WAVE_R + 16, 900);
+    const now = this.time.now;
+    const near = (x: number, y: number) => Phaser.Math.Distance.Between(p.x, cy, x, y) < WAVE_R;
+    const hit = this.creatures.filter((c) => c.visible && c.canBeHit(now) && near(c.x, c.y - 6));
+    if (hit.length) audio.sfx('acerto');
+    for (const c of hit) if (c.takeHit(stats(s, db).poder, p, now)) this.banishCreature(c);
+    for (const c of this.candles) {
+      if (c.lit || !spellAffects(db, 'lumen', c.targetKind) || !near(c.x, c.y - 8)) continue;
+      c.setLit(true);
+      if (this.challenge?.isTarget(c.targetName)) this.challenge.hitTarget(c.targetName, s, db);
+      else s.flags[this.candleFlag(c.targetName)] = true;
+    }
     this.afterStateChange();
   }
 
@@ -1708,6 +1830,10 @@ export class WorldScene extends Phaser.Scene {
       this.bark.say(pickLine('parado'));
     }
     this.bark.update(this.player.x, this.player.y - this.player.height - 2);
+    if (this.guide && session.state.modo !== 'kids' && time > this.guideUntil) {
+      this.guide.destroy();
+      this.guide = undefined;
+    }
     if (this.guide) this.updateGuide(time);
     this.puzzles.update(dir, delta);
     for (const c of this.creatures) c.think(this.player, time, delta);

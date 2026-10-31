@@ -211,35 +211,42 @@
         "abrir": 16,
         "levitar": 17,
         "passo-de-vento": 18,
-        "coracao": 19,
-        "energia": 20,
-        "poder": 21,
-        "chaves-trinco": 22,
-        "capa-coragem": 23,
-        "capa-inteligencia": 24,
-        "capa-astucia": 25,
-        "capa-lealdade": 26,
-        "capa-estrelada": 27,
-        "pedra-coragem": 28,
-        "pedra-inteligencia": 29,
-        "pedra-astucia": 30,
-        "pedra-lealdade": 31,
-        "carta-amelia-1": 32,
-        "carta-amelia-2": 33,
-        "carta-amelia-3": 34,
-        "carta-amelia-4": 35,
-        "semente-mandragora": 36,
-        "pocao-vigor": 37,
-        "elixir-estelar": 38,
-        "livro-coracao": 39,
-        "emblema-coragem": 40,
-        "emblema-inteligencia": 41,
-        "emblema-astucia": 42,
-        "emblema-lealdade": 43,
-        "mapa-dos-segredos": 44,
-        "estrela-perdida": 45,
-        "amuleto-estelar": 46,
-        "chave-do-porao": 47
+        "zaparatar": 19,
+        "coracao": 20,
+        "energia": 21,
+        "poder": 22,
+        "chaves-trinco": 23,
+        "capa-coragem": 24,
+        "capa-inteligencia": 25,
+        "capa-astucia": 26,
+        "capa-lealdade": 27,
+        "capa-estrelada": 28,
+        "pedra-coragem": 29,
+        "pedra-inteligencia": 30,
+        "pedra-astucia": 31,
+        "pedra-lealdade": 32,
+        "carta-amelia-1": 33,
+        "carta-amelia-2": 34,
+        "carta-amelia-3": 35,
+        "carta-amelia-4": 36,
+        "semente-mandragora": 37,
+        "pocao-vigor": 38,
+        "elixir-estelar": 39,
+        "livro-coracao": 40,
+        "emblema-coragem": 41,
+        "emblema-inteligencia": 42,
+        "emblema-astucia": 43,
+        "emblema-lealdade": 44,
+        "onda-de-luz": 45,
+        "estrela-guia": 46,
+        "anel-caldeirao": 47,
+        "broche-mandragora": 48,
+        "pena-encantada": 49,
+        "medalha-disciplina": 50,
+        "mapa-dos-segredos": 51,
+        "estrela-perdida": 52,
+        "amuleto-estelar": 53,
+        "chave-do-porao": 54
       }
     },
     "npc.dona-brasa": {
@@ -1866,35 +1873,42 @@
         "abrir": 16,
         "levitar": 17,
         "passo-de-vento": 18,
-        "coracao": 19,
-        "energia": 20,
-        "poder": 21,
-        "chaves-trinco": 22,
-        "capa-coragem": 23,
-        "capa-inteligencia": 24,
-        "capa-astucia": 25,
-        "capa-lealdade": 26,
-        "capa-estrelada": 27,
-        "pedra-coragem": 28,
-        "pedra-inteligencia": 29,
-        "pedra-astucia": 30,
-        "pedra-lealdade": 31,
-        "carta-amelia-1": 32,
-        "carta-amelia-2": 33,
-        "carta-amelia-3": 34,
-        "carta-amelia-4": 35,
-        "semente-mandragora": 36,
-        "pocao-vigor": 37,
-        "elixir-estelar": 38,
-        "livro-coracao": 39,
-        "emblema-coragem": 40,
-        "emblema-inteligencia": 41,
-        "emblema-astucia": 42,
-        "emblema-lealdade": 43,
-        "mapa-dos-segredos": 44,
-        "estrela-perdida": 45,
-        "amuleto-estelar": 46,
-        "chave-do-porao": 47
+        "zaparatar": 19,
+        "coracao": 20,
+        "energia": 21,
+        "poder": 22,
+        "chaves-trinco": 23,
+        "capa-coragem": 24,
+        "capa-inteligencia": 25,
+        "capa-astucia": 26,
+        "capa-lealdade": 27,
+        "capa-estrelada": 28,
+        "pedra-coragem": 29,
+        "pedra-inteligencia": 30,
+        "pedra-astucia": 31,
+        "pedra-lealdade": 32,
+        "carta-amelia-1": 33,
+        "carta-amelia-2": 34,
+        "carta-amelia-3": 35,
+        "carta-amelia-4": 36,
+        "semente-mandragora": 37,
+        "pocao-vigor": 38,
+        "elixir-estelar": 39,
+        "livro-coracao": 40,
+        "emblema-coragem": 41,
+        "emblema-inteligencia": 42,
+        "emblema-astucia": 43,
+        "emblema-lealdade": 44,
+        "onda-de-luz": 45,
+        "estrela-guia": 46,
+        "anel-caldeirao": 47,
+        "broche-mandragora": 48,
+        "pena-encantada": 49,
+        "medalha-disciplina": 50,
+        "mapa-dos-segredos": 51,
+        "estrela-perdida": 52,
+        "amuleto-estelar": 53,
+        "chave-do-porao": 54
       }
     },
     "npc.prof-angelina": {
@@ -2492,6 +2506,35 @@
       "frameWidth": 16,
       "frameHeight": 16,
       "animations": {}
+    },
+    "npc.prof-dolores": {
+      "url": "sprites/prof-dolores.png",
+      "frameWidth": 16,
+      "frameHeight": 32,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "talk": {
+          "frames": [
+            2,
+            3
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
+    },
+    "prop.frasco": {
+      "url": "sprites/frasco.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {}
     }
   },
   "tilesets": {
@@ -2599,6 +2642,48 @@
     },
     "map.porao": {
       "url": "maps/porao.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.ala-professores": {
+      "url": "maps/ala-professores.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.aula-feiticos": {
+      "url": "maps/aula-feiticos.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.aula-pocoes": {
+      "url": "maps/aula-pocoes.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.aula-herbologia": {
+      "url": "maps/aula-herbologia.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.aula-adivinhacao": {
+      "url": "maps/aula-adivinhacao.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.aula-literatura": {
+      "url": "maps/aula-literatura.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.aula-defesa": {
+      "url": "maps/aula-defesa.tmj",
       "tilesets": [
         "tiles.castelo"
       ]

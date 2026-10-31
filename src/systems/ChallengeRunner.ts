@@ -38,6 +38,15 @@ export class ChallengeRunner {
     const best = Math.min(this.elapsed, s.challenges[this.id]?.bestMs ?? Infinity);
     s.challenges[this.id] = { done: true, bestMs: best };
     for (const e of first ? this.def.reward : this.def.repeatReward ?? []) this.notices.push(...apply(e, s, db));
+    // último desafio de uma série (as salas dos professores): prêmio da série, uma vez só
+    const serie = this.def.serie;
+    if (first && serie && !s.flags[`serie:${serie}`]) {
+      const all = Object.entries(db.challenges).filter(([, c]) => c.serie === serie);
+      if (all.every(([id]) => s.challenges[id]?.done)) {
+        s.flags[`serie:${serie}`] = true;
+        for (const e of db.progression.series?.[serie] ?? []) this.notices.push(...apply(e, s, db));
+      }
+    }
   }
 
   update(deltaMs: number): void {

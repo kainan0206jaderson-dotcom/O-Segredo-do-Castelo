@@ -239,5 +239,44 @@
         "startQuest": "porao-secreto"
       }
     ]
+  },
+  "anel-caldeirao": {
+    "name": "Anel do Caldeirão",
+    "kind": "equipamento",
+    "slot": "anel",
+    "bonus": {
+      "energia": 2,
+      "regen": 300
+    },
+    "description": "Prêmio da aula de Poções da Profa. Lilith Snarke. Um caldeirãozinho de prata que nunca esfria: a energia mágica volta mais rápido."
+  },
+  "broche-mandragora": {
+    "name": "Broche de Mandrágora",
+    "kind": "equipamento",
+    "slot": "broche",
+    "bonus": {
+      "vida": 2
+    },
+    "description": "Prêmio da aula de Herbologia do Prof. Ucker Broto. A mandrágora de esmalte resmunga baixinho, mas protege de verdade."
+  },
+  "pena-encantada": {
+    "name": "Pena Encantada",
+    "kind": "equipamento",
+    "slot": "pena",
+    "bonus": {
+      "poder": 1,
+      "energia": 1
+    },
+    "description": "Prêmio da aula de Literatura Mágica do Prof. Aristóteles. Escreve sozinha o que você esquece e deixa seus feitiços mais fortes."
+  },
+  "medalha-disciplina": {
+    "name": "Medalha da Disciplina",
+    "kind": "equipamento",
+    "slot": "medalha",
+    "bonus": {
+      "vida": 1,
+      "poder": 1
+    },
+    "description": "Prêmio da aula de Defesa da Profa. Dolores Rosatti. Cor-de-rosa, pesada e muito bem polida. Ela confere todo dia."
   }
 }

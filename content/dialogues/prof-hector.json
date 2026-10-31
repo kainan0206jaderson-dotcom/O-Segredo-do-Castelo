@@ -14,7 +14,7 @@
   ],
   "nodes": {
     "oi": {
-      "text": "Hector Tallun, Feitiços! E aquele ali é meu irmão gêmeo, o Jackoby. Eu sou o bonito. Teste rápido?",
+      "text": "Hector Tallun, Feitiços! Meu irmão gêmeo, o Jackoby, vive enfiado na biblioteca. Eu sou o bonito. Teste rápido?",
       "next": "quiz"
     },
     "quiz": {

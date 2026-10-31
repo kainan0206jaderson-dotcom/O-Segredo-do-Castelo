@@ -86,7 +86,9 @@ describe('feitiços', () => {
 
   it('feitiços extras só vêm de desafios', () => {
     const extras = Object.entries(db.spells).filter(([, sp]) => sp.kind === 'extra').map(([id]) => id);
-    const fromChallenges = Object.values(db.challenges).flatMap((c) => c.reward).flatMap((e) => ('learnSpell' in e ? [e.learnSpell] : []));
+    // prêmio de série (todas as aulas da Ala dos Professores) também vem de desafios
+    const rewards = [...Object.values(db.challenges).flatMap((c) => c.reward), ...Object.values(db.progression.series ?? {}).flat()];
+    const fromChallenges = rewards.flatMap((e) => ('learnSpell' in e ? [e.learnSpell] : []));
     expect(extras.length).toBeGreaterThan(0);
     for (const id of extras) expect(fromChallenges).toContain(id);
   });
@@ -143,5 +145,30 @@ describe('desafio Velas do Grande Salão', () => {
       expect(db.items[r.result]).toBeDefined();
       for (const i of Object.keys(r.ingredients)) expect(db.items[i]?.kind, i).toBe('ingrediente');
     }
+  });
+});
+
+describe('aulas da Ala dos Professores', () => {
+  const aulas = Object.entries(db.challenges).filter(([, c]) => c.serie === 'professores').map(([id]) => id);
+
+  it('são seis, cada uma num mapa próprio', () => {
+    expect(aulas).toHaveLength(6);
+    expect(new Set(aulas.map((id) => db.challenges[id].map)).size).toBe(6);
+  });
+
+  it('só ensinam Zaparatar quando as seis terminam, e uma vez só', () => {
+    const s = newGame('m', 's');
+    s.spells.push('lumen', 'levitar', 'revelar', 'escudo');
+    for (const [i, id] of aulas.entries()) {
+      const def = db.challenges[id];
+      const run = new ChallengeRunner(id, def);
+      for (const t of def.targets) run.hitTarget(t, s, db);
+      expect(run.status).toBe('won');
+      expect(s.spells.includes('zaparatar')).toBe(i === aulas.length - 1);
+    }
+    expect(s.flags['serie:professores']).toBe(true);
+    const again = new ChallengeRunner(aulas[0], db.challenges[aulas[0]]);
+    for (const t of db.challenges[aulas[0]].targets) again.hitTarget(t, s, db);
+    expect(s.spells.filter((sp) => sp === 'zaparatar')).toHaveLength(1);
   });
 });

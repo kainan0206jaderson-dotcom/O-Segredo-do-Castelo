@@ -7,5 +7,8 @@
     { "xp": 450, "vida": 9, "energia": 10, "poder": 3 }
   ],
   "regenMs": 2500,
-  "creatureXp": 8
+  "creatureXp": 8,
+  "series": {
+    "professores": [{ "learnSpell": "zaparatar" }, { "giveXp": 150 }]
+  }
 }
