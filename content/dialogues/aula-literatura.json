@@ -1,0 +1,27 @@
+{
+  "id": "aula-literatura",
+  "speaker": "Prof. Aristóteles",
+  "entries": [
+    {
+      "when": {
+        "flag": "serie:professores"
+      },
+      "start": "zap"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Bem-vindo à Literatura Mágica! Aqui os livros leem a gente de volta. E fogem, quando a história fica chata.",
+      "next": "oi-2"
+    },
+    "oi-2": {
+      "text": "Três deles escaparam de novo. Fale com o quadro de desafios e leve cada um flutuando até um atril. Levitar, com carinho."
+    },
+    "zap": {
+      "text": "Ouvi dizer que você terminou as seis aulas da ala. Isso dá um capítulo inteiro! Zaparatar com cuidado: nunca no meio de uma frase."
+    }
+  }
+}

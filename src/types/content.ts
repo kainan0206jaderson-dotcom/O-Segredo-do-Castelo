@@ -103,7 +103,7 @@ export interface ItemDef {
   /** Poções: efeitos ao usar (o item é gasto). */
   use?: Effect[];
   /** Equipamentos: onde veste, a aparência do aprendiz e o bônus. */
-  slot?: 'capa' | 'amuleto';
+  slot?: 'capa' | 'amuleto' | 'anel' | 'broche' | 'pena' | 'medalha';
   sheet?: string;
   bonus?: StatBonus;
   /** Efeitos ao pegar o item do chão (começar uma missão, por exemplo). */
@@ -121,7 +121,7 @@ export interface SpellDef {
   /** Energia mágica gasta a cada uso. */
   cost: number;
   /** Feitiços sem alvo podem ter um efeito no próprio aprendiz. */
-  self?: 'velocidade' | 'escudo' | 'zaparatar';
+  self?: 'velocidade' | 'escudo' | 'zaparatar' | 'onda' | 'guia';
 }
 
 export interface RecipeDef {
@@ -147,6 +147,10 @@ export interface ChallengeDef {
   repeatReward?: Effect[];
   /** Tutorial mostrado antes da primeira tentativa. */
   tutorial?: string;
+  /** "levitar": tipo do objeto que volta ao lugar quando o desafio começa (padrão: cálice). */
+  levitavel?: string;
+  /** Série de desafios (ex.: "professores"): vencer todos dá o prêmio de progression.series. */
+  serie?: string;
 }
 
 export interface HouseDef {
@@ -171,6 +175,8 @@ export interface ProgressionDef {
   regenMs: number;
   /** Experiência por criatura espantada. */
   creatureXp: number;
+  /** Prêmio por vencer todos os desafios de uma série (ChallengeDef.serie). */
+  series?: Record<string, Effect[]>;
 }
 
 export interface TutorialDef {

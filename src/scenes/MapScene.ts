@@ -31,6 +31,7 @@ export class MapScene extends Phaser.Scene {
   private zap = false;
   private zapRooms: { key: string; mark: Phaser.GameObjects.Rectangle }[] = [];
   private zapSel = 0;
+  private title?: Phaser.GameObjects.Text;
 
   constructor() {
     super('Map');
@@ -57,7 +58,7 @@ export class MapScene extends Phaser.Scene {
       paper.add(o);
       return o;
     };
-    txt(layout.w / 2, 18, this.zap ? 'Zaparatar: para onde?' : 'Mapa dos Segredos', 11, '#f6ead0');
+    this.title = txt(layout.w / 2, 18, this.zap ? 'Zaparatar: para onde?' : 'Mapa dos Segredos', 11, '#f6ead0');
     txt(124, 38, 'Térreo e porão', 8, INK_L);
     txt(356, 38, 'Andar de cima', 8, INK_L);
 
@@ -69,9 +70,10 @@ export class MapScene extends Phaser.Scene {
       if (!visited) {
         // névoa: o mesmo pedaço do quadro 1 da folha, por cima da sala
         paper.add(this.add.image(0, 0, 'ui.mapa', 1).setOrigin(0).setCrop(r.x - 1, r.y - 1, r.w + 2, r.h + 2));
-        if (r.nome) txt(r.x + r.w / 2, r.y + r.h / 2, '?', 10, INK_L);
+        if (r.nome && r.rotulo !== 'n') txt(r.x + r.w / 2, r.y + r.h / 2, '?', 10, INK_L);
       }
-      if (r.nome) {
+      // rótulo 'n': sala pequena demais para ter nome escrito (as aulas da Ala)
+      if (r.nome && r.rotulo !== 'n') {
         const name = visited ? r.nome : '???';
         if (r.rotulo === 'b') txt(r.x + r.w / 2 + (r.dx ?? 0), r.y + r.h + 7, name, 7, INK);
         else if (r.rotulo === 't') txt(r.x + r.w / 2, r.y - 7, name, 7, INK);
@@ -175,6 +177,7 @@ export class MapScene extends Phaser.Scene {
     if (i < 0 || !this.zapRooms.length) return;
     this.zapSel = (i + this.zapRooms.length) % this.zapRooms.length;
     this.zapRooms.forEach((z, j) => z.mark.setFillStyle(0x6a58a0, j === this.zapSel ? 0.45 : 0.12).setStrokeStyle(j === this.zapSel ? 2 : 1, 0x6a58a0, 0.9));
+    this.title?.setText(`Zaparatar: ${layout.salas[this.zapRooms[this.zapSel].key].nome}`);
   }
 
   private close(destino?: string): void {

@@ -21,7 +21,7 @@
    "dx": 0
   },
   "map.gabinete": {
-   "x": 80,
+   "x": 98,
    "y": 80,
    "w": 32,
    "h": 22,
@@ -119,6 +119,15 @@
    "rotulo": "b",
    "dx": 0
   },
+  "map.ala-professores": {
+   "x": 14,
+   "y": 56,
+   "w": 64,
+   "h": 20,
+   "nome": "Ala dos Professores",
+   "rotulo": "b",
+   "dx": 17
+  },
   "map.quadro-coragem": {
    "x": 342,
    "y": 101,
@@ -150,6 +159,54 @@
    "h": 11,
    "nome": "",
    "rotulo": "b"
+  },
+  "map.aula-feiticos": {
+   "x": 17,
+   "y": 46,
+   "w": 7,
+   "h": 5,
+   "nome": "Sala de Feitiços",
+   "rotulo": "n"
+  },
+  "map.aula-pocoes": {
+   "x": 27,
+   "y": 46,
+   "w": 7,
+   "h": 5,
+   "nome": "Masmorra de Poções",
+   "rotulo": "n"
+  },
+  "map.aula-herbologia": {
+   "x": 39,
+   "y": 46,
+   "w": 7,
+   "h": 5,
+   "nome": "Estufa de Aula",
+   "rotulo": "n"
+  },
+  "map.aula-adivinhacao": {
+   "x": 49,
+   "y": 46,
+   "w": 7,
+   "h": 5,
+   "nome": "Torre de Adivinhação",
+   "rotulo": "n"
+  },
+  "map.aula-literatura": {
+   "x": 61,
+   "y": 46,
+   "w": 7,
+   "h": 5,
+   "nome": "Sala de Literatura Mágica",
+   "rotulo": "n"
+  },
+  "map.aula-defesa": {
+   "x": 71,
+   "y": 46,
+   "w": 7,
+   "h": 5,
+   "nome": "Sala de Defesa",
+   "rotulo": "n"
   },
   "_escadas": {
    "hall": [

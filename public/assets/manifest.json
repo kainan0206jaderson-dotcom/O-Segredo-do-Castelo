@@ -237,10 +237,16 @@
         "emblema-inteligencia": 42,
         "emblema-astucia": 43,
         "emblema-lealdade": 44,
-        "mapa-dos-segredos": 45,
-        "estrela-perdida": 46,
-        "amuleto-estelar": 47,
-        "chave-do-porao": 48
+        "onda-de-luz": 45,
+        "estrela-guia": 46,
+        "anel-caldeirao": 47,
+        "broche-mandragora": 48,
+        "pena-encantada": 49,
+        "medalha-disciplina": 50,
+        "mapa-dos-segredos": 51,
+        "estrela-perdida": 52,
+        "amuleto-estelar": 53,
+        "chave-do-porao": 54
       }
     },
     "npc.dona-brasa": {
@@ -1893,10 +1899,16 @@
         "emblema-inteligencia": 42,
         "emblema-astucia": 43,
         "emblema-lealdade": 44,
-        "mapa-dos-segredos": 45,
-        "estrela-perdida": 46,
-        "amuleto-estelar": 47,
-        "chave-do-porao": 48
+        "onda-de-luz": 45,
+        "estrela-guia": 46,
+        "anel-caldeirao": 47,
+        "broche-mandragora": 48,
+        "pena-encantada": 49,
+        "medalha-disciplina": 50,
+        "mapa-dos-segredos": 51,
+        "estrela-perdida": 52,
+        "amuleto-estelar": 53,
+        "chave-do-porao": 54
       }
     },
     "npc.prof-angelina": {
@@ -2494,6 +2506,35 @@
       "frameWidth": 16,
       "frameHeight": 16,
       "animations": {}
+    },
+    "npc.prof-dolores": {
+      "url": "sprites/prof-dolores.png",
+      "frameWidth": 16,
+      "frameHeight": 32,
+      "animations": {
+        "idle": {
+          "frames": [
+            0,
+            1
+          ],
+          "frameRate": 2,
+          "repeat": -1
+        },
+        "talk": {
+          "frames": [
+            2,
+            3
+          ],
+          "frameRate": 8,
+          "repeat": -1
+        }
+      }
+    },
+    "prop.frasco": {
+      "url": "sprites/frasco.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {}
     }
   },
   "tilesets": {
@@ -2601,6 +2642,48 @@
     },
     "map.porao": {
       "url": "maps/porao.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.ala-professores": {
+      "url": "maps/ala-professores.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.aula-feiticos": {
+      "url": "maps/aula-feiticos.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.aula-pocoes": {
+      "url": "maps/aula-pocoes.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.aula-herbologia": {
+      "url": "maps/aula-herbologia.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.aula-adivinhacao": {
+      "url": "maps/aula-adivinhacao.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.aula-literatura": {
+      "url": "maps/aula-literatura.tmj",
+      "tilesets": [
+        "tiles.castelo"
+      ]
+    },
+    "map.aula-defesa": {
+      "url": "maps/aula-defesa.tmj",
       "tilesets": [
         "tiles.castelo"
       ]

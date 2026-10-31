@@ -57,10 +57,28 @@
     "cost": 2,
     "self": "velocidade"
   },
+  "onda-de-luz": {
+    "name": "Onda de Luz",
+    "kind": "extra",
+    "description": "Feitiço extra, prêmio da aula do Prof. Hector Tallun. Um anel de luz sai de você e acerta tudo em volta: espanta sombras e acende velas.",
+    "target": "nenhum",
+    "fx": "fx.fagulha",
+    "cost": 3,
+    "self": "onda"
+  },
+  "estrela-guia": {
+    "name": "Estrela-Guia",
+    "kind": "extra",
+    "description": "Feitiço extra, prêmio da aula da Profa. Sibila Trelane. Estrelinhas mostram o caminho do seu objetivo por alguns segundos.",
+    "target": "nenhum",
+    "fx": "fx.fagulha",
+    "cost": 2,
+    "self": "guia"
+  },
   "zaparatar": {
     "name": "Zaparatar",
     "kind": "extra",
-    "description": "Feitiço extra, prêmio de quem vence os desafios de todos os professores. Leva você na hora para qualquer sala do castelo que você já visitou.",
+    "description": "Feitiço extra, prêmio de quem vence os desafios das seis salas da Ala dos Professores. Leva você na hora para qualquer sala do castelo que você já visitou.",
     "target": "nenhum",
     "fx": "fx.fagulha",
     "cost": 3,

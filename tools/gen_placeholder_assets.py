@@ -1044,6 +1044,40 @@ NEW_ICONS.update({"carta-amelia-1": i_carta, "carta-amelia-2": i_carta, "carta-a
                   "livro-coracao": i_livro_coracao})
 for name in ("coragem", "inteligencia", "astucia", "lealdade"):
     NEW_ICONS[f"emblema-{name}"] = emblema_icon(CAPAS[name][0])
+# ícones da etapa 7: feitiços e objetos das salas dos professores
+def i_onda(px):
+    for r, col in ((6.5, (250, 220, 120)), (4.2, (255, 244, 190)), (2, (255, 255, 255))):
+        disc(px, 7.5, 8, r, r, col)
+    disc(px, 7.5, 8, 3.2, 3.2, (250, 220, 120))
+    disc(px, 7.5, 8, 1.4, 1.4, (255, 255, 255))
+def i_guia(px):
+    Y, W = P["Y"], (255, 255, 255)
+    for x, y in ((7, 3), (8, 3), (6, 5), (7, 5), (8, 5), (9, 5), (4, 6), (5, 6), (10, 6), (11, 6), (7, 4), (8, 4), (6, 7), (7, 7), (8, 7), (9, 7), (6, 8), (9, 8), (5, 9), (10, 9)):
+        px[(x, y)] = Y
+    px[(7, 6)] = W; px[(8, 6)] = W
+    for x in (3, 5, 11, 13):
+        px[(x, 13)] = (250, 220, 120)
+def i_anel(px):
+    disc(px, 7.5, 9.5, 4.5, 4.5, (214, 170, 60))
+    for q in [q for q in px if ((q[0] - 7.5) / 2.3) ** 2 + ((q[1] - 9.5) / 2.3) ** 2 <= 1]:
+        del px[q]
+    for q in [q for q in px if ((q[0] - 7.5) / 3.4) ** 2 + ((q[1] - 9.5) / 3.4) ** 2 <= 1]:
+        px[q] = (170, 130, 40)
+    disc(px, 7.5, 4, 2, 2, (80, 190, 120)); px[(7, 3)] = (220, 255, 230)
+def i_broche(px):
+    disc(px, 7.5, 8, 5, 5, (214, 170, 60)); disc(px, 7.5, 8, 3.6, 3.6, (120, 80, 50))
+    rect(px, 7, 5, 8, 9, (90, 170, 80)); px[(6, 6)] = (90, 170, 80); px[(9, 6)] = (90, 170, 80)
+def i_pena(px):
+    for i in range(10):
+        x, y = 4 + i * 0.8, 13 - i
+        rect(px, int(x), int(y), int(x) + 2, int(y), (240, 236, 250))
+        px[(int(x) + 1, int(y))] = (170, 150, 220)
+    px[(3, 14)] = (60, 40, 30); px[(4, 13)] = (60, 40, 30)
+def i_medalha(px):
+    rect(px, 5, 1, 6, 6, (200, 90, 140)); rect(px, 9, 1, 10, 6, (200, 90, 140))
+    disc(px, 7.5, 10, 4, 4, (214, 170, 60)); disc(px, 7.5, 10, 2.4, 2.4, (240, 200, 90)); px[(7, 10)] = (255, 255, 255)
+NEW_ICONS.update({"onda-de-luz": i_onda, "estrela-guia": i_guia, "anel-caldeirao": i_anel,
+                  "broche-mandragora": i_broche, "pena-encantada": i_pena, "medalha-disciplina": i_medalha})
 ALL_ICONS = {**ICONS, **NEW_ICONS}
 icons = Image.new("RGBA", (16 * len(ALL_ICONS), 16), (0, 0, 0, 0))
 for i, (name, fn) in enumerate(ALL_ICONS.items()):
@@ -1715,7 +1749,8 @@ build_room("gabinete", "Gabinete do Ministro", 16, 11,
 
 # Hall da Escada: escada selada, 4 pedestais, sombrinhas guardando a Pedra da Coragem; leste = Corredor
 build_room("hall", "Hall da Escada", 22, 14,
-           doors=[("L", 5, "map.corredor", "do-hall", "do-corredor")],
+           doors=[("L", 5, "map.corredor", "do-hall", "do-corredor"),
+                  ("N", 5, "map.ala-professores", "do-hall", "da-ala")],
            carpet=(10, 4, 11, 12), windows=(4, 17),
            props=[("prop.vela", 2, 3), ("prop.vela", 19, 3)],
            extra=[pt("prop", "escadaria", 10, 3, x=11 * 16, sprite="prop.escadaria"),
@@ -1957,6 +1992,71 @@ add_objects("cozinha", [
 # A chave fica escondida atrás da mesa do Gabinete do Ministro
 add_objects("gabinete", [pt("pickup", "chave-porao", 14, 8, y=8 * 16 + 12, item="chave-do-porao")])
 
+# Ala dos Professores [KAINAN 31/10]: um corredor ao norte do Hall com seis salas de aula.
+# Cada sala tem o quadro de um desafio da matéria; vencer os seis dá o Zaparatar
+# (progression.series.professores). Quem dá aula em cada sala está em content/professores.json.
+SALAS_PROF = [  # (sala, nome, porta na parede norte da Ala)
+    ("feiticos", "Sala de Feitiços", 2),
+    ("pocoes", "Masmorra de Poções", 7),
+    ("herbologia", "Estufa de Aula", 13),
+    ("adivinhacao", "Torre de Adivinhação", 18),
+    ("literatura", "Sala de Literatura Mágica", 24),
+    ("defesa", "Sala de Defesa", 29),
+]
+build_room("ala-professores", "Ala dos Professores", 32, 10,
+           doors=[("S", 5, "map.hall", "da-ala", "do-hall")]
+                 + [("N", px, f"map.aula-{sid}", "da-ala", f"de-{sid}") for sid, _, px in SALAS_PROF],
+           carpet=(1, 5, 30, 6), windows=(11, 21),
+           candles=[("vela-a1", 1, 3, True), ("vela-a2", 30, 3, True)])
+
+
+def aula(sid, floor, carpet=None, **kw):
+    """Sala de aula 20x14 com a porta ao sul, para a Ala, e o quadro do desafio na parede."""
+    title = next(n for s, n, _ in SALAS_PROF if s == sid)
+    build_room(f"aula-{sid}", title, 20, 14,
+               doors=[("S", 9, "map.ala-professores", f"de-{sid}", "da-ala")],
+               floor_tile=floor, carpet=carpet, windows=(4, 15),
+               boards=[(f"quadro-{sid}", f"aula-{sid}", 10, 3)], **kw)
+
+
+# Feitiços: oito velas que se apagam; acender todas com Lumen antes do tempo
+VELAS_F = [(3, 5), (16, 5), (2, 8), (17, 8), (5, 11), (14, 11), (7, 7), (12, 7)]
+aula("feiticos", FLOOR, carpet=(4, 5, 15, 10),
+     candles=[(f"vf-{i + 1}", x, y, True) for i, (x, y) in enumerate(VELAS_F)])
+# Poções: levar os três frascos flutuando até os caldeirões
+aula("pocoes", FLOOR2,
+     extra=[*[pt("socket", f"caldeirao-{i + 1}", x, 6, accepts="frasco", mode="levitar", group="pocoes", sprite="prop.caldeirao")
+              for i, x in enumerate((5, 10, 15))],
+            *[pt("levitavel", f"frasco-{i + 1}", x, y, kind="frasco", sprite="prop.frasco")
+              for i, (x, y) in enumerate([(3, 11), (13, 11), (16, 9)])]])
+# Herbologia: plantar as três mudas nos canteiros (levitando os vasos)
+aula("herbologia", GRASS,
+     extra=[*[pt("socket", f"canteiro-a{i + 1}", x, 7, accepts="vaso", mode="levitar", group="mudas", sprite="prop.canteiro")
+              for i, x in enumerate((5, 10, 15))],
+            *[pt("levitavel", f"vaso-{i + 1}", x, y, kind="vaso", sprite="prop.vaso")
+              for i, (x, y) in enumerate([(3, 11), (13, 12), (16, 10)])]])
+# Adivinhação: visões invisíveis em três levas (Revelar para ver, Lumen para dissipar)
+VISOES = [("visao-1", [(5, 6, 3), (14, 6, 3)]), ("visao-2", [(4, 10, 3), (10, 6, 3), (16, 10, 3)]),
+          ("visao-3", [(6, 7, 3), (14, 7, 3), (10, 10, 6)])]
+aula("adivinhacao", STARS,
+     extra=[pt("creature", f"{g}-{i + 1}", cx, cy, sprite="npc.espectro", group=g, hp=hp, oculto=True, challenge="aula-adivinhacao")
+            for g, lst in VISOES for i, (cx, cy, hp) in enumerate(lst)])
+# Literatura Mágica: devolver os livros fujões aos atris
+aula("literatura", WOODF, carpet=(5, 5, 14, 10),
+     npcs=[("aristoteles-aula", "npc.aristoteles", 14, 3, "aula-literatura", False)],
+     extra=[*[pt("socket", f"atril-l{i + 1}", x, y, accepts="livro", mode="levitar", group="leitura", sprite="prop.atril")
+              for i, (x, y) in enumerate([(4, 6), (15, 6), (10, 9)])],
+            *[pt("levitavel", f"livro-l{i + 1}", x, y, kind="livro", sprite="prop.livro")
+              for i, (x, y) in enumerate([(2, 11), (6, 12), (17, 11)])]])
+# Defesa: três ataques de sombrinhas; o Escudo ajuda a aguentar
+ATAQUES = [("ataque-1", [(5, 6), (14, 6), (10, 10)]), ("ataque-2", [(4, 8), (15, 8), (7, 11), (12, 11)]),
+           ("ataque-3", [(5, 6), (14, 6), (4, 10), (15, 10), (10, 8)])]
+aula("defesa", FLOOR, carpet=(3, 5, 16, 11),
+     extra=[pt("creature", f"{g}-{i + 1}", cx, cy, sprite="npc.sombrinha", group=g, hp=2, challenge="aula-defesa")
+            for g, lst in ATAQUES for i, (cx, cy) in enumerate(lst)])
+for key in ["ala-professores"] + [f"aula-{sid}" for sid, _, _ in SALAS_PROF]:
+    MANIFEST["maps"][f"map.{key}"] = {"url": f"maps/{key}.tmj", "tilesets": ["tiles.castelo"]}
+
 # Enfeites para as salas não parecerem vazias: móveis encostados nas paredes e nos cantos,
 # longe das portas e dos caminhos dos enigmas. "solido" = altura da base que bloqueia.
 def enfeite(sprite, tx, ty, solido=0):
@@ -2016,6 +2116,19 @@ ENFEITES = {
                      enfeite("prop.candelabro", 18, 7, 6), tapete(9, 7, 1)],
     "sala-espectral": [enfeite("prop.estante", 5, 3, 8), enfeite("prop.estante", 15, 3, 8),
                        enfeite("prop.candelabro", 1, 9, 6), enfeite("prop.candelabro", 20, 9, 6)],
+    "ala-professores": [enfeite("prop.planta", 4, 3, 8), enfeite("prop.planta", 11, 3, 8), enfeite("prop.planta", 22, 3, 8),
+                        enfeite("prop.armadura", 16, 3, 8), enfeite("prop.relogio", 27, 3, 6)],
+    "aula-feiticos": [enfeite("prop.estante", 1, 3, 8), enfeite("prop.estante", 18, 3, 8), enfeite("prop.globo", 6, 3, 6)],
+    "aula-pocoes": [enfeite("prop.prateleira-pocoes", 2, 3), enfeite("prop.prateleira-pocoes", 16, 3), enfeite("prop.barril", 1, 8, 8),
+                    enfeite("prop.barril", 18, 8, 8), enfeite("prop.caixote", 1, 12, 8)],
+    "aula-herbologia": [enfeite("prop.planta", 1, 3, 8), enfeite("prop.planta", 18, 3, 8), enfeite("prop.planta", 1, 12, 8),
+                        enfeite("prop.saco-sementes", 6, 3, 6)],
+    "aula-adivinhacao": [enfeite("prop.globo", 2, 3, 6), enfeite("prop.telescopio", 17, 3, 6), enfeite("prop.candelabro", 1, 8, 6),
+                         enfeite("prop.candelabro", 18, 8, 6)],
+    "aula-literatura": [enfeite("prop.estante", 1, 3, 8), enfeite("prop.estante", 2, 3, 8), enfeite("prop.estante", 17, 3, 8),
+                        enfeite("prop.estante", 18, 3, 8), enfeite("prop.pilha-livros", 6, 3)],
+    "aula-defesa": [enfeite("prop.armadura", 2, 3, 8), enfeite("prop.armadura", 17, 3, 8), enfeite("prop.estandarte-coragem", 6, 3, 4),
+                    enfeite("prop.estandarte-lealdade", 14, 3, 4)],
     # cada quadro de casa ganha os estandartes da sua casa
     "quadro-coragem": [enfeite("prop.estandarte-coragem", 6, 3, 4), enfeite("prop.estandarte-coragem", 17, 3, 4),
                        enfeite("prop.candelabro", 1, 7, 6), enfeite("prop.candelabro", 22, 7, 6)],
