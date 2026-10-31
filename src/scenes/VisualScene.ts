@@ -60,9 +60,9 @@ export class VisualScene extends Phaser.Scene {
     this.add.rectangle(x0, y0, w, h, 0x2a2140, 1).setOrigin(0).setStrokeStyle(2, COLORS.panelBorder);
     this.add.text(x0 + w / 2, y0 + 10, 'Visual', textStyle(12, COLORS.gold)).setOrigin(0.5, 0).setResolution(TEXT_RES);
 
-    // boneco grande à esquerda, virando de lado de tempos em tempos
-    this.add.ellipse(x0 + 62, y0 + 128, 50, 10, 0x000000, 0.35);
-    this.kid = this.add.sprite(x0 + 62, y0 + 128, playerSheet('player.aprendiz')).setOrigin(0.5, 1).setScale(4);
+    // boneco grande (3x, os quadros têm 2 tiles de altura) à esquerda, virando de lado de tempos em tempos
+    this.add.ellipse(x0 + 62, y0 + 128, 40, 8, 0x000000, 0.35);
+    this.kid = this.add.sprite(x0 + 62, y0 + 128, playerSheet('player.aprendiz')).setOrigin(0.5, 1).setScale(3);
     this.facing = 0;
     this.showKid();
     this.time.addEvent({ delay: 1400, loop: true, callback: () => { this.facing = (this.facing + 1) % 4; this.showKid(); } });

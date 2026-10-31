@@ -18,11 +18,18 @@ PELES = [
     ("parda", "Parda", (164, 108, 70)),
     ("negra", "Negra", (112, 72, 50)),
 ]
+# cores de cabelo de verdade, do mais escuro ao mais claro [KAINAN pediu cores reais]
 CABELOS = [
     ("castanho", "Castanho", (92, 58, 40)),  # o padrão
     ("preto", "Preto", (44, 36, 42)),
-    ("loiro", "Loiro", (216, 172, 92)),
+    ("castanho-escuro", "Castanho-escuro", (64, 42, 32)),
+    ("castanho-claro", "Castanho-claro", (138, 94, 60)),
     ("ruivo", "Ruivo", (180, 80, 42)),
+    ("acobreado", "Acobreado", (150, 82, 50)),
+    ("loiro-escuro", "Loiro-escuro", (170, 132, 80)),
+    ("loiro", "Loiro", (216, 172, 92)),
+    ("platinado", "Platinado", (232, 218, 182)),
+    ("grisalho", "Grisalho", (168, 164, 166)),
 ]
 # só duas roupas por personagem, para manter a identidade do jogo [KAINAN]
 ROUPAS = {

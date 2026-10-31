@@ -94,7 +94,7 @@ export function lookSheet(sheet: string): string {
     d[i + 2] = to & 255;
   }
   ctx.putImageData(img, 0, 0);
-  game.textures.addSpriteSheet(key, canvas as unknown as HTMLImageElement, { frameWidth: 16, frameHeight: 24 });
+  game.textures.addSpriteSheet(key, canvas as unknown as HTMLImageElement, { frameWidth: 16, frameHeight: game.textures.get(sheet).get(0).height });
   for (const { sheet: s, key: animKey, def } of assets().animations()) {
     if (s !== sheet) continue;
     const name = animKey.slice(sheet.length + 1);
