@@ -36,6 +36,7 @@ import mapaLayout from '../ui/mapa-layout.json';
 import { setFalaProvider } from '../core/aparencia';
 import { nextGuidePoint, type MapObject } from '../systems/guia';
 import { GuideTrail } from '../world/GuideTrail';
+import { emitNotices } from '../systems/progress';
 import { dropShadow, torchHalo, windowLight } from '../world/Lighting';
 
 export interface WorldData {
@@ -78,7 +79,8 @@ interface Trigger {
   fired: boolean;
 }
 
-const FADE_MS = 220;
+/** Transição entre salas: escurece e clareia (ms). */
+const FADE_MS = 320;
 /** Modo Kids: dica depois de um tempo sem avançar, ampulhetas mais longas, olhos e Bellatrix mais lentos. */
 const KIDS_HINT_MS = 30000;
 const KIDS_TIME = 1.5;
@@ -144,6 +146,7 @@ export class WorldScene extends Phaser.Scene {
   private walls!: Phaser.Tilemaps.TilemapLayer;
   private controls!: InputManager;
   private things: Thing[] = [];
+  private dialogueId = '';
   private candles: Candle[] = [];
   private creatures: Creature[] = [];
   private triggers: Trigger[] = [];
@@ -675,6 +678,8 @@ export class WorldScene extends Phaser.Scene {
 
   /** Avisos de texto vão para a tela; tutoriais e fim de ato entram na fila. */
   private showNotices(notices: Notice[]): void {
+    // missões, itens e feitiços viram eventos: o HUD comemora a etapa e o jogo salva na hora
+    emitNotices(events, notices);
     const kinds = new Set(notices.map((n) => n.kind));
     const item = notices.find((n) => n.kind === 'item');
     if (kinds.has('level')) this.bark.say(pickLine('nivel'), true);
@@ -688,7 +693,7 @@ export class WorldScene extends Phaser.Scene {
     for (const n of notices) {
       if (n.kind === 'tutorial' && n.ref) this.queueTutorial(n.ref);
       else if (n.kind === 'act-end' && n.ref) this.actQueue.push(n.ref);
-      else if (n.text) this.hud.notify(n.text);
+      else if (n.text && n.kind !== 'quest-update' && n.kind !== 'quest-done') this.hud.notify(n.text);
     }
   }
 
@@ -1473,6 +1478,8 @@ export class WorldScene extends Phaser.Scene {
     who?.setHighlighted(false);
     this.talkingTo = who;
     this.dialogue = new DialogueRunner(def, session.state, db);
+    this.dialogueId = def.id;
+    events.emit('dialogue:start', { id: def.id });
     this.showCurrentLine();
   }
 
@@ -1515,6 +1522,7 @@ export class WorldScene extends Phaser.Scene {
     this.talkingTo?.setTalking(false);
     this.talkingTo = undefined;
     this.dialogue = undefined;
+    events.emit('dialogue:end', { id: this.dialogueId });
     if (this.actor) {
       const a = this.actor;
       this.actor = undefined;

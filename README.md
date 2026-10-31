@@ -69,3 +69,39 @@ Textos, diálogos, missões e itens ficam em `content/` como JSON, sem código:
 - `content/tutorials.json`: tutoriais curtos que aparecem na primeira vez de cada coisa.
 
 `npm test` verifica se toda fala, item, missão e diálogo citado existe.
+
+## Qualidade visual (PRs #20 a #23)
+
+- **Grade fixa de 16 px**: todo sprite, tile e móvel é desenhado na mesma densidade; nada é
+  ampliado com escala quebrada. O mundo aparece 1,5x em todas as salas e aparelhos
+  (`WORLD_SCALE` em `src/config/game.ts`), e `RENDER_ZOOM` é sempre par para isso cair em
+  pixels inteiros. PC 16:9 e celular deitado mostram a mesma altura de sala.
+- **HUD**: posições em `src/ui/hudLayout.ts`; `tests/hudLayout.test.ts` garante que nada se
+  cobre nem corta de 480 a 640 de largura.
+- **Luz e sombra**: `src/world/Lighting.ts` (sombra no chão, halo das velas, luar nas janelas).
+- **Cenário**: `tools/art_cenario.py` (estantes, tapetes, mesa de leitura, candelabro, globo,
+  pilha de livros, relógio, atril). Peças com vários quadros variam pelo lugar na sala.
+- **Progresso pelo EventBus** (`src/core/EventBus.ts`, `src/systems/progress.ts`): as regras
+  viram eventos (`quest:started`, `quest:advanced`, `quest:done`, `item:got`,
+  `spell:learned`, `level:up`, `dialogue:start`, `dialogue:end`). O HUD comemora cada etapa
+  e o jogo salva na hora em que o progresso muda, não só ao trocar de sala.
+
+### Problemas visuais restantes
+
+- Personagens têm 16x24 (1,5 tile). Para 2 tiles (16x32 ou 24x32) é preciso redesenhar à mão
+  as folhas de todos os ~50 personagens em `tools/art_people.py`, com as animações; ficou para
+  uma etapa própria.
+- Contorno dos personagens é "colorido" (tom escuro da cor vizinha), não preto puro; os móveis
+  novos já usam contorno escuro. Unificar quando os personagens forem redesenhados.
+- Grande Salão, Corredor, Galeria, Observatório e as salas dos quadros ainda não ganharam os
+  móveis novos (só sombras e luz).
+- Assoalho de pedra igual em quase todas as salas; falta uma variação por ala (cozinha com
+  ladrilho, gabinete com madeira escura).
+- O contorno de destaque ao aproximar usa o brilho do WebGL; em aparelhos sem WebGL fica só
+  o "!" e o pulinho.
+- Painel da missão cobre um pedaço da sala no canto superior esquerdo quando o objetivo tem
+  3 linhas; uma opção de recolher o painel ajudaria no celular.
+- Halos das velas são iguais em todas as salas; salas escuras (porão, Quadro da Coragem)
+  poderiam escurecer o resto para a luz contar mais.
+- Transição entre salas é um escurecer/clarear (320 ms); um efeito próprio (cortina de
+  estrelas) daria mais personalidade.
