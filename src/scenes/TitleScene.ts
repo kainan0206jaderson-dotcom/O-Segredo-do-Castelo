@@ -123,7 +123,7 @@ export class TitleScene extends Phaser.Scene {
     looks.forEach((look, i) => {
       const x = GAME_WIDTH / 2 + (i === 0 ? -64 : 64);
       const sheet = look === 'menina' ? 'player.aprendiza' : 'player.aprendiz';
-      const kid = this.add.sprite(x, 190, sheet).setOrigin(0.5, 1).setScale(3)
+      const kid = this.add.sprite(x, 190, sheet).setOrigin(0.5, 1).setScale(2)
         .setInteractive({ useHandCursor: true })
         // tocar só seleciona (o outro fica apagado); para seguir, o botão OK
         .on('pointerdown', () => this.pickLook(look));

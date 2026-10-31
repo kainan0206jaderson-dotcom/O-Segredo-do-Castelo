@@ -257,11 +257,36 @@ HEAD_REPS = {10: 1}
 BODY_REPS = {1: 1, 2: 1, 5: 4}
 
 
-def player_frame(head, body, legs, bob):
+# Cabelo comprido da aprendiz [KAINAN: diferenciar os dois modelos do jogador]: emoldura o
+# rosto até o queixo e desce até a cintura (de frente), pelas costas até abaixo do cinto
+# (de trás) e num rabo de cavalo mais longo (de lado). Índices já na grade de 32 linhas.
+LONG_HAIR = {
+    "down": {14: {3: "k", 4: "h", 13: "h", 14: "k"}, 15: {3: "k", 4: "h", 13: "h", 14: "k"},
+             22: {5: "h", 11: "h"}, 23: {5: "j", 11: "j"}},
+    "up": {15: {3: "k", 4: "j", 12: "j", 13: "k"},
+           22: {5: "h", 6: "h", 7: "H", 8: "h", 9: "h", 10: "j"}, 23: {6: "j", 7: "h", 8: "h", 9: "j"}, 24: {7: "j", 8: "j"}},
+    "side": {21: {3: "h"}, 22: {3: "j"}, 23: {3: "j"}},
+}
+
+
+def edit_rows(rows, edits):
+    rows = list(rows)
+    for y, cols in edits.items():
+        r = list(rows[y])
+        for x, ch in cols.items():
+            r[x] = ch
+        rows[y] = "".join(r)
+    return rows
+
+
+def player_frame(head, body, legs, bob, edits=None):
     head, _ = stretch(head, HEAD_REPS)
     body, _ = stretch(body, BODY_REPS)
     legs, _ = stretch(legs, {0: 1})
-    rows = shift_down(head + body, bob)[: H - len(legs)] + legs
+    top = head + body
+    if edits:
+        top = edit_rows(top, edits)
+    rows = shift_down(top, bob)[: H - len(legs)] + legs
     check("aprendiz", rows, 16, H)
     return rows
 
@@ -295,8 +320,9 @@ def player_sheet(name, robe, menina=False, skin=None, hair=None, roupa=None):
     else:
         dirs = ((HEAD_DOWN, BODY_DOWN, LEGS_DOWN), (HEAD_UP, BODY_UP, LEGS_DOWN), (HEAD_SIDE, BODY_SIDE, LEGS_SIDE))
     for r, (head, body, legs) in enumerate(dirs):
+        edits = LONG_HAIR[("down", "up", "side")[r]] if menina else None
         for c, (leg, bob) in enumerate(seq):
-            sheet.paste(paint(player_frame(head, body, legs[leg], bob), pal, 16, H, ref_pal=ref_pal), (c * 16, r * H))
+            sheet.paste(paint(player_frame(head, body, legs[leg], bob, edits), pal, 16, H, ref_pal=ref_pal), (c * 16, r * H))
     if name == "estrelada":
         # capa estrelada: pontinhos dourados no manto
         px = sheet.load()
