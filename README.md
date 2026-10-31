@@ -88,13 +88,11 @@ Textos, diálogos, missões e itens ficam em `content/` como JSON, sem código:
 
 ### Problemas visuais restantes
 
-- Personagens têm 16x24 (1,5 tile). Para 2 tiles (16x32 ou 24x32) é preciso redesenhar à mão
-  as folhas de todos os ~50 personagens em `tools/art_people.py`, com as animações; ficou para
-  uma etapa própria.
+- Personagens humanos e fantasmas têm 2 tiles (16x32, etapa 6), alongados com `stretch()` a
+  partir das grades antigas; gnomos, Trinco e Fuxico seguem 16x16 de propósito. Uma passada à
+  mão nos quadros de andar de lado deixaria o passo mais natural.
 - Contorno dos personagens é "colorido" (tom escuro da cor vizinha), não preto puro; os móveis
-  novos já usam contorno escuro. Unificar quando os personagens forem redesenhados.
-- Grande Salão, Corredor, Galeria, Observatório e as salas dos quadros ainda não ganharam os
-  móveis novos (só sombras e luz).
+  novos já usam contorno escuro.
 - Assoalho de pedra igual em quase todas as salas; falta uma variação por ala (cozinha com
   ladrilho, gabinete com madeira escura).
 - O contorno de destaque ao aproximar usa o brilho do WebGL; em aparelhos sem WebGL fica só

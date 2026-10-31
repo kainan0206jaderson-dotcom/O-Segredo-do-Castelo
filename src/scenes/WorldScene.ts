@@ -368,7 +368,7 @@ export class WorldScene extends Phaser.Scene {
           const frames = this.textures.get(sprite).frameTotal - 1;
           const frame = prop<number>(o.properties, 'frame') ?? (frames > 1 ? ((o.x! / 16) * 7 + (o.y! / 16) * 3) % frames : 0);
           const flat = FLAT_PROPS.some((f) => sprite.startsWith(f));
-          const p = this.add.sprite(o.x!, o.y!, sprite, Math.floor(frame)).setOrigin(0.5, 1).setDepth(sprite.startsWith('prop.tapete') ? 0.3 : sprite.startsWith('prop.estandarte') ? o.y! + 140 : o.y!);
+          const p = this.add.sprite(o.x!, o.y!, sprite, Math.floor(frame)).setOrigin(0.5, 1).setDepth(sprite.startsWith('prop.tapete') ? 0.3 : o.y! + (prop<number>(o.properties, 'acima') ?? 0));
           if (assets().hasAnimation(sprite, 'idle')) p.play({ key: AssetRegistry.animKey(sprite, 'idle'), startFrame: Phaser.Math.Between(0, 2) });
           if (LIGHT_PROPS.has(sprite)) torchHalo(this, o.x!, o.y! - p.height + 4);
           else if (!flat) dropShadow(this, p, Math.min(28, p.width - 2));
