@@ -13,8 +13,8 @@ function ensureTextures(scene: Phaser.Scene): void {
   if (!scene.textures.exists(SHADOW)) {
     // oval de 14x5 em pixels inteiros: miolo mais escuro e borda clara
     const g = scene.make.graphics({ x: 0, y: 0 }, false);
-    g.fillStyle(0x140f20, 0.28).fillRect(1, 0, 12, 5).fillRect(0, 1, 14, 3);
-    g.fillStyle(0x140f20, 0.3).fillRect(3, 1, 8, 3);
+    g.fillStyle(0x140f20, 0.34).fillRect(1, 0, 12, 5).fillRect(0, 1, 14, 3);
+    g.fillStyle(0x140f20, 0.34).fillRect(3, 1, 8, 3);
     g.generateTexture(SHADOW, 14, 5);
     g.destroy();
   }
@@ -22,7 +22,7 @@ function ensureTextures(scene: Phaser.Scene): void {
     // halo em degraus (4 anéis), para combinar com a pixel art em vez de um degradê liso
     const g = scene.make.graphics({ x: 0, y: 0 }, false);
     const c = HALO_SIZE / 2;
-    const rings: [number, number][] = [[24, 0.18], [18, 0.22], [12, 0.3], [6, 0.4]];
+    const rings: [number, number][] = [[24, 0.1], [18, 0.14], [12, 0.2], [6, 0.3]];
     for (const [r, a] of rings) g.fillStyle(0xffc860, a).fillCircle(c, c, r);
     g.generateTexture(HALO, HALO_SIZE, HALO_SIZE);
     g.destroy();
@@ -58,7 +58,7 @@ export function dropShadow(scene: Phaser.Scene, target: Anchored, width = 14, fo
 }
 
 /** Halo de luz quente em volta de uma chama, tremulando devagar. radius em pixels. */
-export function torchHalo(scene: Phaser.Scene, x: number, y: number, radius = 22): Phaser.GameObjects.Image {
+export function torchHalo(scene: Phaser.Scene, x: number, y: number, radius = 20): Phaser.GameObjects.Image {
   ensureTextures(scene);
   const h = scene.add.image(Math.round(x), Math.round(y), HALO).setBlendMode(Phaser.BlendModes.ADD)
     .setScale((radius * 2) / HALO_SIZE).setDepth(1).setAlpha(0.9);
@@ -68,4 +68,20 @@ export function torchHalo(scene: Phaser.Scene, x: number, y: number, radius = 22
     delay: Phaser.Math.Between(0, 400),
   });
   return h;
+}
+
+/**
+ * Luar entrando pela janela: um facho claro em degraus que desce da janela até o chão.
+ * (x, y) é o pé da janela, no meio do tile.
+ */
+export function windowLight(scene: Phaser.Scene, x: number, y: number): Phaser.GameObjects.Graphics {
+  const g = scene.add.graphics({ x: Math.round(x), y: Math.round(y) }).setBlendMode(Phaser.BlendModes.ADD).setDepth(0.4);
+  const steps = 5;
+  for (let i = 0; i < steps; i++) {
+    // cada degrau é mais largo e mais fraco, como luz que se espalha
+    const w = 12 + i * 4;
+    g.fillStyle(0x9fb8ff, 0.16 - i * 0.025).fillRect(-w / 2, i * 8, w, 8);
+  }
+  scene.tweens.add({ targets: g, alpha: { from: 0.8, to: 1 }, duration: 2400, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
+  return g;
 }

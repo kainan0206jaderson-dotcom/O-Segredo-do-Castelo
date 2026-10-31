@@ -36,6 +36,7 @@ import mapaLayout from '../ui/mapa-layout.json';
 import { setFalaProvider } from '../core/aparencia';
 import { nextGuidePoint, type MapObject } from '../systems/guia';
 import { GuideTrail } from '../world/GuideTrail';
+import { dropShadow, torchHalo, windowLight } from '../world/Lighting';
 
 export interface WorldData {
   map: string;
@@ -95,6 +96,13 @@ const ORB_SPEED = 78;
 const BOSS_FLAG = 'boss:fase';
 /** Chance de aparecerem sombrinhas fujonas ao entrar numa sala (depois do Ato 1). */
 const RUNAWAY_CHANCE = 0.2;
+
+/** Enfeites que acendem (ganham halo de luz) e os que ficam rentes ao chão ou na parede (sem sombra). */
+const LIGHT_PROPS = new Set(['prop.vela', 'prop.fonte-luz', 'prop.tocha', 'prop.candelabro']);
+const FLAT_PROPS = ['prop.quadrinho', 'prop.toalha', 'prop.banco', 'prop.tapete', 'prop.janela', 'prop.escadaria', 'prop.selo', 'prop.alcapao', 'prop.escada-porao'];
+
+/** Índice (gid) do tile de janela no tileset do castelo. */
+const WINDOW_TILE = 7;
 
 const ACT2_MAPS = ['map.biblioteca', 'map.sala-espectral', 'map.estufa', 'map.observatorio'];
 
@@ -223,6 +231,13 @@ export class WorldScene extends Phaser.Scene {
     map.createLayer('chao', tilesets)!;
     this.walls = map.createLayer('paredes', tilesets)!;
     this.walls.setCollisionByProperty({ collides: true });
+    // luar pelas janelas da parede (tile "janela" do tileset)
+    this.walls.forEachTile((t) => {
+      if (t.index !== WINDOW_TILE) return;
+      let ty = t.y + 1;
+      while (ty < t.y + 4 && this.walls.getTileAt(t.x, ty)?.collides) ty++;
+      windowLight(this, t.pixelX + 8, ty * TILE_SIZE);
+    });
 
     const objects = map.getObjectLayer('objetos')?.objects ?? [];
     const spawns = objects.filter((o) => o.type === 'spawn');
@@ -230,6 +245,7 @@ export class WorldScene extends Phaser.Scene {
     const capa = s.equipment.capa ? db.items[s.equipment.capa]?.sheet : undefined;
     this.player = new Player(this, spawn.x!, spawn.y!, prop<Facing>(spawn.properties, 'facing') ?? 'down', capa ?? DEFAULT_SHEET);
     this.physics.add.collider(this.player, this.walls);
+    dropShadow(this, this.player, 12, true);
     this.puzzles = new Puzzles(this, this.player, this.walls, {
       platesSolved: (g) => this.onPlatesSolved(g),
       socketFilled: (sk) => this.onLevitatedIntoSocket(sk),
@@ -342,6 +358,8 @@ export class WorldScene extends Phaser.Scene {
           if (!sprite) break;
           const p = this.add.sprite(o.x!, o.y!, sprite, prop<number>(o.properties, 'frame') ?? 0).setOrigin(0.5, 1).setDepth(o.y!);
           if (assets().hasAnimation(sprite, 'idle')) p.play({ key: AssetRegistry.animKey(sprite, 'idle'), startFrame: Phaser.Math.Between(0, 2) });
+          if (LIGHT_PROPS.has(sprite)) torchHalo(this, o.x!, o.y! - p.height + 4);
+          else if (!FLAT_PROPS.some((f) => sprite.startsWith(f))) dropShadow(this, p, Math.min(20, p.width - 2));
           // móvel de enfeite que ocupa espaço: "solido" é a altura (em px) da base que bloqueia
           const solid = prop<number>(o.properties, 'solido');
           if (solid) {

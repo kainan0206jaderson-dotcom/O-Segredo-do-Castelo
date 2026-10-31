@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { dropShadow } from '../world/Lighting';
 import { AssetRegistry } from '../core/AssetRegistry';
 
 export type BossPhase = 'parada' | 'fase1' | 'fase2';
@@ -44,6 +45,7 @@ export class Boss extends Phaser.GameObjects.Sprite {
     this.setOrigin(0.5, 1).setDepth(y);
     this.baseY = y;
     this.play(AssetRegistry.animKey(sheet, 'idle'));
+    dropShadow(scene, this, 14, true);
     this.zzz = scene.add.text(x, y - 30, 'cansada!', { fontFamily: '"Pixelify Sans", Georgia, serif', fontSize: '8px', color: '#c8c8d6' })
       .setOrigin(0.5).setResolution(4).setDepth(1300).setVisible(false);
   }

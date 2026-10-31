@@ -30,7 +30,7 @@ export class Hud {
 
   constructor(private scene: Phaser.Scene, touch: boolean) {
     const l = this.l;
-    this.questBg = scene.add.rectangle(l.quest.x, l.quest.y, 10, 10, 0x18142a, 0.8).setOrigin(0).setScrollFactor(0).setDepth(1499).setVisible(false);
+    this.questBg = scene.add.rectangle(l.quest.x, l.quest.y, 10, 10, 0x18142a, 0.62).setOrigin(0).setScrollFactor(0).setDepth(1499).setVisible(false);
     this.questTitle = scene.add.text(l.quest.x + 4, l.quest.y + 2, '', textStyle(9, COLORS.gold, { fontStyle: 'bold', stroke: '#18142a', strokeThickness: 3, wordWrap: { width: l.questWrap } }))
       .setScrollFactor(0).setDepth(1500).setResolution(TEXT_RES);
     // 9 px com contorno: o menor tamanho que ainda se lê bem na tela do celular
