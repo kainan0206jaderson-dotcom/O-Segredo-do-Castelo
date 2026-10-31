@@ -2426,6 +2426,42 @@
           "repeat": -1
         }
       }
+    },
+    "prop.tapete": {
+      "url": "sprites/tapete.png",
+      "frameWidth": 32,
+      "frameHeight": 16,
+      "animations": {}
+    },
+    "prop.mesa-leitura": {
+      "url": "sprites/mesa-leitura.png",
+      "frameWidth": 32,
+      "frameHeight": 22,
+      "animations": {}
+    },
+    "prop.candelabro": {
+      "url": "sprites/candelabro.png",
+      "frameWidth": 16,
+      "frameHeight": 32,
+      "animations": {}
+    },
+    "prop.globo": {
+      "url": "sprites/globo.png",
+      "frameWidth": 16,
+      "frameHeight": 24,
+      "animations": {}
+    },
+    "prop.pilha-livros": {
+      "url": "sprites/pilha-livros.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {}
+    },
+    "prop.relogio": {
+      "url": "sprites/relogio.png",
+      "frameWidth": 16,
+      "frameHeight": 32,
+      "animations": {}
     }
   },
   "tilesets": {

@@ -21,6 +21,7 @@ import art_visual  # noqa: E402
 import art_mapa  # noqa: E402
 import art_icones32  # noqa: E402
 import art_bolsa  # noqa: E402
+import art_cenario  # noqa: E402
 
 # ---------------------------------------------------------------- tileset 8x4
 
@@ -238,19 +239,22 @@ WOODF = ramp((140, 96, 58))
 
 
 def wood_floor(seed):
+    """Tábuas largas (8 px) e compridas: emenda só em uma a cada duas tábuas, junta suave
+    e veio da madeira em traços, para o assoalho não parecer parede de tijolo."""
     def f(x, y):
-        plank = y // 4
-        joint_col = mix(WOODF[0], WOODF[1], 0.55)
-        if y % 4 == 3:
+        plank = y // 8
+        joint_col = mix(WOODF[1], WOODF[2], 0.35)
+        if y % 8 == 7:
+            return mix(WOODF[0], WOODF[1], 0.6)
+        if (plank + seed) % 2 == 0 and x == (plank * 11 + seed * 5) % 16:
             return joint_col
-        joint = (plank * 7 + seed * 5) % 16
-        if x == joint:
-            return joint_col
-        c = WOODF[2] if (plank + seed) % 3 else mix(WOODF[2], WOODF[1], 0.3)
-        if y % 4 == 0:
-            c = mix(c, WOODF[3], 0.3)
-        if hsh(x // 3, y, 30 + seed) < 0.12:
-            c = mix(c, WOODF[1], 0.45)
+        tone = (plank * 5 + seed * 3) % 3
+        c = WOODF[2] if tone == 0 else mix(WOODF[2], WOODF[1], 0.22) if tone == 1 else mix(WOODF[2], WOODF[3], 0.18)
+        if y % 8 == 0:
+            c = mix(c, WOODF[3], 0.35)
+        # veio: traços horizontais curtos
+        if hsh(x // 4, y, 30 + seed) < 0.16 and y % 8 in (2, 4, 5):
+            c = mix(c, WOODF[1], 0.35)
         return c
 
     return f
@@ -413,7 +417,7 @@ for name in sorted(os.listdir(os.path.join(ROOT, "maps"))):
 
 new_icons = art_people.render_all()
 art_visual.render_visual()
-decor = art_decor.render_decor(HOUSE, CREST) + art_prologo.render_prologo() + art_logo.render_logo() + art_mapa.render_mapa() + art_bolsa.render_bolsa()
+decor = art_decor.render_decor(HOUSE, CREST) + art_prologo.render_prologo() + art_logo.render_logo() + art_mapa.render_mapa() + art_bolsa.render_bolsa() + art_cenario.render_cenario()
 
 # ---------------------------------------------------------------- manifesto
 
