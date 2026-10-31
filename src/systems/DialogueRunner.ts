@@ -7,6 +7,8 @@ export interface DialogueView {
   text: string;
   /** Escolhas visíveis; vazio quando é só avançar. */
   choices: string[];
+  /** Efeito de cena da fala, se houver (ver DialogueNode.cena). */
+  cena?: string;
 }
 
 /**
@@ -34,7 +36,7 @@ export class DialogueRunner {
 
   view(): DialogueView | undefined {
     if (!this.node) return undefined;
-    return { speaker: this.node.speaker ?? this.def.speaker, text: this.node.text, choices: this.visibleChoices.map((c) => c.text) };
+    return { speaker: this.node.speaker ?? this.def.speaker, text: this.node.text, choices: this.visibleChoices.map((c) => c.text), cena: this.node.cena };
   }
 
   /** Avança uma fala sem escolhas. */

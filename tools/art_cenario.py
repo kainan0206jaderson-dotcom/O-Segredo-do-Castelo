@@ -332,6 +332,35 @@ def lectern():
     return outline(im)
 
 
+# ---------------------------------------------------------------- Chapéu das Virtudes (16x16)
+
+def virtue_hat():
+    """Chapéu das Virtudes [FICÇÃO]: chapéu pontudo de veludo roxo com a ponta caída,
+    faixa dourada e estrelinhas bordadas. Não tem rosto nem fala: só brilha na cor da casa."""
+    w, h = 16, 16
+    im, px = canvas(w, h)
+    vel = ramp((92, 56, 140))
+    # aba
+    for x in range(1, 15):
+        put(px, x, 13, vel[1] if x > 7 else vel[2], w, h)
+        put(px, x, 14, vel[0], w, h)
+    # cone (afina para cima) com a ponta caindo para a direita
+    for y in range(4, 13):
+        half = 1 + (y - 4) * 4 // 8
+        for x in range(7 - half, 9 + half):
+            put(px, x, y, vel[3] if x < 7 else vel[2] if x < 9 else vel[1], w, h)
+    for x, y in ((8, 3), (9, 2), (10, 2), (11, 3), (12, 4)):
+        put(px, x, y, vel[2], w, h)
+    put(px, 12, 5, GOLD[3], w, h)
+    # faixa dourada
+    for x in range(4, 12):
+        put(px, x, 11, GOLD[2] if x % 3 else GOLD[3], w, h)
+    # estrelinhas
+    for x, y in ((6, 8), (9, 6), (8, 9)):
+        put(px, x, y, (255, 236, 150), w, h)
+    return outline(im)
+
+
 def render_cenario():
     """Desenha os móveis novos e devolve as entradas do manifesto (chave, url, largura, altura)."""
     pecas = {
@@ -343,6 +372,7 @@ def render_cenario():
         "pilha-livros": book_stack(),
         "relogio": clock(),
         "atril": lectern(),
+        "chapeu": virtue_hat(),
     }
     sizes = {"estante": (16, 32), "tapete": (32, 16)}
     out = []

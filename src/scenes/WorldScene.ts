@@ -103,6 +103,9 @@ const RUNAWAY_CHANCE = 0.2;
 const LIGHT_PROPS = new Set(['prop.vela', 'prop.fonte-luz', 'prop.tocha', 'prop.candelabro']);
 const FLAT_PROPS = ['prop.quadrinho', 'prop.toalha', 'prop.banco', 'prop.tapete', 'prop.janela', 'prop.escadaria', 'prop.selo', 'prop.alcapao', 'prop.escada-porao'];
 
+/** Cor de cada casa (brilho do Chapéu das Virtudes). */
+const HOUSE_COLORS: Record<string, number> = { coragem: 0xe04848, astucia: 0x48b070, lealdade: 0xf0c040, inteligencia: 0x4c80e0 };
+
 /** Índice (gid) do tile de janela no tileset do castelo. */
 const WINDOW_TILE = 7;
 
@@ -147,6 +150,8 @@ export class WorldScene extends Phaser.Scene {
   private controls!: InputManager;
   private things: Thing[] = [];
   private dialogueId = '';
+  /** Chapéu das Virtudes na cabeça do aprendiz durante a escolha da casa. */
+  private hat?: Phaser.GameObjects.Image;
   private candles: Candle[] = [];
   private creatures: Creature[] = [];
   private triggers: Trigger[] = [];
@@ -363,7 +368,7 @@ export class WorldScene extends Phaser.Scene {
           const frames = this.textures.get(sprite).frameTotal - 1;
           const frame = prop<number>(o.properties, 'frame') ?? (frames > 1 ? ((o.x! / 16) * 7 + (o.y! / 16) * 3) % frames : 0);
           const flat = FLAT_PROPS.some((f) => sprite.startsWith(f));
-          const p = this.add.sprite(o.x!, o.y!, sprite, Math.floor(frame)).setOrigin(0.5, 1).setDepth(sprite.startsWith('prop.tapete') ? 0.3 : o.y!);
+          const p = this.add.sprite(o.x!, o.y!, sprite, Math.floor(frame)).setOrigin(0.5, 1).setDepth(sprite.startsWith('prop.tapete') ? 0.3 : sprite.startsWith('prop.estandarte') ? o.y! + 140 : o.y!);
           if (assets().hasAnimation(sprite, 'idle')) p.play({ key: AssetRegistry.animKey(sprite, 'idle'), startFrame: Phaser.Math.Between(0, 2) });
           if (LIGHT_PROPS.has(sprite)) torchHalo(this, o.x!, o.y! - p.height + 4);
           else if (!flat) dropShadow(this, p, Math.min(28, p.width - 2));
@@ -676,10 +681,45 @@ export class WorldScene extends Phaser.Scene {
     this.hud.setVitals({ vida: s.vida, vidaMax: st.vidaMax, energia: s.energia, energiaMax: st.energiaMax, level: s.level });
   }
 
+  /** Chapéu das Virtudes desce flutuando até a cabeça do aprendiz. */
+  private putHat(): void {
+    if (this.hat) return;
+    const top = this.player.y - this.player.height;
+    this.hat = this.add.image(this.player.x, top - 20, 'prop.chapeu').setOrigin(0.5, 1).setDepth(this.player.depth + 1).setAlpha(0);
+    this.tweens.add({ targets: this.hat, y: top + 5, alpha: 1, duration: 600, ease: 'Sine.out' });
+    audio.sfx('confirmar');
+  }
+
+  /** Casa escolhida: o chapéu brilha com a cor da casa e some numa nuvenzinha. */
+  private hatGlow(house: string): void {
+    const hat = this.hat;
+    if (!hat) return;
+    this.hat = undefined;
+    const color = HOUSE_COLORS[house] ?? 0xfad65c;
+    const glow = this.add.circle(hat.x, hat.y - 7, 4, color, 0.7).setDepth(hat.depth + 1).setBlendMode(Phaser.BlendModes.ADD);
+    hat.setTint(color);
+    this.tweens.add({ targets: glow, radius: 22, alpha: 0, duration: 700, onComplete: () => glow.destroy() });
+    this.tweens.add({
+      targets: hat, y: hat.y - 14, alpha: 0, delay: 500, duration: 500,
+      onComplete: () => {
+        this.puff(hat.x, hat.y - 6);
+        hat.destroy();
+      },
+    });
+  }
+
+  private removeHat(): void {
+    if (!this.hat) return;
+    const hat = this.hat;
+    this.hat = undefined;
+    this.tweens.add({ targets: hat, alpha: 0, duration: 300, onComplete: () => hat.destroy() });
+  }
+
   /** Avisos de texto vão para a tela; tutoriais e fim de ato entram na fila. */
   private showNotices(notices: Notice[]): void {
     // missões, itens e feitiços viram eventos: o HUD comemora a etapa e o jogo salva na hora
     emitNotices(events, notices);
+    if (notices.some((n) => n.kind === 'house') && session.state.house) this.hatGlow(session.state.house);
     const kinds = new Set(notices.map((n) => n.kind));
     const item = notices.find((n) => n.kind === 'item');
     if (kinds.has('level')) this.bark.say(pickLine('nivel'), true);
@@ -1489,6 +1529,7 @@ export class WorldScene extends Phaser.Scene {
     this.refreshPresence(true);
     this.applyOutfit();
     const view = this.dialogue?.view();
+    if (view?.cena === 'chapeu') this.putHat();
     if (!view) {
       this.endDialogue();
       return;
@@ -1523,6 +1564,7 @@ export class WorldScene extends Phaser.Scene {
     this.talkingTo = undefined;
     this.dialogue = undefined;
     events.emit('dialogue:end', { id: this.dialogueId });
+    this.removeHat();
     if (this.actor) {
       const a = this.actor;
       this.actor = undefined;
