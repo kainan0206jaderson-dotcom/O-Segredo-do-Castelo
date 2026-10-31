@@ -1775,7 +1775,7 @@ export class WorldScene extends Phaser.Scene {
       for (const c of this.candles) if (c.lit) out.push({ x: c.x, y: c.y - 10, r: 58 });
       return out;
     }
-    const out: Light[] = [{ x: this.player.x, y: this.player.y - 10, r: 72, i: 0.6 }, ...this.staticLights];
+    const out: Light[] = [{ x: this.player.x, y: this.player.y - 10, r: 84, i: 0.75 }, ...this.staticLights];
     for (const c of this.candles) if (c.lit) out.push({ x: c.x, y: c.y - 12, r: 80, i: 0.95, c: 0xd88040 });
     return out;
   }
