@@ -4,6 +4,7 @@ import { assets } from '../core/registry';
 import { COLORS, TEXT_RES, textStyle } from './theme';
 import { flash } from './fx';
 import { hudLayout, type HudLayout } from './hudLayout';
+import { events } from '../core/EventBus';
 
 const ICONS = 'ui.icones';
 
@@ -69,6 +70,51 @@ export class Hud {
 
     this.roomName = scene.add.text(GAME_WIDTH / 2, l.roomName.y + l.roomName.h / 2, '', textStyle(13, COLORS.gold, { stroke: '#18142a', strokeThickness: 4 }))
       .setOrigin(0.5).setScrollFactor(0).setDepth(1501).setResolution(TEXT_RES).setAlpha(0);
+
+    // o HUD escuta o progresso pelo EventBus (sem a cena chamar direto)
+    const offs = [
+      events.on('quest:advanced', () => this.celebrate('Etapa concluída!', false)),
+      events.on('quest:done', (p) => this.celebrate(p.text, true)),
+      // durante o diálogo o painel da missão fica apagadinho, para a conversa ter foco
+      events.on('dialogue:start', () => this.dimQuest(true)),
+      events.on('dialogue:end', () => this.dimQuest(false)),
+    ];
+    scene.events.once(Phaser.Scenes.Events.SHUTDOWN, () => offs.forEach((off) => off()));
+  }
+
+  private dimQuest(on: boolean): void {
+    this.scene.tweens.add({ targets: [this.questBg, this.questTitle, this.questObjective], alpha: on ? 0.3 : 1, duration: 200 });
+  }
+
+  /**
+   * Comemoração de etapa ou missão: faixa dourada no meio com estrelinhas que se espalham
+   * e o painel da missão piscando com o objetivo novo.
+   */
+  celebrate(text: string, big: boolean): void {
+    const l = this.l;
+    const y = l.notice.y + l.notice.h / 2;
+    const label = this.scene.add.text(GAME_WIDTH / 2, y, `★ ${text} ★`, textStyle(big ? 13 : 11, COLORS.gold, {
+      stroke: '#18142a', strokeThickness: 4, fontStyle: 'bold', align: 'center', wordWrap: { width: l.notice.w - 20 },
+    })).setOrigin(0.5).setScrollFactor(0).setDepth(2600).setResolution(TEXT_RES).setScale(0.6).setAlpha(0);
+    this.scene.tweens.chain({
+      targets: label,
+      tweens: [
+        { alpha: 1, scale: 1, duration: 220, ease: 'Back.out' },
+        { alpha: 0, y: y - 6, duration: 350, delay: big ? 1800 : 1100 },
+      ],
+      onComplete: () => label.destroy(),
+    });
+    // estrelinhas (quadradinhos de 2 px) que saem da faixa
+    for (let i = 0; i < (big ? 18 : 10); i++) {
+      const a = (Math.PI * 2 * i) / (big ? 18 : 10);
+      const dot = this.scene.add.rectangle(GAME_WIDTH / 2, y, 2, 2, i % 2 ? 0xfad65c : 0xf0e8f8)
+        .setScrollFactor(0).setDepth(2599);
+      this.scene.tweens.add({
+        targets: dot, x: GAME_WIDTH / 2 + Math.cos(a) * (big ? 90 : 60), y: y + Math.sin(a) * 26, alpha: 0,
+        duration: 700, ease: 'Quad.out', onComplete: () => dot.destroy(),
+      });
+    }
+    this.scene.tweens.add({ targets: this.questBg, fillAlpha: { from: 1, to: 0.62 }, duration: 600 });
   }
 
   /** Nome da sala ao entrar: aparece no meio, abaixo do HUD, e some sozinho. */

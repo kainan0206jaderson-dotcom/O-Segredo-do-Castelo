@@ -18,6 +18,8 @@ import { audio } from './audio/Audio';
 import { initVisual } from './core/visual';
 import { VisualScene } from './scenes/VisualScene';
 import { ModoScene } from './scenes/ModoScene';
+import { events } from './core/EventBus';
+import { autosave } from './systems/progress';
 
 // O canvas tem RENDER_ZOOM pixels reais por pixel de jogo. Toda câmera nova já nasce
 // ampliada e presa no canto, então cenas e HUD continuam usando coordenadas de jogo.
@@ -57,6 +59,8 @@ const game = new Phaser.Game({
 initVisual(game);
 setupMobileScreen();
 audio.install();
+// salva sempre que a missão anda, um item chega ou um diálogo termina (além de a cada sala)
+autosave(events, () => session.save());
 
 // atalho de depuração no console do navegador
 Object.assign(window as unknown as object, { game, session, audio });

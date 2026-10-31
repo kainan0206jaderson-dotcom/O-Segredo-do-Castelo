@@ -70,7 +70,7 @@ export function apply(effect: Effect, s: GameState, db: ContentDb): Notice[] {
     const q = need(db.quests, effect.startQuest, 'missão');
     if (s.quests[effect.startQuest]) return [];
     s.quests[effect.startQuest] = { stage: q.stages[0].id, done: false };
-    return [{ kind: 'quest-start', text: `Nova missão: ${q.title}` }];
+    return [{ kind: 'quest-start', text: `Nova missão: ${q.title}`, ref: effect.startQuest }];
   }
   if ('advanceQuest' in effect) {
     const q = need(db.quests, effect.advanceQuest, 'missão');
@@ -78,14 +78,14 @@ export function apply(effect: Effect, s: GameState, db: ContentDb): Notice[] {
     const p = s.quests[effect.advanceQuest];
     if (!p || p.done || p.stage === effect.to) return [];
     p.stage = effect.to;
-    return [{ kind: 'quest-update', text: 'Missão atualizada' }];
+    return [{ kind: 'quest-update', text: 'Missão atualizada', ref: effect.advanceQuest }];
   }
   if ('completeQuest' in effect) {
     const q = need(db.quests, effect.completeQuest, 'missão');
     const p = s.quests[effect.completeQuest];
     if (!p || p.done) return [];
     p.done = true;
-    return [{ kind: 'quest-done', text: `Missão concluída: ${q.title}` }, ...(q.xp ? apply({ giveXp: q.xp }, s, db) : [])];
+    return [{ kind: 'quest-done', text: `Missão concluída: ${q.title}`, ref: effect.completeQuest }, ...(q.xp ? apply({ giveXp: q.xp }, s, db) : [])];
   }
   if ('learnSpell' in effect) {
     const spell = need(db.spells, effect.learnSpell, 'feitiço');
