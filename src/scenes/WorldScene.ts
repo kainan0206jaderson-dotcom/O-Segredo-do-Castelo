@@ -1327,7 +1327,7 @@ export class WorldScene extends Phaser.Scene {
   private raiseShield(): void {
     this.shieldUntil = this.time.now + SHIELD_MS;
     if (!this.shield) {
-      this.shield = this.add.circle(this.player.x, this.player.y - 10, 15, 0x78c8f0, 0.18).setStrokeStyle(1.5, 0xbeebff, 0.9);
+      this.shield = this.add.circle(this.player.x, this.player.y - 14, 18, 0x78c8f0, 0.18).setStrokeStyle(1.5, 0xbeebff, 0.9);
     }
     this.shield.setVisible(true).setScale(0.3);
     this.tweens.add({ targets: this.shield, scale: 1, duration: 160, ease: 'Back.out' });
@@ -1608,7 +1608,7 @@ export class WorldScene extends Phaser.Scene {
     }
     if (this.shield) {
       const on = this.shielded;
-      this.shield.setVisible(on).setPosition(p.x, p.y - 10).setDepth(p.depth + 1);
+      this.shield.setVisible(on).setPosition(p.x, p.y - 14).setDepth(p.depth + 1);
       if (on && this.shieldUntil - time < 700) this.shield.setAlpha(Math.floor(time / 90) % 2 ? 0.3 : 1);
       else this.shield.setAlpha(1);
     }

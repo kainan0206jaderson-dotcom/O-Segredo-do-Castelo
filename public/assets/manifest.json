@@ -5,7 +5,7 @@
     "player.aprendiz": {
       "url": "sprites/aprendiz.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle-down": {
           "frames": [
@@ -292,7 +292,7 @@
     "player.aprendiz-coragem": {
       "url": "sprites/aprendiz-coragem.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle-down": {
           "frames": [
@@ -353,7 +353,7 @@
     "player.aprendiz-inteligencia": {
       "url": "sprites/aprendiz-inteligencia.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle-down": {
           "frames": [
@@ -414,7 +414,7 @@
     "player.aprendiz-astucia": {
       "url": "sprites/aprendiz-astucia.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle-down": {
           "frames": [
@@ -475,7 +475,7 @@
     "player.aprendiz-lealdade": {
       "url": "sprites/aprendiz-lealdade.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle-down": {
           "frames": [
@@ -536,7 +536,7 @@
     "player.aprendiz-estrelada": {
       "url": "sprites/aprendiz-estrelada.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle-down": {
           "frames": [
@@ -1448,7 +1448,7 @@
     "player.aprendiza": {
       "url": "sprites/aprendiza.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle-down": {
           "frames": [
@@ -1509,7 +1509,7 @@
     "player.aprendiza-coragem": {
       "url": "sprites/aprendiza-coragem.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle-down": {
           "frames": [
@@ -1570,7 +1570,7 @@
     "player.aprendiza-inteligencia": {
       "url": "sprites/aprendiza-inteligencia.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle-down": {
           "frames": [
@@ -1631,7 +1631,7 @@
     "player.aprendiza-astucia": {
       "url": "sprites/aprendiza-astucia.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle-down": {
           "frames": [
@@ -1692,7 +1692,7 @@
     "player.aprendiza-lealdade": {
       "url": "sprites/aprendiza-lealdade.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle-down": {
           "frames": [
@@ -1753,7 +1753,7 @@
     "player.aprendiza-estrelada": {
       "url": "sprites/aprendiza-estrelada.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle-down": {
           "frames": [
@@ -1900,7 +1900,7 @@
     "npc.prof-angelina": {
       "url": "sprites/prof-angelina.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -1923,7 +1923,7 @@
     "npc.prof-anturio": {
       "url": "sprites/prof-anturio.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -1946,7 +1946,7 @@
     "npc.prof-cerafum": {
       "url": "sprites/prof-cerafum.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -1969,7 +1969,7 @@
     "npc.prof-ucker": {
       "url": "sprites/prof-ucker.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -1992,7 +1992,7 @@
     "npc.prof-mustaffa": {
       "url": "sprites/prof-mustaffa.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -2016,7 +2016,7 @@
     "npc.prof-valkyria": {
       "url": "sprites/prof-valkyria.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -2039,7 +2039,7 @@
     "npc.prof-constantin": {
       "url": "sprites/prof-constantin.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -2062,7 +2062,7 @@
     "npc.prof-delphy": {
       "url": "sprites/prof-delphy.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -2085,7 +2085,7 @@
     "npc.prof-eulalia": {
       "url": "sprites/prof-eulalia.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -2108,7 +2108,7 @@
     "npc.prof-sibila": {
       "url": "sprites/prof-sibila.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -2131,7 +2131,7 @@
     "npc.prof-kassandra": {
       "url": "sprites/prof-kassandra.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -2154,7 +2154,7 @@
     "npc.prof-morgana-le-fay": {
       "url": "sprites/prof-morgana-le-fay.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -2177,7 +2177,7 @@
     "npc.prof-hector": {
       "url": "sprites/prof-hector.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -2200,7 +2200,7 @@
     "npc.prof-jackoby": {
       "url": "sprites/prof-jackoby.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -2223,7 +2223,7 @@
     "npc.prof-agnes": {
       "url": "sprites/prof-agnes.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -2246,7 +2246,7 @@
     "npc.prof-leon": {
       "url": "sprites/prof-leon.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -2269,7 +2269,7 @@
     "npc.prof-lilith": {
       "url": "sprites/prof-lilith.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -2292,7 +2292,7 @@
     "npc.prof-lucio": {
       "url": "sprites/prof-lucio.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -2315,7 +2315,7 @@
     "npc.prof-wolfgang": {
       "url": "sprites/prof-wolfgang.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -2338,7 +2338,7 @@
     "npc.prof-merlina": {
       "url": "sprites/prof-merlina.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -2361,7 +2361,7 @@
     "npc.prof-nickolay": {
       "url": "sprites/prof-nickolay.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -2384,7 +2384,7 @@
     "npc.prof-mildrety": {
       "url": "sprites/prof-mildrety.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [
@@ -2407,7 +2407,7 @@
     "npc.prof-oliveira": {
       "url": "sprites/prof-oliveira.png",
       "frameWidth": 16,
-      "frameHeight": 24,
+      "frameHeight": 32,
       "animations": {
         "idle": {
           "frames": [

@@ -77,6 +77,17 @@ def shift_down(rows, n, w=16):
     return ["." * w] * n + rows[: len(rows) - n]
 
 
+def stretch(rows, reps):
+    """Alonga uma grade repetindo linhas: reps = {índice: cópias extras}. É como o
+    desenhista alonga um boneco (mais manga, mais túnica, mais perna) sem redesenhar o
+    contorno. Devolve as linhas novas e a função que leva um índice antigo ao novo."""
+    out, where = [], {}
+    for i, r in enumerate(rows):
+        where[i] = len(out)
+        out.extend([r] * (1 + reps.get(i, 0)))
+    return out, lambda i: where[i]
+
+
 def with_mouth(rows, y, x0, patch):
     rows = list(rows)
     r = list(rows[y])
@@ -239,9 +250,19 @@ MENINA_PAL = {"r": (232, 96, 150), "R": (255, 168, 204)}
 NAVY = [(26, 34, 74), (40, 54, 112), (66, 86, 156)]
 
 
+# 2 tiles de altura (16x32): rosto com uma linha a mais, ombros, mangas e túnica mais
+# compridos e pernas com uma linha a mais.
+H = 32
+HEAD_REPS = {10: 1}
+BODY_REPS = {1: 1, 2: 1, 5: 4}
+
+
 def player_frame(head, body, legs, bob):
-    rows = shift_down(head + body, bob)[:21] + legs
-    check("aprendiz", rows, 16, 24)
+    head, _ = stretch(head, HEAD_REPS)
+    body, _ = stretch(body, BODY_REPS)
+    legs, _ = stretch(legs, {0: 1})
+    rows = shift_down(head + body, bob)[: H - len(legs)] + legs
+    check("aprendiz", rows, 16, H)
     return rows
 
 
@@ -268,19 +289,19 @@ def player_sheet(name, robe, menina=False, skin=None, hair=None, roupa=None):
         hr = ramp(hair)
         pal.update({"h": hr[2], "H": hr[3], "j": hr[1]})
     seq = [("stand", 0), ("stand", 1), ("l", 0), ("mid", 1), ("r", 0), ("mid", 1)]
-    sheet = Image.new("RGBA", (96, 72), (0, 0, 0, 0))
+    sheet = Image.new("RGBA", (96, 3 * H), (0, 0, 0, 0))
     if menina:
         dirs = ((HEAD_DOWN_F, BODY_DOWN_F, LEGS_DOWN), (HEAD_UP_F, BODY_UP_F, LEGS_DOWN), (HEAD_SIDE_F, BODY_SIDE_F, LEGS_SIDE))
     else:
         dirs = ((HEAD_DOWN, BODY_DOWN, LEGS_DOWN), (HEAD_UP, BODY_UP, LEGS_DOWN), (HEAD_SIDE, BODY_SIDE, LEGS_SIDE))
     for r, (head, body, legs) in enumerate(dirs):
         for c, (leg, bob) in enumerate(seq):
-            sheet.paste(paint(player_frame(head, body, legs[leg], bob), pal, 16, 24, ref_pal=ref_pal), (c * 16, r * 24))
+            sheet.paste(paint(player_frame(head, body, legs[leg], bob), pal, 16, H, ref_pal=ref_pal), (c * 16, r * H))
     if name == "estrelada":
         # capa estrelada: pontinhos dourados no manto
         px = sheet.load()
         robe_cols = {tuple(v[:3]) for k, v in robe_pal(robe).items() if k in "pq"}
-        for y in range(72):
+        for y in range(3 * H):
             for x in range(96):
                 if px[x, y][3] and px[x, y][:3] in robe_cols and (x * 7 + y * 5) % 13 == 0:
                     px[x, y] = (255, 236, 150, 255)
@@ -714,6 +735,10 @@ def prof_pal(p):
     return pal
 
 
+# professores em 2 tiles: rosto +1, peito e mangas +3, túnica +3, pernas +1
+PROF_REPS = {10: 1, 14: 1, 15: 1, 18: 1, 19: 2, 20: 1, 22: 1}
+
+
 def render_professores():
     with open(os.path.join(os.path.dirname(__file__), "..", "content", "professores.json"), encoding="utf-8") as f:
         lista = json.load(f)["lista"]
@@ -723,12 +748,13 @@ def render_professores():
             for i, r in PROF_BARBA.items():
                 rows[i] = r
         pal = prof_pal(p)
+        rows, at = stretch(rows, PROF_REPS)
         if p.get("fantasma"):
-            talk = with_mouth(rows, 11, 8, "e")
-            frames = [paint(r, pal, 16, 24, False) for r in (rows, shift_down(rows, 1), talk, rows)]
+            talk = with_mouth(rows, at(11), 8, "e")
+            frames = [paint(r, pal, 16, H, False) for r in (rows, shift_down(rows, 1), talk, rows)]
         else:
-            frames = npc_frames(rows, pal, (11, 8), "e")
-        save(strip(frames, 16, 24), f"sprites/prof-{p['id']}.png")
+            frames = npc_frames(rows, pal, (at(11), 8), "e", h=H)
+        save(strip(frames, 16, H), f"sprites/prof-{p['id']}.png")
     return lista
 
 
