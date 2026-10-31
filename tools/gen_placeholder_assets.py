@@ -1562,9 +1562,10 @@ def build_room(name, title, w, h, doors, tables=(), carpet=None, windows=(), ban
         obj(name=sprite, type="prop", x=px * 16 + 8, y=py * 16 + 16, point=True,
             properties=[{"name": "sprite", "type": "string", "value": sprite}])
     # enfeites em pixels exatos: (sprite, x da base, y da base, altura que bloqueia ou 0)
-    for (sprite, px, py, solid) in decor:
+    for (sprite, px, py, solid, *more) in decor:
+        # 5º campo opcional: propriedades extras (ex.: {"acima": 140} desenha por cima da mesa)
         obj(name=sprite, type="prop", x=px, y=py, point=True,
-            properties=[{"name": "sprite", "type": "string", "value": sprite}] + plist(**({"solido": solid} if solid else {})))
+            properties=[{"name": "sprite", "type": "string", "value": sprite}] + plist(**({"solido": solid} if solid else {}), **(more[0] if more else {})))
     for e in extra:
         obj(**e)
 
@@ -1633,7 +1634,7 @@ def mesa_posta(casa, tx, ty=6, th=7):
     bottom = (ty + th) * 16
     return [(f"prop.toalha-{casa}", (tx + 1) * 16, bottom + 4, 0),
             # estandarte da casa de pé na cabeceira da mesa, por cima da toalha (ver WorldScene)
-            (f"prop.estandarte-{casa}", (tx + 1) * 16, ty * 16 + 18, 0),
+            (f"prop.estandarte-{casa}", (tx + 1) * 16, ty * 16 + 18, 0, {"acima": 140}),
             ("prop.banco", (tx - 1) * 16 + 10, bottom - 16, 80),
             ("prop.banco", (tx + 2) * 16 + 6, bottom - 16, 80)]
 
@@ -1973,7 +1974,10 @@ ENFEITES = {
                 enfeite("prop.caixote", 20, 8, 8), enfeite("prop.caixote", 20, 9, 8), enfeite("prop.planta", 14, 12, 8),
                 enfeite("prop.candelabro", 1, 4, 6)],
     "corredor": [enfeite("prop.armadura", 20, 3), enfeite("prop.armadura", 26, 3),
-                 enfeite("prop.planta", 5, 8), enfeite("prop.planta", 11, 8), enfeite("prop.planta", 22, 8), enfeite("prop.planta", 27, 8)],
+                 enfeite("prop.planta", 5, 8), enfeite("prop.planta", 11, 8), enfeite("prop.planta", 22, 8), enfeite("prop.planta", 27, 8),
+                 # longe das caixas que se empurram (colunas 9 a 24)
+                 enfeite("prop.relogio", 5, 3, 6), enfeite("prop.candelabro", 1, 8, 6), enfeite("prop.candelabro", 32, 6, 6),
+                 tapete(6, 6, 0), tapete(26, 6, 1)],
     "gabinete": [enfeite("prop.prateleira-pocoes", 11, 3), enfeite("prop.planta", 2, 8, 8),
                  enfeite("prop.relogio", 14, 3, 6), enfeite("prop.globo", 2, 4, 6), enfeite("prop.candelabro", 13, 5, 6)],
     "hall": [enfeite("prop.armadura", 8, 3, 8), enfeite("prop.armadura", 13, 3, 8),
@@ -1986,10 +1990,30 @@ ENFEITES = {
                    enfeite("prop.candelabro", 1, 4, 6), enfeite("prop.candelabro", 26, 9, 6),
                    enfeite("prop.globo", 18, 13, 6), enfeite("prop.pilha-livros", 6, 4), enfeite("prop.pilha-livros", 21, 5),
                    tapete(3, 5, 1, 14), tapete(8, 5, 0, 14), tapete(19, 10, 0, 14), tapete(24, 10, 1, 14)],
-    "estufa": [enfeite("prop.planta", 4, 3), enfeite("prop.planta", 10, 3), enfeite("prop.planta", 15, 3)],
+    "estufa": [enfeite("prop.planta", 4, 3), enfeite("prop.planta", 10, 3), enfeite("prop.planta", 15, 3),
+               enfeite("prop.planta", 20, 3, 8), enfeite("prop.caixote", 1, 8, 8), enfeite("prop.barril", 1, 12, 8)],
     "galeria": [enfeite("prop.planta", 3, 12), enfeite("prop.planta", 28, 12),
-                enfeite("prop.armadura", 9, 12), enfeite("prop.armadura", 22, 12)],
-    "porao": [enfeite("prop.barril", 1, 8, 8), enfeite("prop.barril", 1, 9, 8), enfeite("prop.prateleira-pocoes", 8, 3)],
+                enfeite("prop.armadura", 9, 12), enfeite("prop.armadura", 22, 12),
+                # estátuas ao lado do retrato do Ministro, candelabros nos cantos e tapete no meio
+                enfeite("prop.estatua", 14, 3, 8), enfeite("prop.estatua", 18, 3, 8),
+                enfeite("prop.candelabro", 1, 4, 6), enfeite("prop.candelabro", 30, 4, 6), tapete(14, 10, 0)],
+    "porao": [enfeite("prop.barril", 1, 8, 8), enfeite("prop.barril", 1, 9, 8), enfeite("prop.prateleira-pocoes", 8, 3),
+              enfeite("prop.caixote", 20, 11, 8)],
+    # etapa 6.3: móveis nas salas que ainda estavam vazias, longe das portas e dos enigmas
+    "grande-salao": [enfeite("prop.candelabro", 1, 5, 6), enfeite("prop.candelabro", 26, 5, 6),
+                     enfeite("prop.armadura", 8, 16, 8), enfeite("prop.armadura", 19, 16, 8)],
+    "observatorio": [enfeite("prop.globo", 2, 3, 6), mesa("prop.mesa-leitura", 8, 3), enfeite("prop.pilha-livros", 12, 3),
+                     enfeite("prop.candelabro", 18, 7, 6), tapete(9, 7, 1)],
+    "sala-espectral": [enfeite("prop.estante", 5, 3, 8), enfeite("prop.estante", 15, 3, 8),
+                       enfeite("prop.candelabro", 1, 9, 6), enfeite("prop.candelabro", 20, 9, 6)],
+    # cada quadro de casa ganha os estandartes da sua casa
+    "quadro-coragem": [enfeite("prop.estandarte-coragem", 6, 3, 4), enfeite("prop.estandarte-coragem", 17, 3, 4),
+                       enfeite("prop.candelabro", 1, 7, 6), enfeite("prop.candelabro", 22, 7, 6)],
+    "quadro-astucia": [enfeite("prop.estandarte-astucia", 2, 3, 4), enfeite("prop.estandarte-astucia", 27, 3, 4)],
+    "quadro-lealdade": [enfeite("prop.estandarte-lealdade", 8, 3, 4), enfeite("prop.estandarte-lealdade", 14, 3, 4),
+                        enfeite("prop.candelabro", 1, 3, 6), enfeite("prop.candelabro", 20, 3, 6)],
+    # fora da linha 3, por onde passa o raio de luz do enigma
+    "quadro-inteligencia": [enfeite("prop.estandarte-inteligencia", 1, 5, 4), enfeite("prop.estandarte-inteligencia", 16, 6, 4)],
 }
 for key, objs in ENFEITES.items():
     add_objects(key, objs)
