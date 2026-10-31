@@ -1,5 +1,6 @@
 import Phaser from 'phaser';
 import { TILE_SIZE } from '../config/game';
+import { dropShadow } from '../world/Lighting';
 
 /** Estátua pesada: não levita, só anda um quadrado quando o aprendiz empurra. */
 export class Pushable extends Phaser.GameObjects.Sprite {
@@ -12,6 +13,7 @@ export class Pushable extends Phaser.GameObjects.Sprite {
     scene.physics.add.existing(this, true);
     const body = this.body as Phaser.Physics.Arcade.StaticBody;
     body.setSize(14, 12).setOffset((this.width - 14) / 2, this.height - 12);
+    dropShadow(scene, this, 16, true);
   }
 
   get tileX(): number {

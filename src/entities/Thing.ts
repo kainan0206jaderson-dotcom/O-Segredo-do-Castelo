@@ -2,6 +2,7 @@ import Phaser from 'phaser';
 import { AssetRegistry } from '../core/AssetRegistry';
 import { assets } from '../core/registry';
 import type { Condition } from '../types/content';
+import { dropShadow } from '../world/Lighting';
 
 export type ThingKind = 'npc' | 'pickup' | 'station' | 'challenge' | 'socket' | 'planter' | 'dial' | 'lock' | 'chest';
 
@@ -36,6 +37,7 @@ export class Thing extends Phaser.GameObjects.Sprite {
   readonly extra?: string;
   private alert: Phaser.GameObjects.Sprite;
   private present = true;
+  private glow?: Phaser.FX.Glow;
 
   constructor(scene: Phaser.Scene, x: number, y: number, private readonly opts: ThingOptions) {
     super(scene, x, y, opts.sheet, opts.frame ?? 0);
@@ -64,6 +66,8 @@ export class Thing extends Phaser.GameObjects.Sprite {
       scene.tweens.add({ targets: this, y: y - 3, duration: 1300, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
       scene.tweens.add({ targets: this, alpha: { from: 0.95, to: 0.6 }, duration: 1700, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
     }
+    // sombra no chão para quem está de pé (quadros e fechaduras ficam na parede)
+    if (!this.onWall && opts.kind !== 'lock') dropShadow(scene, this, Math.min(18, Math.max(10, this.width - 4)), true);
     this.playAnim('idle');
   }
 
@@ -81,8 +85,17 @@ export class Thing extends Phaser.GameObjects.Sprite {
     if (body) body.enable = on;
   }
 
+  /** Perto o bastante para interagir: contorno claro, um pulinho e o "!" em cima. */
   setHighlighted(on: boolean): void {
     this.alert.setVisible(on && this.present);
+    if (on && this.present) {
+      // contorno de luz só no WebGL (no modo Canvas fica só o "!" e o pulinho)
+      this.glow ??= this.preFX?.addGlow(0xfff2b0, 2, 0, false, 0.1, 8);
+      if (this.glow) this.glow.active = true;
+      this.scene.tweens.add({ targets: this, scaleX: 1.06, scaleY: 1.06, duration: 90, yoyo: true });
+    } else if (this.glow) {
+      this.glow.active = false;
+    }
   }
 
   setTalking(on: boolean): void {

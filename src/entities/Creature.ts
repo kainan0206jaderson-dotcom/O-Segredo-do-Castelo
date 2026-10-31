@@ -1,4 +1,5 @@
 import Phaser from 'phaser';
+import { dropShadow } from '../world/Lighting';
 import { AssetRegistry } from '../core/AssetRegistry';
 import type { Condition } from '../types/content';
 
@@ -48,6 +49,7 @@ export class Creature extends Phaser.Physics.Arcade.Sprite {
     if (this.still) body.setImmovable(true);
     this.play({ key: AssetRegistry.animKey(sheet, 'idle'), startFrame: Phaser.Math.Between(0, 1) });
     this.setAlpha(this.hidden ? HIDDEN_ALPHA : 0.92);
+    dropShadow(scene, this, 12, true);
   }
 
   get isPresent(): boolean {
