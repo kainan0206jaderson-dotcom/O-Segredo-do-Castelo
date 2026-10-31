@@ -356,10 +356,14 @@ export class WorldScene extends Phaser.Scene {
       switch (o.type) {
         case 'prop': {
           if (!sprite) break;
-          const p = this.add.sprite(o.x!, o.y!, sprite, prop<number>(o.properties, 'frame') ?? 0).setOrigin(0.5, 1).setDepth(o.y!);
+          // variações: peça com vários quadros (estante, tapete) muda conforme o lugar, para não se repetir igual
+          const frames = this.textures.get(sprite).frameTotal - 1;
+          const frame = prop<number>(o.properties, 'frame') ?? (frames > 1 ? ((o.x! / 16) * 7 + (o.y! / 16) * 3) % frames : 0);
+          const flat = FLAT_PROPS.some((f) => sprite.startsWith(f));
+          const p = this.add.sprite(o.x!, o.y!, sprite, Math.floor(frame)).setOrigin(0.5, 1).setDepth(sprite.startsWith('prop.tapete') ? 0.3 : o.y!);
           if (assets().hasAnimation(sprite, 'idle')) p.play({ key: AssetRegistry.animKey(sprite, 'idle'), startFrame: Phaser.Math.Between(0, 2) });
           if (LIGHT_PROPS.has(sprite)) torchHalo(this, o.x!, o.y! - p.height + 4);
-          else if (!FLAT_PROPS.some((f) => sprite.startsWith(f))) dropShadow(this, p, Math.min(20, p.width - 2));
+          else if (!flat) dropShadow(this, p, Math.min(28, p.width - 2));
           // móvel de enfeite que ocupa espaço: "solido" é a altura (em px) da base que bloqueia
           const solid = prop<number>(o.properties, 'solido');
           if (solid) {

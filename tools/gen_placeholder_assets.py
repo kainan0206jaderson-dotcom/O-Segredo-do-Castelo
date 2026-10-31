@@ -1736,9 +1736,8 @@ build_room("biblioteca", "Biblioteca", 28, 16,
                   ("N", 20, "map.galeria", "da-biblioteca", "da-galeria",
                    dict(when=FL("trancado:map.biblioteca:porta-galeria")))],
            floor_tile=WOODF, carpet=(13, 4, 14, 14), windows=(10, 17),
-           tables=[(3, 4, 1, 3), (8, 4, 1, 3), (19, 9, 1, 3), (24, 9, 1, 3)],
-           props=[("prop.estante", 2, 2), ("prop.estante", 3, 2), ("prop.estante", 8, 2), ("prop.estante", 12, 2),
-                  ("prop.estante", 15, 2), ("prop.estante", 24, 2), ("prop.estante", 25, 2),
+           # parede do fundo coberta de estantes (cada uma com livros diferentes), menos janelas, espelho e portas
+           props=[*[("prop.estante", x, 2) for x in (1, 2, 3, 4, 7, 8, 9, 11, 12, 14, 15, 16, 18, 19, 22, 23, 24, 25, 26)],
                   ("prop.vela", 11, 4), ("prop.vela", 16, 4)],
            npcs=[("aristoteles", "npc.aristoteles", 11, 7, "aristoteles", False), ("mish-mish", "npc.mish-mish", 9, 12, "mish-mish", False)],
            extra=[pt("npc", "espelho", 16, 1, x=17 * 16, sprite="npc.espelho", dialogue="espelho", wall=True),
@@ -1949,20 +1948,40 @@ def enfeite(sprite, tx, ty, solido=0):
     return pt("prop", sprite, tx, ty, sprite=sprite, **({"solido": solido} if solido else {}))
 
 
+def mesa(sprite, tx, ty):
+    """Móvel de 2 tiles de largura: a base fica entre o tile tx e o seguinte."""
+    return pt("prop", sprite, tx, ty, x=(tx + 1) * 16, sprite=sprite, solido=10)
+
+
+def tapete(tx, ty, frame, dy=0):
+    """Tapete no chão (2 tiles), desenhado embaixo de todo mundo; dy desce em pixels (embaixo de uma mesa)."""
+    return pt("prop", "prop.tapete", tx, ty, x=(tx + 1) * 16, y=(ty + 1) * 16 + dy, sprite="prop.tapete", frame=frame)
+
+
 ENFEITES = {
     "recepcao": [enfeite("prop.armadura", 7, 3, 8), enfeite("prop.armadura", 12, 3, 8),
                  enfeite("prop.planta", 1, 3, 8), enfeite("prop.planta", 18, 3, 8),
                  enfeite("prop.barril", 17, 8, 8), enfeite("prop.barril", 18, 8, 8),
-                 enfeite("prop.prateleira-pocoes", 14, 3), enfeite("prop.caixote", 1, 11, 8)],
+                 enfeite("prop.prateleira-pocoes", 14, 3), enfeite("prop.caixote", 1, 11, 8),
+                 enfeite("prop.relogio", 4, 3, 6), enfeite("prop.candelabro", 16, 11, 6), tapete(3, 8, 0)],
     "cozinha": [enfeite("prop.prateleira-pocoes", 7, 3), enfeite("prop.prateleira-pocoes", 11, 3),
                 enfeite("prop.barril", 1, 12, 8), enfeite("prop.barril", 2, 12, 8),
-                enfeite("prop.caixote", 20, 8, 8), enfeite("prop.caixote", 20, 9, 8), enfeite("prop.planta", 14, 12, 8)],
+                enfeite("prop.caixote", 20, 8, 8), enfeite("prop.caixote", 20, 9, 8), enfeite("prop.planta", 14, 12, 8),
+                enfeite("prop.candelabro", 1, 4, 6)],
     "corredor": [enfeite("prop.armadura", 20, 3), enfeite("prop.armadura", 26, 3),
                  enfeite("prop.planta", 5, 8), enfeite("prop.planta", 11, 8), enfeite("prop.planta", 22, 8), enfeite("prop.planta", 27, 8)],
-    "gabinete": [enfeite("prop.prateleira-pocoes", 11, 3), enfeite("prop.planta", 2, 8, 8)],
+    "gabinete": [enfeite("prop.prateleira-pocoes", 11, 3), enfeite("prop.planta", 2, 8, 8),
+                 enfeite("prop.relogio", 14, 3, 6), enfeite("prop.globo", 2, 4, 6), enfeite("prop.candelabro", 13, 5, 6)],
     "hall": [enfeite("prop.armadura", 8, 3, 8), enfeite("prop.armadura", 13, 3, 8),
-             enfeite("prop.planta", 1, 4, 8), enfeite("prop.barril", 4, 12, 8)],
-    "biblioteca": [enfeite("prop.planta", 12, 14), enfeite("prop.planta", 15, 14)],
+             enfeite("prop.planta", 1, 4, 8), enfeite("prop.barril", 4, 12, 8),
+             enfeite("prop.relogio", 19, 4, 6), enfeite("prop.candelabro", 1, 9, 6)],
+    "biblioteca": [enfeite("prop.planta", 12, 14), enfeite("prop.planta", 15, 14),
+                   # mesas de leitura no lugar das mesas compridas, com livro aberto e vela
+                   mesa("prop.mesa-leitura", 3, 5), mesa("prop.mesa-leitura", 8, 5),
+                   mesa("prop.mesa-leitura", 19, 10), mesa("prop.mesa-leitura", 24, 10),
+                   enfeite("prop.candelabro", 1, 4, 6), enfeite("prop.candelabro", 26, 9, 6),
+                   enfeite("prop.globo", 18, 13, 6), enfeite("prop.pilha-livros", 6, 4), enfeite("prop.pilha-livros", 21, 5),
+                   tapete(3, 5, 1, 14), tapete(8, 5, 0, 14), tapete(19, 10, 0, 14), tapete(24, 10, 1, 14)],
     "estufa": [enfeite("prop.planta", 4, 3), enfeite("prop.planta", 10, 3), enfeite("prop.planta", 15, 3)],
     "galeria": [enfeite("prop.planta", 3, 12), enfeite("prop.planta", 28, 12),
                 enfeite("prop.armadura", 9, 12), enfeite("prop.armadura", 22, 12)],

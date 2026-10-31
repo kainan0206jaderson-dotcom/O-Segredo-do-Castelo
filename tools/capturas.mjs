@@ -18,7 +18,7 @@ const only = (process.env.SALAS ?? '').split(',').filter(Boolean);
 const rooms = readdirSync(mapsDir).filter((f) => f.endsWith('.tmj') && (!only.length || only.includes(f.replace('.tmj', '')))).map((f) => {
   const m = JSON.parse(readFileSync(join(mapsDir, f), 'utf8'));
   const spawn = m.layers.flatMap((l) => l.objects ?? []).find((o) => o.type === 'spawn');
-  return { key: `map.${f.replace('.tmj', '')}`, spawn: spawn.name };
+  return { key: `map.${f.replace('.tmj', '')}`, spawn: process.env.SPAWN ?? spawn.name };
 });
 
 const devices = [
