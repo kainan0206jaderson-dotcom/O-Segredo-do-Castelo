@@ -28,10 +28,10 @@
     },
     "b": {
       "speaker": "Bellatrix Lestrelle",
-      "text": "Minhas virtudes? Ninguém nunca reparou nelas. Nem o Bonfatt.",
+      "text": "Minhas virtudes? Ninguém nunca reparou nelas. Nem o Bonfatti.",
       "choices": [
         {
-          "text": "Mostrar as cartas do Bonfatt.",
+          "text": "Mostrar as cartas do Bonfatti.",
           "next": "c"
         },
         {
@@ -61,7 +61,7 @@
       "next": "c-4"
     },
     "c-4": {
-      "text": "Vá. Toque o Coração do Castelo. Eu... ajudo a acender.",
+      "text": "Vá. Toque o Coração do Castelo. A Varinha Suprema fica onde está... e o Senhor das Sombras que espere sentado.",
       "speaker": "Bellatrix Lestrelle",
       "effects": [
         {

@@ -71,4 +71,8 @@
   - Mapa: rabisco da rota até o objetivo (no Modo Kids) e um zoom na sala atual ao tocar.
   - Bolsa: arrastar itens para reorganizar os bolsinhos e uma aba "Favoritos".
   - Caldeirão e HUD ainda usam os ícones pequenos; dá para trocar pelos de 32 px.
-- Professores (lista oficial do kainan, 30/10): hoje eles aparecem no Mural dos Professores, na Recepção. Dá para dar a cada um um retrato, uma sala e uma fala própria quando o kainan passar como eles são.
+- Professores (lista por matéria do kainan, 30/10): os 23 novos já têm boneco, retrato, sala e função (troca, presente, quiz, cura, receita, profecia). Próximos passos:
+  - Retratos maiores e rosto próprio para cada um (hoje o retrato é o boneco do mapa).
+  - Aulas de verdade: um minijogo por matéria (regar plantas na Herbologia, ler a bola de cristal na Adivinhação).
+  - Baltazar Bonfatti ganhar uma vitrine de Artefatos Mágicos no Gabinete.
+  - Professores andarem pela sala e trocarem de lugar à noite.

@@ -1,0 +1,40 @@
+{
+  "_sobre": "Professores do castelo [KAINAN: nomes, matérias e cargos; adaptados de HP onde precisou]. Cores, salas e funções são [FICÇÃO]. Usado por tools/ (sprites e mapas) e pelo jogo (retratos, mural).",
+  "materias": {
+    "herbologia": "Herbologia",
+    "espectrais": "Seres Espectrais",
+    "defesa": "Defesa contra a Magia Sombria",
+    "adivinhacao": "Adivinhação",
+    "feiticos": "Feitiços",
+    "pocoes": "Poções",
+    "diretoria": "Diretora do Castelo",
+    "criaturas": "Criaturas Mágicas",
+    "varinhas": "Varinhas",
+    "artefatos": "Artefatos Mágicos"
+  },
+  "lista": [
+    { "id": "angelina", "nome": "Profa. Angelina Kalabares", "materia": "herbologia", "sala": "estufa", "x": 5, "y": 6, "sexo": "f", "chapeu": [70, 140, 70], "roupa": [96, 150, 70], "cabelo": [200, 120, 60], "pele": [244, 200, 166] },
+    { "id": "anturio", "nome": "Prof. Antúrio Damas", "materia": "herbologia", "sala": "estufa", "x": 15, "y": 5, "sexo": "m", "barba": true, "chapeu": [190, 60, 70], "roupa": [70, 120, 70], "cabelo": [70, 50, 40], "pele": [196, 140, 100] },
+    { "id": "cerafum", "nome": "Prof. Cerafum Raíz", "materia": "herbologia", "sala": "estufa", "x": 19, "y": 10, "sexo": "m", "barba": true, "chapeu": [110, 80, 50], "roupa": [120, 100, 60], "cabelo": [200, 200, 200], "pele": [150, 100, 70] },
+    { "id": "ucker", "nome": "Prof. Ucker Broto", "materia": "herbologia", "sala": "estufa", "x": 10, "y": 4, "sexo": "m", "chapeu": [100, 170, 80], "roupa": [60, 110, 60], "cabelo": [230, 190, 110], "pele": [240, 196, 160] },
+    { "id": "mustaffa", "nome": "Prof. Mustaffa Nox", "materia": "espectrais", "sala": "sala-espectral", "x": 19, "y": 7, "sexo": "m", "barba": true, "fantasma": true, "chapeu": [90, 100, 150], "roupa": [150, 170, 210], "cabelo": [220, 230, 250], "pele": [226, 234, 250] },
+    { "id": "valkyria", "nome": "Profa. Valkyria Vanderbelt", "materia": "defesa", "sala": "corredor", "x": 4, "y": 7, "sexo": "f", "chapeu": [120, 30, 40], "roupa": [150, 150, 170], "cabelo": [240, 210, 120], "pele": [244, 206, 176] },
+    { "id": "constantin", "nome": "Prof. Constantin Vólvok", "materia": "defesa", "sala": "hall", "x": 8, "y": 4, "sexo": "m", "barba": true, "chapeu": [40, 40, 60], "roupa": [130, 30, 40], "cabelo": [40, 30, 30], "pele": [236, 196, 160] },
+    { "id": "delphy", "nome": "Profa. Delphy Lestrelle", "materia": "defesa", "sala": "corredor", "x": 15, "y": 7, "sexo": "f", "chapeu": [60, 60, 80], "roupa": [100, 40, 60], "cabelo": [30, 26, 36], "pele": [236, 210, 196] },
+    { "id": "eulalia", "nome": "Profa. Eulália Tulun", "materia": "adivinhacao", "sala": "observatorio", "x": 4, "y": 5, "sexo": "f", "chapeu": [110, 60, 160], "roupa": [140, 90, 190], "cabelo": [130, 60, 40], "pele": [120, 80, 60] },
+    { "id": "sibila", "nome": "Profa. Sibila Trelane", "materia": "adivinhacao", "sala": "observatorio", "x": 14, "y": 5, "sexo": "f", "chapeu": [60, 50, 120], "roupa": [200, 150, 60], "cabelo": [180, 120, 200], "pele": [244, 214, 190] },
+    { "id": "kassandra", "nome": "Profa. Kassandra Talbout", "materia": "adivinhacao", "sala": "observatorio", "x": 16, "y": 10, "sexo": "f", "chapeu": [40, 40, 90], "roupa": [70, 70, 140], "cabelo": [220, 220, 230], "pele": [200, 150, 120] },
+    { "id": "morgana-le-fay", "nome": "Profa. Morgana Le Fay", "materia": "adivinhacao", "sala": "observatorio", "x": 6, "y": 11, "sexo": "f", "chapeu": [30, 90, 90], "roupa": [40, 120, 110], "cabelo": [150, 40, 40], "pele": [246, 220, 200] },
+    { "id": "hector", "nome": "Prof. Hector Tallun", "materia": "feiticos", "sala": "biblioteca", "x": 21, "y": 12, "sexo": "m", "chapeu": [50, 80, 170], "roupa": [70, 110, 200], "cabelo": [60, 40, 30], "pele": [210, 160, 120] },
+    { "id": "jackoby", "nome": "Prof. Jackoby Tallun", "materia": "feiticos", "sala": "biblioteca", "x": 23, "y": 12, "sexo": "m", "barba": true, "chapeu": [50, 80, 170], "roupa": [40, 140, 180], "cabelo": [60, 40, 30], "pele": [210, 160, 120] },
+    { "id": "agnes", "nome": "Profa. Agnes Severo", "materia": "pocoes", "sala": "cozinha", "x": 3, "y": 9, "sexo": "f", "chapeu": [40, 70, 60], "roupa": [60, 100, 90], "cabelo": [90, 90, 100], "pele": [240, 204, 176] },
+    { "id": "leon", "nome": "Prof. Leon Arctrus", "materia": "pocoes", "sala": "cozinha", "x": 8, "y": 10, "sexo": "m", "chapeu": [90, 60, 40], "roupa": [130, 90, 50], "cabelo": [220, 160, 70], "pele": [236, 190, 150] },
+    { "id": "lilith", "nome": "Profa. Lilith Snarke", "materia": "pocoes", "sala": "cozinha", "x": 14, "y": 10, "sexo": "f", "chapeu": [30, 30, 40], "roupa": [50, 50, 70], "cabelo": [20, 20, 30], "pele": [250, 230, 220] },
+    { "id": "lucio", "nome": "Prof. Lúcio Wilson", "materia": "pocoes", "sala": "cozinha", "x": 18, "y": 6, "sexo": "m", "chapeu": [120, 120, 130], "roupa": [90, 70, 110], "cabelo": [240, 240, 240], "pele": [240, 210, 180] },
+    { "id": "wolfgang", "nome": "Prof. Wolfgang Straus", "materia": "pocoes", "sala": "cozinha", "x": 9, "y": 4, "sexo": "m", "barba": true, "chapeu": [80, 40, 40], "roupa": [110, 70, 50], "cabelo": [160, 90, 50], "pele": [240, 200, 170] },
+    { "id": "merlina", "nome": "Diretora Merlina McLouth", "materia": "diretoria", "sala": "grande-salao", "x": 6, "y": 15, "sexo": "f", "chapeu": [220, 180, 70], "roupa": [240, 236, 226], "cabelo": [210, 210, 220], "pele": [240, 206, 180] },
+    { "id": "nickolay", "nome": "Prof. Nickolay Gavony", "materia": "criaturas", "sala": "hall", "x": 3, "y": 8, "sexo": "m", "barba": true, "chapeu": [120, 80, 40], "roupa": [170, 110, 50], "cabelo": [120, 60, 30], "pele": [230, 180, 140] },
+    { "id": "mildrety", "nome": "Profa. Mildrety", "materia": "criaturas", "sala": "hall", "x": 9, "y": 10, "sexo": "f", "chapeu": [200, 110, 60], "roupa": [150, 120, 70], "cabelo": [60, 40, 30], "pele": [180, 120, 90] },
+    { "id": "oliveira", "nome": "Prof. Oliveira da Figueira", "materia": "varinhas", "sala": "recepcao", "x": 15, "y": 9, "sexo": "m", "barba": true, "chapeu": [100, 70, 40], "roupa": [140, 100, 60], "cabelo": [200, 200, 200], "pele": [200, 150, 110] }
+  ]
+}

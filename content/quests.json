@@ -130,7 +130,7 @@
     "stages": [
       {
         "id": "ir-ao-corredor",
-        "objective": "Vá ao Corredor dos Quadros (porta oeste do Grande Salão) e procure o gabinete do Ministro Bonfatt.",
+        "objective": "Vá ao Corredor dos Quadros (porta oeste do Grande Salão) e procure o gabinete do Ministro Bonfatti.",
         "completeWhen": {
           "flag": "visto:morgana-corredor"
         },
@@ -172,7 +172,7 @@
       },
       {
         "id": "falar-com-diretor",
-        "objective": "Converse com o Ministro Bonfatt no gabinete.",
+        "objective": "Converse com o Ministro Bonfatti no gabinete.",
         "guia": [
           {
             "map": "map.gabinete",
@@ -182,7 +182,7 @@
       },
       {
         "id": "ir-ao-hall",
-        "objective": "Siga o Ministro Bonfatt até o Hall da Escada, no fim oeste do corredor.",
+        "objective": "Siga o Ministro Bonfatti até o Hall da Escada, no fim oeste do corredor.",
         "guia": [
           {
             "map": "map.hall",

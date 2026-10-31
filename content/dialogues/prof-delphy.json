@@ -1,0 +1,40 @@
+{
+  "id": "prof-delphy",
+  "speaker": "Profa. Delphy Lestrelle",
+  "entries": [
+    {
+      "when": {
+        "flag": "prof:delphy:pocao"
+      },
+      "start": "depois"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Delphy Lestrelle, Defesa. E sim, Lestrelle como a Bellatrix. Ela é minha prima.",
+      "next": "oi-2"
+    },
+    "oi-2": {
+      "text": "Ela invadiu o castelo atrás da Varinha Suprema, para entregar ao Senhor das Sombras. Prometeram que assim ninguém mais ia esquecer dela.",
+      "next": "oi-3"
+    },
+    "oi-3": {
+      "text": "Eu não consigo enfrentar minha própria família. Mas posso te ajudar: leve esta Poção de Vigor.",
+      "effects": [
+        {
+          "giveItem": "pocao-vigor"
+        },
+        {
+          "setFlag": "prof:delphy:pocao",
+          "value": true
+        }
+      ]
+    },
+    "depois": {
+      "text": "Se encontrar a Bellatrix... lembre que dentro da fuligem ainda tem uma aluna que só queria ser vista."
+    }
+  }
+}

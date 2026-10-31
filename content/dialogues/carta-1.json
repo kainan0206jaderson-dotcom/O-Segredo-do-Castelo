@@ -8,13 +8,13 @@
   ],
   "nodes": {
     "a": {
-      "text": "Um pedaço de papel branco, com a letra caprichada do Ministro Bonfatt:",
+      "text": "Um pedaço de papel branco, com a letra caprichada do Ministro Bonfatti:",
       "speaker": "✦",
       "next": "a-2"
     },
     "a-2": {
       "text": "\"Querida M., hoje acendi uma vela por você no Grande Salão. O castelo sente sua falta. Eu também.\"",
-      "speaker": "Carta do Bonfatt"
+      "speaker": "Carta do Bonfatti"
     }
   }
 }

@@ -1,0 +1,56 @@
+{
+  "id": "prof-anturio",
+  "speaker": "Prof. Antúrio Damas",
+  "entries": [
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Antúrio Damas, ao seu dispor. Eu troco o que sobra na sua bolsa pelo que falta. Herbologia também é saber negociar.",
+      "choices": [
+        {
+          "text": "Trocar 1 abóbora por 1 folha de mandrágora",
+          "when": {
+            "hasItem": "abobora"
+          },
+          "next": "trocou",
+          "effects": [
+            {
+              "takeItem": "abobora"
+            },
+            {
+              "giveItem": "folha-mandragora"
+            }
+          ]
+        },
+        {
+          "text": "Trocar 1 cacau por 1 suco colorido",
+          "when": {
+            "hasItem": "cacau"
+          },
+          "next": "trocou",
+          "effects": [
+            {
+              "takeItem": "cacau"
+            },
+            {
+              "giveItem": "suco-colorido"
+            }
+          ]
+        },
+        {
+          "text": "Agora não, obrigado.",
+          "next": "tchau"
+        }
+      ]
+    },
+    "trocou": {
+      "text": "Negócio fechado! Volte sempre que a bolsa estiver cheia de abóbora."
+    },
+    "tchau": {
+      "text": "Sem pressa. As plantas também não têm."
+    }
+  }
+}

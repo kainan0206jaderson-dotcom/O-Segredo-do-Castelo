@@ -1,0 +1,56 @@
+{
+  "id": "prof-leon",
+  "speaker": "Prof. Leon Arctrus",
+  "entries": [
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Leon Arctrus. Meu laboratório é aqui na cozinha mesmo, a Dona Brasa deixa. Precisa de ingrediente?",
+      "choices": [
+        {
+          "text": "Trocar 1 suco colorido por 1 gelo seco",
+          "when": {
+            "hasItem": "suco-colorido"
+          },
+          "next": "trocou",
+          "effects": [
+            {
+              "takeItem": "suco-colorido"
+            },
+            {
+              "giveItem": "gelo-seco"
+            }
+          ]
+        },
+        {
+          "text": "Trocar 1 gelo seco por 1 suco colorido",
+          "when": {
+            "hasItem": "gelo-seco"
+          },
+          "next": "trocou",
+          "effects": [
+            {
+              "takeItem": "gelo-seco"
+            },
+            {
+              "giveItem": "suco-colorido"
+            }
+          ]
+        },
+        {
+          "text": "Só olhando.",
+          "next": "tchau"
+        }
+      ]
+    },
+    "trocou": {
+      "text": "Aqui está. Fumaça fresquinha, sem cobrar nada."
+    },
+    "tchau": {
+      "text": "Olhe à vontade, mas não cheire o caldeirão azul."
+    }
+  }
+}

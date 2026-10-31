@@ -32,6 +32,8 @@ import { audio, CASTELO_LISTA, type Sfx, type Track } from '../audio/Audio';
 import { Bark, pickLine } from '../ui/Bark';
 import { openChest, type LootTable } from '../systems/loot';
 import baus from '../../content/baus.json';
+import mapaLayout from '../ui/mapa-layout.json';
+import { setFalaProvider } from '../core/aparencia';
 import { nextGuidePoint, type MapObject } from '../systems/guia';
 import { GuideTrail } from '../world/GuideTrail';
 
@@ -181,6 +183,7 @@ export class WorldScene extends Phaser.Scene {
   }
 
   create(data: WorldData): void {
+    this.registerFalas();
     this.mapKey = data.map;
     this.entry = data;
     this.transitioning = false;
@@ -632,6 +635,30 @@ export class WorldScene extends Phaser.Scene {
     this.player.halt();
     this.cameras.main.fadeOut(FADE_MS, 24, 20, 42);
     this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => this.scene.restart(target));
+  }
+
+  /** Respostas para {objetivo} e {estrela} nas falas dos professores. */
+  private registerFalas(): void {
+    setFalaProvider('objetivo', () => {
+      return currentObjective(session.state, db)?.objective ?? 'Aproveitar o castelo, porque o que precisava ser feito já foi!';
+    });
+    setFalaProvider('estrela', () => {
+      const salas = (mapaLayout as unknown as { salas: Record<string, { nome?: string }> }).salas;
+      const s = session.state;
+      const comEstrela = Object.keys(salas).filter((key) => {
+        const json = this.cache.tilemap.get(key)?.data as
+          | { layers: { objects?: { name: string; type: string; properties?: { name: string; value: unknown }[] }[] }[] }
+          | undefined;
+        if (!json || !salas[key].nome) return false;
+        return json.layers
+          .flatMap((l) => l.objects ?? [])
+          .some((o) => o.type === 'pickup' && o.properties?.some((p) => p.name === 'item' && p.value === 'estrela-perdida') && !s.flags[`pego:${key}:${o.name}`]);
+      });
+      if (!comEstrela.length) return 'Ela diz que você já achou todas as estrelas perdidas. Que brilho!';
+      // a sala onde o aprendiz está fica por último, para a dica levar a outro lugar
+      const key = comEstrela.find((k) => k !== this.mapKey) ?? comEstrela[0];
+      return `Ela aponta para: ${salas[key].nome}. Lá ainda brilha uma estrela perdida.`;
+    });
   }
 
   // ---------- estado e HUD

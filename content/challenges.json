@@ -34,7 +34,7 @@
     "requires": {
       "hasSpell": "levitar"
     },
-    "lockedText": "Você precisa conhecer o feitiço Levitar. Quem ensina é o Ministro Bonfatt.",
+    "lockedText": "Você precisa conhecer o feitiço Levitar. Quem ensina é o Ministro Bonfatti.",
     "timeLimitMs": 60000,
     "kind": "levitar",
     "targets": [

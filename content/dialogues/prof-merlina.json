@@ -1,0 +1,40 @@
+{
+  "id": "prof-merlina",
+  "speaker": "Diretora Merlina McLouth",
+  "entries": [
+    {
+      "when": {
+        "flag": "prof:merlina:oi"
+      },
+      "start": "depois"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Sou Merlina McLouth, diretora do Castelo Magia & Bruxaria. Que bom ter você aqui, {nome}.",
+      "next": "oi-2"
+    },
+    "oi-2": {
+      "text": "Esta noite a Bellatrix Lestrelle invadiu o castelo. Ela quer a Varinha Suprema, que dorme no Coração do Castelo.",
+      "next": "oi-3"
+    },
+    "oi-3": {
+      "text": "Ela promete entregar a varinha ao Senhor das Sombras. Isso não pode acontecer. Os professores vão te ajudar: cada um, do seu jeito.",
+      "effects": [
+        {
+          "giveXp": 20
+        },
+        {
+          "setFlag": "prof:merlina:oi",
+          "value": true
+        }
+      ]
+    },
+    "depois": {
+      "text": "Precisa de um norte? Agora o importante é: \"{objetivo}\""
+    }
+  }
+}

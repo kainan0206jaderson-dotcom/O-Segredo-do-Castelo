@@ -15,7 +15,7 @@ const CAST: { sheet: string; name: string }[] = [
   { sheet: 'npc.trinco', name: 'Trinco' },
   { sheet: 'npc.dona-brasa', name: 'Dona Brasa' },
   { sheet: 'npc.aristoteles', name: 'Aristóteles' },
-  { sheet: 'npc.arquimedes', name: 'Bonfatt' },
+  { sheet: 'npc.arquimedes', name: 'Bonfatti' },
   { sheet: 'npc.amelia', name: 'Amélia' },
   { sheet: 'npc.morgana', name: 'Bellatrix' },
   { sheet: 'npc.fuxico', name: 'Fuxico' },
@@ -33,7 +33,7 @@ const BACK: { sheet: string; name: string }[] = [
 
 const CEREMONY = [
   'O Coração do Castelo voltou a bater, e todas as velas se acenderam de uma vez.',
-  'No Grande Salão, o Ministro Bonfatt pediu silêncio (o Fuxico demorou um pouco).',
+  'No Grande Salão, o Ministro Bonfatti pediu silêncio (o Fuxico demorou um pouco).',
   '"Por coragem, inteligência, astúcia e lealdade, todas juntas..."',
   '"...este aprendiz agora é Guardião do Castelo!"',
 ];

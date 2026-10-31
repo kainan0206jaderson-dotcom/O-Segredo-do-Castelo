@@ -1,0 +1,30 @@
+{
+  "id": "prof-eulalia",
+  "speaker": "Profa. Eulália Tulun",
+  "entries": [
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Eulália Tulun. Minha bola de cristal está brilhando... ela quer falar com você. Quer ouvir?",
+      "choices": [
+        {
+          "text": "Quero! O que ela diz?",
+          "next": "visao"
+        },
+        {
+          "text": "Hoje não.",
+          "next": "nao"
+        }
+      ]
+    },
+    "visao": {
+      "text": "Eu vejo... vejo... \"{objetivo}\". A bola nunca erra. Quase nunca."
+    },
+    "nao": {
+      "text": "O futuro espera. Ele é muito paciente."
+    }
+  }
+}

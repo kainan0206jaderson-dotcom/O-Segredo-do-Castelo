@@ -1,0 +1,36 @@
+{
+  "id": "prof-morgana-le-fay",
+  "speaker": "Profa. Morgana Le Fay",
+  "entries": [
+    {
+      "when": {
+        "flag": "prof:morgana-le-fay:elixir"
+      },
+      "start": "depois"
+    },
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Sou Morgana Le Fay. Minha história é bem mais antiga que este castelo: vem das lendas do Rei Arthur.",
+      "next": "oi-2"
+    },
+    "oi-2": {
+      "text": "Já vi muitas noites como esta. Tome um Elixir Estelar. Feitiço cansa, e a noite ainda é longa.",
+      "effects": [
+        {
+          "giveItem": "elixir-estelar"
+        },
+        {
+          "setFlag": "prof:morgana-le-fay:elixir",
+          "value": true
+        }
+      ]
+    },
+    "depois": {
+      "text": "Não confunda Morgana com morgana. Eu sou a das lendas. A outra só pegou o nome emprestado... e já devolveu."
+    }
+  }
+}

@@ -213,7 +213,7 @@ describe('elenco do castelo', () => {
     expect(stage(s, 'esconde-esconde')).toBe('fim');
   });
 
-  it('o Booh conta a lenda de São Paulo, e o Ministro Bonfatt substitui o Arquimedes nos textos', () => {
+  it('o Booh conta a lenda de São Paulo, e o Ministro Bonfatti substitui o Arquimedes nos textos', () => {
     const s = newGame('m', 's');
     talk('booh', s);
     expect(s.flags['ouviu:lenda']).toBe(true);

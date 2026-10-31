@@ -1,0 +1,30 @@
+{
+  "id": "prof-sibila",
+  "speaker": "Profa. Sibila Trelane",
+  "entries": [
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Sibila Trelane, Adivinhação. Puxe uma carta do meu baralho estrelado, aprendiz.",
+      "choices": [
+        {
+          "text": "Puxar uma carta",
+          "next": "carta"
+        },
+        {
+          "text": "Melhor não.",
+          "next": "nao"
+        }
+      ]
+    },
+    "carta": {
+      "text": "A carta da Estrela! {estrela}"
+    },
+    "nao": {
+      "text": "Medo do futuro? Tudo bem. Ele também tem um pouco de medo de você."
+    }
+  }
+}

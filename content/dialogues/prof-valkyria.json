@@ -1,0 +1,35 @@
+{
+  "id": "prof-valkyria",
+  "speaker": "Profa. Valkyria Vanderbelt",
+  "entries": [
+    {
+      "start": "oi"
+    }
+  ],
+  "nodes": {
+    "oi": {
+      "text": "Valkyria Vanderbelt, Defesa contra a Magia Sombria. Sombrinha te pegou? Deixa eu ver esse arranhão.",
+      "choices": [
+        {
+          "text": "Pode cuidar de mim?",
+          "next": "cura",
+          "effects": [
+            {
+              "heal": 99
+            }
+          ]
+        },
+        {
+          "text": "Estou bem, obrigado!",
+          "next": "bem"
+        }
+      ]
+    },
+    "cura": {
+      "text": "Pronto, novinho em folha. Lembre: a melhor defesa é não estar onde o feitiço vai cair."
+    },
+    "bem": {
+      "text": "Ótimo. Mas se precisar, estou aqui no corredor de guarda."
+    }
+  }
+}
