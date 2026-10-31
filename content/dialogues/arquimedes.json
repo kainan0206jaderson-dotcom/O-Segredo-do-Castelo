@@ -51,10 +51,15 @@
     },
     "intro-3": {
       "text": "Alguém está apagando a luz do castelo, vela por vela. Primeiro a torre, depois a cozinha, hoje o corredor. Me tranquei aqui para descobrir quem.",
+      "next": "chapeu"
+    },
+    "chapeu": {
+      "text": "Antes, uma tradição do castelo: o Chapéu das Virtudes. Ele não escolhe por ninguém... só brilha com a cor da virtude que você disser de coração.",
+      "cena": "chapeu",
       "next": "casa"
     },
     "casa": {
-      "text": "Mas antes: todo aprendiz senta a uma das quatro mesas do Grande Salão. Qual virtude fala mais alto em você?",
+      "text": "Todo aprendiz senta a uma das quatro mesas do Grande Salão. Com o chapéu na cabeça, me diga: qual virtude fala mais alto em você?",
       "choices": [
         {
           "text": "Coragem",
@@ -65,18 +70,6 @@
             },
             {
               "equip": "capa-coragem"
-            }
-          ]
-        },
-        {
-          "text": "Inteligência",
-          "next": "casa-inteligencia",
-          "effects": [
-            {
-              "setHouse": "inteligencia"
-            },
-            {
-              "equip": "capa-inteligencia"
             }
           ]
         },
@@ -103,8 +96,21 @@
               "equip": "capa-lealdade"
             }
           ]
+        },
+        {
+          "text": "Inteligência",
+          "next": "casa-inteligencia",
+          "effects": [
+            {
+              "setHouse": "inteligencia"
+            },
+            {
+              "equip": "capa-inteligencia"
+            }
+          ]
         }
-      ]
+      ],
+      "cena": "chapeu"
     },
     "levitar": {
       "text": "E para quem vai andar pelo castelo, um feitiço muito útil. Segure a varinha bem leve, como uma pena... LEVITAR!",

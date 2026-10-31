@@ -1623,13 +1623,16 @@ build_room("recepcao", "Recepção", 20, 13,
            pickups=[("abobora-recepcao", "abobora", 3, 10)])
 
 # Grande Salão: as quatro mesas das casas, com toalha da casa e bancos; sul = Recepção, leste = Cozinha
-SALAO_MESAS = [("coragem", 3), ("inteligencia", 8), ("astucia", 18), ("lealdade", 23)]
+# ordem oficial das bandeiras [KAINAN 31/10]: vermelho, verde, amarelo, azul
+SALAO_MESAS = [("coragem", 3), ("astucia", 8), ("lealdade", 18), ("inteligencia", 23)]
 
 
 def mesa_posta(casa, tx, ty=6, th=7):
     """Toalha da casa por cima da mesa e um banco de cada lado."""
     bottom = (ty + th) * 16
     return [(f"prop.toalha-{casa}", (tx + 1) * 16, bottom + 4, 0),
+            # estandarte da casa de pé na cabeceira da mesa, por cima da toalha (ver WorldScene)
+            (f"prop.estandarte-{casa}", (tx + 1) * 16, ty * 16 + 18, 0),
             ("prop.banco", (tx - 1) * 16 + 10, bottom - 16, 80),
             ("prop.banco", (tx + 2) * 16 + 6, bottom - 16, 80)]
 
@@ -1640,7 +1643,7 @@ build_room("grande-salao", "Grande Salão", 28, 18,
                   ("O", 8, "map.corredor", "do-salao", "do-corredor")],
            tables=[(tx, 6, 2, 7) for _, tx in SALAO_MESAS],
            carpet=(12, 3, 15, 16), windows=(6, 21),
-           banners=[(4, B1), (9, B2), (18, B3), (23, B4)],
+           banners=[(4, B1), (9, B3), (18, B4), (23, B2)],  # coragem, astúcia, lealdade, inteligência
            candles=[("vela-1", 1, 3, True), ("vela-2", 26, 3, True), ("vela-3", 1, 15, True),
                     ("vela-4", 26, 15, True), ("vela-5", 11, 4, True), ("vela-6", 16, 4, True)],
            npcs=[("dom-moldura", "npc.dom-moldura", 13, 2, "dom-moldura", True), ("booh", "npc.booh", 21, 4, "booh", False)],

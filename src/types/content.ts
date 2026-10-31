@@ -52,6 +52,8 @@ export interface DialogueNode {
   next?: string | null;
   choices?: DialogueChoice[];
   effects?: Effect[];
+  /** Efeito de cena enquanto a fala aparece (ex.: "chapeu" põe o Chapéu das Virtudes no aprendiz). */
+  cena?: string;
 }
 
 export interface DialogueDef {

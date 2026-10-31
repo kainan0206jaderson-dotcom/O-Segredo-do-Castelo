@@ -430,36 +430,41 @@ ARISTOTELES_PAL = {
     "B": (44, 84, 164), "9": (74, 120, 206), "N": (54, 44, 40),
 }
 
-# Bellatrix Lestrelle [FICÇÃO]: capuz cinza-fuligem, mecha prateada, olhos violeta
+# Bellatrix Lestrelle [KAINAN: figurino pelas fotos de referência de 31/10]: cabelo preto
+# cheio e cacheado com uma mecha acinzentada, rosto pálido, olhos marcados e batom vermelho,
+# vestido preto longo com corpete costurado, mangas de renda trançada e arabescos prateados
+# na saia; varinha na mão direita. (Sem caveira nem cobra: é personagem original do jogo.)
 MORGANA = [
-    "................",
-    "................",
-    "................",
-    "......kkkk......",
-    ".....kiiiik.....",
-    "....kiIiiiik....",
-    "...kiIilnnik....",
-    "...kiIlnnnnik...",
-    "...kiIlMnnMik...",
-    "...kiInnnnnik...",
-    "...kiiknnnnkik..",
-    "...kiiiknnkiik..",
-    "..kiIiiiiiiiIik.",
-    "..kiIitttttiIik.",
-    "..knIittMttiInk.",
-    "..kkIitttttiIkk.",
-    "...kIitttttiik..",
-    "...kIiitttiiik..",
-    "...kIiiiiiiiik..",
-    "..kiIiiiiiiiIik.",
-    "..kiIiiiIiiiIik.",
-    "..kiiIiiiiiIiik.",
-    "..kttttttttttttk",
+    "..k.kk.kk.kk....",
+    ".khkhhkHhkhhk...",
+    "khhHhhhhhhHhhk..",
+    "khhhhHhhhhhhHhk.",
+    "khHhhhhhhhhhhhk.",
+    "khghhhsssshhHhhk",
+    "khghhsssssshhhHk",
+    "khghhsessseshhhk",
+    "kHhhhssshsshhHhk",
+    "khghhssrrsshhhhk",
+    "khghHkssssk hHhk".replace(" ", "h"),
+    "khHhhhksskhhhhhk",
+    "khghLdddxdddLhHk",
+    "khhhxdcCcCcdxhhk",
+    "kwhhLdCxCxCdLhhk",
+    ".kWhxdcCcCcdxhhk",
+    "..kWsdddddddshk.",
+    "...kdddddddDDk..",
+    "...kdxxdddddDk..",
+    "..kdddxdddxxDDk.",
+    "..kddddddddxDDk.",
+    "..kdxxdddddddDk.",
+    "..kddxddddxxdDDk",
     "...kkkkkkkkkkkk.",
 ]
 MORGANA_PAL = {
-    "i": (56, 52, 66), "I": (90, 86, 104), "t": (30, 28, 40),
-    "l": (206, 206, 222), "n": (232, 220, 228), "M": (176, 112, 226),
+    "h": (34, 26, 34), "H": (66, 58, 78), "g": (118, 122, 150),
+    "s": (238, 222, 216), "S": (214, 192, 188), "e": (30, 20, 34), "r": (196, 34, 46),
+    "d": (30, 28, 38), "D": (52, 48, 62), "c": (46, 42, 56), "C": (74, 70, 88),
+    "x": (150, 152, 174), "L": (60, 56, 70), "w": (120, 76, 44), "W": (160, 112, 70),
 }
 
 # Booh [FICÇÃO: aparência]: fantasminha de lençol, bochechudo, com laço vermelho
@@ -613,7 +618,7 @@ def render_npcs():
     sets = [
         ("arquimedes", BONFATT, BONFATT_PAL, (11, 7), "XkkX", False),
         ("aristoteles", ARISTOTELES, ARISTOTELES_PAL, (9, 6), "kk", False),
-        ("morgana", MORGANA, MORGANA_PAL, (11, 8), "kk", False),
+        ("morgana", MORGANA, MORGANA_PAL, (9, 7), "kr", False),
         ("booh", BOOH, BOOH_PAL, (10, 7), "00", True),
         ("addam", ADDAM, ADDAM_PAL, (10, 7), "00", True),
         ("lagrima", LAGRIMA, LAGRIMA_PAL, (11, 6), "00", True),

@@ -92,6 +92,62 @@ def tablecloth(color, crest):
     return im
 
 
+# ---------------------------------------------------------------- estandarte da casa (16x32)
+
+def standard(color, crest):
+    """Estandarte na cabeceira da mesa: mastro de madeira com ponta dourada e bandeira da
+    casa pendurada numa travessa, com barra dourada, brasão e ponta em V."""
+    w, h = 16, 32
+    im, px = canvas(w, h)
+    r = ramp(color)
+    # mastro
+    for y in range(3, h - 1):
+        put(px, 7, y, WOOD[3], w, h)
+        put(px, 8, y, WOOD[1], w, h)
+    put(px, 7, 1, GOLD[3], w, h)
+    put(px, 8, 1, GOLD[2], w, h)
+    for x in (6, 7, 8, 9):
+        put(px, x, 2, GOLD[2], w, h)
+    # travessa
+    for x in range(2, 14):
+        put(px, x, 4, GOLD[1] if x in (2, 13) else WOOD[2], w, h)
+    # bandeira
+    for y in range(5, 23):
+        for x in range(3, 13):
+            depth = y - 18
+            if depth > 0 and abs(x - 7.5) > 5 - depth * 1.1:
+                continue
+            c = r[2] if x < 11 else r[1]
+            if x == 3:
+                c = r[3]
+            if x in (3, 12) or y == 5:
+                c = GOLD[2]
+            put(px, x, y, c, w, h)
+    for cy, line in enumerate(crest):
+        for cx, ch in enumerate(line):
+            if ch == "#":
+                put(px, 5 + cx, 9 + cy, GOLD[3], w, h)
+    # base de ferro
+    for x in range(5, 11):
+        put(px, x, h - 2, (92, 88, 110) if x < 8 else (70, 66, 86), w, h)
+    return outline_ink(im)
+
+
+def outline_ink(im):
+    """Contorno escuro de 1 px em volta da peça."""
+    w, h = im.size
+    src = im.load()
+    out = im.copy()
+    po = out.load()
+    for y in range(h):
+        for x in range(w):
+            if src[x, y][3]:
+                continue
+            if any(0 <= x + dx < w and 0 <= y + dy < h and src[x + dx, y + dy][3] for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1))):
+                po[x, y] = INK + (255,)
+    return out
+
+
 # ---------------------------------------------------------------- móveis
 
 WOOD = ramp((140, 92, 52))
@@ -243,6 +299,8 @@ def render_decor(houses, crests):
     for casa, (color, crest) in houses.items():
         save(tablecloth(color, crests[crest]), f"toalha-{casa}.png")
         out.append((f"prop.toalha-{casa}", f"sprites/toalha-{casa}.png", CLOTH_W, CLOTH_H))
+        save(standard(color, crests[crest]), f"estandarte-{casa}.png")
+        out.append((f"prop.estandarte-{casa}", f"sprites/estandarte-{casa}.png", 16, 32))
     for key, im in (("banco", bench()), ("barril", barrel()), ("planta", plant()),
                     ("prateleira-pocoes", potion_shelf()), ("armadura", armor())):
         save(im, f"{key}.png")

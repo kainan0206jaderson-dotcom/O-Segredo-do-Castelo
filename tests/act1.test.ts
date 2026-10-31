@@ -104,7 +104,8 @@ describe('Ato 1 do começo ao fim', () => {
     expect(stage(s, 'o-diretor')).toBe('falar-com-diretor');
 
     // o diretor em pessoa: casa, capa e Levitar
-    const n = talk('arquimedes', s, 1);
+    // escolhas na ordem das bandeiras: Coragem, Astúcia, Lealdade, Inteligência
+    const n = talk('arquimedes', s, 3);
     expect(s.house).toBe('inteligencia');
     expect(s.equipment.capa).toBe('capa-inteligencia');
     expect(s.spells).toContain('levitar');

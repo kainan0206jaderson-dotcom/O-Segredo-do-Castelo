@@ -2462,6 +2462,36 @@
       "frameWidth": 16,
       "frameHeight": 32,
       "animations": {}
+    },
+    "prop.estandarte-coragem": {
+      "url": "sprites/estandarte-coragem.png",
+      "frameWidth": 16,
+      "frameHeight": 32,
+      "animations": {}
+    },
+    "prop.estandarte-inteligencia": {
+      "url": "sprites/estandarte-inteligencia.png",
+      "frameWidth": 16,
+      "frameHeight": 32,
+      "animations": {}
+    },
+    "prop.estandarte-astucia": {
+      "url": "sprites/estandarte-astucia.png",
+      "frameWidth": 16,
+      "frameHeight": 32,
+      "animations": {}
+    },
+    "prop.estandarte-lealdade": {
+      "url": "sprites/estandarte-lealdade.png",
+      "frameWidth": 16,
+      "frameHeight": 32,
+      "animations": {}
+    },
+    "prop.chapeu": {
+      "url": "sprites/chapeu.png",
+      "frameWidth": 16,
+      "frameHeight": 16,
+      "animations": {}
     }
   },
   "tilesets": {
