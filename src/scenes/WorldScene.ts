@@ -26,7 +26,7 @@ import { Beam } from '../world/Beam';
 import { Darkness, type Light } from '../world/Darkness';
 import { CauldronScene } from './CauldronScene';
 import { GrimoireScene } from './GrimoireScene';
-import { GAME_HEIGHT, GAME_WIDTH, RENDER_ZOOM, TILE_SIZE } from '../config/game';
+import { GAME_HEIGHT, GAME_WIDTH, RENDER_ZOOM, TILE_SIZE, WORLD_SCALE } from '../config/game';
 import { shake, flash } from '../ui/fx';
 import { audio, CASTELO_LISTA, type Sfx, type Track } from '../audio/Audio';
 import { Bark, pickLine } from '../ui/Bark';
@@ -77,8 +77,6 @@ interface Trigger {
   fired: boolean;
 }
 
-/** Ampliação extra do mundo em relação ao HUD. */
-const WORLD_SCALE = 1.25;
 const FADE_MS = 220;
 /** Modo Kids: dica depois de um tempo sem avançar, ampulhetas mais longas, olhos e Bellatrix mais lentos. */
 const KIDS_HINT_MS = 30000;
@@ -287,7 +285,7 @@ export class WorldScene extends Phaser.Scene {
     this.applyOutfit();
     this.refreshHud();
     this.refreshPresence(false);
-    this.showRoomName(prop(map.properties, 'nome') ?? '');
+    this.hud.showRoomName(prop(map.properties, 'nome') ?? '');
     this.cameras.main.fadeIn(FADE_MS, 24, 20, 42);
     const track = trackFor(data.map, s.flags[BOSS_FLAG]);
     if (track === 'castelo') audio.playlist(CASTELO_LISTA);
@@ -580,19 +578,16 @@ export class WorldScene extends Phaser.Scene {
   }
 
   /**
-   * Mapas menores que a tela ficam centralizados e ampliados (em escala inteira) para
-   * encher a tela; maiores seguem o jogador. O HUD tem uma câmera própria, sem zoom
+   * Todas as salas usam o mesmo zoom (WORLD_SCALE), no PC e no celular: personagens,
+   * portas e móveis ficam sempre do mesmo tamanho. Salas menores que a tela ficam
+   * centralizadas; maiores seguem o jogador. O HUD tem uma câmera própria, sem zoom
    * de sala, que mostra só o que está preso na tela (scrollFactor 0).
    */
   private setupCamera(map: Phaser.Tilemaps.Tilemap): void {
     const cam = this.cameras.main;
     const w = map.widthInPixels;
     const h = map.heightInPixels;
-    const fit = Math.min(GAME_WIDTH / w, GAME_HEIGHT / h);
-    // o mundo aparece um pouco ampliado (1,25x) em todas as salas: personagens e objetos
-    // ficam maiores na tela do celular; salas pequenas ampliam mais para encher a tela
-    const base = Math.max(RENDER_ZOOM, Math.round(RENDER_ZOOM * WORLD_SCALE));
-    const zoom = Math.min(RENDER_ZOOM * 2, Math.max(base, Math.floor(RENDER_ZOOM * fit)));
+    const zoom = RENDER_ZOOM * WORLD_SCALE;
     const viewW = (GAME_WIDTH * RENDER_ZOOM) / zoom;
     const viewH = (GAME_HEIGHT * RENDER_ZOOM) / zoom;
     cam.setOrigin(0.5).setZoom(zoom);
@@ -610,21 +605,6 @@ export class WorldScene extends Phaser.Scene {
         const c = o as unknown as Phaser.GameObjects.Components.Visible & { cameraFilter: number };
         c.cameraFilter = onScreen ? cam.id : ui.id;
       }
-    });
-  }
-
-  private showRoomName(name: string): void {
-    if (!name) return;
-    const label = this.add.text(GAME_WIDTH / 2, 18, name, {
-      fontFamily: '"Pixelify Sans", Georgia, serif', fontSize: '12px', color: '#fad65c', stroke: '#18142a', strokeThickness: 3,
-    }).setOrigin(0.5).setScrollFactor(0).setDepth(1001).setResolution(4).setAlpha(0);
-    this.tweens.chain({
-      targets: label,
-      tweens: [
-        { alpha: 1, y: 22, duration: 300 },
-        { alpha: 0, duration: 400, delay: 1600 },
-      ],
-      onComplete: () => label.destroy(),
     });
   }
 
