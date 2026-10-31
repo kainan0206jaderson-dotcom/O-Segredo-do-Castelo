@@ -46,6 +46,8 @@ export interface WorldData {
   fainted?: boolean;
   /** Foi visto por uma sentinela e voltou ao último ponto seguro. */
   caught?: boolean;
+  /** Chegou zaparatando: aparece no meio de um redemoinho. */
+  zaparatou?: boolean;
 }
 
 interface DialMeta {
@@ -118,6 +120,7 @@ function spellSound(id: string | null | undefined): Sfx {
       return id;
     case 'fogos-bruxos': return 'fogos';
     case 'passo-de-vento': return 'vento';
+    case 'zaparatar': return 'blip';
     default: return 'blip';
   }
 }
@@ -317,7 +320,14 @@ export class WorldScene extends Phaser.Scene {
     if (data.fainted) audio.sfx('desmaio');
 
     // ao voltar do caldeirão, do grimório, de um tutorial ou do fim de ato
-    this.events.on(Phaser.Scenes.Events.RESUME, (_s: unknown, from?: { from?: string }) => {
+    this.events.on(Phaser.Scenes.Events.RESUME, (_s: unknown, from?: { from?: string; destino?: string; zaparatar?: boolean }) => {
+      if (from?.zaparatar) {
+        if (from.destino) this.zaparatar(from.destino);
+        else {
+          restoreEnergy(session.state, db, db.spells.zaparatar.cost); // desistiu: não gasta
+          this.refreshHud();
+        }
+      }
       if (from?.from === 'cauldron') for (const t of CauldronScene.lastNotices) this.hud.notify(t);
       if (from?.from === 'grimoire') for (const t of GrimoireScene.lastNotices) this.hud.notify(t);
       // o modo pode ter mudado nas Opções
@@ -330,6 +340,7 @@ export class WorldScene extends Phaser.Scene {
     });
     this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.events.off(Phaser.Scenes.Events.RESUME));
 
+    if (data.zaparatou) this.zapAppear();
     if (data.fainted) this.hud.notify('Você desmaiou... e acordou aqui. Vida e energia de volta!');
     if (data.caught) this.hud.notify('Uma sentinela viu você! De volta ao último ponto seguro.');
     this.resumeBossFight();
@@ -826,6 +837,64 @@ export class WorldScene extends Phaser.Scene {
     this.refreshHud();
   }
 
+  /**
+   * Zaparatar [FICÇÃO]: o aprendiz gira, é espremido num redemoinho de fumaça e some com um
+   * estalo; na sala escolhida aparece do mesmo jeito, ao contrário (zapAppear).
+   */
+  private zaparatar(destino: string): void {
+    if (this.transitioning || this.dialogue) return;
+    this.transitioning = true;
+    const p = this.player;
+    p.halt();
+    audio.sfx('zaparatar');
+    this.zapSwirl(p.x, p.y - p.height / 2, false);
+    // gira cada vez mais rápido trocando de lado e afina até virar uma linha
+    let flips = 0;
+    this.time.addEvent({ delay: 45, repeat: 7, callback: () => p.setFlipX(++flips % 2 === 1) });
+    this.tweens.add({ targets: p, scaleX: 0.05, scaleY: p.scaleY * 1.35, duration: 360, ease: 'Cubic.in' });
+    this.time.delayedCall(370, () => {
+      p.setVisible(false);
+      flash(this.cameras.main, 120, 40, 30, 60);
+      shake(this.cameras.main, 90, 0.004);
+      this.cameras.main.fadeOut(260, 12, 10, 24);
+      this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () =>
+        this.scene.restart({ map: destino, zaparatou: true } satisfies WorldData));
+    });
+  }
+
+  private zapAppear(): void {
+    const p = this.player;
+    const sx = p.scaleX;
+    const sy = p.scaleY;
+    p.setScale(0.05, sy * 1.35);
+    this.zapSwirl(p.x, p.y - p.height / 2, true);
+    this.time.delayedCall(FADE_MS, () => {
+      audio.sfx('zaparatar');
+      this.tweens.add({ targets: p, scaleX: sx, scaleY: sy, duration: 300, ease: 'Back.out' });
+    });
+  }
+
+  /** Fumaça escura girando em volta do aprendiz; para dentro ao sumir, para fora ao aparecer. */
+  private zapSwirl(x: number, y: number, out: boolean): void {
+    for (let i = 0; i < 14; i++) {
+      const a = (i / 14) * Math.PI * 2;
+      const r = out ? 4 : 22;
+      const puff = this.add.circle(x + Math.cos(a) * r, y + Math.sin(a) * r * 0.6, Phaser.Math.Between(3, 6), i % 3 ? 0x2a2140 : 0x6a58a0, 0.85)
+        .setDepth(this.player.depth + 2);
+      const to = out ? 24 : 2;
+      const turn = { t: 0 };
+      this.tweens.add({
+        targets: turn, t: 1, duration: 420, delay: out ? FADE_MS : 0, ease: 'Sine.inOut',
+        onUpdate: () => {
+          const ang = a + turn.t * Math.PI * 1.5 * (out ? -1 : 1);
+          const rr = r + (to - r) * turn.t;
+          puff.setPosition(x + Math.cos(ang) * rr, y + Math.sin(ang) * rr * 0.6).setAlpha(0.85 * (out ? 1 - turn.t : 1 - turn.t * 0.6));
+        },
+        onComplete: () => puff.destroy(),
+      });
+    }
+  }
+
   private openMap(): void {
     if (!session.state.inventory['mapa-dos-segredos']) {
       this.bark.say('Se eu tivesse um mapa deste castelo...');
@@ -1201,6 +1270,19 @@ export class WorldScene extends Phaser.Scene {
     }
     if (spell.self === 'escudo') {
       this.raiseShield();
+      return;
+    }
+    if (spell.self === 'zaparatar') {
+      if (this.challenge?.status === 'running' || this.boss) {
+        restoreEnergy(s, db, spell.cost);
+        this.refreshHud();
+        this.hud.notify('Agora não dá para zaparatar!');
+        return;
+      }
+      // o Mapa dos Segredos abre para escolher o destino (só salas já visitadas)
+      this.player.halt();
+      this.scene.launch('Map', { back: 'World', zaparatar: true });
+      this.scene.pause();
       return;
     }
     if (spell.target === 'levitavel') {

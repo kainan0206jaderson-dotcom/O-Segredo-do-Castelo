@@ -56,5 +56,14 @@
     "fx": "fx.fagulha",
     "cost": 2,
     "self": "velocidade"
+  },
+  "zaparatar": {
+    "name": "Zaparatar",
+    "kind": "extra",
+    "description": "Feitiço extra, prêmio de quem vence os desafios de todos os professores. Leva você na hora para qualquer sala do castelo que você já visitou.",
+    "target": "nenhum",
+    "fx": "fx.fagulha",
+    "cost": 3,
+    "self": "zaparatar"
   }
 }

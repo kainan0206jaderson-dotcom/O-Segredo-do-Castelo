@@ -9,7 +9,7 @@ export type Sfx =
   | 'passo' | 'porta' | 'blip' | 'menu' | 'confirmar'
   | 'lumen' | 'levitar' | 'revelar' | 'escudo' | 'abrir' | 'fogos' | 'vento' | 'sem-energia'
   | 'pegar' | 'missao' | 'nivel' | 'dano' | 'acerto' | 'espanto' | 'orbe' | 'enigma'
-  | 'vitoria' | 'derrota' | 'desmaio' | 'coracao' | 'pocao' | 'erro';
+  | 'vitoria' | 'derrota' | 'desmaio' | 'coracao' | 'pocao' | 'erro' | 'zaparatar';
 
 export type Track = 'titulo' | 'castelo' | 'lareira' | 'corredores' | 'ninar' | 'biblioteca' | 'quadros' | 'duelo' | 'final';
 
@@ -272,6 +272,8 @@ class AudioEngine {
       case 'coracao': this.tone(t, 'sine', 70, 50, 0.18, 0.4); this.tone(t + 0.25, 'sine', 70, 50, 0.22, 0.45); return;
       case 'pocao': this.notes(t, 'sine', ['C5', 'E5', 'D5', 'G5'], 0.05, 0.08); this.noise(t, 0.2, 0.04, 1500, 'bandpass'); return;
       case 'erro': this.tone(t, 'square', 200, 150, 0.2, 0.07); return;
+      // giro que suga o ar e termina num estalo seco
+      case 'zaparatar': this.noise(t, 0.35, 0.08, 400, 'bandpass', 3200); this.noise(t + 0.36, 0.05, 0.3, 1800, 'highpass'); this.tone(t + 0.36, 'square', 180, 60, 0.08, 0.1); return;
     }
   }
 

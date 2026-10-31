@@ -962,6 +962,16 @@ def i_passo(px):
     for (x, y, l) in ((3, 4, 8), (2, 8, 10), (4, 12, 7)):
         rect(px, x, y, x + l, y, (200, 230, 250))
     rect(px, 10, 6, 12, 10, P["y"])
+def i_zaparatar(px):
+    """Redemoinho roxo com o estalo dourado no meio."""
+    import math
+    for i in range(36):
+        a = i * 0.42
+        r = 1.2 + i * 0.16
+        x, y = int(round(7.5 + math.cos(a) * r)), int(round(7.5 + math.sin(a) * r))
+        if 0 <= x < 16 and 0 <= y < 16:
+            px[(x, y)] = (150, 120, 220) if i % 2 else (90, 70, 160)
+    rect(px, 7, 7, 8, 8, P["Y"])
 def i_coracao(px):
     disc(px, 5.5, 6, 2.6, 2.6, (200, 40, 60)); disc(px, 9.5, 6, 2.6, 2.6, (200, 40, 60))
     for y in range(7, 13):
@@ -1004,7 +1014,7 @@ def i_escudo(px):
 def i_abrir(px):
     rect(px, 3, 6, 8, 9, (200, 170, 70)); rect(px, 9, 7, 13, 8, (200, 170, 70)); rect(px, 12, 9, 13, 10, (200, 170, 70)); rect(px, 5, 7, 6, 8, (90, 70, 30))
 
-NEW_ICONS = {"revelar": i_revelar, "escudo": i_escudo, "abrir": i_abrir, "levitar": i_levitar, "passo-de-vento": i_passo, "coracao": i_coracao, "energia": i_energia, "poder": i_poder,
+NEW_ICONS = {"revelar": i_revelar, "escudo": i_escudo, "abrir": i_abrir, "levitar": i_levitar, "passo-de-vento": i_passo, "zaparatar": i_zaparatar, "coracao": i_coracao, "energia": i_energia, "poder": i_poder,
              "chaves-trinco": i_chaves}
 for name, col in CAPAS.items():
     NEW_ICONS[f"capa-{name}"] = capa_icon(col)
