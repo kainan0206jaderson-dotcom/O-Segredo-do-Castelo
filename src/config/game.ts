@@ -21,9 +21,14 @@ export const GAME_WIDTH = Math.min(640, Math.max(480, Math.round((GAME_HEIGHT * 
 
 /**
  * Quantos pixels reais cada pixel de jogo usa no desenho. A arte continua em blocos,
- * mas textos e bordas ganham a nitidez da tela do aparelho.
+ * mas textos e bordas ganham a nitidez da tela do aparelho. É sempre par (2, 4 ou 6),
+ * para o mundo ampliado 1,5x (WORLD_SCALE) cair em pixels inteiros em qualquer aparelho:
+ * PC e celular mostram a mesma altura de sala, com o mesmo zoom.
  */
-export const RENDER_ZOOM = Math.min(4, Math.max(1, Math.round((shape.h * shape.dpr) / GAME_HEIGHT)));
+export const RENDER_ZOOM = Math.min(6, Math.max(2, 2 * Math.round((shape.h * shape.dpr) / (GAME_HEIGHT * 2))));
+
+/** Ampliação do mundo em relação ao HUD, igual em todas as salas e aparelhos. */
+export const WORLD_SCALE = 1.5;
 export const TILE_SIZE = 16;
 export const PLAYER_SPEED = 80; // pixels de jogo por segundo
 export const MANIFEST_URL = 'assets/manifest.json';

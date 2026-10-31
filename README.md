@@ -9,7 +9,11 @@ npm install
 npm run dev        # abre em http://localhost:5173
 npm test           # testes unitários
 npm run build      # gera dist/ para publicar
+node tools/capturas.mjs capturas/antes      # com o dev rodando: uma captura por sala (PC 16:9 e celular deitado)
+python3 tools/comparar.py capturas/antes capturas/depois capturas/lado-a-lado
 ```
+
+`SALAS=biblioteca,cozinha node tools/capturas.mjs ...` captura só algumas salas.
 
 ## Trocar arte provisória por definitiva
 
