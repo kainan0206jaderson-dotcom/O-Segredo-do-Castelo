@@ -81,6 +81,16 @@ export class OptionsScene extends Phaser.Scene {
           this.scene.launch('Visual', { back: 'Options' });
           this.scene.pause();
         },
+      }, {
+        // o jogo salva sozinho; volta para a tela inicial sem perder nada
+        label: 'Tela inicial',
+        change: (dir: number) => {
+          if (dir !== 0) return;
+          audio.sfx('confirmar');
+          session.save();
+          for (const sc of this.game.scene.getScenes(false)) if (sc !== this && (sc.scene.isActive() || sc.scene.isPaused())) sc.scene.stop();
+          this.scene.start('Title');
+        },
       }] : []),
       { label: 'Voltar', change: (dir) => dir === 0 && this.close() },
     ];
