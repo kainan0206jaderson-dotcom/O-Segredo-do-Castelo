@@ -130,6 +130,22 @@
     },
     "levitar-2": {
       "text": "Cálices, caixotes, livros pesados de cálculo... tudo que é leve sobe. Estátuas não. Estátuas são teimosas.",
+      "next": "apanha"
+    },
+    "apanha": {
+      "text": "E isto aqui é invenção minha: o Apanha-Luz. Um clique guarda a luz de uma vela. Outro clique solta a luz onde você precisar.",
+      "effects": [
+        {
+          "learnSpell": "apanha-luz"
+        },
+        {
+          "tutorial": "apanha-luz"
+        }
+      ],
+      "next": "apanha-2"
+    },
+    "apanha-2": {
+      "text": "O problema é que eu fiz dois. O primeiro sumiu da minha vitrine hoje à noite... e desde então as velas do castelo apagam sozinhas, uma por uma.",
       "next": "selo"
     },
     "selo": {

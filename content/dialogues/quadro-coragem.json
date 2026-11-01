@@ -12,7 +12,7 @@
       "next": "a-2"
     },
     "a-2": {
-      "text": "Velas apagadas pelo caminho... Lumen nelas, e o escuro vai perder a graça.",
+      "text": "Velas apagadas pelo caminho... Lumen nelas, e o escuro vai perder a graça. A luz guardada no Apanha-Luz também ajuda.",
       "effects": [
         {
           "setFlag": "visto:quadro-coragem",

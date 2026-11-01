@@ -125,7 +125,9 @@ export interface SpellDef {
   /** Energia mágica gasta a cada uso. */
   cost: number;
   /** Feitiços sem alvo podem ter um efeito no próprio aprendiz. */
-  self?: 'velocidade' | 'escudo' | 'zaparatar' | 'onda' | 'guia';
+  self?: 'velocidade' | 'escudo' | 'zaparatar' | 'onda' | 'guia' | 'apanha-luz';
+  /** Ícone a usar quando o feitiço não tem um próprio. */
+  icon?: string;
 }
 
 export interface RecipeDef {

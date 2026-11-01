@@ -233,7 +233,7 @@ export class PrologueScene extends Phaser.Scene {
       .map(([wx, wy]) => this.add.rectangle(left + wx, top + wy, 4, 7, 0x282440).setOrigin(0).setAlpha(0));
     s.add(dark);
     dark.forEach((d, i) => this.tweens.add({ targets: d, alpha: 1, duration: 200, delay: 600 + i * 220 }));
-    await this.say('Mas, no alto da torre, alguém também esperava por aquela noite...', 5000);
+    await this.say('Mas, no alto da torre, alguém também esperava por aquela noite... e começou a roubar a luz do castelo, janela por janela.', 5000);
     this.tweens.add({ targets: morgana, alpha: 0, duration: 700 });
     soot.stop();
     await this.wait(600);

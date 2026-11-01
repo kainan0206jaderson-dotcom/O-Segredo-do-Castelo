@@ -83,5 +83,14 @@
     "fx": "fx.fagulha",
     "cost": 3,
     "self": "zaparatar"
+  },
+  "apanha-luz": {
+    "name": "Apanha-Luz",
+    "kind": "principal",
+    "description": "Artefato do Ministro Bonfatti. De frente para uma vela acesa, guarda a luz dela (até 3). Para uma apagada, devolve a luz. Longe de velas, solta uma bolinha de luz que fica acesa na sala.",
+    "target": "nenhum",
+    "fx": "fx.fagulha",
+    "cost": 1,
+    "self": "apanha-luz"
   }
 }

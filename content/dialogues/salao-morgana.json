@@ -12,7 +12,7 @@
       "next": "b"
     },
     "b": {
-      "text": "Cada vela que você acende, eu apago duas. Até logo.",
+      "text": "Cada vela que você acende, eu guardo duas no meu Apanha-Luz. Até logo.",
       "effects": [
         {
           "setFlag": "visto:morgana-salao",

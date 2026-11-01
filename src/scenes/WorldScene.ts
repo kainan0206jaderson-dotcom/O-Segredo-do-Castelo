@@ -25,6 +25,7 @@ import { Puzzles, type SocketSpot } from '../world/Puzzles';
 import { Beam } from '../world/Beam';
 import { Darkness, type Light } from '../world/Darkness';
 import { ambienteDa } from '../world/ambiente';
+import { APANHA_LUZ_MAX, guardarLuz, luzesGuardadas, soltarLuz } from '../systems/apanhaLuz';
 import { CauldronScene } from './CauldronScene';
 import { GrimoireScene } from './GrimoireScene';
 import { GAME_HEIGHT, GAME_WIDTH, RENDER_ZOOM, TILE_SIZE, WORLD_SCALE } from '../config/game';
@@ -38,7 +39,7 @@ import { setFalaProvider } from '../core/aparencia';
 import { nextGuidePoint, type MapObject } from '../systems/guia';
 import { GuideTrail } from '../world/GuideTrail';
 import { emitNotices } from '../systems/progress';
-import { dropShadow, torchHalo, wallSconce, windowLight } from '../world/Lighting';
+import { dropShadow, GLOW_DEPTH, torchHalo, wallSconce, windowLight } from '../world/Lighting';
 import { hudLayout } from '../ui/hudLayout';
 
 export interface WorldData {
@@ -198,6 +199,8 @@ export class WorldScene extends Phaser.Scene {
   private darkness?: Darkness;
   /** Luzes que não se mexem (janelas, tochas, caldeirões): abrem buracos na sombra da sala. */
   private staticLights: Light[] = [];
+  /** Bolinhas de luz soltas pelo Apanha-Luz nesta sala (somem ao sair). */
+  private releasedLights: Light[] = [];
   private boss?: Boss;
   private bossWhen?: Condition;
   private orbs!: Phaser.Physics.Arcade.Group;
@@ -242,6 +245,7 @@ export class WorldScene extends Phaser.Scene {
     this.beam = undefined;
     this.darkness = undefined;
     this.staticLights = [];
+    this.releasedLights = [];
     this.boss = undefined;
     this.bossWhen = undefined;
     this.wave = 0;
@@ -711,7 +715,10 @@ export class WorldScene extends Phaser.Scene {
     const s = session.state;
     const st = stats(s, db);
     this.hud.setObjective(currentObjective(s, db));
-    this.hud.setSpell(s.selectedSpell ? { id: s.selectedSpell, name: db.spells[s.selectedSpell].name } : undefined);
+    const sel = s.selectedSpell ? db.spells[s.selectedSpell] : undefined;
+    // no Apanha-Luz, o nome mostra quantas luzes estão guardadas
+    const label = sel?.self === 'apanha-luz' ? `${sel.name} ${luzesGuardadas(s)}/${APANHA_LUZ_MAX}` : sel?.name;
+    this.hud.setSpell(sel ? { id: s.selectedSpell!, name: label!, icon: sel.icon } : undefined);
     this.hud.setVitals({ vida: s.vida, vidaMax: st.vidaMax, energia: s.energia, energiaMax: st.energiaMax, level: s.level });
   }
 
@@ -1303,6 +1310,7 @@ export class WorldScene extends Phaser.Scene {
       return;
     }
     if (spell.self === 'onda') return this.lightWave();
+    if (spell.self === 'apanha-luz') return this.useLightCatcher(at);
     if (spell.self === 'guia') {
       // Estrela-Guia: a trilha de estrelinhas do Modo Kids aparece por alguns segundos
       this.guideUntil = this.time.now + GUIDE_MS;
@@ -1773,9 +1781,10 @@ export class WorldScene extends Phaser.Scene {
     if (this.darkness?.escuro) {
       const out: Light[] = [{ x: this.player.x, y: this.player.y - 8, r: 46 }];
       for (const c of this.candles) if (c.lit) out.push({ x: c.x, y: c.y - 10, r: 58 });
+      for (const l of this.releasedLights) out.push({ x: l.x, y: l.y, r: 58 });
       return out;
     }
-    const out: Light[] = [{ x: this.player.x, y: this.player.y - 10, r: 84, i: 0.75 }, ...this.staticLights];
+    const out: Light[] = [{ x: this.player.x, y: this.player.y - 10, r: 84, i: 0.75 }, ...this.staticLights, ...this.releasedLights];
     for (const c of this.candles) if (c.lit) out.push({ x: c.x, y: c.y - 12, r: 80, i: 0.95, c: 0xd88040 });
     return out;
   }
@@ -1811,6 +1820,71 @@ export class WorldScene extends Phaser.Scene {
         const pos = wallSconce(this, inner * TILE_SIZE + dx - (dx > 8 ? 0 : 0), ty * TILE_SIZE + 12, true);
         this.staticLights.push({ ...pos, r: 70, i: 0.8, c: 0xd88040 });
       }
+    }
+  }
+
+  /**
+   * Apanha-Luz: de frente para uma vela acesa, guarda a luz dela; para uma apagada, devolve
+   * uma luz guardada (vale como acender); longe de velas, solta uma bolinha de luz na sala.
+   */
+  private useLightCatcher(at: { x: number; y: number }): void {
+    const s = session.state;
+    const candle = this.candles
+      .map((c) => ({ c, d: Phaser.Math.Distance.Between(at.x, at.y, c.x, c.y - 8) }))
+      .filter(({ d }) => d < SPELL_RANGE)
+      .sort((a, b) => a.d - b.d)[0]?.c;
+    const running = this.challenge?.status === 'running';
+    if (candle?.lit) {
+      if (running && this.challenge?.isTarget(candle.targetName)) {
+        this.hud.notify('Agora não: esta vela é do desafio!');
+        return;
+      }
+      if (!guardarLuz(s)) {
+        this.hud.notify(`O Apanha-Luz está cheio (${APANHA_LUZ_MAX} luzes).`);
+        audio.sfx('erro');
+        return;
+      }
+      candle.setLit(false);
+      s.flags[this.candleFlag(candle.targetName)] = false;
+      this.lightTrail(candle.x, candle.y - 12, this.player.x, this.player.y - 14);
+      audio.sfx('levitar');
+      this.hud.notify(`Luz guardada! (${luzesGuardadas(s)}/${APANHA_LUZ_MAX})`);
+      return this.afterStateChange();
+    }
+    if (!soltarLuz(s)) {
+      this.hud.notify('O Apanha-Luz está vazio. Guarde a luz de uma vela acesa.');
+      audio.sfx('erro');
+      return;
+    }
+    if (candle && !candle.lit) {
+      this.lightTrail(this.player.x, this.player.y - 14, candle.x, candle.y - 12);
+      candle.setLit(true);
+      audio.sfx('acerto');
+      if (this.challenge?.isTarget(candle.targetName)) this.challenge.hitTarget(candle.targetName, s, db);
+      else s.flags[this.candleFlag(candle.targetName)] = true;
+      return this.afterStateChange();
+    }
+    // bolinha de luz que fica flutuando onde foi solta
+    const x = Math.round(at.x);
+    const y = Math.round(at.y - 10);
+    const ball = this.add.circle(x, y, 2, 0xfff0b0).setDepth(GLOW_DEPTH + 2);
+    torchHalo(this, x, y, 20);
+    this.tweens.add({ targets: ball, y: y - 3, duration: 900, yoyo: true, repeat: -1, ease: 'Sine.inOut' });
+    this.lightTrail(this.player.x, this.player.y - 14, x, y);
+    this.releasedLights.push({ x, y, r: 80, i: 0.95, c: 0xd88040 });
+    audio.sfx('revelar');
+    this.hud.notify(`Luz solta! (${luzesGuardadas(s)}/${APANHA_LUZ_MAX})`);
+    this.afterStateChange();
+  }
+
+  /** Faísquinhas voando de um ponto a outro (a luz entrando ou saindo do Apanha-Luz). */
+  private lightTrail(x1: number, y1: number, x2: number, y2: number): void {
+    for (let i = 0; i < 6; i++) {
+      const p = this.add.circle(x1, y1, 1, 0xfff0b0).setDepth(GLOW_DEPTH + 2);
+      this.tweens.add({
+        targets: p, x: x2 + Phaser.Math.Between(-3, 3), y: y2 + Phaser.Math.Between(-3, 3),
+        duration: 380 + i * 50, delay: i * 40, ease: 'Sine.in', onComplete: () => p.destroy(),
+      });
     }
   }
 

@@ -143,3 +143,22 @@ describe('luz das salas', () => {
     expect(ambienteDa('map.cozinha', s).alpha).toBeLessThan(acesa);
   });
 });
+
+describe('Apanha-Luz', () => {
+  it('guarda até 3 luzes e solta uma de cada vez', async () => {
+    const { APANHA_LUZ_MAX, guardarLuz, luzesGuardadas, soltarLuz } = await import('../src/systems/apanhaLuz');
+    const s = newGame('map.porao', 'inicio');
+    expect(soltarLuz(s)).toBe(false);
+    for (let i = 0; i < APANHA_LUZ_MAX; i++) expect(guardarLuz(s)).toBe(true);
+    expect(guardarLuz(s)).toBe(false);
+    expect(luzesGuardadas(s)).toBe(APANHA_LUZ_MAX);
+    expect(soltarLuz(s)).toBe(true);
+    expect(luzesGuardadas(s)).toBe(APANHA_LUZ_MAX - 1);
+  });
+
+  it('o Bonfatti entrega o Apanha-Luz no gabinete', () => {
+    const nodes = Object.values(dialogues['arquimedes'].nodes);
+    expect(nodes.some((n) => JSON.stringify(n.effects ?? []).includes('"learnSpell":"apanha-luz"'))).toBe(true);
+    expect(db.spells['apanha-luz']).toBeDefined();
+  });
+});

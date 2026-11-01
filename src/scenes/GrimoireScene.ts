@@ -207,7 +207,7 @@ export class GrimoireScene extends Phaser.Scene {
           return { icon: id, title: `${it?.name ?? id}${n > 1 ? ` ×${n}` : ''}${worn ? ' (vestindo)' : ''}`, detail: it?.description ?? '', use, count: n };
         });
       case 'Feitiços': {
-        const known = s.spells.map((id) => ({ icon: id, title: db.spells[id].name + (db.spells[id].kind === 'extra' ? ' ★' : ''), detail: db.spells[id].description }));
+        const known = s.spells.map((id) => ({ icon: icon(id) ? id : db.spells[id].icon ?? id, title: db.spells[id].name + (db.spells[id].kind === 'extra' ? ' ★' : ''), detail: db.spells[id].description }));
         const extrasLeft = Object.entries(db.challenges)
           .filter(([id, c]) => !s.challenges[id]?.done && c.reward.some((e) => 'learnSpell' in e))
           .map(([, c]) => ({ icon: 'bloqueado', title: '???', detail: `Feitiço extra. Vença o desafio "${c.title}" para aprender.`, muted: true }));
