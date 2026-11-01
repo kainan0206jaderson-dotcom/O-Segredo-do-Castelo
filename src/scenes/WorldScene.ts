@@ -116,6 +116,7 @@ const HOUSE_COLORS: Record<string, number> = { coragem: 0xe04848, astucia: 0x48b
 
 /** Índice (gid) do tile de janela no tileset do castelo. */
 const WINDOW_TILE = 7;
+const STARRY = new Set(['map.aula-adivinhacao', 'map.observatorio', 'map.coracao']);
 /** Tile da face lisa da parede de cima (onde cabem arandelas). */
 const WALL_FACE_TILE = 5;
 
@@ -208,6 +209,7 @@ export class WorldScene extends Phaser.Scene {
   private doorNoticeAt = 0;
   private bark!: Bark;
   private stillSince = 0;
+  private dustAt = 0;
 
   constructor() {
     super('World');
@@ -255,12 +257,15 @@ export class WorldScene extends Phaser.Scene {
     const map = this.make.tilemap({ key: data.map });
     const tilesets = mapDef.tilesets.map((key) => map.addTilesetImage(assets().tileset(key).tiledName, key)!);
 
-    map.createLayer('chao', tilesets)!;
+    const chao = map.createLayer('chao', tilesets)!;
+    // céu de estrelas no chão: mais apagado, para não disputar atenção com as pessoas
+    if (STARRY.has(data.map)) chao.setTint(0x8a86b0);
     this.walls = map.createLayer('paredes', tilesets)!;
     this.walls.setCollisionByProperty({ collides: true });
     // luar pelas janelas da parede (tile "janela" do tileset)
     this.walls.forEachTile((t) => {
-      if (t.index !== WINDOW_TILE) return;
+      // só janelas da parede de cima: nas colunas do meio da sala o luar virava um triângulo solto
+      if (t.index !== WINDOW_TILE || t.y > 2) return;
       let ty = t.y + 1;
       while (ty < t.y + 4 && this.walls.getTileAt(t.x, ty)?.collides) ty++;
       const pool = windowLight(this, t.pixelX + 8, ty * TILE_SIZE);
@@ -389,8 +394,10 @@ export class WorldScene extends Phaser.Scene {
     let beamTarget: { name: string; tx: number; ty: number; sprite: Phaser.GameObjects.Sprite } | undefined;
     const bossSpots: { x: number; y: number }[] = [];
     for (const o of objects) {
-      if (this.puzzles.build(o)) continue;
       const sprite = prop<string>(o.properties, 'sprite');
+      // caldeirões de encaixe (Aula de Poções) também borbulham e brilham
+      if (o.type === 'socket' && sprite === 'prop.caldeirao') this.cauldronGlow(o.x!, o.y!);
+      if (this.puzzles.build(o)) continue;
       let when = cond(o);
       switch (o.type) {
         case 'prop': {
@@ -1784,8 +1791,11 @@ export class WorldScene extends Phaser.Scene {
       for (const l of this.releasedLights) out.push({ x: l.x, y: l.y, r: 58 });
       return out;
     }
-    const out: Light[] = [{ x: this.player.x, y: this.player.y - 10, r: 84, i: 0.75 }, ...this.staticLights, ...this.releasedLights];
-    for (const c of this.candles) if (c.lit) out.push({ x: c.x, y: c.y - 12, r: 80, i: 0.95, c: 0xd88040 });
+    // chamas tremulam um pouco (cada uma no seu ritmo); luar e caldeirões ficam firmes
+    const now = this.time.now / 1000;
+    const flicker = (l: Light): Light => (l.c === 0xd88040 ? { ...l, r: l.r * (1 + 0.04 * Math.sin(now * 7 + l.x) + 0.025 * Math.sin(now * 13 + l.y)) } : l);
+    const out: Light[] = [{ x: this.player.x, y: this.player.y - 10, r: 100, i: 0.8 }, ...this.staticLights.map(flicker), ...this.releasedLights];
+    for (const c of this.candles) if (c.lit) out.push(flicker({ x: c.x, y: c.y - 12, r: 96, i: 1, c: 0xd88040 }));
     return out;
   }
 
@@ -1978,6 +1988,12 @@ export class WorldScene extends Phaser.Scene {
     if (dir.lengthSq() > 0) {
       audio.sfx('passo');
       this.stillSince = time;
+      // poeirinha nos pés a cada passo
+      if (time - this.dustAt > 280) {
+        this.dustAt = time;
+        const d = this.add.circle(this.player.x + Phaser.Math.Between(-3, 3), this.player.y - 1, 2, 0xc8bca8, 0.45).setDepth(this.player.depth - 1);
+        this.tweens.add({ targets: d, scale: 2.2, alpha: 0, y: d.y - 3, duration: 420, onComplete: () => d.destroy() });
+      }
     } else if (time - this.stillSince > 25000) {
       // parado um tempinho: o aprendiz pensa alto
       this.stillSince = time;

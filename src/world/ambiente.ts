@@ -20,12 +20,12 @@ const QUENTE = 0x1c0e16;
 const ESTRELAS = 0x070a26;
 
 const SALAS: Record<string, Ambiente> = {
-  'map.recepcao': { color: NOITE, alpha: 0.48 },
-  'map.grande-salao': { color: NOITE, alpha: 0.46 },
+  'map.recepcao': { color: NOITE, alpha: 0.42 },
+  'map.grande-salao': { color: NOITE, alpha: 0.4 },
   'map.cozinha': { color: QUENTE, alpha: 0.42 },
-  'map.corredor': { color: NOITE, alpha: 0.54 },
+  'map.corredor': { color: NOITE, alpha: 0.48 },
   'map.gabinete': { color: QUENTE, alpha: 0.44 },
-  'map.hall': { color: NOITE, alpha: 0.56 },
+  'map.hall': { color: NOITE, alpha: 0.48 },
   'map.ala-professores': { color: NOITE, alpha: 0.52 },
   'map.biblioteca': { color: 0x0e1028, alpha: 0.54 },
   'map.sala-espectral': { color: 0x0a1426, alpha: 0.62 },

@@ -55,10 +55,11 @@ export class Darkness {
     const ctx = tex.getContext();
     const half = LIGHT_SIZE / 2;
     const grad = ctx.createRadialGradient(half, half, 0, half, half, half);
-    grad.addColorStop(0, 'rgba(255,255,255,1)');
-    grad.addColorStop(0.45, 'rgba(255,255,255,0.85)');
-    grad.addColorStop(0.75, 'rgba(255,255,255,0.35)');
-    grad.addColorStop(1, 'rgba(255,255,255,0)');
+    // queda suave (sem "degrau"): luzes vizinhas se juntam sem deixar manchas no chão
+    for (let k = 0; k <= 10; k++) {
+      const t = k / 10;
+      grad.addColorStop(t, `rgba(255,255,255,${((1 - t) ** 1.6).toFixed(3)})`);
+    }
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, LIGHT_SIZE, LIGHT_SIZE);
     tex.refresh();
