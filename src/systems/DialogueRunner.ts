@@ -42,7 +42,8 @@ export class DialogueRunner {
   /** Avança uma fala sem escolhas. */
   next(): void {
     if (!this.node || this.visibleChoices.length) return;
-    this.enter(this.node.next ?? null);
+    const branch = this.node.nextIf?.find((b) => check(b.when, this.state));
+    this.enter(branch ? branch.next : this.node.next ?? null);
   }
 
   choose(index: number): void {

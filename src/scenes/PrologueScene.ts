@@ -95,7 +95,7 @@ export class PrologueScene extends Phaser.Scene {
     s.add(sparkles);
     await this.say('Dizem que, escondido em São Paulo, sempre existiu um castelo.', 4800);
     sparkles.forEach((p) => p.start());
-    await this.say('Bruxos antigos o protegiam com um escudo de magia, esperando o momento certo de revelá-lo.', 5600);
+    await this.say('Bruxos antigos o protegeram por séculos. Há cinco anos, no momento certo, ele se revelou para a cidade.', 5600);
     await this.fadeTo(900);
   }
 
@@ -157,7 +157,8 @@ export class PrologueScene extends Phaser.Scene {
     s.add(this.add.image(W / 2, 0, 'prologo.ceu').setOrigin(0.5, 0));
     const far = this.add.tileSprite(0, NEAR_Y - 70, W, 110, 'prologo.cidade-longe').setOrigin(0);
     const asphalt = this.add.rectangle(0, NEAR_Y + 150, W, H - NEAR_Y - 150, 0x221e2e).setOrigin(0);
-    const castle = this.add.image(0, STREET_Y - 2, 'prologo.castelo').setOrigin(0.5, 1).setAlpha(0);
+    // o castelo já está lá (a cidade conhece), mas adormecido: escuro e sem brilho até a estrela chegar
+    const castle = this.add.image(0, STREET_Y - 2, 'prologo.castelo').setOrigin(0.5, 1).setTint(0x4a4470).setAlpha(0.7);
     const near = this.add.image(0, NEAR_Y, 'prologo.cidade-perto').setOrigin(0);
     const kid = this.add.sprite(W * 0.35, STREET_Y + 3, KID()).setOrigin(0.5, 1);
     const star = this.add.image(W * 0.55, STREET_Y - 30, 'prologo.estrela');
@@ -182,7 +183,7 @@ export class PrologueScene extends Phaser.Scene {
     const endScroll = NEAR_W - W;
     this.tweens.add({ targets: scroll, x: endScroll, duration: 11000, ease: 'Sine.easeInOut' });
     await this.say('Ruas, esquinas, postes piscando... e a estrela sem parar nem um segundo.', 5200);
-    await this.say('Até um terreno vazio, desses em que ninguém nunca repara.', 5600);
+    await this.say('Até o castelo que a cidade inteira conhece... mas que quase ninguém conhece de verdade.', 5600);
     kid.play(AssetRegistry.animKey(KID(), 'idle-side'));
     this.hideCaption();
 
@@ -204,10 +205,11 @@ export class PrologueScene extends Phaser.Scene {
     glow.setVisible(false);
     trail.stop();
     audio.music('castelo');
-    castle.setAlpha(0).setScale(1, 0.92);
-    this.tweens.add({ targets: castle, alpha: 1, scaleY: 1, duration: 1600, ease: 'Back.easeOut' });
-    await this.say('E então, como se sempre tivesse estado ali... o castelo apareceu.', 4600);
-    await this.say('Os bruxos antigos tinham escolhido o momento certo. E o aprendiz certo.', 4600);
+    // o castelo acorda: as cores voltam e ele "respira" uma vez
+    castle.clearTint().setAlpha(1).setScale(1, 0.96);
+    this.tweens.add({ targets: castle, scaleY: 1, duration: 1600, ease: 'Back.easeOut' });
+    await this.say('E então o castelo acordou, como se esperasse só por aquela estrela.', 4600);
+    await this.say('Para a cidade, ele tinha se revelado havia cinco anos. Para você, se revelava agora.', 4600);
 
     // a torre: alguém observa
     this.events.off('update', place);
@@ -231,7 +233,7 @@ export class PrologueScene extends Phaser.Scene {
       .map(([wx, wy]) => this.add.rectangle(left + wx, top + wy, 4, 7, 0x282440).setOrigin(0).setAlpha(0));
     s.add(dark);
     dark.forEach((d, i) => this.tweens.add({ targets: d, alpha: 1, duration: 200, delay: 600 + i * 220 }));
-    await this.say('Mas, no alto da torre, alguém também esperava por aquela noite...', 5000);
+    await this.say('Mas, no alto da torre, alguém também esperava por aquela noite... e começou a roubar a luz do castelo, janela por janela.', 5000);
     this.tweens.add({ targets: morgana, alpha: 0, duration: 700 });
     soot.stop();
     await this.wait(600);

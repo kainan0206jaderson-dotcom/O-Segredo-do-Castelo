@@ -8,17 +8,17 @@
   ],
   "nodes": {
     "a": {
-      "text": "As quatro pedras brilham ao mesmo tempo. O selo de fuligem racha... e vira poeira!",
+      "text": "As quatro pedras brilham ao mesmo tempo. O selo de fuligem racha... e vira poeira! Na porta da Ala, a fuligem se desfaz também.",
       "next": "b"
     },
     "b": {
       "speaker": "Bellatrix (voz)",
-      "text": "Então você quebrou o primeiro selo. Que fofo.",
+      "text": "Então você quebrou o meu selo e soltou os professores. Que fofo.",
       "next": "c"
     },
     "c": {
       "speaker": "Bellatrix (voz)",
-      "text": "Lá em cima, os professores não vão te ajudar tão fácil. E o ministro... bom, ele está muito bem guardado.",
+      "text": "Pode soltar quem quiser: a minha fuligem empurra de volta qualquer professor deste castelo. E o ministro... bom, ele está muito bem guardado.",
       "effects": [
         {
           "completeQuest": "o-selo"

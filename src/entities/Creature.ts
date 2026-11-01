@@ -15,7 +15,7 @@ export interface CreatureOptions {
   hidden?: boolean;
   /** Não anda nem machuca (âncoras de fuligem). */
   still?: boolean;
-  /** Só aparece durante este desafio (levas da aula de Criaturas Espectrais). */
+  /** Só aparece durante este desafio (levas da aula de Seres Espectrais). */
   challenge?: string;
 }
 

@@ -58,6 +58,11 @@
     "c-3": {
       "text": "...Tá. Tá bom. Talvez eu tenha exagerado um pouquinho. Só um pouquinho.",
       "speaker": "Bellatrix Lestrelle",
+      "next": "c-3b"
+    },
+    "c-3b": {
+      "speaker": "✦",
+      "text": "A Bellatrix abre o Apanha-Luz roubado. Todas as luzes que ela guardou a noite inteira saem voando, como um enxame de vaga-lumes, de volta para as velas do castelo.",
       "next": "c-4"
     },
     "c-4": {

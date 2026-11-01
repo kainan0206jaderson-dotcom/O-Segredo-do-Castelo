@@ -150,7 +150,7 @@
     ]
   },
   "aula": {
-    "title": "Aula de Criaturas Espectrais",
+    "title": "Aula de Seres Espectrais",
     "pages": [
       {
         "icon": "revelar",
@@ -198,6 +198,18 @@
       {
         "icon": "lumen",
         "text": "Depois de alguns tiros ela cansa: é a hora do Lumen! Quando ela ficar invisível, use Revelar e depois Lumen."
+      }
+    ]
+  },
+  "apanha-luz": {
+    "title": "Apanha-Luz",
+    "pages": [
+      {
+        "icon": "apanha-luz",
+        "text": "Escolha o Apanha-Luz e use de frente para uma vela acesa: a luz dela entra no artefato. Ele guarda até 3 luzes."
+      },
+      {
+        "text": "Use de frente para uma vela apagada para devolver a luz. Longe de velas, ele solta uma bolinha de luz que fica acesa na sala: ótimo para lugares escuros."
       }
     ]
   }

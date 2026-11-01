@@ -8,6 +8,7 @@ import { db } from '../content';
 import { COLORS, TEXT_RES, textStyle } from '../ui/theme';
 import { flash } from '../ui/fx';
 import { audio } from '../audio/Audio';
+import { noGenero } from '../core/aparencia';
 import { playerSheet } from '../core/aparencia';
 
 /** Quem sobe ao palco na cerimônia final, da esquerda para a direita. */
@@ -35,7 +36,7 @@ const CEREMONY = [
   'O Coração do Castelo voltou a bater, e todas as velas se acenderam de uma vez.',
   'No Grande Salão, o Ministro Bonfatti pediu silêncio (o Fuxico demorou um pouco).',
   '"Por coragem, inteligência, astúcia e lealdade, todas juntas..."',
-  '"...este aprendiz agora é Guardião do Castelo!"',
+  '"...{este aprendiz|esta aprendiz} agora é {Guardião|Guardiã} do Castelo!"',
 ];
 
 const CREDITS = [
@@ -113,7 +114,7 @@ export class EndingScene extends Phaser.Scene {
   }
 
   private showLine(): void {
-    const text = CEREMONY[this.step];
+    const text = noGenero(CEREMONY[this.step]);
     this.line.setText(text).setAlpha(0);
     this.tweens.add({ targets: this.line, alpha: 1, duration: 350 });
     if (this.step === CEREMONY.length - 1) {

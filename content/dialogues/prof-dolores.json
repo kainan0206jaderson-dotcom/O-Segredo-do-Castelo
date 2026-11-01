@@ -28,7 +28,7 @@
       "next": "oi-3"
     },
     "oi-3": {
-      "text": "E um segredinho, querido. Quem completar as aulas das seis salas desta ala ganha o direito de aprender a zaparatar.",
+      "text": "E um segredinho, querid{o|a}. Quem completar as aulas das seis salas desta ala ganha o direito de aprender a zaparatar.",
       "effects": [
         {
           "setFlag": "prof:dolores:oi",
@@ -37,7 +37,7 @@
       ]
     },
     "depois": {
-      "text": "O quadro de desafios fica na parede. Disciplina, querido. Disciplina e um sorriso."
+      "text": "O quadro de desafios fica na parede. Disciplina, querid{o|a}. Disciplina e um sorriso."
     },
     "zap": {
       "text": "Todas as seis aulas! Hum. Admito que estou... levemente impressionada. Use o Zaparatar com juízo e nunca nos corredores na hora do chá."

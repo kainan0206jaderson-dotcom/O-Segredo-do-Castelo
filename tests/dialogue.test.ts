@@ -64,7 +64,7 @@ describe('conteúdo', () => {
     for (const d of Object.values(dialogues)) {
       const refs = [
         ...d.entries.map((e) => e.start),
-        ...Object.values(d.nodes).flatMap((n) => [n.next, ...(n.choices ?? []).map((c) => c.next)]),
+        ...Object.values(d.nodes).flatMap((n) => [n.next, ...(n.nextIf ?? []).map((b) => b.next), ...(n.choices ?? []).map((c) => c.next)]),
       ].filter((r): r is string => typeof r === 'string');
       for (const r of refs) expect(d.nodes[r], `${d.id}: ${r}`).toBeDefined();
       const effects = Object.values(d.nodes).flatMap((n) => [...(n.effects ?? []), ...(n.choices ?? []).flatMap((c) => c.effects ?? [])]);

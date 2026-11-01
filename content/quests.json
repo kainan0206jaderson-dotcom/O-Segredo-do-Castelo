@@ -489,7 +489,7 @@
       },
       {
         "id": "aula-espectral",
-        "objective": "Vença a aula de Criaturas Espectrais, na sala a leste da Biblioteca.",
+        "objective": "Vença a aula de Seres Espectrais, na sala a leste da Biblioteca.",
         "completeWhen": {
           "flag": "aula:vencida"
         },
@@ -781,48 +781,32 @@
     "stages": [
       {
         "id": "guardar-livros",
-        "objective": "Leve os 3 livros fujões até os atris da parede oeste da Biblioteca (Levitar).",
+        "objective": "Os livros fujões foram parar na sala de Literatura, na Ala dos Professores: vença a aula de lá (Levitar).",
         "completeWhen": {
-          "all": [
+          "any": [
             {
-              "flag": "encaixe:map.biblioteca:atril-1"
+              "challengeDone": "aula-literatura"
             },
             {
-              "flag": "encaixe:map.biblioteca:atril-2"
-            },
-            {
-              "flag": "encaixe:map.biblioteca:atril-3"
+              "all": [
+                {
+                  "flag": "encaixe:map.biblioteca:atril-1"
+                },
+                {
+                  "flag": "encaixe:map.biblioteca:atril-2"
+                },
+                {
+                  "flag": "encaixe:map.biblioteca:atril-3"
+                }
+              ]
             }
           ]
         },
         "then": "contar-ao-aristoteles",
         "guia": [
           {
-            "map": "map.biblioteca",
-            "alvo": "livro-1",
-            "when": {
-              "not": {
-                "flag": "encaixe:map.biblioteca:atril-1"
-              }
-            }
-          },
-          {
-            "map": "map.biblioteca",
-            "alvo": "livro-2",
-            "when": {
-              "not": {
-                "flag": "encaixe:map.biblioteca:atril-2"
-              }
-            }
-          },
-          {
-            "map": "map.biblioteca",
-            "alvo": "livro-3",
-            "when": {
-              "not": {
-                "flag": "encaixe:map.biblioteca:atril-3"
-              }
-            }
+            "map": "map.aula-literatura",
+            "alvo": "quadro-literatura"
           }
         ]
       },

@@ -8,7 +8,7 @@
   ],
   "nodes": {
     "a": {
-      "text": "Veja o selo da escada, aprendiz. Era dourado. Agora está cinza como fuligem.",
+      "text": "Veja o selo da escada, aprendiz. Era dourado. Agora está cinza como fuligem. E a porta da Ala também.",
       "next": "b"
     },
     "b": {
@@ -17,12 +17,12 @@
       "next": "c"
     },
     "c": {
-      "text": "Bellatrix?! Você não devia estar aqui. Ninguém sobe aquela escada sem permissão!",
+      "text": "Bellatrix?! Então foi você que trancou os professores! E essa luz fria na sua mão... é o meu Apanha-Luz!",
       "next": "d"
     },
     "d": {
       "speaker": "Bellatrix Lestrelle",
-      "text": "E você não devia abrir as portas do castelo para qualquer um. Vamos ver se ele ainda te obedece...",
+      "text": "Seu? Agora é meu. Toda vela deste castelo cabe aqui dentro. E você não devia abrir as portas para qualquer um... vamos ver se ele ainda te obedece.",
       "next": "e"
     },
     "e": {

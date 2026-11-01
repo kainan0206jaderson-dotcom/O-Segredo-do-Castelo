@@ -1,6 +1,6 @@
 {
   "id": "aula-literatura",
-  "speaker": "Prof. Aristóteles",
+  "speaker": "Bilhete do Aristóteles",
   "entries": [
     {
       "when": {
@@ -14,14 +14,20 @@
   ],
   "nodes": {
     "oi": {
-      "text": "Bem-vindo à Literatura Mágica! Aqui os livros leem a gente de volta. E fogem, quando a história fica chata.",
+      "speaker": "✦",
+      "text": "Um bilhete preso na mesa do professor, com a letra apressada do Prof. Aristóteles:",
       "next": "oi-2"
     },
     "oi-2": {
-      "text": "Três deles escaparam de novo. Fale com o quadro de desafios e leve cada um flutuando até um atril. Levitar, com carinho."
+      "text": "\"Fui à Biblioteca: a Amélia sumiu e alguém precisa acalmar os dicionários. Aula de hoje: três livros fugiram das estantes. Fale com o quadro de desafios e leve cada um flutuando até um atril. Levitar, com carinho.\""
     },
     "zap": {
-      "text": "Ouvi dizer que você terminou as seis aulas da ala. Isso dá um capítulo inteiro! Zaparatar com cuidado: nunca no meio de uma frase."
+      "speaker": "✦",
+      "text": "Um bilhete novo apareceu na mesa:",
+      "next": "zap-2"
+    },
+    "zap-2": {
+      "text": "\"Soube que você terminou as seis aulas da ala. Isso dá um capítulo inteiro! Zaparatar com cuidado: nunca no meio de uma frase.\""
     }
   }
 }

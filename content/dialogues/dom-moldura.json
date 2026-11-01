@@ -68,7 +68,7 @@
       ]
     },
     "curta": {
-      "text": "Uma luz fria desceu da torre, as velas apagaram e o Bonfatti se trancou no gabinete. Fim.",
+      "text": "Uma luz fria desceu da torre, as velas da cozinha e do corredor se apagaram, os professores entraram na Ala para a reunião e não saíram mais, e o Bonfatti se trancou no gabinete. Fim.",
       "next": "fim",
       "effects": [
         {
@@ -78,11 +78,11 @@
       ]
     },
     "dramatica": {
-      "text": "Era meia-noite! Um brilho GELADO desceu da torre como neve brava! As velas tremeram, gritaram (bem baixinho) e se apagaram!",
+      "text": "Era meia-noite! Um brilho GELADO desceu da torre como neve brava e foi SUGANDO a luz das velas da cozinha, uma por uma! As do Salão só aguentaram porque eu encarei a luz fria sem piscar.",
       "next": "dramatica-2"
     },
     "dramatica-2": {
-      "text": "E o nobre Ministro Bonfatti correu para o gabinete e trancou a porta! Com TRÊS voltas na chave! Eu teria desmaiado, se quadros desmaiassem.",
+      "text": "A porta da Ala dos Professores, com a Diretora e todo mundo lá dentro, ficou cinza de fuligem! E o nobre Ministro Bonfatti correu para o gabinete e trancou a porta! Com TRÊS voltas na chave! Eu teria desmaiado, se quadros desmaiassem.",
       "next": "fim",
       "effects": [
         {

@@ -53,11 +53,11 @@
   ],
   "nodes": {
     "intro": {
-      "text": "Então foi você que quebrou o selo da escada! Sou o Prof. Aristóteles. Ensino Criaturas Espectrais, e cuido desta bagunça de papel.",
+      "text": "Então foi você que quebrou o selo da escada! Sou o Prof. Aristóteles. Ensino Seres Espectrais aqui em cima e Literatura Mágica na Ala, e cuido desta bagunça de papel.",
       "next": "intro-2"
     },
     "intro-2": {
-      "text": "Más notícias: a Profa. Amélia sumiu na mesma noite que o ministro. A última vez que a vi, ela estava em frente àquele espelho.",
+      "text": "Más notícias: a Profa. Amélia sumiu hoje à noite, logo que a fuligem chegou. A última vez que a vi, ela estava em frente àquele espelho.",
       "next": "intro-3"
     },
     "intro-3": {
@@ -69,11 +69,11 @@
       "next": "intro-5"
     },
     "intro-5": {
-      "text": "Agora você enxerga o que a fuligem esconde. Treine na minha aula, na sala a leste. Os espectros de lá adoram pegar aprendiz desprevenido.",
+      "text": "Agora você enxerga o que a fuligem esconde. Treine na minha aula de Seres Espectrais, na sala a leste. Os espectros de lá adoram pegar aprendiz de surpresa.",
       "next": "intro-6"
     },
     "intro-6": {
-      "text": "Ah, e se puder: três livros fugiram das estantes de novo. Os atris ficam na parede oeste. Livros leves voam com Levitar.",
+      "text": "Ah, e se puder: três livros fugiram da minha sala de Literatura, na Ala dos Professores. Vença a aula de lá e eles voltam para os atris.",
       "effects": [
         {
           "learnSpell": "revelar"
@@ -129,7 +129,7 @@
       "text": "Cheguei correndo assim que as velas tremeram! Perdi alguma coisa? ...Perdi tudo, né."
     },
     "fim": {
-      "text": "Guardião do Castelo! Vou pedir para os dicionários fazerem silêncio em sua homenagem. Por uns cinco minutos, pelo menos."
+      "text": "{Guardião|Guardiã} do Castelo! Vou pedir para os dicionários fazerem silêncio em sua homenagem. Por uns cinco minutos, pelo menos."
     },
     "ocupado": {
       "text": "Shhh. Estou catalogando livros que não querem ser catalogados."

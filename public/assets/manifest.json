@@ -246,7 +246,8 @@
         "mapa-dos-segredos": 51,
         "estrela-perdida": 52,
         "amuleto-estelar": 53,
-        "chave-do-porao": 54
+        "chave-do-porao": 54,
+        "apanha-luz": 55
       }
     },
     "npc.dona-brasa": {
@@ -1908,7 +1909,8 @@
         "mapa-dos-segredos": 51,
         "estrela-perdida": 52,
         "amuleto-estelar": 53,
-        "chave-do-porao": 54
+        "chave-do-porao": 54,
+        "apanha-luz": 55
       }
     },
     "npc.prof-angelina": {

@@ -149,10 +149,10 @@ export class Hud {
     }
   }
 
-  setSpell(spell: { id: string; name: string } | undefined): void {
+  setSpell(spell: { id: string; name: string; icon?: string } | undefined): void {
     this.spellBox.setVisible(Boolean(spell));
     if (!spell) return;
-    this.spellIcon.setFrame(assets().frameOf(ICONS, spell.id) ?? 0);
+    this.spellIcon.setFrame(assets().frameOf(ICONS, spell.id) ?? assets().frameOf(ICONS, spell.icon ?? '') ?? 0);
     this.spellName.setText(spell.name);
     this.scene.tweens.add({ targets: this.spellBox, scale: { from: 1.15, to: 1 }, duration: 150 });
   }
