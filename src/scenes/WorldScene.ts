@@ -884,6 +884,19 @@ export class WorldScene extends Phaser.Scene {
     fx.once(Phaser.Animations.Events.ANIMATION_COMPLETE, () => fx.destroy());
   }
 
+  /** Tecla própria do feitiço (aba Feitiços da bolsa): escolhe e já lança. */
+  private castSpellByKey(letter: string): void {
+    const s = session.state;
+    const id = Object.keys(db.spells).find((k) => db.spells[k].tecla === letter);
+    if (!id) return;
+    if (!s.spells.includes(id)) return this.hud.notify(`Nenhum feitiço na tecla ${letter} ainda.`);
+    if (s.selectedSpell !== id) {
+      s.selectedSpell = id;
+      this.refreshHud();
+    }
+    this.castSpell();
+  }
+
   private changeSpell(): void {
     if (this.dialogue || !session.state.spells.length) return;
     cycleSpell(session.state);
@@ -2049,6 +2062,7 @@ export class WorldScene extends Phaser.Scene {
     if (this.controls.menuPressed()) return this.openGrimoire();
     if (this.controls.mapPressed()) return this.openMap();
     if (this.controls.spellCyclePressed()) this.changeSpell();
+    const letter = this.controls.letterPressed();
 
     const dir = time < this.arriveUntil ? new Phaser.Math.Vector2() : this.controls.direction();
     if (time >= this.knockUntil) this.player.move(dir);
@@ -2091,7 +2105,8 @@ export class WorldScene extends Phaser.Scene {
       near?.setHighlighted(true);
       this.near = near;
     }
-    if (this.controls.actionPressed()) {
+    if (letter) this.castSpellByKey(letter);
+    else if (this.controls.actionPressed()) {
       if (near) this.interact(near);
       else this.castSpell();
     }

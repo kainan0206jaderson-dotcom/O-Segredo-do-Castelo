@@ -132,6 +132,8 @@ export interface SpellDef {
   fx: string;
   /** Energia mágica gasta a cada uso. */
   cost: number;
+  /** Tecla (uma letra) que lança este feitiço direto, sem precisar trocar com Q. */
+  tecla?: string;
   /** Feitiços sem alvo podem ter um efeito no próprio aprendiz. */
   self?: 'velocidade' | 'escudo' | 'zaparatar' | 'onda' | 'guia' | 'apanha-luz';
   /** Ícone a usar quando o feitiço não tem um próprio. */
