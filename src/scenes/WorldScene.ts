@@ -97,7 +97,7 @@ const KIDS_BOSS = 1.6;
 const TALK_RANGE = 20;
 const SPELL_RANGE = 28;
 const START_CHALLENGE_FLAG = 'desafio:iniciar';
-const INVULNERABLE_MS = 1100;
+const INVULNERABLE_MS = 1400;
 const WIND_MS = 5000;
 const SHIELD_MS = 3200;
 /** Estrela-Guia: tempo da trilha acesa. Onda de Luz: alcance do anel. */
@@ -1068,8 +1068,9 @@ export class WorldScene extends Phaser.Scene {
    */
   private maybeRunawayShadows(map: Phaser.Tilemaps.Tilemap): void {
     const s = session.state;
-    const calm = ['map.recepcao', 'map.coracao', 'map.sala-espectral', 'map.gabinete'];
-    if (!s.flags['ato:1:fim'] || calm.includes(this.mapKey) || this.mapKey.startsWith('map.quadro-') || this.boss) return;
+    // salas com gente para conversar ou desafio próprio ficam sem sombrinhas avulsas
+    const calm = ['map.recepcao', 'map.coracao', 'map.sala-espectral', 'map.gabinete', 'map.observatorio', 'map.biblioteca', 'map.ala-professores'];
+    if (!s.flags['ato:1:fim'] || calm.includes(this.mapKey) || this.mapKey.startsWith('map.quadro-') || this.mapKey.startsWith('map.aula-') || this.boss) return;
     if (Math.random() > RUNAWAY_CHANCE) return;
     let placed = 0;
     for (let tries = 0; tries < 60 && placed < 2; tries++) {
@@ -1726,6 +1727,16 @@ export class WorldScene extends Phaser.Scene {
     this.tweens.add({ targets: who, y: y - 3, duration: 110, yoyo: true, ease: 'Quad.out', onComplete: () => who.setY(y) });
   }
 
+  /**
+   * Perto da parede de cima a câmera olha um pouco mais para cima, para que professores e
+   * quadros encostados nela apareçam abaixo do painel de missão e da vida.
+   */
+  private lookAhead(): void {
+    const cam = this.cameras.main;
+    const near = this.player.y < cam.height / cam.zoom * 0.8;
+    cam.followOffset.y += ((near ? 30 : 0) - cam.followOffset.y) * 0.08;
+  }
+
   private startDialogue(def: DialogueDef | undefined, who?: Thing): void {
     if (!def) throw new Error(`diálogo não encontrado: ${who?.ref}`);
     this.player.halt();
@@ -1779,6 +1790,8 @@ export class WorldScene extends Phaser.Scene {
     this.talkingTo?.setTalking(false);
     this.talkingTo = undefined;
     this.dialogue = undefined;
+    // um respiro depois da conversa: nada machuca no instante em que a caixa fecha
+    this.invulnerableUntil = Math.max(this.invulnerableUntil, this.time.now + 900);
     events.emit('dialogue:end', { id: this.dialogueId });
     this.removeHat();
     if (this.actor) {
@@ -2001,6 +2014,7 @@ export class WorldScene extends Phaser.Scene {
     const s = session.state;
     s.playTimeMs += delta;
     if (this.transitioning) return;
+    this.lookAhead();
 
     if (this.dialogue) {
       this.guide?.hide();
