@@ -48,6 +48,7 @@ export function check(cond: Condition | undefined, s: GameState): boolean {
   if ('knowsRecipe' in cond) return s.recipes.includes(cond.knowsRecipe);
   if ('house' in cond) return s.house === cond.house;
   if ('minLevel' in cond) return s.level >= cond.minLevel;
+  if ('kids' in cond) return (s.modo === 'kids') === cond.kids;
   return false;
 }
 
@@ -189,7 +190,7 @@ export function tickQuests(s: GameState, db: ContentDb): Notice[] {
 }
 
 /** Etapa da missão ativa mais recente (a que aparece na tela). */
-function currentStage(s: GameState, db: ContentDb): { quest: QuestDef; stage: QuestStageDef } | undefined {
+export function currentStage(s: GameState, db: ContentDb): { quest: QuestDef; stage: QuestStageDef } | undefined {
   const active = Object.entries(s.quests).filter(([, p]) => !p.done);
   // a história vem primeiro; missões secundárias aparecem quando não há principal ativa
   const last = active.filter(([id]) => db.quests[id]?.kind !== 'secundaria').at(-1) ?? active.at(-1);
@@ -203,7 +204,12 @@ function currentStage(s: GameState, db: ContentDb): { quest: QuestDef; stage: Qu
 /** Objetivo da missão ativa mais recente, para mostrar na tela. */
 export function currentObjective(s: GameState, db: ContentDb): { quest: string; objective: string } | undefined {
   const cur = currentStage(s, db);
-  return cur && { quest: cur.quest.title, objective: cur.stage.objective };
+  return cur && { quest: cur.quest.title, objective: stageObjective(cur.stage, s) };
+}
+
+/** Texto do objetivo da etapa (o resumido, no Modo Kids). */
+export function stageObjective(stage: QuestStageDef, s: GameState): string {
+  return (s.modo === 'kids' && stage.kidsObjective) || stage.objective;
 }
 
 /** Modo Kids: o lugar (mapa + objeto) para onde a trilha de estrelinhas aponta agora. */

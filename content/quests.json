@@ -12,6 +12,10 @@
             "map": "map.grande-salao",
             "alvo": "dom-moldura"
           }
+        ],
+        "dicas": [
+          "Da Recepção, a porta ao norte leva ao Grande Salão.",
+          "O Dom Moldura é o quadro de bigode no meio da parede norte do Grande Salão. Fique de frente para ele e aperte Espaço."
         ]
       },
       {
@@ -22,6 +26,9 @@
             "map": "map.recepcao",
             "alvo": "trinco"
           }
+        ],
+        "dicas": [
+          "O Trinco fica atrás do balcão da Recepção, ao sul do Grande Salão."
         ]
       }
     ]
@@ -39,6 +46,9 @@
             "map": "map.cozinha",
             "alvo": "dona-brasa"
           }
+        ],
+        "dicas": [
+          "A Cozinha Bruxa fica pela porta leste do Grande Salão."
         ]
       },
       {
@@ -69,6 +79,10 @@
             "map": "map.cozinha",
             "alvo": "caldeirao"
           }
+        ],
+        "dicas": [
+          "O suco colorido está na cozinha e o gelo seco ficou no Grande Salão. A despensa da cozinha também tem os dois.",
+          "Com os dois na bolsa, use o caldeirão grande da cozinha, coloque os ingredientes e escolha Mexer."
         ]
       },
       {
@@ -79,6 +93,9 @@
             "map": "map.cozinha",
             "alvo": "dona-brasa"
           }
+        ],
+        "dicas": [
+          "A Dona Brasa está na cozinha. Fique de frente para ela e aperte Espaço."
         ]
       },
       {
@@ -109,6 +126,10 @@
             "map": "map.cozinha",
             "alvo": "vela-b"
           }
+        ],
+        "dicas": [
+          "Aperte Q até aparecer Lumen no canto da tela.",
+          "Fique de frente para cada vela da bancada e aperte Espaço para lançar o Lumen."
         ]
       },
       {
@@ -119,6 +140,9 @@
             "map": "map.cozinha",
             "alvo": "dona-brasa"
           }
+        ],
+        "dicas": [
+          "As duas velas estão acesas: fale de novo com a Dona Brasa."
         ]
       }
     ]
@@ -140,6 +164,9 @@
             "map": "map.corredor",
             "alvo": "morgana-corredor"
           }
+        ],
+        "dicas": [
+          "O Corredor dos Quadros fica pela porta oeste do Grande Salão."
         ]
       },
       {
@@ -154,6 +181,9 @@
             "map": "map.corredor",
             "alvo": "sombra-1"
           }
+        ],
+        "dicas": [
+          "Escolha o Lumen (Q) e lance de frente para cada sombrinha. Se a energia acabar, espere ela voltar."
         ]
       },
       {
@@ -168,6 +198,11 @@
             "map": "map.corredor",
             "alvo": "grade"
           }
+        ],
+        "dicas": [
+          "As estátuas só andam quando você empurra: encoste nelas e continue andando.",
+          "Cada estátua precisa parar em cima de uma placa no chão. Leve primeiro para o lado e depois para baixo.",
+          "Travou uma estátua num canto? Saia da sala e volte: elas voltam ao lugar."
         ]
       },
       {
@@ -178,6 +213,9 @@
             "map": "map.gabinete",
             "alvo": "arquimedes"
           }
+        ],
+        "dicas": [
+          "A grade abriu! O gabinete do Bonfatti é a porta no meio do corredor, ao norte."
         ]
       },
       {
@@ -188,6 +226,9 @@
             "map": "map.hall",
             "alvo": "arquimedes"
           }
+        ],
+        "dicas": [
+          "O Hall da Escada fica no fim oeste do Corredor dos Quadros."
         ]
       }
     ]
@@ -310,6 +351,10 @@
               }
             }
           }
+        ],
+        "dicas": [
+          "Coragem: no Hall, cercada de sombrinhas (Lumen). Inteligência: a charada do Dom Moldura. Astúcia: atrás dos caixotes do corredor (Levitar). Lealdade: fale com o Trinco.",
+          "O Fuxico, no Grande Salão, diz qual pedra ainda falta. Abra o grimório (I) para ver quais pedras já estão na bolsa."
         ]
       },
       {
@@ -352,6 +397,9 @@
               }
             }
           }
+        ],
+        "dicas": [
+          "Os quatro pedestais ficam no Hall da Escada. Fique de frente para cada um e aperte Espaço."
         ]
       }
     ]
@@ -369,6 +417,9 @@
             "map": "map.cozinha",
             "alvo": "dona-brasa"
           }
+        ],
+        "dicas": [
+          "A Dona Brasa fica na Cozinha Bruxa, a leste do Grande Salão."
         ]
       },
       {
@@ -399,6 +450,10 @@
             "map": "map.cozinha",
             "alvo": "caldeirao"
           }
+        ],
+        "dicas": [
+          "Abóbora e gelo seco: tem abóbora na Recepção e gelo seco no Grande Salão. A despensa repõe com o tempo.",
+          "Com os dois na bolsa, use o caldeirão da cozinha e escolha Mexer."
         ]
       },
       {
@@ -409,6 +464,9 @@
             "map": "map.cozinha",
             "alvo": "dona-brasa"
           }
+        ],
+        "dicas": [
+          "Leve a Cerveja de Abóbora para a Dona Brasa, na cozinha."
         ]
       },
       {
@@ -419,6 +477,9 @@
             "map": "map.recepcao",
             "alvo": "trinco"
           }
+        ],
+        "dicas": [
+          "O Trinco está na Recepção, esperando as chaves."
         ]
       }
     ]
@@ -478,6 +539,23 @@
     "xp": 80,
     "stages": [
       {
+        "id": "subir-escada",
+        "objective": "O selo quebrou! Suba a escada do Hall até a Biblioteca, no segundo andar.",
+        "completeWhen": {
+          "flag": "visto:biblioteca"
+        },
+        "then": "falar-com-aristoteles",
+        "guia": [
+          {
+            "map": "map.hall",
+            "alvo": "porta-biblioteca"
+          }
+        ],
+        "dicas": [
+          "No Hall da Escada, a passagem para a Biblioteca fica ao norte, onde estava o selo."
+        ]
+      },
+      {
         "id": "falar-com-aristoteles",
         "objective": "Fale com o Prof. Aristóteles na Biblioteca.",
         "guia": [
@@ -485,6 +563,9 @@
             "map": "map.biblioteca",
             "alvo": "aristoteles"
           }
+        ],
+        "dicas": [
+          "O Prof. Aristóteles está na Biblioteca, perto das estantes."
         ]
       },
       {
@@ -499,6 +580,10 @@
             "map": "map.sala-espectral",
             "alvo": "quadro-aula"
           }
+        ],
+        "dicas": [
+          "A sala da aula fica a leste da Biblioteca. Fale com o quadro de desafios para começar.",
+          "Lance Revelar perto dos espectros para vê-los e, logo depois, Lumen. Eles fogem quando aparecem: vá atrás!"
         ]
       },
       {
@@ -546,6 +631,10 @@
               }
             }
           }
+        ],
+        "dicas": [
+          "As cartas estão escondidas: escolha Revelar e lance perto dos cantos das salas.",
+          "Uma na Biblioteca, uma na sala da aula (leste) e uma na Estufa (oeste)."
         ]
       },
       {
@@ -556,6 +645,9 @@
             "map": "map.biblioteca",
             "alvo": "espelho"
           }
+        ],
+        "dicas": [
+          "Com as três cartas, fale com o espelho alto da Biblioteca."
         ]
       },
       {
@@ -579,6 +671,10 @@
             "map": "map.observatorio",
             "alvo": "mostrador-1"
           }
+        ],
+        "dicas": [
+          "A última carta está escondida no Observatório: use Revelar.",
+          "A carta diz: coragem é a chama, inteligência é o livro, astúcia é a lua, lealdade é o coração. Gire cada mostrador até o símbolo certo."
         ]
       },
       {
@@ -589,6 +685,9 @@
             "map": "map.observatorio",
             "alvo": "telescopio"
           }
+        ],
+        "dicas": [
+          "O telescópio fica no meio do Observatório. Fique de frente para ele e aperte Espaço."
         ]
       },
       {
@@ -603,6 +702,9 @@
             "map": "map.biblioteca",
             "alvo": "porta-galeria"
           }
+        ],
+        "dicas": [
+          "A porta trancada fica ao norte da Biblioteca. Escolha Abrir e fique de frente para ela."
         ]
       },
       {
@@ -613,6 +715,9 @@
             "map": "map.galeria",
             "alvo": "captura-amelia"
           }
+        ],
+        "dicas": [
+          "A porta da Galeria está aberta, ao norte da Biblioteca."
         ]
       }
     ]
@@ -626,18 +731,35 @@
         "id": "juntar-emblemas",
         "objective": "Entre nos quatro quadros da Galeria e traga os emblemas das virtudes.",
         "completeWhen": {
-          "all": [
+          "any": [
             {
-              "hasItem": "emblema-coragem"
+              "all": [
+                {
+                  "hasItem": "emblema-coragem"
+                },
+                {
+                  "hasItem": "emblema-inteligencia"
+                },
+                {
+                  "hasItem": "emblema-astucia"
+                },
+                {
+                  "hasItem": "emblema-lealdade"
+                }
+              ]
             },
             {
-              "hasItem": "emblema-inteligencia"
-            },
-            {
-              "hasItem": "emblema-astucia"
-            },
-            {
-              "hasItem": "emblema-lealdade"
+              "all": [
+                {
+                  "kids": true
+                },
+                {
+                  "hasItem": "emblema-coragem"
+                },
+                {
+                  "hasItem": "emblema-lealdade"
+                }
+              ]
             }
           ]
         },
@@ -658,14 +780,21 @@
             "when": {
               "all": [
                 {
-                  "not": {
-                    "hasItem": "emblema-inteligencia"
-                  }
+                  "kids": false
                 },
                 {
-                  "not": {
-                    "flag": "luz:map.quadro-inteligencia:cristal"
-                  }
+                  "all": [
+                    {
+                      "not": {
+                        "hasItem": "emblema-inteligencia"
+                      }
+                    },
+                    {
+                      "not": {
+                        "flag": "luz:map.quadro-inteligencia:cristal"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -674,18 +803,32 @@
             "map": "map.quadro-inteligencia",
             "alvo": "emblema",
             "when": {
-              "not": {
-                "hasItem": "emblema-inteligencia"
-              }
+              "all": [
+                {
+                  "kids": false
+                },
+                {
+                  "not": {
+                    "hasItem": "emblema-inteligencia"
+                  }
+                }
+              ]
             }
           },
           {
             "map": "map.quadro-astucia",
             "alvo": "emblema",
             "when": {
-              "not": {
-                "hasItem": "emblema-astucia"
-              }
+              "all": [
+                {
+                  "kids": false
+                },
+                {
+                  "not": {
+                    "hasItem": "emblema-astucia"
+                  }
+                }
+              ]
             }
           },
           {
@@ -697,6 +840,12 @@
               }
             }
           }
+        ],
+        "kidsObjective": "Entre nos quadros da Coragem e da Lealdade e traga os dois emblemas.",
+        "dicas": [
+          "Ande até a moldura de um quadro da Galeria para entrar nele.",
+          "Coragem: acenda as velas. Inteligência: leve os espelhos aos suportes certos. Astúcia: fuja do facho dos olhos. Lealdade: Lumen nas âncoras.",
+          "O retrato do Bonfatti, no meio da Galeria, explica cada quadro."
         ]
       },
       {
@@ -711,6 +860,9 @@
             "map": "map.coracao",
             "alvo": "duelo"
           }
+        ],
+        "dicas": [
+          "Com os emblemas, a barreira a leste da Galeria cai. Siga por ela."
         ]
       },
       {
@@ -719,7 +871,11 @@
         "completeWhen": {
           "flag": "morgana:convencida"
         },
-        "then": "acender-coracao"
+        "then": "acender-coracao",
+        "dicas": [
+          "Quando a Bellatrix parar, cansada, lance Lumen nela. Escudo protege das bolas de fuligem.",
+          "Quando ela sumir, lance Revelar e depois Lumen."
+        ]
       },
       {
         "id": "acender-coracao",
@@ -729,6 +885,9 @@
             "map": "map.coracao",
             "alvo": "coracao"
           }
+        ],
+        "dicas": [
+          "Fique de frente para o Coração de pedra e aperte Espaço."
         ]
       }
     ]
@@ -760,6 +919,10 @@
             "map": "map.estufa",
             "alvo": "canteiro-1"
           }
+        ],
+        "dicas": [
+          "Pegue uma semente no saco perto da porta da Estufa, fique de frente para um canteiro e aperte Espaço.",
+          "Depois lance Lumen na semente e, quando ela crescer, aperte Espaço para colher."
         ]
       },
       {
@@ -855,6 +1018,9 @@
             "map": "map.observatorio",
             "alvo": "wish-wish"
           }
+        ],
+        "dicas": [
+          "Mish Mish adora livros velhos (Biblioteca). Wish Wish vive contando estrelas (Observatório)."
         ]
       },
       {
@@ -885,6 +1051,9 @@
             "map": "map.cozinha",
             "alvo": "porta-porao"
           }
+        ],
+        "dicas": [
+          "Onde se guarda comida? Procure um alçapão no chão da cozinha."
         ]
       }
     ]

@@ -1776,6 +1776,10 @@ RESGATADA = FL("amelia:resgatada")
 CONVENCIDA = FL("morgana:convencida")
 FIM = FL("jogo:fim")
 EMBLEMAS = ALL(*[{"hasItem": f"emblema-{v}"} for v in ("coragem", "inteligencia", "astucia", "lealdade")])
+# Modo Kids: bastam os emblemas da Coragem e da Lealdade; a aula de Seres Espectrais é opcional
+KIDS = {"kids": True}
+EMBLEMAS_OK = ANY(EMBLEMAS, ALL(KIDS, {"hasItem": "emblema-coragem"}, {"hasItem": "emblema-lealdade"}))
+AULA = ANY(FL("aula:vencida"), KIDS)
 
 # Biblioteca: o centro do Ato 2. Sul = Hall, leste = Aula, oeste = Estufa, norte = Observatório e Galeria (trancada)
 build_room("biblioteca", "Biblioteca", 28, 16,
@@ -1817,7 +1821,7 @@ build_room("sala-espectral", "Aula de Criaturas Espectrais", 22, 14,
            extra=[*[pt("creature", f"{g}-{i + 1}", cx, cy, sprite="npc.espectro", group=g, hp=hp, oculto=True, challenge="aula-espectral")
                     for g, lst in ondas for i, (cx, cy, hp) in enumerate(lst)],
                   pt("pickup", "carta-3", 19, 11, y=11 * 16 + 12, item="carta-amelia-3", oculto=True, dialogue="carta-3",
-                     when=FL("aula:vencida"))])
+                     when=AULA)])
 
 # Estufa: canteiros de mandrágora, a Fada Ramalhete e uma visita rápida da Bellatrix
 build_room("estufa", "Estufa", 22, 14,
@@ -1832,7 +1836,7 @@ build_room("estufa", "Estufa", 22, 14,
                   *[pt("creature", f"sombra-{i + 1}", cx, cy, sprite="npc.sombrinha", group="sombras", hp=2,
                        when=FL("visto:morgana-estufa")) for i, (cx, cy) in enumerate([(6, 11), (12, 12), (16, 8)])],
                   zone("trigger", "morgana-estufa", 3, 8, 14, 5, dialogue="estufa-morgana", actor="npc.morgana", ax=17 * 16, ay=11 * 16,
-                       when=ALL(QA("cartas-de-amelia"), FL("aula:vencida"), NOT(FL("visto:morgana-estufa"))))])
+                       when=ALL(QA("cartas-de-amelia"), AULA, NOT(FL("visto:morgana-estufa"))))])
 
 # Observatório: quatro mostradores de constelação (um por virtude) e o telescópio
 dials = [(4, 8, 0, 2), (7, 10, 1, 3), (12, 10, 2, 0), (15, 8, 3, 1)]  # tx, ty, casa (= resposta), símbolo inicial
@@ -1854,7 +1858,7 @@ PORTAIS = [("coragem", 4, "pego:map.quadro-coragem:emblema"), ("inteligencia", 9
 build_room("galeria", "Galeria dos Quadros", 32, 14,
            doors=[("S", 15, "map.biblioteca", "da-galeria", "da-biblioteca"),
                   ("L", 7, "map.coracao", "da-galeria", "do-coracao",
-                   dict(when=EMBLEMAS, locked="A barreira empurra você de volta. Faltam emblemas."))],
+                   dict(when=EMBLEMAS_OK, locked="A barreira empurra você de volta. Faltam emblemas."))],
            floor_tile=PAINT, carpet=(3, 5, 28, 6),
            candles=[("vela-g1", 2, 3, True), ("vela-g2", 29, 3, True)],
            npcs=[("quadro-arquimedes", "npc.quadro-arquimedes", 15, 1, "quadro-arquimedes", True), ("addam", "npc.addam", 6, 9, "addam", False)],
@@ -1862,7 +1866,7 @@ build_room("galeria", "Galeria dos Quadros", 32, 14,
                   *[zone("door", f"porta-quadro-{v}", px, 3, 2, 1, target=f"map.quadro-{v}", spawn="da-galeria", when=CAPTURADA,
                          locked="Só tinta e moldura... por enquanto.") for v, px, _ in PORTAIS],
                   *[pt("spawn", f"do-quadro-{v}", px, 5, x=px * 16 + 16, facing="down") for v, px, _ in PORTAIS],
-                  pt("npc", "barreira", 29, 8, x=30 * 16, sprite="prop.barreira", dialogue="barreira", wall=True, when=NOT(EMBLEMAS)),
+                  pt("npc", "barreira", 29, 8, x=30 * 16, sprite="prop.barreira", dialogue="barreira", wall=True, when=NOT(EMBLEMAS_OK)),
                   pt("npc", "amelia", 16, 9, sprite="npc.amelia", dialogue="amelia", wall=False,
                      when=ANY(ALL(LIVRE, NOT(CAPTURADA)), ALL(RESGATADA, NOT(FIM)))),
                   zone("trigger", "captura-amelia", 12, 7, 8, 5, dialogue="galeria-morgana", actor="npc.morgana", ax=20 * 16, ay=9 * 16,
@@ -2118,16 +2122,22 @@ ENFEITES = {
                        enfeite("prop.candelabro", 1, 9, 6), enfeite("prop.candelabro", 20, 9, 6)],
     "ala-professores": [enfeite("prop.planta", 4, 3, 8), enfeite("prop.planta", 11, 3, 8), enfeite("prop.planta", 22, 3, 8),
                         enfeite("prop.armadura", 16, 3, 8), enfeite("prop.relogio", 27, 3, 6)],
-    "aula-feiticos": [enfeite("prop.estante", 1, 3, 8), enfeite("prop.estante", 18, 3, 8), enfeite("prop.globo", 6, 3, 6)],
-    "aula-pocoes": [enfeite("prop.prateleira-pocoes", 2, 3), enfeite("prop.prateleira-pocoes", 16, 3), enfeite("prop.barril", 1, 8, 8),
+    "aula-feiticos": [enfeite("prop.candelabro", 3, 3, 6), enfeite("prop.planta", 1, 12, 8), enfeite("prop.planta", 18, 12, 8),
+        enfeite("prop.estante", 1, 3, 8), enfeite("prop.estante", 18, 3, 8), enfeite("prop.globo", 6, 3, 6)],
+    "aula-pocoes": [enfeite("prop.barril", 6, 3, 8), enfeite("prop.planta", 18, 12, 8),
+        enfeite("prop.prateleira-pocoes", 2, 3), enfeite("prop.prateleira-pocoes", 16, 3), enfeite("prop.barril", 1, 8, 8),
                     enfeite("prop.barril", 18, 8, 8), enfeite("prop.caixote", 1, 12, 8)],
-    "aula-herbologia": [enfeite("prop.planta", 1, 3, 8), enfeite("prop.planta", 18, 3, 8), enfeite("prop.planta", 1, 12, 8),
+    "aula-herbologia": [enfeite("prop.vaso", 4, 3), enfeite("prop.planta", 18, 12, 8),
+        enfeite("prop.planta", 1, 3, 8), enfeite("prop.planta", 18, 3, 8), enfeite("prop.planta", 1, 12, 8),
                         enfeite("prop.saco-sementes", 6, 3, 6)],
-    "aula-adivinhacao": [enfeite("prop.globo", 2, 3, 6), enfeite("prop.telescopio", 17, 3, 6), enfeite("prop.candelabro", 1, 8, 6),
+    "aula-adivinhacao": [mesa("prop.mesa-leitura", 5, 3), enfeite("prop.pilha-livros", 14, 3), enfeite("prop.planta", 1, 12, 8), enfeite("prop.planta", 18, 12, 8),
+        enfeite("prop.globo", 2, 3, 6), enfeite("prop.telescopio", 17, 3, 6), enfeite("prop.candelabro", 1, 8, 6),
                          enfeite("prop.candelabro", 18, 8, 6)],
-    "aula-literatura": [enfeite("prop.estante", 1, 3, 8), enfeite("prop.estante", 2, 3, 8), enfeite("prop.estante", 17, 3, 8),
+    "aula-literatura": [enfeite("prop.candelabro", 4, 3, 6),
+        enfeite("prop.estante", 1, 3, 8), enfeite("prop.estante", 2, 3, 8), enfeite("prop.estante", 17, 3, 8),
                         enfeite("prop.estante", 18, 3, 8), enfeite("prop.pilha-livros", 6, 3)],
-    "aula-defesa": [enfeite("prop.armadura", 2, 3, 8), enfeite("prop.armadura", 17, 3, 8), enfeite("prop.estandarte-coragem", 6, 3, 4),
+    "aula-defesa": [enfeite("prop.candelabro", 4, 3, 6), enfeite("prop.planta", 1, 12, 8), enfeite("prop.planta", 18, 12, 8),
+        enfeite("prop.armadura", 2, 3, 8), enfeite("prop.armadura", 17, 3, 8), enfeite("prop.estandarte-coragem", 6, 3, 4),
                     enfeite("prop.estandarte-lealdade", 14, 3, 4)],
     # cada quadro de casa ganha os estandartes da sua casa
     "quadro-coragem": [enfeite("prop.estandarte-coragem", 6, 3, 4), enfeite("prop.estandarte-coragem", 17, 3, 4),

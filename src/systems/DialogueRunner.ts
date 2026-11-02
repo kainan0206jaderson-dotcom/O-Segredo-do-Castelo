@@ -36,7 +36,7 @@ export class DialogueRunner {
 
   view(): DialogueView | undefined {
     if (!this.node) return undefined;
-    return { speaker: this.node.speaker ?? this.def.speaker, text: this.node.text, choices: this.visibleChoices.map((c) => c.text), cena: this.node.cena };
+    return { speaker: this.node.speaker ?? this.def.speaker, text: (this.state.modo === 'kids' && this.node.kids) || this.node.text, choices: this.visibleChoices.map((c) => c.text), cena: this.node.cena };
   }
 
   /** Avança uma fala sem escolhas. */
