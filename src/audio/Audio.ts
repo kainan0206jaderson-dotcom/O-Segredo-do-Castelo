@@ -49,11 +49,8 @@ export type Ambiencia = 'lareira' | 'vento' | 'goteira' | 'grilos' | 'relogio' |
 
 /** Som de fundo de cada sala. Salas fora da lista ficam só com a música. */
 export const AMBIENCIA_SALA: Record<string, Ambiencia> = {
-  'map.recepcao': 'lareira',
-  'map.cozinha': 'lareira',
-  'map.gabinete': 'lareira',
-  'map.grande-salao': 'relogio',
-  'map.biblioteca': 'relogio',
+  // Recepção, Cozinha, Gabinete, Grande Salão e Biblioteca ficam só com a música: os estalos da
+  // lareira e o tique-taque do relógio pareciam passinhos de bicho e cansavam
   'map.corredor': 'vento',
   'map.hall': 'vento',
   'map.ala-professores': 'vento',
@@ -439,7 +436,7 @@ class AudioEngine {
         if (chance(0.035)) this.noise(t, R(1.4, 2.4), 0.022, R(300, 500), 'bandpass', R(900, 1400));
         return;
       case 'goteira':
-        if (chance(0.09)) this.tone(t, 'sine', R(1300, 1900), R(500, 700), 0.07, 0.03);
+        if (chance(0.04)) this.tone(t, 'sine', R(1300, 1900), R(500, 700), 0.07, 0.03);
         if (chance(0.02)) this.noise(t, 1.6, 0.012, 180, 'lowpass');
         return;
       case 'grilos':
