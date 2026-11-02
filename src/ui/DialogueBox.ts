@@ -47,6 +47,7 @@ export class DialogueBox {
   private wrap = 0;
   private fullText = '';
   private shown = 0;
+  private speaker = '';
   private choices: string[] = [];
   private selected = 0;
   onChoice?: (index: number) => void;
@@ -83,6 +84,7 @@ export class DialogueBox {
   show(view: DialogueView): void {
     this.root.setVisible(true);
     this.nameText.setText(view.speaker);
+    this.speaker = view.speaker;
     this.nameTab.setSize(this.nameText.width + 12, 14);
     const hasPortrait = this.setPortrait(PORTRAITS[view.speaker]);
     const shift = hasPortrait ? PORTRAIT + 8 : 0;
@@ -152,7 +154,7 @@ export class DialogueBox {
     const before = Math.floor(this.shown / 4);
     this.shown = Math.min(this.fullText.length, this.shown + (deltaMs / 1000) * charsPerSecond());
     // "voz" da caixa de diálogo: um bipe a cada poucas letras
-    if (Math.floor(this.shown / 4) !== before && this.typing) audio.sfx('blip');
+    if (Math.floor(this.shown / 4) !== before && this.typing) audio.voz(this.speaker);
     this.bodyText.setText(this.fullText.slice(0, Math.floor(this.shown)));
     if (!this.typing) this.afterTyping();
   }

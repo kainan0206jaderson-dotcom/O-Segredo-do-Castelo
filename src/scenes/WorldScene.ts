@@ -31,7 +31,7 @@ import { CauldronScene } from './CauldronScene';
 import { GrimoireScene } from './GrimoireScene';
 import { GAME_HEIGHT, GAME_WIDTH, RENDER_ZOOM, TILE_SIZE, WORLD_SCALE } from '../config/game';
 import { shake, flash } from '../ui/fx';
-import { audio, CASTELO_LISTA, type Sfx, type Track } from '../audio/Audio';
+import { AMBIENCIA_SALA, audio, CASTELO_LISTA, type Sfx, type Track } from '../audio/Audio';
 import { Bark, pickLine } from '../ui/Bark';
 import { openChest, type LootTable } from '../systems/loot';
 import baus from '../../content/baus.json';
@@ -345,6 +345,7 @@ export class WorldScene extends Phaser.Scene {
     const track = trackFor(data.map, s.flags[BOSS_FLAG]);
     if (track === 'castelo') audio.playlist(CASTELO_LISTA);
     else audio.music(track);
+    audio.ambiente(AMBIENCIA_SALA[data.map]);
     if (data.fainted) audio.sfx('desmaio');
 
     // ao voltar do caldeirão, do grimório, de um tutorial ou do fim de ato
@@ -366,7 +367,10 @@ export class WorldScene extends Phaser.Scene {
       }
       this.afterStateChange();
     });
-    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => this.events.off(Phaser.Scenes.Events.RESUME));
+    this.events.once(Phaser.Scenes.Events.SHUTDOWN, () => {
+      this.events.off(Phaser.Scenes.Events.RESUME);
+      audio.ambiente();
+    });
 
     if (data.zaparatou) this.zapAppear();
     if (data.fainted) this.hud.notify('Você desmaiou... e acordou aqui. Vida e energia de volta!');
@@ -787,6 +791,7 @@ export class WorldScene extends Phaser.Scene {
     else if (kinds.has('quest-done') || kinds.has('spell')) audio.sfx('missao');
     else if (kinds.has('quest-start') || kinds.has('recipe') || kinds.has('house')) audio.sfx('confirmar');
     else if (kinds.has('item') || kinds.has('equip')) audio.sfx('pegar');
+    if (item?.ref) this.showPickup(item.ref);
     for (const n of notices) {
       if (n.kind === 'tutorial' && n.ref) this.queueTutorial(n.ref);
       else if (n.kind === 'act-end' && n.ref) this.actQueue.push(n.ref);
@@ -1309,6 +1314,7 @@ export class WorldScene extends Phaser.Scene {
     }
     const fxKey = spell?.fx ?? 'fx.fagulha';
     audio.sfx(spellSound(spellId));
+    this.castPose(at);
     if (fxKey === 'fx.fogos') this.burstFireworks(at.x, at.y - 6);
     else {
       const fx = this.add.sprite(at.x, at.y, fxKey).setDepth(this.player.depth + 1);
@@ -1616,6 +1622,8 @@ export class WorldScene extends Phaser.Scene {
     this.player.setVelocity(away.x, away.y);
     this.tweens.add({ targets: this.player, alpha: 0.3, duration: 90, yoyo: true, repeat: 5, onComplete: () => this.player.setAlpha(1) });
     audio.sfx('dano');
+    this.player.setTint(0xff7070);
+    this.time.delayedCall(220, () => this.player.clearTint());
     this.bark.say(pickLine('dano'));
     // Modo Kids: só um em cada dois toques tira coração
     this.kidsHits += 1;
@@ -1687,11 +1695,43 @@ export class WorldScene extends Phaser.Scene {
 
   // ---------- diálogo
 
+  /** Aprendiz ergue a varinha: estica um pouco e solta estrelinhas na ponta. */
+  private castPose(at: Phaser.Math.Vector2): void {
+    const p = this.player;
+    if (this.tweens.isTweening(p)) return;
+    const sx = p.scaleX;
+    const sy = p.scaleY;
+    this.tweens.add({ targets: p, scaleX: sx * 0.9, scaleY: sy * 1.08, duration: 70, yoyo: true, ease: 'Sine.out', onComplete: () => p.setScale(sx, sy) });
+    for (let i = 0; i < 4; i++) {
+      const a = (Math.PI * 2 * i) / 4 + Math.random();
+      const star = this.add.rectangle(at.x, at.y, 2, 2, 0xfff2b0).setDepth(p.depth + 2);
+      this.tweens.add({ targets: star, x: at.x + Math.cos(a) * 9, y: at.y + Math.sin(a) * 9 - 3, alpha: 0, duration: 380, ease: 'Cubic.out', onComplete: () => star.destroy() });
+    }
+  }
+
+  /** Item pego aparece sobre a cabeça do aprendiz e sobe sumindo. */
+  private showPickup(ref: string): void {
+    const f = assets().frameOf('ui.icones', ref);
+    if (f === undefined) return;
+    const p = this.player;
+    const icon = this.add.image(p.x, p.y - p.displayHeight - 2, 'ui.icones', f).setDepth(1300).setScale(0.4);
+    this.tweens.add({ targets: icon, scale: 1, duration: 180, ease: 'Back.out' });
+    this.tweens.add({ targets: icon, y: icon.y - 12, alpha: 0, delay: 650, duration: 450, ease: 'Sine.in', onComplete: () => icon.destroy() });
+  }
+
+  /** Personagem dá um pulinho quando o aprendiz chega para conversar. */
+  private hop(who: Thing): void {
+    if (this.tweens.isTweening(who)) return;
+    const y = who.y;
+    this.tweens.add({ targets: who, y: y - 3, duration: 110, yoyo: true, ease: 'Quad.out', onComplete: () => who.setY(y) });
+  }
+
   private startDialogue(def: DialogueDef | undefined, who?: Thing): void {
     if (!def) throw new Error(`diálogo não encontrado: ${who?.ref}`);
     this.player.halt();
     this.bark.hide();
     who?.setHighlighted(false);
+    if (who?.kind === 'npc') this.hop(who);
     this.talkingTo = who;
     this.dialogue = new DialogueRunner(def, session.state, db);
     this.dialogueId = def.id;
@@ -2022,7 +2062,7 @@ export class WorldScene extends Phaser.Scene {
     // missão parada há muito tempo (mesmo andando): o Fuxico manda uma dica
     if (!this.challenge && !this.boss && time > this.arriveUntil) {
       const dica = dueHint(hintClock, s, db, s.playTimeMs);
-      if (dica) this.startDialogue({ id: 'dica', speaker: 'Fuxico', entries: [{ start: 'a' }], nodes: { a: { text: `Psiu, aprendiz! Uma dica de elfo: ${dica}` } } });
+      if (dica) this.startDialogue({ id: 'dica', speaker: 'Elfo Fuxico', entries: [{ start: 'a' }], nodes: { a: { text: `Psiu, aprendiz! Uma dica de elfo: ${dica}` } } });
     }
     this.puzzles.update(dir, delta);
     for (const c of this.creatures) c.think(this.player, time, delta);

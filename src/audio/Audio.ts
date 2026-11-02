@@ -16,6 +16,75 @@ export type Track = 'titulo' | 'castelo' | 'lareira' | 'corredores' | 'ninar' | 
 /** Músicas de passear pelo castelo: revezam sozinhas, em ordem meio aleatória. */
 export const CASTELO_LISTA: Track[] = ['castelo', 'lareira', 'corredores', 'ninar'];
 
+export type Ambiencia = 'lareira' | 'vento' | 'goteira' | 'grilos' | 'relogio' | 'magia';
+
+/** Som de fundo de cada sala. Salas fora da lista ficam só com a música. */
+export const AMBIENCIA_SALA: Record<string, Ambiencia> = {
+  'map.recepcao': 'lareira',
+  'map.cozinha': 'lareira',
+  'map.gabinete': 'lareira',
+  'map.grande-salao': 'relogio',
+  'map.biblioteca': 'relogio',
+  'map.corredor': 'vento',
+  'map.hall': 'vento',
+  'map.ala-professores': 'vento',
+  'map.observatorio': 'vento',
+  'map.porao': 'goteira',
+  'map.sala-espectral': 'goteira',
+  'map.estufa': 'grilos',
+  'map.aula-herbologia': 'grilos',
+  'map.galeria': 'magia',
+  'map.coracao': 'magia',
+  'map.quadro-coragem': 'magia',
+  'map.quadro-astucia': 'magia',
+  'map.quadro-inteligencia': 'magia',
+  'map.quadro-lealdade': 'magia',
+};
+
+export interface Voz {
+  wave: OscillatorType;
+  hz: number;
+  /** Variação de altura entre um bipe e outro (0,1 = 10%). */
+  var: number;
+  dur: number;
+  vol: number;
+  /** Escorrega a nota (fantasmas e espelho "flutuam"). */
+  glide?: number;
+  vibrato?: number;
+}
+
+/** Vozes com jeito próprio; o resto sai do nome (mesmo nome, mesma voz). */
+const VOZES: Record<string, Partial<Voz>> = {
+  'Bellatrix Lestrelle': { wave: 'sawtooth', hz: 300, var: 0.06, vol: 0.022, glide: 0.85 },
+  'Bellatrix (voz)': { wave: 'sawtooth', hz: 220, var: 0.04, vol: 0.02, glide: 0.8, vibrato: 6 },
+  'Ministro Bonfatti': { wave: 'triangle', hz: 240, var: 0.08, vol: 0.05 },
+  'Profa. Amélia': { wave: 'sine', hz: 620, var: 0.1, vol: 0.04, glide: 1.15, vibrato: 5 },
+  'Prof. Aristóteles': { wave: 'sine', hz: 420, var: 0.08, vol: 0.04, glide: 0.9, vibrato: 4 },
+  'Elfo Fuxico': { wave: 'square', hz: 900, var: 0.18, dur: 0.025, vol: 0.026 },
+  Fuxico: { wave: 'square', hz: 900, var: 0.18, dur: 0.025, vol: 0.026 },
+  Trinco: { wave: 'square', hz: 330, var: 0.12, vol: 0.03 },
+  'Dona Brasa': { wave: 'triangle', hz: 360, var: 0.1, vol: 0.05 },
+  'Dom Moldura': { wave: 'triangle', hz: 200, var: 0.06, vol: 0.05 },
+  'Dama do Chá': { wave: 'sine', hz: 700, var: 0.08, vol: 0.04, vibrato: 5 },
+  Espelho: { wave: 'sine', hz: 520, var: 0.05, vol: 0.035, glide: 1.25, vibrato: 7 },
+  'Coração do Castelo': { wave: 'sine', hz: 160, var: 0.03, vol: 0.06, vibrato: 3 },
+  // narração, cartas e objetos: virar de página baixinho
+  '✦': { vol: 0 },
+  Carta: { vol: 0 },
+  'Carta do Bonfatti': { vol: 0 },
+  Telescópio: { vol: 0 },
+  'Mural dos Professores': { vol: 0 },
+};
+
+export function vozDe(speaker: string): Voz {
+  let h = 0;
+  for (const ch of speaker) h = (h * 31 + ch.charCodeAt(0)) >>> 0;
+  // professoras um pouco mais agudas que professores; cada nome escolhe seu tom
+  const base = /^Profa\.|^Fada|^Dama|^Mary/.test(speaker) ? 560 : /^Prof\./.test(speaker) ? 300 : 440;
+  const auto: Voz = { wave: h % 3 === 0 ? 'triangle' : 'square', hz: base * (0.85 + (h % 7) * 0.05), var: 0.1, dur: 0.035, vol: h % 3 === 0 ? 0.045 : 0.026 };
+  return { ...auto, ...VOZES[speaker] };
+}
+
 type Wave = OscillatorType;
 
 const NOTE_INDEX: Record<string, number> = { C: 0, 'C#': 1, D: 2, 'D#': 3, E: 4, F: 5, 'F#': 6, G: 7, 'G#': 8, A: 9, 'A#': 10, B: 11 };
@@ -166,6 +235,10 @@ class AudioEngine {
   private nextAt = 0;
   private timer?: number;
   private lastStepAt = 0;
+  private amb?: Ambiencia;
+  private ambTimer?: number;
+  private ambN = 0;
+  private ambTac = false;
 
   /** Liga o áudio no primeiro toque/tecla (exigência dos navegadores, principalmente no celular). */
   install(): void {
@@ -274,6 +347,69 @@ class AudioEngine {
       case 'erro': this.tone(t, 'square', 200, 150, 0.2, 0.07); return;
       // giro que suga o ar e termina num estalo seco
       case 'zaparatar': this.noise(t, 0.35, 0.08, 400, 'bandpass', 3200); this.noise(t + 0.36, 0.05, 0.3, 1800, 'highpass'); this.tone(t + 0.36, 'square', 180, 60, 0.08, 0.1); return;
+    }
+  }
+
+
+  /** "Voz" de quem fala: um bipe com altura e timbre próprios de cada personagem. */
+  voz(speaker: string): void {
+    const ctx = this.ctx;
+    if (!ctx || ctx.state !== 'running' || settings.efeitos <= 0) return;
+    const v = vozDe(speaker);
+    if (v.vol <= 0) return;
+    const t = ctx.currentTime + 0.005;
+    const hz = v.hz * (1 + (Math.random() - 0.5) * v.var);
+    this.tone(t, v.wave, hz, v.glide ? hz * v.glide : undefined, v.dur, v.vol, v.vibrato);
+  }
+
+  /** Som de fundo da sala (lareira, vento, goteiras, grilos...). Sem argumento, silencia. */
+  ambiente(kind?: Ambiencia): void {
+    if (kind === this.amb) return;
+    this.amb = kind;
+    if (this.ambTimer) window.clearInterval(this.ambTimer);
+    this.ambTimer = kind ? window.setInterval(() => this.ambTick(), 200) : undefined;
+  }
+
+  private ambTick(): void {
+    const ctx = this.ctx;
+    if (!ctx || ctx.state !== 'running' || settings.efeitos <= 0 || !this.amb) return;
+    const t = ctx.currentTime + 0.01;
+    const R = (a: number, b: number) => a + Math.random() * (b - a);
+    const chance = (p: number) => Math.random() < p;
+    switch (this.amb) {
+      case 'lareira':
+        // estalos curtos e secos de lenha, de vez em quando um "pop" maior
+        if (chance(0.55)) this.noise(t, R(0.01, 0.03), R(0.01, 0.03), R(2500, 6000), 'highpass');
+        if (chance(0.12)) this.noise(t + 0.05, 0.05, 0.035, R(900, 1600), 'bandpass');
+        if (chance(0.08)) this.noise(t, 0.9, 0.012, 250, 'lowpass');
+        return;
+      case 'vento':
+        // rajada que sobe e desce, rara e baixinha
+        if (chance(0.035)) this.noise(t, R(1.4, 2.4), 0.022, R(300, 500), 'bandpass', R(900, 1400));
+        return;
+      case 'goteira':
+        if (chance(0.09)) this.tone(t, 'sine', R(1300, 1900), R(500, 700), 0.07, 0.03);
+        if (chance(0.02)) this.noise(t, 1.6, 0.012, 180, 'lowpass');
+        return;
+      case 'grilos':
+        if (chance(0.16)) {
+          const hz = R(3800, 4600);
+          for (let i = 0; i < 3; i++) this.tone(t + i * 0.045, 'triangle', hz, undefined, 0.025, 0.012);
+        }
+        return;
+      case 'relogio':
+        // tique-taque de relógio de pé, um a cada segundo (5 ticks de 200 ms)
+        this.ambN = (this.ambN + 1) % 5;
+        if (this.ambN === 0) {
+          this.ambTac = !this.ambTac;
+          this.noise(t, 0.015, 0.03, this.ambTac ? 2600 : 2000, 'bandpass');
+        }
+        if (chance(0.02)) this.noise(t, 0.12, 0.01, 4000, 'highpass');
+        return;
+      case 'magia':
+        if (chance(0.05)) this.tone(t, 'sine', noteHz(['E6', 'G#6', 'B6', 'C#7', 'E7'][Math.floor(R(0, 5))]), undefined, 0.6, 0.012, 5);
+        if (chance(0.025)) this.noise(t, 1.8, 0.01, 600, 'bandpass', 1800);
+        return;
     }
   }
 
