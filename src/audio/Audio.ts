@@ -49,6 +49,7 @@ export type Ambiencia = 'lareira' | 'vento' | 'goteira' | 'grilos' | 'relogio' |
 
 /** Som de fundo de cada sala. Salas fora da lista ficam só com a música. */
 export const AMBIENCIA_SALA: Record<string, Ambiencia> = {
+  // sons soltos, de vez em quando, com pausas sorteadas (nada em ritmo repetido)
   'map.recepcao': 'lareira',
   'map.cozinha': 'lareira',
   'map.gabinete': 'lareira',
@@ -272,8 +273,7 @@ class AudioEngine {
   /** Volume extra do som que está sendo montado (equalização). */
   private mul = 1;
   private ambTimer?: number;
-  private ambN = 0;
-  private ambTac = false;
+  private ambNext = 0;
 
   /** Liga o áudio no primeiro toque/tecla (exigência dos navegadores, principalmente no celular). */
   install(): void {
@@ -411,6 +411,7 @@ class AudioEngine {
   ambiente(kind?: Ambiencia): void {
     if (kind === this.amb) return;
     this.amb = kind;
+    this.ambNext = (this.ctx?.currentTime ?? 0) + 1 + Math.random() * 4;
     if (this.ambTimer) window.clearInterval(this.ambTimer);
     this.ambTimer = kind ? window.setInterval(() => this.ambTick(), 200) : undefined;
   }
@@ -419,48 +420,52 @@ class AudioEngine {
     const ctx = this.ctx;
     if (!ctx || ctx.state !== 'running' || settings.efeitos <= 0 || !this.amb) return;
     const t = ctx.currentTime + 0.01;
+    if (t < this.ambNext) return;
     const R = (a: number, b: number) => a + Math.random() * (b - a);
-    const chance = (p: number) => Math.random() < p;
     this.mul = dbGain(AMB_DB[this.amb]);
-    this.ambSwitch(this.amb, t, R, chance);
+    // um acontecimento solto e depois uma pausa sorteada: nada fica em ritmo de relógio
+    const [min, max] = this.ambEvento(this.amb, t, R);
     this.mul = 1;
+    this.ambNext = t + R(min, max);
   }
 
-  private ambSwitch(kind: Ambiencia, t: number, R: (a: number, b: number) => number, chance: (p: number) => boolean): void {
+  /** Toca um "acontecimento" do som da sala e devolve a pausa até o próximo (segundos). */
+  private ambEvento(kind: Ambiencia, t: number, R: (a: number, b: number) => number): [number, number] {
+    const chance = (p: number) => Math.random() < p;
     switch (kind) {
-      case 'lareira':
-        // estalos curtos e secos de lenha, de vez em quando um "pop" maior
-        if (chance(0.55)) this.noise(t, R(0.01, 0.03), R(0.01, 0.03), R(2500, 6000), 'highpass');
-        if (chance(0.12)) this.noise(t + 0.05, 0.05, 0.035, R(900, 1600), 'bandpass');
-        if (chance(0.08)) this.noise(t, 0.9, 0.012, 250, 'lowpass');
-        return;
-      case 'vento':
-        // rajada que sobe e desce, rara e baixinha
-        if (chance(0.035)) this.noise(t, R(1.4, 2.4), 0.022, R(300, 500), 'bandpass', R(900, 1400));
-        return;
-      case 'goteira':
-        if (chance(0.09)) this.tone(t, 'sine', R(1300, 1900), R(500, 700), 0.07, 0.03);
-        if (chance(0.02)) this.noise(t, 1.6, 0.012, 180, 'lowpass');
-        return;
-      case 'grilos':
-        if (chance(0.16)) {
-          const hz = R(3800, 4600);
-          for (let i = 0; i < 3; i++) this.tone(t + i * 0.045, 'triangle', hz, undefined, 0.025, 0.012);
+      case 'lareira': {
+        // a lenha estala umas poucas vezes, em tempos irregulares, e às vezes acomoda
+        const n = Math.floor(R(1, 4));
+        let at = t;
+        for (let i = 0; i < n; i++) {
+          this.noise(at, R(0.01, 0.025), R(0.01, 0.025), R(2500, 5000), 'highpass');
+          at += R(0.08, 0.5);
         }
-        return;
+        if (chance(0.35)) this.noise(t, R(0.8, 1.4), 0.012, 250, 'lowpass');
+        return [5, 16];
+      }
       case 'relogio':
-        // tique-taque de relógio de pé, um a cada segundo (5 ticks de 200 ms)
-        this.ambN = (this.ambN + 1) % 5;
-        if (this.ambN === 0) {
-          this.ambTac = !this.ambTac;
-          this.noise(t, 0.015, 0.03, this.ambTac ? 2600 : 2000, 'bandpass');
-        }
-        if (chance(0.02)) this.noise(t, 0.12, 0.01, 4000, 'highpass');
-        return;
+        // salão grande: madeira que range ao longe e, raramente, um sino distante
+        if (chance(0.7)) this.noise(t, R(0.4, 0.8), 0.018, R(500, 700), 'bandpass', R(250, 350));
+        else this.tone(t, 'sine', noteHz(chance(0.5) ? 'E5' : 'B4'), undefined, 2.2, 0.02);
+        return [10, 26];
+      case 'vento':
+        this.noise(t, R(1.4, 2.8), 0.022, R(300, 500), 'bandpass', R(900, 1400));
+        return [7, 18];
+      case 'goteira':
+        this.tone(t, 'sine', R(1300, 1900), R(500, 700), 0.07, 0.03);
+        if (chance(0.3)) this.tone(t + R(0.3, 0.9), 'sine', R(1300, 1900), R(500, 700), 0.06, 0.022);
+        return [3, 10];
+      case 'grilos': {
+        const hz = R(3800, 4600);
+        const n = Math.floor(R(2, 6));
+        for (let k = 0; k < n; k++) for (let i = 0; i < 3; i++) this.tone(t + k * R(0.35, 0.5) + i * 0.045, 'triangle', hz, undefined, 0.025, 0.012);
+        return [4, 13];
+      }
       case 'magia':
-        if (chance(0.05)) this.tone(t, 'sine', noteHz(['E6', 'G#6', 'B6', 'C#7', 'E7'][Math.floor(R(0, 5))]), undefined, 0.6, 0.012, 5);
-        if (chance(0.025)) this.noise(t, 1.8, 0.01, 600, 'bandpass', 1800);
-        return;
+        if (chance(0.7)) this.tone(t, 'sine', noteHz(['E6', 'G#6', 'B6', 'C#7', 'E7'][Math.floor(R(0, 5))]), undefined, 0.6, 0.012, 5);
+        else this.noise(t, 1.8, 0.01, 600, 'bandpass', 1800);
+        return [4, 11];
     }
   }
 
