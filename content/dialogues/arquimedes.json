@@ -43,7 +43,15 @@
   "nodes": {
     "intro": {
       "text": "Ah! O aprendiz que acendeu a cozinha da Dona Brasa! Entre, entre. Sou Baltazar Bonfatti, Ministro da Magia. Vim para a cerimônia dos aprendizes novos... e olha a noite que me arrumaram.",
-      "next": "intro-2"
+      "next": "intro-2",
+      "nextIf": [
+        {
+          "when": {
+            "kids": true
+          },
+          "next": "intro-4"
+        }
+      ]
     },
     "intro-2": {
       "text": "Vi pela janela você espantar aquelas sombrinhas e empurrar as estátuas. Nada mal para a primeira noite!",
@@ -55,7 +63,8 @@
     },
     "intro-4": {
       "text": "E a Diretora Merlina e os professores entraram na Ala para a reunião da noite e não saíram mais. Me tranquei aqui para descobrir quem está por trás disso.",
-      "next": "chapeu"
+      "next": "chapeu",
+      "kids": "A Diretora Merlina e os professores sumiram na Ala, e alguém está apagando as velas. Vamos descobrir quem!"
     },
     "chapeu": {
       "text": "Antes, uma tradição do castelo: o Chapéu das Virtudes. Ele não escolhe por ninguém... só brilha com a cor da virtude que você disser de coração.",
@@ -126,6 +135,14 @@
         {
           "tutorial": "levitar"
         }
+      ],
+      "nextIf": [
+        {
+          "when": {
+            "kids": true
+          },
+          "next": "apanha"
+        }
       ]
     },
     "levitar-2": {
@@ -146,7 +163,8 @@
     },
     "apanha-2": {
       "text": "O problema é que eu fiz dois. O primeiro sumiu da minha vitrine hoje à noite... e desde então as velas do castelo apagam sozinhas, uma por uma.",
-      "next": "selo"
+      "next": "selo",
+      "kids": "Eu fiz dois. O primeiro sumiu hoje à noite... e desde então as velas do castelo apagam sozinhas."
     },
     "selo": {
       "text": "Agora, o mais importante. O selo da escada do segundo andar mudou de cor hoje à noite, e a porta da Ala fica no mesmo hall. Venha comigo ao Hall da Escada, no fim oeste do corredor.",
@@ -158,7 +176,8 @@
         {
           "tutorial": "ficha"
         }
-      ]
+      ],
+      "kids": "Agora venha comigo ao Hall da Escada, no fim oeste do corredor. O selo da escada mudou de cor!"
     },
     "vamos": {
       "text": "Ao Hall da Escada, aprendiz! Fim oeste do Corredor dos Quadros. Eu vou na frente."

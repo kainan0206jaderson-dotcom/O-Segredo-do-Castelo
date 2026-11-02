@@ -626,18 +626,35 @@
         "id": "juntar-emblemas",
         "objective": "Entre nos quatro quadros da Galeria e traga os emblemas das virtudes.",
         "completeWhen": {
-          "all": [
+          "any": [
             {
-              "hasItem": "emblema-coragem"
+              "all": [
+                {
+                  "hasItem": "emblema-coragem"
+                },
+                {
+                  "hasItem": "emblema-inteligencia"
+                },
+                {
+                  "hasItem": "emblema-astucia"
+                },
+                {
+                  "hasItem": "emblema-lealdade"
+                }
+              ]
             },
             {
-              "hasItem": "emblema-inteligencia"
-            },
-            {
-              "hasItem": "emblema-astucia"
-            },
-            {
-              "hasItem": "emblema-lealdade"
+              "all": [
+                {
+                  "kids": true
+                },
+                {
+                  "hasItem": "emblema-coragem"
+                },
+                {
+                  "hasItem": "emblema-lealdade"
+                }
+              ]
             }
           ]
         },
@@ -658,14 +675,21 @@
             "when": {
               "all": [
                 {
-                  "not": {
-                    "hasItem": "emblema-inteligencia"
-                  }
+                  "kids": false
                 },
                 {
-                  "not": {
-                    "flag": "luz:map.quadro-inteligencia:cristal"
-                  }
+                  "all": [
+                    {
+                      "not": {
+                        "hasItem": "emblema-inteligencia"
+                      }
+                    },
+                    {
+                      "not": {
+                        "flag": "luz:map.quadro-inteligencia:cristal"
+                      }
+                    }
+                  ]
                 }
               ]
             }
@@ -674,18 +698,32 @@
             "map": "map.quadro-inteligencia",
             "alvo": "emblema",
             "when": {
-              "not": {
-                "hasItem": "emblema-inteligencia"
-              }
+              "all": [
+                {
+                  "kids": false
+                },
+                {
+                  "not": {
+                    "hasItem": "emblema-inteligencia"
+                  }
+                }
+              ]
             }
           },
           {
             "map": "map.quadro-astucia",
             "alvo": "emblema",
             "when": {
-              "not": {
-                "hasItem": "emblema-astucia"
-              }
+              "all": [
+                {
+                  "kids": false
+                },
+                {
+                  "not": {
+                    "hasItem": "emblema-astucia"
+                  }
+                }
+              ]
             }
           },
           {
@@ -697,7 +735,8 @@
               }
             }
           }
-        ]
+        ],
+        "kidsObjective": "Entre nos quadros da Coragem e da Lealdade e traga os dois emblemas."
       },
       {
         "id": "ir-ao-coracao",

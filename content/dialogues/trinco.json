@@ -32,6 +32,37 @@
       "when": {
         "all": [
           {
+            "kids": true
+          },
+          {
+            "questActive": "o-selo"
+          },
+          {
+            "not": {
+              "questDone": "chaves-do-trinco"
+            }
+          },
+          {
+            "not": {
+              "hasItem": "pedra-lealdade"
+            }
+          },
+          {
+            "not": {
+              "flag": "encaixe:map.hall:pedestal-lealdade"
+            }
+          }
+        ]
+      },
+      "start": "kids-pedra"
+    },
+    {
+      "when": {
+        "all": [
+          {
+            "kids": false
+          },
+          {
             "questActive": "o-selo"
           },
           {
@@ -92,7 +123,8 @@
     },
     "sumico": {
       "text": "Mas olha, hoje a noite tá esquisita. As velas estão apagando sozinhas, os professores entraram na Ala pra reunião e ninguém saiu, e o Ministro Bonfatti se trancou no gabinete desde o jantar!",
-      "next": "mesa-ok"
+      "next": "mesa-ok",
+      "kids": "Mas hoje a noite tá esquisita: as velas apagam sozinhas e os professores sumiram na Ala!"
     },
     "mesa-ok": {
       "text": "Tome, sua varinha, {nome}. Não aponte para o meu nariz, por favor.",
@@ -186,6 +218,14 @@
     },
     "pos-jogo": {
       "text": "{Guardião|Guardiã} do Castelo! E pensar que fui eu que abri o portão pra você. Vou contar isso pra todo mundo. Duas vezes."
+    },
+    "kids-pedra": {
+      "text": "Aprendiz! Olha o que estava pendurado no meu molho de chaves: uma pedra com o símbolo da Lealdade! Leva pro selo.",
+      "effects": [
+        {
+          "giveItem": "pedra-lealdade"
+        }
+      ]
     }
   }
 }

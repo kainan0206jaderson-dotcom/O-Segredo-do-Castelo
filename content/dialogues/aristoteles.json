@@ -58,7 +58,15 @@
     },
     "intro-2": {
       "text": "Más notícias: a Profa. Amélia sumiu hoje à noite, logo que a fuligem chegou. A última vez que a vi, ela estava em frente àquele espelho.",
-      "next": "intro-3"
+      "next": "intro-3",
+      "nextIf": [
+        {
+          "when": {
+            "kids": true
+          },
+          "next": "intro-4"
+        }
+      ]
     },
     "intro-3": {
       "text": "E desde então o espelho... cochicha. Eu achava que era o eco. O eco não pede para a gente achar cartas.",
@@ -70,7 +78,16 @@
     },
     "intro-5": {
       "text": "Agora você enxerga o que a fuligem esconde. Treine na minha aula de Seres Espectrais, na sala a leste. Os espectros de lá adoram pegar aprendiz de surpresa.",
-      "next": "intro-6"
+      "next": "intro-6",
+      "nextIf": [
+        {
+          "when": {
+            "kids": true
+          },
+          "next": "intro-6k"
+        }
+      ],
+      "kids": "Revelar mostra coisas escondidas: bilhetes, passagens, até fantasmas."
     },
     "intro-6": {
       "text": "Ah, e se puder: três livros fugiram da minha sala de Literatura, na Ala dos Professores. Vença a aula de lá e eles voltam para os atris.",
@@ -133,6 +150,21 @@
     },
     "ocupado": {
       "text": "Shhh. Estou catalogando livros que não querem ser catalogados."
+    },
+    "intro-6k": {
+      "text": "Agora você enxerga o que a fuligem esconde. Fale com aquele espelho: acho que é a Amélia pedindo ajuda!",
+      "effects": [
+        {
+          "learnSpell": "revelar"
+        },
+        {
+          "tutorial": "revelar"
+        },
+        {
+          "advanceQuest": "cartas-de-amelia",
+          "to": "achar-cartas"
+        }
+      ]
     }
   }
 }

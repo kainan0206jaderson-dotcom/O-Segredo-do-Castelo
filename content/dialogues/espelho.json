@@ -57,7 +57,16 @@
     "preso-3": {
       "text": "Antes de sumir, escondi pedaços de cartas pelo andar. Cartas que o Bonfatti escreveu para uma ex-aluna e me pediu para entregar. Ela nunca quis ler.",
       "speaker": "Profa. Amélia",
-      "next": "preso-3b"
+      "next": "preso-3b",
+      "kids": "Antes de sumir, escondi pedaços de cartas do Bonfatti pelo andar, longe da Bellatrix.",
+      "nextIf": [
+        {
+          "when": {
+            "kids": true
+          },
+          "next": "preso-4"
+        }
+      ]
     },
     "preso-3b": {
       "text": "Quando a Bellatrix chegou, rasguei tudo e escondi os pedaços, antes que ela queimasse. Ache três e leia para mim aqui.",
@@ -100,7 +109,15 @@
     "libertar-5": {
       "text": "Um presente por me tirar de lá. Braço firme, pensamento de bolha... ESCUDO! Protege de sombrinhas e de feitiços da Bellatrix.",
       "speaker": "Profa. Amélia",
-      "next": "libertar-6"
+      "next": "libertar-6",
+      "nextIf": [
+        {
+          "when": {
+            "kids": true
+          },
+          "next": "libertar-6k"
+        }
+      ]
     },
     "libertar-6": {
       "text": "A última carta está no Observatório, ao norte. Ela explica os mostradores das estrelas. Agora que estou livre, eles vão girar.",
@@ -130,6 +147,49 @@
     },
     "reflexo": {
       "text": "Um espelho alto, com moldura de prata. Por um segundo, o reflexo parece se mexer sozinho."
+    },
+    "libertar-6k": {
+      "speaker": "Profa. Amélia",
+      "text": "Agora que estou livre, as estrelas do Observatório se alinharam sozinhas! Vá ao norte da Biblioteca e olhe pelo telescópio.",
+      "effects": [
+        {
+          "setFlag": "amelia:livre",
+          "value": true
+        },
+        {
+          "learnSpell": "escudo"
+        },
+        {
+          "tutorial": "escudo"
+        },
+        {
+          "setFlag": "mostrador:map.observatorio:mostrador-1",
+          "value": 0
+        },
+        {
+          "setFlag": "mostrador:map.observatorio:mostrador-2",
+          "value": 1
+        },
+        {
+          "setFlag": "mostrador:map.observatorio:mostrador-3",
+          "value": 2
+        },
+        {
+          "setFlag": "mostrador:map.observatorio:mostrador-4",
+          "value": 3
+        },
+        {
+          "setFlag": "signos:map.observatorio:estrelas",
+          "value": true
+        },
+        {
+          "advanceQuest": "cartas-de-amelia",
+          "to": "olhar-telescopio"
+        },
+        {
+          "giveXp": 30
+        }
+      ]
     }
   }
 }

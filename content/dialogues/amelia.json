@@ -75,7 +75,8 @@
       "next": "resgatada-2"
     },
     "resgatada-2": {
-      "text": "Junte os quatro emblemas e a barreira cai. O Coração do Castelo fica logo depois."
+      "text": "Junte os quatro emblemas e a barreira cai. O Coração do Castelo fica logo depois.",
+      "kids": "Junte também o emblema da Coragem e a barreira cai. O Coração do Castelo fica logo depois."
     },
     "coracao": {
       "text": "Bellatrix do nosso lado... quem diria. O castelo gosta de surpresas."

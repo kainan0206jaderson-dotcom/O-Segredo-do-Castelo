@@ -10,18 +10,35 @@
     },
     {
       "when": {
-        "all": [
+        "any": [
           {
-            "hasItem": "emblema-coragem"
+            "all": [
+              {
+                "hasItem": "emblema-coragem"
+              },
+              {
+                "hasItem": "emblema-inteligencia"
+              },
+              {
+                "hasItem": "emblema-astucia"
+              },
+              {
+                "hasItem": "emblema-lealdade"
+              }
+            ]
           },
           {
-            "hasItem": "emblema-inteligencia"
-          },
-          {
-            "hasItem": "emblema-astucia"
-          },
-          {
-            "hasItem": "emblema-lealdade"
+            "all": [
+              {
+                "kids": true
+              },
+              {
+                "hasItem": "emblema-coragem"
+              },
+              {
+                "hasItem": "emblema-lealdade"
+              }
+            ]
           }
         ]
       },
@@ -48,13 +65,16 @@
     },
     "virtudes-3": {
       "text": "Coragem: no escuro. Inteligência: um raio de luz. Astúcia: olhos que vigiam. Lealdade: a Amélia precisa de você.",
-      "next": "virtudes-4"
+      "next": "virtudes-4",
+      "kids": "Coragem: um quadro no escuro. Lealdade: a Amélia precisa de você. Os outros dois quadros são para quem quiser mais desafio."
     },
     "virtudes-4": {
-      "text": "Com os quatro emblemas, a barreira a leste cai e o caminho até o Coração do Castelo se abre."
+      "text": "Com os quatro emblemas, a barreira a leste cai e o caminho até o Coração do Castelo se abre.",
+      "kids": "Com os emblemas da Coragem e da Lealdade, a barreira a leste cai e o caminho até o Coração do Castelo se abre."
     },
     "pronto": {
-      "text": "Os quatro emblemas! Siga para o Coração do Castelo, a leste. E, {nome}... seja gentil com a Bellatrix. Ela já foi minha melhor aluna."
+      "text": "Os quatro emblemas! Siga para o Coração do Castelo, a leste. E, {nome}... seja gentil com a Bellatrix. Ela já foi minha melhor aluna.",
+      "kids": "Os emblemas! Siga para o Coração do Castelo, a leste. E, {nome}... seja gentil com a Bellatrix. Ela já foi minha melhor aluna."
     },
     "retrato": {
       "text": "Um retrato do Ministro Bonfatti. O chapéu pontudo quase sai da moldura."

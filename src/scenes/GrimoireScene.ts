@@ -3,7 +3,7 @@ import { db } from '../content';
 import { session } from '../core/session';
 import { assets } from '../core/registry';
 import { InputManager } from '../input/InputManager';
-import { useItem } from '../systems/rules';
+import { stageObjective, useItem } from '../systems/rules';
 import { stats } from '../systems/progression';
 import { GAME_HEIGHT, GAME_WIDTH } from '../config/game';
 import { TEXT_RES, textStyle } from '../ui/theme';
@@ -223,7 +223,7 @@ export class GrimoireScene extends Phaser.Scene {
         return Object.entries(s.quests).reverse().map(([id, p]) => {
           const q = db.quests[id];
           const stage = q.stages.find((st) => st.id === p.stage);
-          return { icon: p.done ? undefined : 'grimorio', title: `${p.done ? '✓ ' : ''}${q.title}`, detail: p.done ? 'Missão concluída.' : stage?.objective ?? '', muted: p.done };
+          return { icon: p.done ? undefined : 'grimorio', title: `${p.done ? '✓ ' : ''}${q.title}`, detail: p.done ? 'Missão concluída.' : (stage ? stageObjective(stage, session.state) : ''), muted: p.done };
         });
     }
   }

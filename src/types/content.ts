@@ -18,6 +18,8 @@ export type Condition =
   | { knowsRecipe: string }
   | { house: string }
   | { minLevel: number }
+  /** Modo Kids ligado (true) ou desligado (false): o Modo Kids encurta a história e pula desafios. */
+  | { kids: boolean }
   | { not: Condition }
   | { all: Condition[] }
   | { any: Condition[] };
@@ -56,6 +58,8 @@ export interface DialogueNode {
   nextIf?: { when: Condition; next: string | null }[];
   choices?: DialogueChoice[];
   effects?: Effect[];
+  /** Modo Kids: versão resumida da fala (vale no lugar de "text"). */
+  kids?: string;
   /** Efeito de cena enquanto a fala aparece (ex.: "chapeu" põe o Chapéu das Virtudes no aprendiz). */
   cena?: string;
 }
@@ -70,6 +74,8 @@ export interface DialogueDef {
 export interface QuestStageDef {
   id: string;
   objective: string;
+  /** Modo Kids: objetivo resumido (a versão Kids da missão pode pedir menos). */
+  kidsObjective?: string;
   /** Quando a condição vale, a missão avança sozinha para a etapa "then" (ou termina, se "then" faltar). */
   completeWhen?: Condition;
   then?: string;
