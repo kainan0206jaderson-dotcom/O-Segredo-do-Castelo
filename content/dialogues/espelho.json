@@ -70,7 +70,8 @@
     },
     "preso-3b": {
       "text": "Quando a Bellatrix chegou, rasguei tudo e escondi os pedaços, antes que ela queimasse. Ache três e leia para mim aqui.",
-      "next": "preso-4"
+      "next": "preso-4",
+      "speaker": "Profa. Amélia"
     },
     "preso-4": {
       "text": "Uma está nesta biblioteca, uma na sala da aula, uma na estufa. Use Revelar. Eu espero. Não tenho muita escolha.",

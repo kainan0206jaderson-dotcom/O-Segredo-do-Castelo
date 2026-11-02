@@ -134,10 +134,10 @@
   ],
   "nodes": {
     "oi": {
-      "text": "Eu sou o Fuxico, elfo da limpeza. Ouço tudo enquanto varro. Se travar em alguma coisa, me pergunte!"
+      "text": "Eu sou o Fuxico, elfo da limpeza. Ouço tudo enquanto varro. Se travar em alguma coisa, me pergunte! Dica de agora: {dica}"
     },
     "livre": {
-      "text": "O selo quebrou! Os professores saíram da Ala e a escada está livre: lá em cima ficam a Biblioteca e o resto do mistério. Explore, vença os desafios e ajude quem pedir."
+      "text": "O selo quebrou e os professores saíram da Ala! Se travar, é só me perguntar. Dica de agora: {dica}"
     },
     "pedestais": {
       "text": "Pedras na mão? Os pedestais ficam no Hall da Escada, fim oeste do corredor. Cada um tem o símbolo de uma casa."

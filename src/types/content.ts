@@ -76,6 +76,8 @@ export interface QuestStageDef {
   objective: string;
   /** Modo Kids: objetivo resumido (a versão Kids da missão pode pedir menos). */
   kidsObjective?: string;
+  /** Dicas em ordem (da mais leve à mais direta), mostradas quando a missão fica muito tempo sem avançar. */
+  dicas?: string[];
   /** Quando a condição vale, a missão avança sozinha para a etapa "then" (ou termina, se "then" faltar). */
   completeWhen?: Condition;
   then?: string;

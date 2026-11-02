@@ -54,6 +54,7 @@ const FEMININO: [RegExp, string][] = [
 const FALA_PADRAO: Record<string, string> = {
   objetivo: 'Explorar o castelo e conversar com todo mundo.',
   estrela: 'As estrelas estão quietas hoje.',
+  dica: 'Explore o castelo e converse com todo mundo.',
 };
 
 /** Trechos que mudam com o jogo, como {objetivo} e {estrela}. A cena do castelo registra quem responde cada um. */
@@ -67,7 +68,7 @@ export function setFalaProvider(key: string, fn: () => string): void {
  * {o|a} pela forma certa e, para a menina, o masculino pelo feminino. */
 export function noGenero(text: string): string {
   text = text.replace(/\{nome\}/g, nomeAprendiz());
-  text = text.replace(/\{(objetivo|estrela)\}/g, (_, k: string) => FALAS[k]?.() ?? FALA_PADRAO[k]);
+  text = text.replace(/\{(objetivo|estrela|dica)\}/g, (_, k: string) => FALAS[k]?.() ?? FALA_PADRAO[k]);
   // {o|a}: forma do menino | forma da menina, escrita direto na fala ("cansad{o|a}", "{Guardião|Guardiã}")
   const menina = aparencia() === 'menina';
   text = text.replace(/\{([^{}|]*)\|([^{}|]*)\}/g, (_, m: string, f: string) => (menina ? f : m));

@@ -109,7 +109,7 @@ describe('Ato 1 do começo ao fim', () => {
     expect(s.house).toBe('inteligencia');
     expect(s.equipment.capa).toBe('capa-inteligencia');
     expect(s.spells).toContain('levitar');
-    expect(n).toContain('tutorial:levitar');
+    expect(n).not.toContain('tutorial:levitar'); // aparece no primeiro uso do feitiço
     expect(stage(s, 'o-diretor')).toBe('ir-ao-hall');
 
     // hall: o diretor some, começa o selo
@@ -149,7 +149,7 @@ describe('Ato 1 do começo ao fim', () => {
     expect(fim).toContain('act-end:1');
     expect(stage(s, 'o-selo')).toBe('fim');
     expect(s.flags['ato:1:fim']).toBe(true);
-    expect(currentObjective(s, db)).toBeUndefined();
+    expect(currentObjective(s, db)?.objective).toMatch(/Suba a escada/); // o Ato 2 já aponta o caminho
     expect(s.level).toBeGreaterThanOrEqual(3);
 
     // jogo livre: os personagens comentam o fim do ato

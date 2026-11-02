@@ -24,6 +24,9 @@
           "completeQuest": "o-selo"
         },
         {
+          "startQuest": "cartas-de-amelia"
+        },
+        {
           "endAct": 1
         }
       ]

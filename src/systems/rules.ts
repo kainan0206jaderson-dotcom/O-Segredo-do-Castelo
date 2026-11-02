@@ -190,7 +190,7 @@ export function tickQuests(s: GameState, db: ContentDb): Notice[] {
 }
 
 /** Etapa da missão ativa mais recente (a que aparece na tela). */
-function currentStage(s: GameState, db: ContentDb): { quest: QuestDef; stage: QuestStageDef } | undefined {
+export function currentStage(s: GameState, db: ContentDb): { quest: QuestDef; stage: QuestStageDef } | undefined {
   const active = Object.entries(s.quests).filter(([, p]) => !p.done);
   // a história vem primeiro; missões secundárias aparecem quando não há principal ativa
   const last = active.filter(([id]) => db.quests[id]?.kind !== 'secundaria').at(-1) ?? active.at(-1);

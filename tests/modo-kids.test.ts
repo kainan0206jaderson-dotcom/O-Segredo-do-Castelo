@@ -108,6 +108,8 @@ describe('Modo Kids: história resumida e menos desafios', () => {
   it('Ato 2 sem a aula de Seres Espectrais, sem livros fujões e sem o enigma das estrelas', () => {
     const s = kids();
     apply({ startQuest: 'cartas-de-amelia' }, s, db);
+    s.flags['visto:biblioteca'] = true;
+    tickQuests(s, db);
     talk('aristoteles', s);
     expect(s.spells).toContain('revelar');
     expect(s.quests['cartas-de-amelia'].stage).toBe('achar-cartas');

@@ -12,10 +12,11 @@ import { Creature } from '../entities/Creature';
 import { Sentinel } from '../entities/Sentinel';
 import { Boss, type BossPhase } from '../entities/Boss';
 import { InputManager } from '../input/InputManager';
+import { dueHint, newHintClock } from '../systems/dicas';
 import { DialogueRunner } from '../systems/DialogueRunner';
 import { ChallengeRunner } from '../systems/ChallengeRunner';
 import {
-  apply, check, currentObjective, cycleSpell, guideTarget, seenTutorial, spellAffects, takeFromPantry, tickQuests, type Notice,
+  apply, check, currentObjective, currentStage, cycleSpell, stageObjective, guideTarget, seenTutorial, spellAffects, takeFromPantry, tickQuests, type Notice,
 } from '../systems/rules';
 import { clampVitals, hurt, restoreEnergy, spendEnergy, stats } from '../systems/progression';
 import type { Condition, DialogueDef } from '../types/content';
@@ -88,6 +89,8 @@ interface Trigger {
 const FADE_MS = 320;
 /** Modo Kids: dica depois de um tempo sem avançar, ampulhetas mais longas, olhos e Bellatrix mais lentos. */
 const KIDS_HINT_MS = 30000;
+/** Relógio das dicas do Fuxico; fica fora da cena porque ela reinicia a cada troca de sala. */
+const hintClock = newHintClock();
 const KIDS_TIME = 1.5;
 const KIDS_SENTINEL = 0.6;
 const KIDS_BOSS = 1.6;
@@ -697,6 +700,12 @@ export class WorldScene extends Phaser.Scene {
     setFalaProvider('objetivo', () => {
       return currentObjective(session.state, db)?.objective ?? 'Aproveitar o castelo, porque o que precisava ser feito já foi!';
     });
+    // {dica}: a primeira dica da etapa atual (o Fuxico responde quando o aprendiz pergunta)
+    setFalaProvider('dica', () => {
+      const s = session.state;
+      const st = currentStage(s, db)?.stage;
+      return st?.dicas?.[0] ?? (st ? stageObjective(st, s) : 'Aproveite o castelo: o que precisava ser feito já foi!');
+    });
     setFalaProvider('estrela', () => {
       const salas = (mapaLayout as unknown as { salas: Record<string, { nome?: string }> }).salas;
       const s = session.state;
@@ -1286,6 +1295,11 @@ export class WorldScene extends Phaser.Scene {
       return;
     }
     const spell = spellId ? db.spells[spellId] : undefined;
+    // feitiço novo: o tutorial dele aparece no primeiro uso, e não tudo de uma vez ao aprender
+    if (spellId && db.tutorials[spellId] && !seenTutorial(s, spellId)) {
+      this.queueTutorial(spellId);
+      return;
+    }
     if (spell && !spendEnergy(s, spell.cost)) {
       audio.sfx('sem-energia');
       this.bark.say(pickLine('sem-energia'));
@@ -2005,6 +2019,11 @@ export class WorldScene extends Phaser.Scene {
       this.guide = undefined;
     }
     if (this.guide) this.updateGuide(time);
+    // missão parada há muito tempo (mesmo andando): o Fuxico manda uma dica
+    if (!this.challenge && !this.boss && time > this.arriveUntil) {
+      const dica = dueHint(hintClock, s, db, s.playTimeMs);
+      if (dica) this.startDialogue({ id: 'dica', speaker: 'Fuxico', entries: [{ start: 'a' }], nodes: { a: { text: `Psiu, aprendiz! Uma dica de elfo: ${dica}` } } });
+    }
     this.puzzles.update(dir, delta);
     for (const c of this.creatures) c.think(this.player, time, delta);
     this.updateExtras(time, delta);

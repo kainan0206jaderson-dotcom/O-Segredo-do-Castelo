@@ -131,9 +131,6 @@
       "effects": [
         {
           "learnSpell": "levitar"
-        },
-        {
-          "tutorial": "levitar"
         }
       ],
       "nextIf": [
@@ -154,9 +151,6 @@
       "effects": [
         {
           "learnSpell": "apanha-luz"
-        },
-        {
-          "tutorial": "apanha-luz"
         }
       ],
       "next": "apanha-2"
