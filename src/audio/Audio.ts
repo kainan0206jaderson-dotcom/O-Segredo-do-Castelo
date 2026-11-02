@@ -16,6 +16,35 @@ export type Track = 'titulo' | 'castelo' | 'lareira' | 'corredores' | 'ninar' | 
 /** Músicas de passear pelo castelo: revezam sozinhas, em ordem meio aleatória. */
 export const CASTELO_LISTA: Track[] = ['castelo', 'lareira', 'corredores', 'ninar'];
 
+/**
+ * Equalização (em dB), medida gravando cada som e comparando o volume percebido:
+ * efeitos de jogo ficam no mesmo nível, um pouco abaixo da música; cliques de menu e
+ * passos mais baixos; conquistas (nível, missão, vitória) um pouco acima.
+ */
+export const SFX_DB: Record<Sfx, number> = {
+  passo: 15, porta: 8, blip: 13, menu: 7, confirmar: 8, lumen: 2, levitar: 1, revelar: 2, escudo: -3,
+  abrir: 6, fogos: 9, vento: 9, 'sem-energia': 9, pegar: 7, missao: 4, nivel: 4, dano: 5, acerto: 10,
+  espanto: 3, orbe: 11, enigma: 1, vitoria: 4, derrota: 2, desmaio: 1, coracao: -7, pocao: 6, erro: 6, zaparatar: 3,
+};
+/** Músicas no mesmo volume; o duelo um pouco mais forte. */
+export const TRACK_DB: Record<Track, number> = {
+  titulo: 0, castelo: -1, lareira: 1.5, corredores: 0.5, ninar: 3, biblioteca: 0.5, quadros: -2.5, duelo: -2, final: 0,
+};
+/** Sons de sala: bem por baixo da música, todos parecidos entre si. */
+export const AMB_DB: Record<Ambiencia, number> = { lareira: 7, vento: 11, goteira: 4, grilos: 9, relogio: 11, magia: 2 };
+const dbGain = (db: number) => 10 ** (db / 20);
+
+/** Curva reta até 0,7 e depois curva suave até 1 (sem distorção no uso normal). */
+export function softClipCurve(n = 2048): Float32Array<ArrayBuffer> {
+  const c = new Float32Array(n);
+  for (let i = 0; i < n; i++) {
+    const x = (i / (n - 1)) * 2 - 1;
+    const a = Math.abs(x);
+    c[i] = Math.sign(x) * (a <= 0.7 ? a : 0.7 + 0.3 * Math.tanh((a - 0.7) / 0.3));
+  }
+  return c;
+}
+
 export type Ambiencia = 'lareira' | 'vento' | 'goteira' | 'grilos' | 'relogio' | 'magia';
 
 /** Som de fundo de cada sala. Salas fora da lista ficam só com a música. */
@@ -51,23 +80,25 @@ export interface Voz {
   /** Escorrega a nota (fantasmas e espelho "flutuam"). */
   glide?: number;
   vibrato?: number;
+  /** Ajuste de volume desta voz (dB). */
+  db?: number;
 }
 
 /** Vozes com jeito próprio; o resto sai do nome (mesmo nome, mesma voz). */
 const VOZES: Record<string, Partial<Voz>> = {
-  'Bellatrix Lestrelle': { wave: 'sawtooth', hz: 300, var: 0.06, vol: 0.022, glide: 0.85 },
-  'Bellatrix (voz)': { wave: 'sawtooth', hz: 220, var: 0.04, vol: 0.02, glide: 0.8, vibrato: 6 },
-  'Ministro Bonfatti': { wave: 'triangle', hz: 240, var: 0.08, vol: 0.05 },
+  'Bellatrix Lestrelle': { wave: 'sawtooth', hz: 300, var: 0.06, vol: 0.022, glide: 0.85, db: 16 },
+  'Bellatrix (voz)': { wave: 'sawtooth', hz: 220, var: 0.04, vol: 0.02, glide: 0.8, vibrato: 6, db: 18 },
+  'Ministro Bonfatti': { wave: 'triangle', hz: 240, var: 0.08, vol: 0.05, db: 8 },
   'Profa. Amélia': { wave: 'sine', hz: 620, var: 0.1, vol: 0.04, glide: 1.15, vibrato: 5 },
   'Prof. Aristóteles': { wave: 'sine', hz: 420, var: 0.08, vol: 0.04, glide: 0.9, vibrato: 4 },
-  'Elfo Fuxico': { wave: 'square', hz: 900, var: 0.18, dur: 0.025, vol: 0.026 },
-  Fuxico: { wave: 'square', hz: 900, var: 0.18, dur: 0.025, vol: 0.026 },
+  'Elfo Fuxico': { wave: 'square', hz: 900, var: 0.18, dur: 0.025, vol: 0.026, db: 11 },
+  Fuxico: { wave: 'square', hz: 900, var: 0.18, dur: 0.025, vol: 0.026, db: 11 },
   Trinco: { wave: 'square', hz: 330, var: 0.12, vol: 0.03 },
   'Dona Brasa': { wave: 'triangle', hz: 360, var: 0.1, vol: 0.05 },
   'Dom Moldura': { wave: 'triangle', hz: 200, var: 0.06, vol: 0.05 },
   'Dama do Chá': { wave: 'sine', hz: 700, var: 0.08, vol: 0.04, vibrato: 5 },
   Espelho: { wave: 'sine', hz: 520, var: 0.05, vol: 0.035, glide: 1.25, vibrato: 7 },
-  'Coração do Castelo': { wave: 'sine', hz: 160, var: 0.03, vol: 0.06, vibrato: 3 },
+  'Coração do Castelo': { wave: 'sine', hz: 160, var: 0.03, vol: 0.06, vibrato: 3, db: 5 },
   // narração, cartas e objetos: virar de página baixinho
   '✦': { vol: 0 },
   Carta: { vol: 0 },
@@ -82,7 +113,9 @@ export function vozDe(speaker: string): Voz {
   // professoras um pouco mais agudas que professores; cada nome escolhe seu tom
   const base = /^Profa\.|^Fada|^Dama|^Mary/.test(speaker) ? 560 : /^Prof\./.test(speaker) ? 300 : 440;
   const auto: Voz = { wave: h % 3 === 0 ? 'triangle' : 'square', hz: base * (0.85 + (h % 7) * 0.05), var: 0.1, dur: 0.035, vol: h % 3 === 0 ? 0.045 : 0.026 };
-  return { ...auto, ...VOZES[speaker] };
+  const v = { ...auto, ...VOZES[speaker] };
+  // vozes medidas e niveladas: falas na altura da música, sem sumir por baixo dela
+  return { ...v, vol: v.vol * dbGain(v.db ?? 10) };
 }
 
 type Wave = OscillatorType;
@@ -236,6 +269,8 @@ class AudioEngine {
   private timer?: number;
   private lastStepAt = 0;
   private amb?: Ambiencia;
+  /** Volume extra do som que está sendo montado (equalização). */
+  private mul = 1;
   private ambTimer?: number;
   private ambN = 0;
   private ambTac = false;
@@ -262,7 +297,11 @@ class AudioEngine {
     const ctx = new Ctor();
     this.ctx = ctx;
     this.master = ctx.createGain();
-    this.master.connect(ctx.destination);
+    // proteção contra estouro: transparente no volume normal, só arredonda picos perto do máximo
+    // (um compressor mudaria o volume dos sons curtos e estragaria a equalização)
+    const clip = ctx.createWaveShaper();
+    clip.curve = softClipCurve();
+    this.master.connect(clip).connect(ctx.destination);
     this.sfxBus = ctx.createGain();
     this.sfxBus.connect(this.master);
     this.musicBus = ctx.createGain();
@@ -312,6 +351,12 @@ class AudioEngine {
     if (!ctx || ctx.state !== 'running' || settings.efeitos <= 0) return;
     const t = ctx.currentTime + 0.005;
     const R = (a: number, b: number) => a + Math.random() * (b - a);
+    this.mul = dbGain(SFX_DB[name]);
+    this.sfxSwitch(name, t, R);
+    this.mul = 1;
+  }
+
+  private sfxSwitch(name: Sfx, t: number, R: (a: number, b: number) => number): void {
     switch (name) {
       case 'passo': {
         if (t - this.lastStepAt < 0.2) return;
@@ -376,7 +421,13 @@ class AudioEngine {
     const t = ctx.currentTime + 0.01;
     const R = (a: number, b: number) => a + Math.random() * (b - a);
     const chance = (p: number) => Math.random() < p;
-    switch (this.amb) {
+    this.mul = dbGain(AMB_DB[this.amb]);
+    this.ambSwitch(this.amb, t, R, chance);
+    this.mul = 1;
+  }
+
+  private ambSwitch(kind: Ambiencia, t: number, R: (a: number, b: number) => number, chance: (p: number) => boolean): void {
+    switch (kind) {
       case 'lareira':
         // estalos curtos e secos de lenha, de vez em quando um "pop" maior
         if (chance(0.55)) this.noise(t, R(0.01, 0.03), R(0.01, 0.03), R(2500, 6000), 'highpass');
@@ -414,7 +465,10 @@ class AudioEngine {
   }
 
   private env(g: GainNode, t: number, dur: number, vol: number): void {
+    // começa calado já agora: sem isso o primeiro instante sai com ganho 1 e dá um estalo
+    g.gain.value = 0;
     g.gain.setValueAtTime(0.0001, t);
+    vol *= this.mul;
     g.gain.exponentialRampToValueAtTime(vol, t + Math.min(0.01, dur / 4));
     g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
   }
@@ -453,6 +507,7 @@ class AudioEngine {
     src.buffer = this.noiseBuf!;
     const f = ctx.createBiquadFilter();
     f.type = type;
+    f.frequency.value = freq;
     f.frequency.setValueAtTime(freq, t);
     if (freqTo) f.frequency.exponentialRampToValueAtTime(freqTo, t + dur);
     const g = ctx.createGain();
@@ -496,7 +551,7 @@ class AudioEngine {
     const g = ctx.createGain();
     g.gain.setValueAtTime(0.0001, ctx.currentTime);
     // instrumentos com ataque suave soam mais baixo que o chiptune antigo: ganho extra
-    g.gain.setTargetAtTime(2, ctx.currentTime + (suave ? 1.5 : 0), suave ? 1 : 0.12);
+    g.gain.setTargetAtTime(2 * dbGain(TRACK_DB[this.track!]), ctx.currentTime + (suave ? 1.5 : 0), suave ? 1 : 0.12);
     this.trocarEm = ctx.currentTime + 70 + Math.random() * 40;
     g.connect(this.musicBus!);
     this.songGain = g;
@@ -537,6 +592,7 @@ class AudioEngine {
   private musicNote(t: number, inst: Instrument, hz: number, dur: number, vol: number): void {
     const ctx = this.ctx!;
     const out = ctx.createGain();
+    out.gain.value = 0;
     out.connect(this.songGain!);
     let end = t + dur;
     const partial = (wave: Wave, mult: number, level: number, detune = 0, decay?: number) => {

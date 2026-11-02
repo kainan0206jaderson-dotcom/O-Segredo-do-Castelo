@@ -19,3 +19,18 @@ describe('vozes e som ambiente', () => {
     for (const id of Object.keys(AMBIENCIA_SALA)) expect(existsSync(`public/assets/maps/${id.replace('map.', '')}.tmj`), id).toBe(true);
   });
 });
+
+describe('equalização', () => {
+  it('todo efeito, música e som de sala tem ajuste, sem exageros', async () => {
+    const { SFX_DB, TRACK_DB, AMB_DB, SONGS } = await import('../src/audio/Audio');
+    for (const t of Object.keys(SONGS)) expect(TRACK_DB[t as keyof typeof TRACK_DB], t).toBeDefined();
+    for (const v of [...Object.values(SFX_DB), ...Object.values(TRACK_DB), ...Object.values(AMB_DB)]) expect(Math.abs(v)).toBeLessThanOrEqual(16);
+  });
+
+  it('proteção contra estouro não mexe no volume normal', async () => {
+    const { softClipCurve } = await import('../src/audio/Audio');
+    const c = softClipCurve(2001);
+    expect(c[1000 + 500]).toBeCloseTo(0.5, 3);
+    expect(c[2000]).toBeLessThanOrEqual(1);
+  });
+});
