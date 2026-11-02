@@ -151,5 +151,35 @@
   "sala:map.porao": [
     "Um porão secreto! Ninguém me contou disso.",
     "Cheira a poeira, mistério e... poções?"
+  ],
+  "sala:map.hall": [
+    "Que escadaria enorme!"
+  ],
+  "sala:map.corredor": [
+    "Essas estátuas parecem de verdade..."
+  ],
+  "sala:map.gabinete": [
+    "Então é aqui que o Ministro trabalha."
+  ],
+  "sala:map.ala-professores": [
+    "A Ala dos Professores! Tomara que estejam todos bem."
+  ],
+  "sala:map.aula-feiticos": [
+    "Cheiro de varinha queimada... é a sala de Feitiços."
+  ],
+  "sala:map.aula-pocoes": [
+    "Caldeirões borbulhando sozinhos!"
+  ],
+  "sala:map.aula-herbologia": [
+    "Essas plantas estão olhando pra mim?"
+  ],
+  "sala:map.aula-adivinhacao": [
+    "O teto daqui é o céu inteiro!"
+  ],
+  "sala:map.aula-literatura": [
+    "Livros por todo lado! Que sala boa de ler."
+  ],
+  "sala:map.aula-defesa": [
+    "Sala de Defesa. Melhor ficar de olho."
   ]
 }
