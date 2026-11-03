@@ -9,7 +9,7 @@ describe('HUD: nenhuma peça cobre outra', () => {
       const l = hudLayout(w, H);
       const boxes: Record<string, Box> = {
         missao: l.quest, bolsa: l.bag, feitico: l.spell, vitais: l.vitals,
-        cronometro: l.timer, aviso: l.notice, sala: l.roomName, chefe: l.boss, acao: l.action,
+        cronometro: l.timer, aviso: l.notice, sala: l.roomName, chefe: l.boss, acao: l.action, varinha: l.cast,
       };
       const names = Object.keys(boxes);
       for (const [i, a] of names.entries()) {
@@ -30,6 +30,14 @@ describe('HUD: nenhuma peça cobre outra', () => {
   it('a tecla da bolsa fica acima dos corações', () => {
     const l = hudLayout(480, H);
     expect(l.bagKey.y + 7).toBeLessThanOrEqual(l.heartsY - 4);
+  });
+
+  it('os dois botões do celular ficam no canto direito, sem encostar um no outro', () => {
+    for (const w of [480, 640]) {
+      const l = hudLayout(w, H);
+      expect(l.cast.x + l.cast.w).toBeLessThan(l.action.x);
+      expect(l.cast.x).toBeGreaterThan(w * 0.75);
+    }
   });
 
   it('o feitiço fica acima dos corações', () => {

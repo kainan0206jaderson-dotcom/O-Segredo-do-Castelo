@@ -4,7 +4,7 @@
     "pages": [
       {
         "text": "Ande com W A S D ou com as setinhas do teclado. Fique de frente para alguém ou algum objeto e aperte Espaço para conversar ou pegar.",
-        "touch": "Arraste o dedo na metade esquerda da tela para andar. Fique de frente para alguém e toque na estrela para conversar."
+        "touch": "Arraste o dedo na metade esquerda da tela para andar. Fique de frente para alguém e toque no botão dourado, no canto direito, para conversar, pegar ou empurrar."
       },
       {
         "text": "O objetivo da missão fica no canto de cima. Aperte I para abrir o grimório, com sua bolsa, feitiços e missões.",
@@ -18,7 +18,7 @@
       {
         "icon": "lumen",
         "text": "Fique de frente para o alvo e aperte Espaço para lançar o feitiço escolhido. Q troca de feitiço. Cada feitiço também tem a sua tecla, e os extras ★ usam Shift junto com ela: veja na aba Feitiços da bolsa.",
-        "touch": "Fique de frente para o alvo e toque na estrela para lançar. Toque no nome do feitiço, no canto, para trocar."
+        "touch": "Fique de frente para o alvo e toque no botão lilás da varinha para lançar. Toque no nome do feitiço, no canto, para trocar."
       },
       {
         "icon": "energia",

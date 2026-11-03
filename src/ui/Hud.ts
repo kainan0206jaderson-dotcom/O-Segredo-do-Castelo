@@ -22,7 +22,8 @@ export class Hud {
   private bossBarBg: Phaser.GameObjects.Rectangle;
   private vitals: Phaser.GameObjects.GameObject[] = [];
   private vitalsKey = '';
-  private queue: string[] = [];
+  /** Avisos e comemorações usam a mesma faixa no meio da tela: um de cada vez, na ordem. */
+  private queue: (string | { celebrate: string; big: boolean })[] = [];
   private showingNotice = false;
   private roomName: Phaser.GameObjects.Text;
   private readonly l: HudLayout = hudLayout(GAME_WIDTH, GAME_HEIGHT);
@@ -91,6 +92,13 @@ export class Hud {
    * e o painel da missão piscando com o objetivo novo.
    */
   celebrate(text: string, big: boolean): void {
+    // missão concluída já diz que a etapa acabou: a faixa de etapa que ainda espera sai da fila
+    if (big) this.queue = this.queue.filter((q) => typeof q === 'string' || q.big);
+    this.queue.push({ celebrate: text, big });
+    if (!this.showingNotice) this.next();
+  }
+
+  private playCelebration(text: string, big: boolean, done: () => void): void {
     const l = this.l;
     const y = l.notice.y + l.notice.h / 2;
     const label = this.scene.add.text(GAME_WIDTH / 2, y, `★ ${text} ★`, textStyle(big ? 13 : 11, COLORS.gold, {
@@ -102,7 +110,10 @@ export class Hud {
         { alpha: 1, scale: 1, duration: 220, ease: 'Back.out' },
         { alpha: 0, y: y - 6, duration: 350, delay: big ? 1800 : 1100 },
       ],
-      onComplete: () => label.destroy(),
+      onComplete: () => {
+        label.destroy();
+        done();
+      },
     });
     // estrelinhas (quadradinhos de 2 px) que saem da faixa
     for (let i = 0; i < (big ? 18 : 10); i++) {
@@ -198,6 +209,7 @@ export class Hud {
       return;
     }
     this.showingNotice = true;
+    if (typeof text !== 'string') return this.playCelebration(text.celebrate, text.big, () => this.next());
     const ny = this.l.notice.y + this.l.notice.h / 2;
     const t = this.scene.add.text(GAME_WIDTH / 2, ny - 4, text, textStyle(10, COLORS.gold, {
       backgroundColor: '#18142ae6', padding: { left: 10, right: 10, top: 4, bottom: 4 }, align: 'center',

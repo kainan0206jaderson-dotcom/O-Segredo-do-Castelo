@@ -1,5 +1,7 @@
 import Phaser from 'phaser';
 import { GAME_HEIGHT, GAME_WIDTH, RENDER_ZOOM } from '../config/game';
+import { assets } from '../core/registry';
+import { hudLayout } from '../ui/hudLayout';
 
 /** Toque em pixels de jogo (o canvas tem RENDER_ZOOM pixels reais por pixel de jogo). */
 function screenPoint(p: Phaser.Input.Pointer): { x: number; y: number } {
@@ -9,7 +11,7 @@ function screenPoint(p: Phaser.Input.Pointer): { x: number; y: number } {
 /**
  * Junta teclado e toque em comandos únicos: direção (-1..1) e ação.
  * No celular, a metade esquerda da tela vira um joystick virtual e o
- * botão redondo à direita é a ação (interagir / lançar feitiço).
+ * à direita ficam dois botões: ação (dourado) e feitiço (lilás, com a varinha).
  */
 export class InputManager {
   private keys: Record<'up' | 'down' | 'left' | 'right' | 'w' | 'a' | 's' | 'd', Phaser.Input.Keyboard.Key>;
@@ -18,8 +20,10 @@ export class InputManager {
   private stickVector = new Phaser.Math.Vector2();
   private base: Phaser.GameObjects.Arc;
   private knob: Phaser.GameObjects.Arc;
-  private actionButton?: Phaser.GameObjects.Container;
   private actionQueued = false;
+  /** A ação veio do botão de toque (lá ela só pega e conversa; feitiço é no botão da varinha). */
+  private actionByTouch = false;
+  private castQueued = false;
   private navQueued = 0;
   private navHQueued = 0;
   private spellQueued = false;
@@ -30,7 +34,7 @@ export class InputManager {
   /** Letras que já têm função: andar (WASD), ação (E), trocar feitiço (Q), mapa (M) e bolsa (I). */
   static readonly RESERVED = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyE', 'KeyQ', 'KeyM', 'KeyI'];
 
-  constructor(private scene: Phaser.Scene, opts: { touchControls?: boolean } = {}) {
+  constructor(private scene: Phaser.Scene, opts: { touchControls?: boolean; castButton?: boolean } = {}) {
     const kb = scene.input.keyboard!;
     const K = Phaser.Input.Keyboard.KeyCodes;
     this.keys = {
@@ -43,7 +47,7 @@ export class InputManager {
     for (const o of [this.base, this.knob]) o.setScrollFactor(0).setDepth(1000).setVisible(false);
 
     const touchControls = opts.touchControls ?? true;
-    if (touchControls && InputManager.isTouchDevice(scene)) this.createActionButton();
+    if (touchControls && InputManager.isTouchDevice(scene)) this.createTouchButtons(opts.castButton ?? false);
 
     // toques rápidos de tecla (apertar e soltar no mesmo quadro) não podem se perder,
     // então ação e navegação são guardadas no próprio evento de tecla
@@ -83,19 +87,40 @@ export class InputManager {
     return scene.sys.game.device.input.touch && window.matchMedia('(pointer: coarse)').matches;
   }
 
-  private createActionButton(): void {
-    const width = GAME_WIDTH;
-    const height = GAME_HEIGHT;
-    const ring = this.scene.add.circle(0, 0, 18, 0xfad65c, 0.18).setStrokeStyle(1, 0xfad65c, 0.7);
-    const star = this.scene.add.star(0, 0, 5, 4, 9, 0xfad65c, 0.85);
-    this.actionButton = this.scene.add.container(width - 34, height - 34, [ring, star])
-      .setScrollFactor(0).setDepth(1000).setSize(44, 44).setInteractive();
-    this.actionButton.on('pointerdown', () => {
-      this.actionQueued = true;
-      this.actionButton!.setScale(0.9);
-    });
-    this.actionButton.on('pointerup', () => this.actionButton!.setScale(1));
-    this.actionButton.on('pointerout', () => this.actionButton!.setScale(1));
+  /**
+   * Botões redondos do celular, no canto direito: ação (dourado, pegar/falar/empurrar)
+   * e, no mundo, feitiço (lilás, com a varinha). Mesmo fundo escuro e borda fina do HUD.
+   */
+  private createTouchButtons(withCast: boolean): void {
+    const l = hudLayout(GAME_WIDTH, GAME_HEIGHT);
+    const make = (box: { x: number; y: number; w: number; h: number }, color: number, symbol: Phaser.GameObjects.GameObject[], onPress: () => void) => {
+      const r = box.w / 2 - 3;
+      const bg = this.scene.add.circle(0, 0, r, 0x18142a, 0.72).setStrokeStyle(1.5, color, 0.9);
+      const glow = this.scene.add.circle(0, 0, r - 3, color, 0.1);
+      const btn = this.scene.add.container(box.x + box.w / 2, box.y + box.h / 2, [bg, glow, ...symbol])
+        .setScrollFactor(0).setDepth(1000).setSize(box.w, box.h).setInteractive();
+      const press = (on: boolean) => {
+        btn.setScale(on ? 0.9 : 1);
+        glow.setFillStyle(color, on ? 0.35 : 0.1);
+      };
+      btn.on('pointerdown', () => { onPress(); press(true); });
+      btn.on('pointerup', () => press(false));
+      btn.on('pointerout', () => press(false));
+      return btn;
+    };
+    const GOLD = 0xfad65c;
+    const LILAC = 0xb99cff;
+    // ação: um símbolo simples (anel com um ponto), como o botão principal de um controle
+    make(l.action, GOLD, [
+      this.scene.add.circle(0, 0, 6, GOLD, 0).setStrokeStyle(1.5, GOLD, 0.95),
+      this.scene.add.circle(0, 0, 2.5, GOLD, 0.95),
+    ], () => { this.actionQueued = true; this.actionByTouch = true; });
+    if (!withCast) return;
+    const frame = assets().frameOf('ui.icones', 'varinha');
+    const wand = frame !== undefined
+      ? [this.scene.add.image(0, 0, 'ui.icones', frame).setScale(1.25)]
+      : [this.scene.add.star(0, 0, 5, 3, 7, LILAC, 0.9)];
+    make(l.cast, LILAC, wand, () => { this.castQueued = true; });
   }
 
   private onDown(p: Phaser.Input.Pointer): void {
@@ -183,6 +208,20 @@ export class InputManager {
   actionPressed(): boolean {
     const pressed = this.actionQueued;
     this.actionQueued = false;
+    return pressed;
+  }
+
+  /** A última ação veio do botão de toque? (lido logo depois de actionPressed) */
+  lastActionByTouch(): boolean {
+    const t = this.actionByTouch;
+    this.actionByTouch = false;
+    return t;
+  }
+
+  /** Botão da varinha (celular): lança o feitiço escolhido, uma vez por toque. */
+  castPressed(): boolean {
+    const pressed = this.castQueued;
+    this.castQueued = false;
     return pressed;
   }
 }
