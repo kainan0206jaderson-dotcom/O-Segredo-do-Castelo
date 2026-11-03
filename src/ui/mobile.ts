@@ -15,11 +15,14 @@ export function setupMobileScreen(): void {
   const installed = nav.standalone === true || window.matchMedia('(display-mode: fullscreen), (display-mode: standalone)').matches;
   const canFullscreen = typeof document.documentElement.requestFullscreen === 'function';
   let iosHintSeen = false;
+  // navegadores dentro de apps (Instagram, Facebook...) às vezes recusam a tela cheia:
+  // aí o aviso não pode voltar, senão o jogo fica coberto para sempre
+  let refused = false;
   if (!canFullscreen) hint.textContent = 'Dica: para jogar em tela cheia no iPhone, toque em Compartilhar e depois em "Adicionar à Tela de Início".';
 
   const landscape = window.matchMedia('(orientation: landscape)');
   const refresh = () => {
-    const need = canFullscreen ? !document.fullscreenElement : !installed && !iosHintSeen;
+    const need = canFullscreen ? !document.fullscreenElement && !refused : !installed && !iosHintSeen;
     box.classList.toggle('on', landscape.matches && need);
   };
 
@@ -32,7 +35,10 @@ export function setupMobileScreen(): void {
     box.classList.remove('on');
     try {
       if (canFullscreen && !document.fullscreenElement) {
-        await document.documentElement.requestFullscreen({ navigationUI: 'hide' });
+        await document.documentElement.requestFullscreen({ navigationUI: 'hide' }).catch((e: unknown) => {
+          refused = true;
+          throw e;
+        });
       }
       const orientation = screen.orientation as ScreenOrientation & { lock?: (o: string) => Promise<void> };
       await orientation.lock?.('landscape');
