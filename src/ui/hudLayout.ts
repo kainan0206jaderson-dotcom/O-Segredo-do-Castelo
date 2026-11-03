@@ -29,14 +29,17 @@ export interface HudLayout {
   roomName: Box;
   /** Barra de vida do duelo, embaixo no meio. */
   boss: Box;
-  /** Botão de ação do celular (canto inferior direito). */
+  /** Botões do celular, no canto inferior direito: ação (pegar, falar, empurrar) e feitiço (varinha). */
   action: Box;
+  cast: Box;
 }
 
 const M = 4;
 const BAG_R = 12;
 const SPELL_W = 92;
 const SPELL_H = 22;
+/** Área de toque de cada botão do celular (o círculo desenhado é um pouco menor). */
+const BTN = 38;
 
 export function hudLayout(width: number, height: number): HudLayout {
   const bag = { x: width - M - BAG_R * 2, y: M, w: BAG_R * 2, h: BAG_R * 2 };
@@ -52,10 +55,12 @@ export function hudLayout(width: number, height: number): HudLayout {
   const notice = { x: 20, y: top, w: width - 40, h: 20 };
   const roomName = { x: width / 2 - 90, y: notice.y + notice.h + 6, w: 180, h: 18 };
   const boss = { x: width / 2 - 81, y: height - 30, w: 162, h: 22 };
-  const action = { x: width - 34 - 22, y: height - 34 - 22, w: 44, h: 44 };
+  // ação no canto, onde o polegar descansa; a varinha logo à esquerda e um pouco acima
+  const action = { x: width - M - 6 - BTN, y: height - M - 6 - BTN, w: BTN, h: BTN };
+  const cast = { x: action.x - BTN - 6, y: action.y - 18, w: BTN, h: BTN };
   return {
     quest, questWrap: questW - 8, bag, bagKey: { x: bag.x + BAG_R, y: bag.y + bag.h + 1 }, spell,
-    vitals, heartsY, energyY, timer, notice, roomName, boss, action,
+    vitals, heartsY, energyY, timer, notice, roomName, boss, action, cast,
   };
 }
 

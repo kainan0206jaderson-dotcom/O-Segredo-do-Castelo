@@ -324,7 +324,7 @@ export class WorldScene extends Phaser.Scene {
     this.physics.world.setBounds(0, 0, map.widthInPixels, map.heightInPixels);
     this.setupCamera(map);
     const touch = InputManager.isTouchDevice(this);
-    this.controls = new InputManager(this);
+    this.controls = new InputManager(this, { castButton: true });
     this.dialogueBox = new DialogueBox(this);
     this.dialogueBox.onChoice = (i) => this.choose(i);
     this.hud = new Hud(this, touch);
@@ -2034,6 +2034,7 @@ export class WorldScene extends Phaser.Scene {
       this.dialogueBox.update(delta);
       if (!this.dialogueBox.typing) this.talkingTo?.setTalking(false);
       this.controls.letterPressed(); // tecla de feitiço apertada na conversa não fica guardada para depois
+      this.controls.castPressed();
       const nav = this.controls.navPressed();
       if (nav) this.dialogueBox.moveSelection(nav);
       if (this.controls.actionPressed()) {
@@ -2107,9 +2108,12 @@ export class WorldScene extends Phaser.Scene {
       this.near = near;
     }
     if (letter) this.castSpellByKey(letter);
+    else if (this.controls.castPressed()) this.castSpell();
     else if (this.controls.actionPressed()) {
+      // no teclado, Espaço longe de tudo lança o feitiço; no celular isso é o botão da varinha
+      const touch = this.controls.lastActionByTouch();
       if (near) this.interact(near);
-      else this.castSpell();
+      else if (!touch || (session.state.selectedSpell === 'levitar' && this.puzzles.carried)) this.castSpell();
     }
   }
 }
