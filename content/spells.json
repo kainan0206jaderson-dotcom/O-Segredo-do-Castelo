@@ -1,6 +1,7 @@
 {
   "lumen": {
     "name": "Lumen",
+    "tecla": "R",
     "kind": "principal",
     "description": "Acende velas, tochas e tudo que já foi luz um dia.",
     "target": "vela",
@@ -9,6 +10,7 @@
   },
   "levitar": {
     "name": "Levitar",
+    "tecla": "T",
     "kind": "principal",
     "description": "Faz objetos leves flutuarem atrás de você. Lance de novo para soltar.",
     "target": "levitavel",
@@ -17,6 +19,7 @@
   },
   "revelar": {
     "name": "Revelar",
+    "tecla": "U",
     "kind": "principal",
     "description": "Mostra coisas escondidas e espectros invisíveis por perto. Ensinado pelo Prof. Aristóteles.",
     "target": "oculto",
@@ -25,6 +28,7 @@
   },
   "escudo": {
     "name": "Escudo",
+    "tecla": "O",
     "kind": "principal",
     "description": "Uma bolha de luz que protege de sombrinhas e orbes de fuligem por alguns segundos. Ensinado pela Profa. Amélia.",
     "target": "nenhum",
@@ -34,6 +38,7 @@
   },
   "abrir": {
     "name": "Abrir",
+    "tecla": "P",
     "kind": "principal",
     "description": "Destranca portas encantadas. Uma chave feita de estrelas.",
     "target": "trancado",
@@ -42,6 +47,7 @@
   },
   "fogos-bruxos": {
     "name": "Fogos Bruxos",
+    "tecla": "G",
     "kind": "extra",
     "description": "Feitiço extra. Solta fogos coloridos. Inútil? Talvez. Divertido? Muito.",
     "target": "nenhum",
@@ -50,6 +56,7 @@
   },
   "passo-de-vento": {
     "name": "Passo de Vento",
+    "tecla": "H",
     "kind": "extra",
     "description": "Feitiço extra. Por alguns segundos, seus pés quase não tocam o chão.",
     "target": "nenhum",
@@ -59,6 +66,7 @@
   },
   "onda-de-luz": {
     "name": "Onda de Luz",
+    "tecla": "J",
     "kind": "extra",
     "description": "Feitiço extra, prêmio da aula do Prof. Hector Tallun. Um anel de luz sai de você e acerta tudo em volta: espanta sombras e acende velas.",
     "target": "nenhum",
@@ -68,6 +76,7 @@
   },
   "estrela-guia": {
     "name": "Estrela-Guia",
+    "tecla": "K",
     "kind": "extra",
     "description": "Feitiço extra, prêmio da aula da Profa. Sibila Trelane. Estrelinhas mostram o caminho do seu objetivo por alguns segundos.",
     "target": "nenhum",
@@ -77,6 +86,7 @@
   },
   "zaparatar": {
     "name": "Zaparatar",
+    "tecla": "L",
     "kind": "extra",
     "description": "Feitiço extra, prêmio de quem vence os desafios das seis salas da Ala dos Professores. Leva você na hora para qualquer sala do castelo que você já visitou.",
     "target": "nenhum",
@@ -86,6 +96,7 @@
   },
   "apanha-luz": {
     "name": "Apanha-Luz",
+    "tecla": "Y",
     "kind": "principal",
     "description": "Artefato do Ministro Bonfatti. De frente para uma vela acesa, guarda a luz dela (até 3). Para uma apagada, devolve a luz. Longe de velas, solta uma bolinha de luz que fica acesa na sala.",
     "target": "nenhum",

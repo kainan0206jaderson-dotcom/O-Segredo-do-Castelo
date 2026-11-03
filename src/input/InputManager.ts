@@ -23,9 +23,12 @@ export class InputManager {
   private navQueued = 0;
   private navHQueued = 0;
   private spellQueued = false;
+  private letterQueued: string | null = null;
   private menuQueued = false;
   private mapQueued = false;
   private static readonly RADIUS = 28;
+  /** Letras que já têm função: andar (WASD), ação (E), trocar feitiço (Q), mapa (M) e bolsa (I). */
+  static readonly RESERVED = ['KeyW', 'KeyA', 'KeyS', 'KeyD', 'KeyE', 'KeyQ', 'KeyM', 'KeyI'];
 
   constructor(private scene: Phaser.Scene, opts: { touchControls?: boolean } = {}) {
     const kb = scene.input.keyboard!;
@@ -56,6 +59,8 @@ export class InputManager {
       if (['ArrowLeft', 'KeyA'].includes(e.code)) this.navHQueued = -1;
       if (['ArrowRight', 'KeyD'].includes(e.code)) this.navHQueued = 1;
       if (e.code === 'KeyQ') this.spellQueued = true;
+      // as outras letras ficam guardadas para as teclas de cada feitiço (R, T, Y, U...)
+      if (/^Key[A-Z]$/.test(e.code) && !InputManager.RESERVED.includes(e.code)) this.letterQueued = e.code.slice(3);
       if (e.code === 'KeyM') this.mapQueued = true;
       if (['KeyI', 'Tab', 'Escape'].includes(e.code)) {
         this.menuQueued = true;
@@ -148,6 +153,13 @@ export class InputManager {
     const p = this.spellQueued;
     this.spellQueued = false;
     return p;
+  }
+
+  /** Última letra livre apertada (ex.: "R"), uma vez por toque. Usada nas teclas dos feitiços. */
+  letterPressed(): string | null {
+    const l = this.letterQueued;
+    this.letterQueued = null;
+    return l;
   }
 
   /** M: abrir o Mapa dos Segredos (se o aprendiz tiver). */

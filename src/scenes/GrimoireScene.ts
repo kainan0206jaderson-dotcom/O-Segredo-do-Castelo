@@ -11,7 +11,7 @@ import { flash } from '../ui/fx';
 import { audio } from '../audio/Audio';
 import { nomeAprendiz } from '../core/aparencia';
 
-type Entry = { icon?: string; title: string; detail: string; muted?: boolean; use?: string; count?: number };
+type Entry = { icon?: string; title: string; detail: string; muted?: boolean; use?: string; count?: number; tecla?: string };
 const TABS = ['Aprendiz', 'Bolsa', 'Feitiços', 'Receitas', 'Missões'] as const;
 const TAB_ICON = ['poder', 'bolsa', 'varinha', 'drink-fumegante', 'grimorio'];
 const BOLSA = 1;
@@ -207,7 +207,13 @@ export class GrimoireScene extends Phaser.Scene {
           return { icon: id, title: `${it?.name ?? id}${n > 1 ? ` ×${n}` : ''}${worn ? ' (vestindo)' : ''}`, detail: it?.description ?? '', use, count: n };
         });
       case 'Feitiços': {
-        const known = s.spells.map((id) => ({ icon: icon(id) ? id : db.spells[id].icon ?? id, title: db.spells[id].name + (db.spells[id].kind === 'extra' ? ' ★' : ''), detail: db.spells[id].description }));
+        // no teclado, cada feitiço tem a sua tecla; no celular continua a estrela + troca no canto
+        const keys = !InputManager.isTouchDevice(this);
+        const known = s.spells.map((id) => {
+          const sp = db.spells[id];
+          const tecla = keys ? sp.tecla : undefined;
+          return { icon: icon(id) ? id : sp.icon ?? id, title: sp.name + (sp.kind === 'extra' ? ' ★' : ''), detail: sp.description + (tecla ? `\n\nTecla para lançar: ${tecla}` : ''), tecla };
+        });
         const extrasLeft = Object.entries(db.challenges)
           .filter(([id, c]) => !s.challenges[id]?.done && c.reward.some((e) => 'learnSpell' in e))
           .map(([, c]) => ({ icon: 'bloqueado', title: '???', detail: `Feitiço extra. Vença o desafio "${c.title}" para aprender.`, muted: true }));
@@ -304,6 +310,13 @@ export class GrimoireScene extends Phaser.Scene {
         if (ic) add(this.add.image(lx + 18, y + ROW_H / 2 - 1, ic.key, ic.frame).setScale(ic.k * 0.68).setAlpha(e.muted ? 0.5 : 1));
         add(this.add.text(lx + (ic ? 34 : 12), y + ROW_H / 2 - 1, e.title, textStyle(11, on ? GOLD : e.muted ? '#9a8470' : '#f0e2c8'))
           .setOrigin(0, 0.5).setResolution(TEXT_RES));
+        if (e.tecla) {
+          // teclinha no fim da linha, como uma tecla de verdade
+          const kx = lx + lw - 20;
+          const ky = y + ROW_H / 2 - 1;
+          add(this.add.rectangle(kx, ky, 15, 14, 0x24140c).setStrokeStyle(1, on ? 0xe2b450 : 0x8a6a48));
+          add(this.add.text(kx, ky, e.tecla, textStyle(9, on ? GOLD : '#f0e2c8', { fontStyle: 'bold' })).setOrigin(0.5).setResolution(TEXT_RES));
+        }
       });
     }
 
