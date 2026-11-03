@@ -4,7 +4,7 @@ import { newGame, type GameState } from '../src/core/GameState';
 import { session } from '../src/core/session';
 import { noGenero } from '../src/core/aparencia';
 import { DialogueRunner } from '../src/systems/DialogueRunner';
-import { apply, check, PANTRY_RESTOCK_MS, takeFromPantry, tickQuests } from '../src/systems/rules';
+import { apply, check, PANTRY_RESTOCK_MS, PANTRY_URGENT_MS, takeFromPantry, tickQuests } from '../src/systems/rules';
 import type { AssetManifest } from '../src/core/AssetRegistry';
 import { prop } from '../src/core/tiled';
 import { db, dialogues } from './content-load';
@@ -122,6 +122,19 @@ describe('despensa da cozinha', () => {
     expect(vazia.readyInMs).toBe(PANTRY_RESTOCK_MS);
     s.playTimeMs += PANTRY_RESTOCK_MS;
     expect(takeFromPantry(s, db, gives).notices.map((n) => n.ref)).toEqual(['abobora']);
+  });
+
+  it('o ingrediente que a missão pede volta logo (gelo seco da cerveja)', () => {
+    const s = newGame('map.cozinha', 'inicio');
+    const gives = ['abobora', 'gelo-seco'];
+    takeFromPantry(s, db, gives);
+    apply({ takeItem: 'gelo-seco' }, s, db); // gasto no drink
+    s.quests['chaves-do-trinco'] = { stage: 'fazer-cerveja', done: false };
+    const r = takeFromPantry(s, db, gives);
+    expect(r.notices).toHaveLength(0);
+    expect(r.readyInMs).toBe(PANTRY_URGENT_MS);
+    s.playTimeMs += PANTRY_URGENT_MS;
+    expect(takeFromPantry(s, db, gives).notices.map((n) => n.ref)).toEqual(['gelo-seco']);
   });
 });
 

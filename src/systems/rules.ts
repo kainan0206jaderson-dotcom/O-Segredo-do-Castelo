@@ -240,6 +240,8 @@ export function spellAffects(db: ContentDb, spellId: string, targetKind: string)
 
 /** Tempo (de jogo) que a Dona Brasa leva para repor um ingrediente da despensa. */
 export const PANTRY_RESTOCK_MS = 180000;
+/** Ingrediente que a missão atual pede (ex.: gelo seco da Cerveja de Abóbora) volta bem antes. */
+export const PANTRY_URGENT_MS = 15000;
 
 /**
  * Despensa da cozinha: dá 1 de cada ingrediente que não está na bolsa e já foi reposto.
@@ -250,10 +252,13 @@ export const PANTRY_RESTOCK_MS = 180000;
 export function takeFromPantry(s: GameState, db: ContentDb, gives: string[]): { notices: Notice[]; readyInMs: number } {
   const notices: Notice[] = [];
   let readyInMs = 0;
+  const wanted = wantedRecipe(s, db);
+  const urgent = wanted ? Object.keys(db.recipes[wanted].ingredients) : [];
   for (const id of gives) {
     if (s.inventory[id]) continue;
     const at = s.flags[`despensa:${id}`];
-    const wait = typeof at === 'number' ? PANTRY_RESTOCK_MS - (s.playTimeMs - at) : 0;
+    const restock = urgent.includes(id) ? PANTRY_URGENT_MS : PANTRY_RESTOCK_MS;
+    const wait = typeof at === 'number' ? restock - (s.playTimeMs - at) : 0;
     if (wait > 0) {
       readyInMs = readyInMs ? Math.min(readyInMs, wait) : wait;
       continue;

@@ -8,7 +8,7 @@ import { db } from '../content';
 import { COLORS, TEXT_RES, textStyle } from '../ui/theme';
 import { flash } from '../ui/fx';
 import { audio } from '../audio/Audio';
-import { noGenero } from '../core/aparencia';
+import { nomeAprendiz, noGenero } from '../core/aparencia';
 import { playerSheet } from '../core/aparencia';
 
 /** Quem sobe ao palco na cerimônia final, da esquerda para a direita. */
@@ -93,6 +93,9 @@ export class EndingScene extends Phaser.Scene {
     });
     const outfit = session.state.equipment.capa ? db.items[session.state.equipment.capa]?.sheet : undefined;
     this.actor(playerSheet(outfit ?? 'player.aprendiz'), x0 + 3 * gap, y, 1900, true);
+    // o aprendiz também ganha o nome embaixo, em dourado, como os outros do elenco
+    this.add.text(x0 + 3 * gap, y + 6, nomeAprendiz(), textStyle(7, COLORS.gold)).setOrigin(0.5, 0).setResolution(TEXT_RES)
+      .setAlpha(0).setData('fade', 1900);
     this.children.list.filter((o) => o.getData('fade') !== undefined).forEach((o) =>
       this.tweens.add({ targets: o, alpha: 1, duration: 400, delay: o.getData('fade') as number }));
 
@@ -120,7 +123,7 @@ export class EndingScene extends Phaser.Scene {
     if (this.step === CEREMONY.length - 1) {
       audio.sfx('nivel');
       flash(this.cameras.main, 600, 250, 214, 92);
-      const title = this.add.text(GAME_WIDTH / 2, 100, 'GUARDIÃO DO CASTELO', textStyle(18, COLORS.gold, { fontStyle: 'bold' }))
+      const title = this.add.text(GAME_WIDTH / 2, 100, noGenero('{GUARDIÃO|GUARDIÃ} DO CASTELO'), textStyle(18, COLORS.gold, { fontStyle: 'bold' }))
         .setOrigin(0.5).setResolution(TEXT_RES).setScale(0.6).setAlpha(0);
       this.tweens.add({ targets: title, alpha: 1, scale: 1, duration: 700, ease: 'Back.out' });
     }
