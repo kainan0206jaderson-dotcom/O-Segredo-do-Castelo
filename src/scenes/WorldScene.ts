@@ -18,7 +18,7 @@ import { ChallengeRunner } from '../systems/ChallengeRunner';
 import {
   apply, check, currentObjective, currentStage, cycleSpell, stageObjective, guideTarget, seenTutorial, spellAffects, takeFromPantry, tickQuests, type Notice,
 } from '../systems/rules';
-import { clampVitals, hurt, restoreEnergy, spendEnergy, stats } from '../systems/progression';
+import { clampVitals, heal, hurt, restoreEnergy, spendEnergy, stats } from '../systems/progression';
 import type { Condition, DialogueDef } from '../types/content';
 import { DialogueBox } from '../ui/DialogueBox';
 import { Hud } from '../ui/Hud';
@@ -1470,7 +1470,12 @@ export class WorldScene extends Phaser.Scene {
       ch.hitTarget(c.group, session.state, db);
       if (ch.status === 'running') {
         this.wave += 1;
-        this.hud.notify('Próxima leva!');
+        // fôlego entre as levas: o Prof. Mustaffa devolve a energia e um coração
+        const st = stats(session.state, db);
+        restoreEnergy(session.state, db, st.energiaMax);
+        heal(session.state, db, 1);
+        this.refreshHud();
+        this.hud.notify('Próxima leva! Energia de volta e +1 coração.');
         this.time.delayedCall(900, () => this.activateWave());
       }
       return;

@@ -37,7 +37,8 @@ export class ModoScene extends Phaser.Scene {
   create(): void {
     this.modo = session.state.modo ?? 'kids';
     this.leaving = false;
-    this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x0c0a1c, 0.94).setOrigin(0).setInteractive();
+    // fundo inteiro: a tela anterior (Menino/Menina, Voltar/OK) não aparece por trás
+    this.add.rectangle(0, 0, GAME_WIDTH, GAME_HEIGHT, 0x0c0a1c, 1).setOrigin(0).setInteractive();
     this.add.text(GAME_WIDTH / 2, 40, 'Como você quer jogar?', textStyle(13, COLORS.text)).setOrigin(0.5).setResolution(TEXT_RES);
     const w = 170;
     const h = 130;
