@@ -2033,6 +2033,7 @@ export class WorldScene extends Phaser.Scene {
       this.guide?.hide();
       this.dialogueBox.update(delta);
       if (!this.dialogueBox.typing) this.talkingTo?.setTalking(false);
+      this.controls.letterPressed(); // tecla de feitiço apertada na conversa não fica guardada para depois
       const nav = this.controls.navPressed();
       if (nav) this.dialogueBox.moveSelection(nav);
       if (this.controls.actionPressed()) {

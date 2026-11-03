@@ -212,7 +212,7 @@ export class GrimoireScene extends Phaser.Scene {
         const known = s.spells.map((id) => {
           const sp = db.spells[id];
           const tecla = keys ? sp.tecla : undefined;
-          return { icon: icon(id) ? id : sp.icon ?? id, title: sp.name + (sp.kind === 'extra' ? ' ★' : ''), detail: sp.description + (tecla ? `\n\nTecla para lançar: ${tecla}` : ''), tecla };
+          return { icon: icon(id) ? id : sp.icon ?? id, title: sp.name + (sp.kind === 'extra' ? ' ★' : ''), detail: sp.description + (tecla ? `\n\nTecla para lançar: ${tecla.replace('+', ' + ')}` : ''), tecla };
         });
         const extrasLeft = Object.entries(db.challenges)
           .filter(([id, c]) => !s.challenges[id]?.done && c.reward.some((e) => 'learnSpell' in e))
@@ -312,10 +312,13 @@ export class GrimoireScene extends Phaser.Scene {
           .setOrigin(0, 0.5).setResolution(TEXT_RES));
         if (e.tecla) {
           // teclinha no fim da linha, como uma tecla de verdade
-          const kx = lx + lw - 20;
+          // extra: Shift + a letra do feitiço principal, desenhado como ⇧R numa tecla mais larga
+          const label = e.tecla.replace('Shift+', '⇧');
+          const kw = label.length > 1 ? 23 : 15;
+          const kx = lx + lw - 12 - kw / 2;
           const ky = y + ROW_H / 2 - 1;
-          add(this.add.rectangle(kx, ky, 15, 14, 0x24140c).setStrokeStyle(1, on ? 0xe2b450 : 0x8a6a48));
-          add(this.add.text(kx, ky, e.tecla, textStyle(9, on ? GOLD : '#f0e2c8', { fontStyle: 'bold' })).setOrigin(0.5).setResolution(TEXT_RES));
+          add(this.add.rectangle(kx, ky, kw, 14, 0x24140c).setStrokeStyle(1, on ? 0xe2b450 : 0x8a6a48));
+          add(this.add.text(kx, ky, label, textStyle(9, on ? GOLD : '#f0e2c8', { fontStyle: 'bold' })).setOrigin(0.5).setResolution(TEXT_RES));
         }
       });
     }

@@ -59,8 +59,11 @@ export class InputManager {
       if (['ArrowLeft', 'KeyA'].includes(e.code)) this.navHQueued = -1;
       if (['ArrowRight', 'KeyD'].includes(e.code)) this.navHQueued = 1;
       if (e.code === 'KeyQ') this.spellQueued = true;
-      // as outras letras ficam guardadas para as teclas de cada feitiço (R, T, Y, U...)
-      if (/^Key[A-Z]$/.test(e.code) && !InputManager.RESERVED.includes(e.code)) this.letterQueued = e.code.slice(3);
+      // as outras letras ficam guardadas para as teclas de cada feitiço (R, T, Y, U...);
+      // com Shift, a mesma letra lança o feitiço extra que divide a tecla (Shift+R...)
+      if (/^Key[A-Z]$/.test(e.code) && !InputManager.RESERVED.includes(e.code)) {
+        this.letterQueued = (e.shiftKey ? 'Shift+' : '') + e.code.slice(3);
+      }
       if (e.code === 'KeyM') this.mapQueued = true;
       if (['KeyI', 'Tab', 'Escape'].includes(e.code)) {
         this.menuQueued = true;
@@ -155,7 +158,7 @@ export class InputManager {
     return p;
   }
 
-  /** Última letra livre apertada (ex.: "R"), uma vez por toque. Usada nas teclas dos feitiços. */
+  /** Última letra livre apertada (ex.: "R" ou "Shift+R"), uma vez por toque. Usada nas teclas dos feitiços. */
   letterPressed(): string | null {
     const l = this.letterQueued;
     this.letterQueued = null;
