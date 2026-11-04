@@ -6,6 +6,8 @@ export type Condition =
   | { flag: string; eq?: FlagValue }
   /** Flag numérica (contador) com valor mínimo. */
   | { flagAtLeast: string; n: number }
+  /** Flag numérica que empata ou passa todas as outras da lista (ex.: casa com mais pontos no quiz do chapéu). */
+  | { flagMax: string; of: string[] }
   | { questStage: string; stage: string }
   | { questDone: string }
   | { questActive: string }
@@ -26,6 +28,8 @@ export type Condition =
 
 export type Effect =
   | { setFlag: string; value: FlagValue }
+  /** Soma n (padrão 1) a uma flag numérica (contador). */
+  | { addFlag: string; n?: number }
   | { giveItem: string; count?: number }
   | { takeItem: string; count?: number }
   | { startQuest: string }

@@ -31,6 +31,10 @@ export function check(cond: Condition | undefined, s: GameState): boolean {
   if ('any' in cond) return cond.any.some((c) => check(c, s));
   if ('not' in cond) return !check(cond.not, s);
   if ('flagAtLeast' in cond) return Number(s.flags[cond.flagAtLeast] ?? 0) >= cond.n;
+  if ('flagMax' in cond) {
+    const mine = Number(s.flags[cond.flagMax] ?? 0);
+    return cond.of.every((f) => mine >= Number(s.flags[f] ?? 0));
+  }
   if ('flag' in cond) return cond.eq === undefined ? Boolean(s.flags[cond.flag]) : s.flags[cond.flag] === cond.eq;
   if ('questStage' in cond) {
     const q = s.quests[cond.questStage];
@@ -55,6 +59,10 @@ export function check(cond: Condition | undefined, s: GameState): boolean {
 export function apply(effect: Effect, s: GameState, db: ContentDb): Notice[] {
   if ('setFlag' in effect) {
     s.flags[effect.setFlag] = effect.value;
+    return [];
+  }
+  if ('addFlag' in effect) {
+    s.flags[effect.addFlag] = Number(s.flags[effect.addFlag] ?? 0) + (effect.n ?? 1);
     return [];
   }
   if ('giveItem' in effect) {
