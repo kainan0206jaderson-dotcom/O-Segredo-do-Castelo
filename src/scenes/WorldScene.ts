@@ -742,11 +742,19 @@ export class WorldScene extends Phaser.Scene {
     this.hud.setVitals({ vida: s.vida, vidaMax: st.vidaMax, energia: s.energia, energiaMax: st.energiaMax, level: s.level });
   }
 
-  /** Chapéu das Virtudes desce flutuando até a cabeça do aprendiz. */
-  private putHat(): void {
-    if (this.hat) return;
+  /**
+   * Chapéu das Virtudes desce flutuando até a cabeça do aprendiz. Com uma casa
+   * ("chapeu:coragem", no fim do quiz), ele já fica com a cor dela; sem casa, volta ao normal.
+   */
+  private putHat(house?: string): void {
+    if (this.hat) {
+      if (house) this.hat.setTint(HOUSE_COLORS[house] ?? 0xfad65c);
+      else this.hat.clearTint();
+      return;
+    }
     const top = this.player.y - this.player.height;
     this.hat = this.add.image(this.player.x, top - 20, 'prop.chapeu').setOrigin(0.5, 1).setDepth(this.player.depth + 1).setAlpha(0);
+    if (house) this.hat.setTint(HOUSE_COLORS[house] ?? 0xfad65c);
     this.tweens.add({ targets: this.hat, y: top + 5, alpha: 1, duration: 600, ease: 'Sine.out' });
     audio.sfx('confirmar');
   }
@@ -1774,7 +1782,7 @@ export class WorldScene extends Phaser.Scene {
     this.refreshPresence(true);
     this.applyOutfit();
     const view = this.dialogue?.view();
-    if (view?.cena === 'chapeu') this.putHat();
+    if (view?.cena?.startsWith('chapeu')) this.putHat(view.cena.split(':')[1]);
     if (!view) {
       this.endDialogue();
       return;

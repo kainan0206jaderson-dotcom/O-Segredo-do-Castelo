@@ -67,12 +67,27 @@
       "kids": "A Diretora Merlina e os professores sumiram na Ala, e alguém está apagando as velas. Vamos descobrir quem!"
     },
     "chapeu": {
-      "text": "Antes, uma tradição do castelo: o Chapéu das Virtudes. Ele não escolhe por ninguém... só brilha com a cor da virtude que você disser de coração.",
+      "text": "Antes, uma tradição do castelo: o Chapéu das Virtudes. Ele não escolhe por ninguém... só brilha com a cor da virtude que mora no seu coração.",
       "cena": "chapeu",
       "next": "casa"
     },
     "casa": {
-      "text": "Todo aprendiz senta a uma das quatro mesas do Grande Salão. Com o chapéu na cabeça, me diga: qual virtude fala mais alto em você?",
+      "text": "Todo aprendiz senta a uma das quatro mesas do Grande Salão. O chapéu pode fazer umas perguntas para descobrir a sua... ou você mesm{o|a} me diz qual virtude fala mais alto.",
+      "cena": "chapeu",
+      "choices": [
+        {
+          "text": "Responder às perguntas do chapéu",
+          "next": "quiz-inicio"
+        },
+        {
+          "text": "Escolher a mesa eu mesm{o|a}",
+          "next": "casa-manual"
+        }
+      ]
+    },
+    "casa-manual": {
+      "text": "Pois bem. Com o chapéu na cabeça, me diga: qual virtude fala mais alto em você?",
+      "cena": "chapeu",
       "choices": [
         {
           "text": "Coragem",
@@ -121,9 +136,411 @@
               "equip": "capa-inteligencia"
             }
           ]
+        },
+        {
+          "text": "Prefiro responder às perguntas",
+          "next": "quiz-inicio"
+        }
+      ]
+    },
+    "quiz-inicio": {
+      "speaker": "Chapéu das Virtudes",
+      "text": "Hmmm... uma cabeça nova! Cinco perguntas, aprendiz. Responda de coração: aqui não existe resposta errada.",
+      "cena": "chapeu",
+      "effects": [
+        {
+          "setFlag": "quiz:coragem",
+          "value": 0
+        },
+        {
+          "setFlag": "quiz:astucia",
+          "value": 0
+        },
+        {
+          "setFlag": "quiz:lealdade",
+          "value": 0
+        },
+        {
+          "setFlag": "quiz:inteligencia",
+          "value": 0
         }
       ],
-      "cena": "chapeu"
+      "next": "quiz-1"
+    },
+    "quiz-1": {
+      "speaker": "Chapéu das Virtudes",
+      "text": "Primeira: uma vela se apaga no meio do corredor escuro. O que você faz?",
+      "cena": "chapeu",
+      "choices": [
+        {
+          "text": "Vou na frente, mesmo com um pouco de medo.",
+          "next": "quiz-2",
+          "effects": [
+            {
+              "addFlag": "quiz:coragem"
+            }
+          ]
+        },
+        {
+          "text": "Paro para entender por que ela apagou.",
+          "next": "quiz-2",
+          "effects": [
+            {
+              "addFlag": "quiz:inteligencia"
+            }
+          ]
+        },
+        {
+          "text": "Procuro um caminho mais iluminado.",
+          "next": "quiz-2",
+          "effects": [
+            {
+              "addFlag": "quiz:astucia"
+            }
+          ]
+        },
+        {
+          "text": "Seguro a mão de quem estiver comigo.",
+          "next": "quiz-2",
+          "effects": [
+            {
+              "addFlag": "quiz:lealdade"
+            }
+          ]
+        }
+      ]
+    },
+    "quiz-2": {
+      "speaker": "Chapéu das Virtudes",
+      "text": "Segunda: na Biblioteca, um livro fujão sai voando da estante. E agora?",
+      "cena": "chapeu",
+      "choices": [
+        {
+          "text": "Ajudo o Prof. Aristóteles a segurar os outros.",
+          "next": "quiz-3",
+          "effects": [
+            {
+              "addFlag": "quiz:lealdade"
+            }
+          ]
+        },
+        {
+          "text": "Pulo e agarro o livro no ar!",
+          "next": "quiz-3",
+          "effects": [
+            {
+              "addFlag": "quiz:coragem"
+            }
+          ]
+        },
+        {
+          "text": "Fecho as janelas e espero ele cansar.",
+          "next": "quiz-3",
+          "effects": [
+            {
+              "addFlag": "quiz:astucia"
+            }
+          ]
+        },
+        {
+          "text": "Leio o título antes que ele escape.",
+          "next": "quiz-3",
+          "effects": [
+            {
+              "addFlag": "quiz:inteligencia"
+            }
+          ]
+        }
+      ]
+    },
+    "quiz-3": {
+      "speaker": "Chapéu das Virtudes",
+      "text": "Terceira: a Dona Brasa precisa de ajuda na cozinha, e a festa já vai começar.",
+      "cena": "chapeu",
+      "choices": [
+        {
+          "text": "Leio a receita duas vezes antes de mexer.",
+          "next": "quiz-4",
+          "effects": [
+            {
+              "addFlag": "quiz:inteligencia"
+            }
+          ]
+        },
+        {
+          "text": "Fico até o último prato sair.",
+          "next": "quiz-4",
+          "effects": [
+            {
+              "addFlag": "quiz:lealdade"
+            }
+          ]
+        },
+        {
+          "text": "Encaro o caldeirão que ninguém quer encarar.",
+          "next": "quiz-4",
+          "effects": [
+            {
+              "addFlag": "quiz:coragem"
+            }
+          ]
+        },
+        {
+          "text": "Invento um jeito de terminar na metade do tempo.",
+          "next": "quiz-4",
+          "effects": [
+            {
+              "addFlag": "quiz:astucia"
+            }
+          ]
+        }
+      ]
+    },
+    "quiz-4": {
+      "speaker": "Chapéu das Virtudes",
+      "text": "Quarta: um quadro vivo te desafia para uma charada bem difícil.",
+      "cena": "chapeu",
+      "choices": [
+        {
+          "text": "Procuro uma pista escondida na moldura.",
+          "next": "quiz-5",
+          "effects": [
+            {
+              "addFlag": "quiz:astucia"
+            }
+          ]
+        },
+        {
+          "text": "Penso com calma até achar a resposta.",
+          "next": "quiz-5",
+          "effects": [
+            {
+              "addFlag": "quiz:inteligencia"
+            }
+          ]
+        },
+        {
+          "text": "Chamo um amigo para pensarmos juntos.",
+          "next": "quiz-5",
+          "effects": [
+            {
+              "addFlag": "quiz:lealdade"
+            }
+          ]
+        },
+        {
+          "text": "Aceito na hora, sem pensar duas vezes!",
+          "next": "quiz-5",
+          "effects": [
+            {
+              "addFlag": "quiz:coragem"
+            }
+          ]
+        }
+      ]
+    },
+    "quiz-5": {
+      "speaker": "Chapéu das Virtudes",
+      "text": "Última, e a que pesa mais: o que você quer levar desta noite no castelo?",
+      "cena": "chapeu",
+      "choices": [
+        {
+          "text": "Uma aventura para contar a vida inteira.",
+          "next": "quiz-fim",
+          "effects": [
+            {
+              "addFlag": "quiz:coragem",
+              "n": 1.5
+            }
+          ]
+        },
+        {
+          "text": "Amigos para a vida inteira.",
+          "next": "quiz-fim",
+          "effects": [
+            {
+              "addFlag": "quiz:lealdade",
+              "n": 1.5
+            }
+          ]
+        },
+        {
+          "text": "Tudo o que eu puder aprender.",
+          "next": "quiz-fim",
+          "effects": [
+            {
+              "addFlag": "quiz:inteligencia",
+              "n": 1.5
+            }
+          ]
+        },
+        {
+          "text": "Um segredo que mais ninguém sabe.",
+          "next": "quiz-fim",
+          "effects": [
+            {
+              "addFlag": "quiz:astucia",
+              "n": 1.5
+            }
+          ]
+        }
+      ]
+    },
+    "quiz-fim": {
+      "speaker": "Chapéu das Virtudes",
+      "text": "Hmmm... hmmm! Já sei. Suas respostas brilham todas para o mesmo lado...",
+      "cena": "chapeu",
+      "nextIf": [
+        {
+          "when": {
+            "flagMax": "quiz:coragem",
+            "of": [
+              "quiz:astucia",
+              "quiz:lealdade",
+              "quiz:inteligencia"
+            ]
+          },
+          "next": "quiz-coragem"
+        },
+        {
+          "when": {
+            "flagMax": "quiz:astucia",
+            "of": [
+              "quiz:coragem",
+              "quiz:lealdade",
+              "quiz:inteligencia"
+            ]
+          },
+          "next": "quiz-astucia"
+        },
+        {
+          "when": {
+            "flagMax": "quiz:lealdade",
+            "of": [
+              "quiz:coragem",
+              "quiz:astucia",
+              "quiz:inteligencia"
+            ]
+          },
+          "next": "quiz-lealdade"
+        },
+        {
+          "when": {
+            "flagMax": "quiz:inteligencia",
+            "of": [
+              "quiz:coragem",
+              "quiz:astucia",
+              "quiz:lealdade"
+            ]
+          },
+          "next": "quiz-inteligencia"
+        }
+      ],
+      "next": "casa-manual"
+    },
+    "quiz-coragem": {
+      "text": "Olhe só! O chapéu brilhou vermelho: Coragem! Quer sentar à mesa da Coragem?",
+      "cena": "chapeu:coragem",
+      "choices": [
+        {
+          "text": "Sim, a mesa da Coragem!",
+          "next": "casa-coragem",
+          "effects": [
+            {
+              "setHouse": "coragem"
+            },
+            {
+              "equip": "capa-coragem"
+            }
+          ]
+        },
+        {
+          "text": "Refazer as perguntas",
+          "next": "quiz-inicio"
+        },
+        {
+          "text": "Escolher a mesa eu mesm{o|a}",
+          "next": "casa-manual"
+        }
+      ]
+    },
+    "quiz-astucia": {
+      "text": "Olhe só! O chapéu brilhou verde: Astúcia! Quer sentar à mesa da Astúcia?",
+      "cena": "chapeu:astucia",
+      "choices": [
+        {
+          "text": "Sim, a mesa da Astúcia!",
+          "next": "casa-astucia",
+          "effects": [
+            {
+              "setHouse": "astucia"
+            },
+            {
+              "equip": "capa-astucia"
+            }
+          ]
+        },
+        {
+          "text": "Refazer as perguntas",
+          "next": "quiz-inicio"
+        },
+        {
+          "text": "Escolher a mesa eu mesm{o|a}",
+          "next": "casa-manual"
+        }
+      ]
+    },
+    "quiz-lealdade": {
+      "text": "Olhe só! O chapéu brilhou amarelo: Lealdade! Quer sentar à mesa da Lealdade?",
+      "cena": "chapeu:lealdade",
+      "choices": [
+        {
+          "text": "Sim, a mesa da Lealdade!",
+          "next": "casa-lealdade",
+          "effects": [
+            {
+              "setHouse": "lealdade"
+            },
+            {
+              "equip": "capa-lealdade"
+            }
+          ]
+        },
+        {
+          "text": "Refazer as perguntas",
+          "next": "quiz-inicio"
+        },
+        {
+          "text": "Escolher a mesa eu mesm{o|a}",
+          "next": "casa-manual"
+        }
+      ]
+    },
+    "quiz-inteligencia": {
+      "text": "Olhe só! O chapéu brilhou azul: Inteligência! Quer sentar à mesa da Inteligência?",
+      "cena": "chapeu:inteligencia",
+      "choices": [
+        {
+          "text": "Sim, a mesa da Inteligência!",
+          "next": "casa-inteligencia",
+          "effects": [
+            {
+              "setHouse": "inteligencia"
+            },
+            {
+              "equip": "capa-inteligencia"
+            }
+          ]
+        },
+        {
+          "text": "Refazer as perguntas",
+          "next": "quiz-inicio"
+        },
+        {
+          "text": "Escolher a mesa eu mesm{o|a}",
+          "next": "casa-manual"
+        }
+      ]
     },
     "levitar": {
       "text": "E para quem vai andar pelo castelo, um feitiço muito útil. Segure a varinha bem leve, como uma pena... LEVITAR!",

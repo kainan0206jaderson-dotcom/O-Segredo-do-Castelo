@@ -230,8 +230,9 @@ def castle(w=240, h=210):
     for wx in (52, 70, 88, 146, 164, 182):
         window(wx, 110)
         window(wx, 140)
-    # bandeiras das quatro casas
-    for i, c in enumerate(((176, 40, 44), (44, 86, 170), (40, 134, 82), (206, 160, 44))):
+    # bandeiras das quatro casas, na ordem das mesas do Grande Salão [KAINAN]:
+    # vermelho (Coragem), verde (Astúcia), amarelo (Lealdade), azul (Inteligência)
+    for i, c in enumerate(((176, 40, 44), (40, 134, 82), (206, 160, 44), (44, 86, 170))):
         bx = 58 + i * 36 if i < 2 else 58 + i * 36 + 12
         d.rectangle([bx, 100, bx + 7, 118], fill=c)
         d.polygon([(bx, 119), (bx + 7, 119), (bx + 3, 123)], fill=c)
