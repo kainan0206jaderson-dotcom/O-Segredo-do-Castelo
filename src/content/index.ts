@@ -8,12 +8,16 @@ import challenges from '../../content/challenges.json';
 import houses from '../../content/houses.json';
 import progression from '../../content/progression.json';
 import tutorials from '../../content/tutorials.json';
+import quizChapeu from '../../content/quiz-chapeu.json';
+import { montarQuiz, type QuizDef } from '../systems/quizChapeu';
 
 const dialogueFiles = import.meta.glob<DialogueDef>('../../content/dialogues/*.json', { eager: true, import: 'default' });
 
 export const dialogues: Record<string, DialogueDef> = Object.fromEntries(
   Object.values(dialogueFiles).map((d) => [d.id, d]),
 );
+// o banco de perguntas do Chapéu das Virtudes entra no diálogo do Ministro
+dialogues.arquimedes = montarQuiz(dialogues.arquimedes, quizChapeu as QuizDef);
 
 export const db: ContentDb = {
   quests: quests as Record<string, QuestDef>,

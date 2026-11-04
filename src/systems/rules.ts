@@ -3,6 +3,7 @@ import type {
   ChallengeDef, Condition, Effect, HouseDef, ItemDef, ProgressionDef, QuestDef, QuestStageDef, RecipeDef, SpellDef, TutorialDef,
 } from '../types/content';
 import { addXp, clampVitals, heal, restoreEnergy } from './progression';
+import { proximaPergunta, resultadoQuiz, sortearQuiz } from './quizChapeu';
 
 export interface ContentDb {
   quests: Record<string, QuestDef>;
@@ -31,10 +32,6 @@ export function check(cond: Condition | undefined, s: GameState): boolean {
   if ('any' in cond) return cond.any.some((c) => check(c, s));
   if ('not' in cond) return !check(cond.not, s);
   if ('flagAtLeast' in cond) return Number(s.flags[cond.flagAtLeast] ?? 0) >= cond.n;
-  if ('flagMax' in cond) {
-    const mine = Number(s.flags[cond.flagMax] ?? 0);
-    return cond.of.every((f) => mine >= Number(s.flags[f] ?? 0));
-  }
   if ('flag' in cond) return cond.eq === undefined ? Boolean(s.flags[cond.flag]) : s.flags[cond.flag] === cond.eq;
   if ('questStage' in cond) {
     const q = s.quests[cond.questStage];
@@ -63,6 +60,18 @@ export function apply(effect: Effect, s: GameState, db: ContentDb): Notice[] {
   }
   if ('addFlag' in effect) {
     s.flags[effect.addFlag] = Number(s.flags[effect.addFlag] ?? 0) + (effect.n ?? 1);
+    return [];
+  }
+  if ('quizSortear' in effect) {
+    sortearQuiz(s, effect.quizSortear, effect.quantas);
+    return [];
+  }
+  if ('quizProxima' in effect) {
+    proximaPergunta(s);
+    return [];
+  }
+  if ('quizResultado' in effect) {
+    resultadoQuiz(s);
     return [];
   }
   if ('giveItem' in effect) {

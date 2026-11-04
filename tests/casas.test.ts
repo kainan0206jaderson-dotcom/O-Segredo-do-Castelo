@@ -4,6 +4,7 @@ import { db, dialogues } from './content-load';
 import { newGame } from '../src/core/GameState';
 import { DialogueRunner } from '../src/systems/DialogueRunner';
 import { apply } from '../src/systems/rules';
+import { proximaPergunta, resultadoQuiz, sortearQuiz, type QuizDef } from '../src/systems/quizChapeu';
 
 // ordem oficial das casas no castelo [kainan, 31/10]: vermelho, verde, amarelo, azul
 const ORDEM = ['coragem', 'astucia', 'lealdade', 'inteligencia'];
@@ -41,62 +42,93 @@ describe('ordem das casas', () => {
 });
 
 describe('quiz do Chapéu das Virtudes', () => {
-  /** Conversa com o Ministro até a casa ser escolhida, seguindo as escolhas dadas (o resto avança). */
-  function sorteio(picks: number[], kids = false) {
+  const banco = JSON.parse(readFileSync('content/quiz-chapeu.json', 'utf8')) as QuizDef;
+  const nodes = dialogues.arquimedes.nodes;
+
+  /** Conversa com o Ministro seguindo as escolhas dadas; nas perguntas do quiz, responde com a última casa indicada. */
+  function sorteio(picks: (number | string)[], kids = false) {
     const s = newGame('map.grande-salao', 'inicio');
     if (kids) s.modo = 'kids';
     apply({ startQuest: 'o-diretor' }, s, db);
     apply({ advanceQuest: 'o-diretor', to: 'falar-com-diretor' }, s, db);
     const run = new DialogueRunner(dialogues.arquimedes, s, db);
-    const vistos: string[] = [];
-    for (let guard = 0; !run.finished && guard < 80; guard++) {
+    const perguntas: string[] = [];
+    let casa = 'coragem';
+    for (let guard = 0; !run.finished && guard < 200; guard++) {
       const v = run.view()!;
-      vistos.push(v.text);
-      if (v.choices.length) run.choose(picks.shift() ?? 0);
-      else run.next();
+      const no = banco.perguntas.find((p) => p.texto === v.text);
+      if (no) {
+        perguntas.push(no.id);
+        run.choose(no.respostas.findIndex((r) => r.casa === casa));
+      } else if (v.choices.length) {
+        const p = picks.shift() ?? 0;
+        // "casa" ou "casa:n": passa a responder com essa casa e toma a escolha n (padrão 0)
+        if (typeof p === 'string') { const [c, n] = p.split(':'); casa = c; run.choose(Number(n ?? 0)); } else run.choose(p);
+      } else run.next();
     }
     expect(run.finished).toBe(true);
-    return { s, vistos };
+    return { s, perguntas };
   }
-  const resposta = (n: string, casa: string) =>
-    dialogues.arquimedes.nodes[n].choices!.findIndex((c) => c.effects?.some((e) => 'addFlag' in e && e.addFlag === `quiz:${casa}`));
 
-  it('as cinco perguntas têm uma resposta de cada casa', () => {
-    for (let i = 1; i <= 5; i++) {
-      const q = dialogues.arquimedes.nodes[`quiz-${i}`];
-      expect(q.cena).toBe('chapeu');
-      expect(ORDEM.map((c) => resposta(`quiz-${i}`, c)).sort()).toEqual([0, 1, 2, 3]);
-    }
+  it('o banco tem 20 perguntas, cada uma com uma resposta de cada casa', () => {
+    expect(banco.perguntas).toHaveLength(20);
+    expect(new Set(banco.perguntas.map((p) => p.id)).size).toBe(20);
+    for (const p of banco.perguntas) expect(p.respostas.map((r) => r.casa).sort()).toEqual([...ORDEM].sort());
+    expect(banco.quantas).toBe(6);
   });
 
   for (const casa of ORDEM) {
-    it(`respostas de ${casa} levam à mesa de ${casa}, com a capa da casa`, () => {
-      const picks = [0, ...[1, 2, 3, 4, 5].map((i) => resposta(`quiz-${i}`, casa)), 0];
-      const { s } = sorteio(picks);
+    it(`responder tudo de ${casa} dá a mesa de ${casa}, com a capa da casa`, () => {
+      // "casa" = responder às perguntas; depois, aceitar o resultado
+      const { s, perguntas } = sorteio([casa, 0]);
+      expect(perguntas).toHaveLength(6);
+      expect(new Set(perguntas).size).toBe(6);
       expect(s.house).toBe(casa);
       expect(s.equipment.capa).toBe(`capa-${casa}`);
     });
   }
 
-  it('empate: a última pergunta desempata', () => {
-    // 2 de coragem, 2 de astúcia, e a última (que pesa mais) em astúcia
-    const picks = [0, resposta('quiz-1', 'coragem'), resposta('quiz-2', 'coragem'), resposta('quiz-3', 'astucia'),
-      resposta('quiz-4', 'lealdade'), resposta('quiz-5', 'astucia'), 0];
-    expect(sorteio(picks).s.house).toBe('astucia');
+  it('as perguntas mudam de um quiz para outro', () => {
+    const vistas = new Set<string>();
+    for (let i = 0; i < 10; i++) sorteio(['coragem', 0]).perguntas.forEach((p) => vistas.add(p));
+    expect(vistas.size).toBeGreaterThan(6);
+  });
+
+  it('o sorteio não repete pergunta e a fila acaba em "fim"', () => {
+    const s = newGame('m', 's');
+    sortearQuiz(s, banco.perguntas.map((p) => p.id), 6, () => 0.5);
+    const vistas: string[] = [];
+    for (let i = 0; i < 7; i++) { proximaPergunta(s); vistas.push(String(s.flags['quiz:atual'])); }
+    expect(new Set(vistas.slice(0, 6)).size).toBe(6);
+    expect(vistas[6]).toBe('fim');
+  });
+
+  it('empate: vale a última resposta', () => {
+    const s = newGame('m', 's');
+    Object.assign(s.flags, { 'quiz:coragem': 2, 'quiz:astucia': 2, 'quiz:lealdade': 1, 'quiz:inteligencia': 1, 'quiz:ultima': 'astucia' });
+    expect(resultadoQuiz(s)).toBe('astucia');
+    s.flags['quiz:ultima'] = 'lealdade';
+    expect(resultadoQuiz(s)).toBe('coragem');
   });
 
   it('dá para refazer o quiz, e os pontos começam do zero', () => {
-    const tudo = (casa: string) => [1, 2, 3, 4, 5].map((i) => resposta(`quiz-${i}`, casa));
     // primeira rodada dá Coragem; refaz (escolha 1) e a segunda dá Lealdade
-    const { s } = sorteio([0, ...tudo('coragem'), 1, ...tudo('lealdade'), 0]);
+    const { s, perguntas } = sorteio(['coragem', 'lealdade:1', 0]);
+    expect(perguntas).toHaveLength(12);
     expect(s.house).toBe('lealdade');
     expect(s.flags['quiz:coragem']).toBe(0);
   });
 
   it('dá para escolher a mesa manualmente, direto ou depois do quiz', () => {
     expect(sorteio([1, 2]).s.house).toBe('lealdade');
-    const tudo = [1, 2, 3, 4, 5].map((i) => resposta(`quiz-${i}`, 'coragem'));
-    expect(sorteio([0, ...tudo, 2, 3]).s.house).toBe('inteligencia');
+    expect(sorteio(['coragem', 2, 3]).s.house).toBe('inteligencia');
+  });
+
+  it('as perguntas são do Chapéu, com o chapéu na cabeça', () => {
+    for (const p of banco.perguntas) {
+      expect(nodes[`quiz-p-${p.id}`].speaker).toBe('Chapéu das Virtudes');
+      expect(nodes[`quiz-p-${p.id}`].cena).toBe('chapeu');
+    }
   });
 
   it('o quiz também funciona no Modo Kids', () => {

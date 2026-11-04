@@ -169,6 +169,8 @@ export class WorldScene extends Phaser.Scene {
   private dialogueId = '';
   /** Chapéu das Virtudes na cabeça do aprendiz durante a escolha da casa. */
   private hat?: Phaser.GameObjects.Image;
+  /** Casa que o chapéu já mostra (cor do resultado do quiz). */
+  private hatHouse?: string;
   private candles: Candle[] = [];
   private creatures: Creature[] = [];
   private triggers: Trigger[] = [];
@@ -748,15 +750,83 @@ export class WorldScene extends Phaser.Scene {
    */
   private putHat(house?: string): void {
     if (this.hat) {
-      if (house) this.hat.setTint(HOUSE_COLORS[house] ?? 0xfad65c);
-      else this.hat.clearTint();
+      if (house && this.hatHouse !== house) this.hatReveal(house);
+      else if (!house && this.hatHouse) {
+        this.hatHouse = undefined;
+        this.hat.setTexture('prop.chapeu', 0).clearTint();
+      }
       return;
     }
     const top = this.player.y - this.player.height;
     this.hat = this.add.image(this.player.x, top - 20, 'prop.chapeu').setOrigin(0.5, 1).setDepth(this.player.depth + 1).setAlpha(0);
-    if (house) this.hat.setTint(HOUSE_COLORS[house] ?? 0xfad65c);
-    this.tweens.add({ targets: this.hat, y: top + 5, alpha: 1, duration: 600, ease: 'Sine.out' });
+    this.hatHouse = undefined;
+    this.tweens.add({ targets: this.hat, y: top + 5, alpha: 1, duration: 600, ease: 'Sine.out', onComplete: () => house && this.hatReveal(house) });
     audio.sfx('confirmar');
+  }
+
+  /**
+   * Resultado do quiz: o chapéu dá um pulinho girando, a cor da casa sobe por ele num
+   * piscar de luz, e uma roda de faíscas da mesma cor se espalha em volta da cabeça.
+   */
+  private hatReveal(house: string): void {
+    const hat = this.hat;
+    if (!hat) return;
+    this.hatHouse = house;
+    const color = HOUSE_COLORS[house] ?? 0xfad65c;
+    if (!this.textures.exists('chapeu.faisca')) {
+      const g = this.make.graphics({}, false);
+      g.fillStyle(0xffffff).fillRect(1, 0, 1, 3).fillRect(0, 1, 3, 1);
+      g.generateTexture('chapeu.faisca', 3, 3);
+      g.destroy();
+    }
+    audio.sfx('revelar');
+    const claro = this.lightHatTexture();
+    const baseY = hat.y;
+    this.tweens.killTweensOf(hat);
+    hat.setAngle(0).setScale(1);
+    // pulinho com giro e esticada, e a cor entra no meio do pulo
+    this.tweens.chain({
+      targets: hat,
+      tweens: [
+        { y: baseY - 8, angle: -12, scaleX: 0.85, scaleY: 1.2, duration: 320, ease: 'Sine.out' },
+        { angle: 12, duration: 240, ease: 'Sine.inOut', onStart: () => { hat.setTintFill(0xffffff); } },
+        { y: baseY, angle: 0, scaleX: 1.15, scaleY: 0.9, duration: 320, ease: 'Bounce.out', onStart: () => { hat.setTexture(claro, 0).clearTint().setTint(color); } },
+        { scaleX: 1, scaleY: 1, duration: 160, ease: 'Sine.out' },
+      ],
+    });
+    // anel de luz e faíscas da cor da casa
+    const ring = this.add.circle(hat.x, hat.y - 6, 3, color, 0).setStrokeStyle(1.5, color, 0.9).setDepth(hat.depth + 1);
+    this.tweens.add({ targets: ring, radius: 26, alpha: 0, delay: 560, duration: 800, ease: 'Sine.out', onComplete: () => ring.destroy() });
+    const glow = this.add.circle(hat.x, hat.y - 6, 10, color, 0.5).setDepth(hat.depth - 1).setBlendMode(Phaser.BlendModes.ADD).setAlpha(0);
+    this.tweens.add({ targets: glow, alpha: 0.6, scale: 1.6, yoyo: true, delay: 560, duration: 520, onComplete: () => glow.destroy() });
+    const sparks = this.add.particles(hat.x, hat.y - 6, 'chapeu.faisca', {
+      speed: { min: 30, max: 70 }, lifespan: 700, alpha: { start: 1, end: 0 }, scale: { start: 1, end: 0.4 },
+      gravityY: 40, tint: [color, 0xffffff], emitting: false,
+    }).setDepth(hat.depth + 2);
+    this.time.delayedCall(560, () => sparks.explode(24));
+    this.time.delayedCall(1500, () => sparks.destroy());
+  }
+
+  /**
+   * Versão clara (tons de cinza) do chapéu, feita uma vez: pintada com a cor da casa,
+   * mostra a cor de verdade, sem escurecer por causa do roxo original.
+   */
+  private lightHatTexture(): string {
+    const key = 'prop.chapeu-claro';
+    if (this.textures.exists(key)) return key;
+    const frame = this.textures.getFrame('prop.chapeu', 0);
+    const canvas = this.textures.createCanvas(key, frame.width, frame.height)!;
+    const ctx = canvas.getContext();
+    ctx.drawImage(frame.source.image as CanvasImageSource, frame.cutX, frame.cutY, frame.width, frame.height, 0, 0, frame.width, frame.height);
+    const img = ctx.getImageData(0, 0, frame.width, frame.height);
+    for (let i = 0; i < img.data.length; i += 4) {
+      const lum = 0.3 * img.data[i] + 0.59 * img.data[i + 1] + 0.11 * img.data[i + 2];
+      const v = Math.min(255, 90 + lum * 1.6);
+      img.data[i] = img.data[i + 1] = img.data[i + 2] = v;
+    }
+    ctx.putImageData(img, 0, 0);
+    canvas.refresh();
+    return key;
   }
 
   /** Casa escolhida: o chapéu brilha com a cor da casa e some numa nuvenzinha. */
@@ -764,6 +834,7 @@ export class WorldScene extends Phaser.Scene {
     const hat = this.hat;
     if (!hat) return;
     this.hat = undefined;
+    this.hatHouse = undefined;
     const color = HOUSE_COLORS[house] ?? 0xfad65c;
     const glow = this.add.circle(hat.x, hat.y - 7, 4, color, 0.7).setDepth(hat.depth + 1).setBlendMode(Phaser.BlendModes.ADD);
     hat.setTint(color);
@@ -781,6 +852,7 @@ export class WorldScene extends Phaser.Scene {
     if (!this.hat) return;
     const hat = this.hat;
     this.hat = undefined;
+    this.hatHouse = undefined;
     this.tweens.add({ targets: hat, alpha: 0, duration: 300, onComplete: () => hat.destroy() });
   }
 

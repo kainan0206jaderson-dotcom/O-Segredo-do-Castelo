@@ -1,0 +1,446 @@
+{
+  "_sobre": "Banco de perguntas do Chapéu das Virtudes [FICÇÃO]. A cada quiz (e a cada vez que o jogador refaz) o chapéu sorteia 'quantas' perguntas diferentes deste banco. Cada pergunta tem uma resposta de cada casa; a casa com mais respostas vence, e no empate vale a última resposta. O que cada casa procura (houses.json): Coragem = enfrenta o medo e vai primeiro; Inteligência = quer entender e aprender o porquê; Astúcia = acha o atalho e o jeito esperto; Lealdade = não deixa ninguém para trás.",
+  "quantas": 6,
+  "perguntas": [
+    {
+      "id": "vela",
+      "texto": "Uma vela se apaga no meio do corredor escuro. O que você faz?",
+      "respostas": [
+        {
+          "texto": "Acendo a vela de novo e sigo na frente.",
+          "casa": "coragem"
+        },
+        {
+          "texto": "Paro para entender por que ela apagou.",
+          "casa": "inteligencia"
+        },
+        {
+          "texto": "Acho um atalho por outro corredor.",
+          "casa": "astucia"
+        },
+        {
+          "texto": "Seguro a mão de quem estiver comigo.",
+          "casa": "lealdade"
+        }
+      ]
+    },
+    {
+      "id": "livro-fujao",
+      "texto": "Na Biblioteca, um livro fujão sai voando da estante. E agora?",
+      "respostas": [
+        {
+          "texto": "Ajudo meus colegas a segurar os outros livros.",
+          "casa": "lealdade"
+        },
+        {
+          "texto": "Pulo e agarro o livro no ar!",
+          "casa": "coragem"
+        },
+        {
+          "texto": "Fecho as janelas e espero ele cansar.",
+          "casa": "astucia"
+        },
+        {
+          "texto": "Leio o título antes que ele escape.",
+          "casa": "inteligencia"
+        }
+      ]
+    },
+    {
+      "id": "cozinha",
+      "texto": "A Dona Brasa precisa de ajuda na cozinha, e a festa já vai começar.",
+      "respostas": [
+        {
+          "texto": "Leio a receita duas vezes antes de mexer.",
+          "casa": "inteligencia"
+        },
+        {
+          "texto": "Fico até o último prato sair.",
+          "casa": "lealdade"
+        },
+        {
+          "texto": "Encaro o caldeirão que ninguém quer encarar.",
+          "casa": "coragem"
+        },
+        {
+          "texto": "Invento um jeito de terminar na metade do tempo.",
+          "casa": "astucia"
+        }
+      ]
+    },
+    {
+      "id": "charada",
+      "texto": "Um quadro vivo te desafia para uma charada bem difícil.",
+      "respostas": [
+        {
+          "texto": "Procuro uma pista escondida na moldura.",
+          "casa": "astucia"
+        },
+        {
+          "texto": "Penso com calma até achar a resposta.",
+          "casa": "inteligencia"
+        },
+        {
+          "texto": "Chamo um amigo para pensarmos juntos.",
+          "casa": "lealdade"
+        },
+        {
+          "texto": "Aceito na hora, sem pensar duas vezes!",
+          "casa": "coragem"
+        }
+      ]
+    },
+    {
+      "id": "levar",
+      "texto": "O que você quer levar desta noite no castelo?",
+      "respostas": [
+        {
+          "texto": "Uma aventura para contar a vida inteira.",
+          "casa": "coragem"
+        },
+        {
+          "texto": "Amigos para a vida inteira.",
+          "casa": "lealdade"
+        },
+        {
+          "texto": "Tudo o que eu puder aprender.",
+          "casa": "inteligencia"
+        },
+        {
+          "texto": "Um atalho secreto por todo o castelo.",
+          "casa": "astucia"
+        }
+      ]
+    },
+    {
+      "id": "chaves",
+      "texto": "O Trinco perdeu as chaves do castelo pela milésima vez.",
+      "respostas": [
+        {
+          "texto": "Penso em onde ele andou e deduzo onde estão.",
+          "casa": "inteligencia"
+        },
+        {
+          "texto": "Fico procurando com ele até achar.",
+          "casa": "lealdade"
+        },
+        {
+          "texto": "Desço sozinh{o|a} até o porão escuro.",
+          "casa": "coragem"
+        },
+        {
+          "texto": "Uso o Revelar e acho num instante.",
+          "casa": "astucia"
+        }
+      ]
+    },
+    {
+      "id": "sombrinha",
+      "texto": "Uma sombrinha de fuligem está parada na frente da porta.",
+      "respostas": [
+        {
+          "texto": "Chamo os outros para ninguém passar sozinho.",
+          "casa": "lealdade"
+        },
+        {
+          "texto": "Dou a volta e entro por outra porta.",
+          "casa": "astucia"
+        },
+        {
+          "texto": "Acendo o Lumen e avanço.",
+          "casa": "coragem"
+        },
+        {
+          "texto": "Observo de onde ela veio antes de tudo.",
+          "casa": "inteligencia"
+        }
+      ]
+    },
+    {
+      "id": "fantasma",
+      "texto": "Um fantasma do castelo pede ajuda, mas todo mundo tem medo de chegar perto.",
+      "respostas": [
+        {
+          "texto": "Sou {o|a} primeir{o|a} a chegar perto dele.",
+          "casa": "coragem"
+        },
+        {
+          "texto": "Pergunto quem ele foi e por que ficou aqui.",
+          "casa": "inteligencia"
+        },
+        {
+          "texto": "Prometo voltar todas as noites para ver como ele está.",
+          "casa": "lealdade"
+        },
+        {
+          "texto": "Descubro o que ele quer sem precisar chegar tão perto.",
+          "casa": "astucia"
+        }
+      ]
+    },
+    {
+      "id": "bau",
+      "texto": "Você encontra um baú trancado num cantinho escondido.",
+      "respostas": [
+        {
+          "texto": "Estudo o desenho da fechadura.",
+          "casa": "inteligencia"
+        },
+        {
+          "texto": "Chamo meus amigos para abrirmos juntos.",
+          "casa": "lealdade"
+        },
+        {
+          "texto": "Procuro a chave onde ninguém olharia.",
+          "casa": "astucia"
+        },
+        {
+          "texto": "Abro na hora, seja lá o que tiver dentro!",
+          "casa": "coragem"
+        }
+      ]
+    },
+    {
+      "id": "pocao",
+      "texto": "Na aula de Poções, a sua mistura começa a borbulhar demais.",
+      "respostas": [
+        {
+          "texto": "Jogo um pouco de gelo-seco e improviso.",
+          "casa": "astucia"
+        },
+        {
+          "texto": "Seguro o caldeirão firme até acalmar.",
+          "casa": "coragem"
+        },
+        {
+          "texto": "Protejo o colega da bancada do lado.",
+          "casa": "lealdade"
+        },
+        {
+          "texto": "Confiro a receita para achar o erro.",
+          "casa": "inteligencia"
+        }
+      ]
+    },
+    {
+      "id": "colega",
+      "texto": "Um aprendiz novo está perdido e com medo no corredor.",
+      "respostas": [
+        {
+          "texto": "Mostro um atalho secreto que eu conheço.",
+          "casa": "astucia"
+        },
+        {
+          "texto": "Explico o mapa do castelo para ele.",
+          "casa": "inteligencia"
+        },
+        {
+          "texto": "Vou na frente para mostrar que não tem perigo.",
+          "casa": "coragem"
+        },
+        {
+          "texto": "Levo ele até a mesa dele.",
+          "casa": "lealdade"
+        }
+      ]
+    },
+    {
+      "id": "estrela",
+      "texto": "O telescópio do Observatório mostra uma estrela que não estava lá ontem.",
+      "respostas": [
+        {
+          "texto": "Corro para contar aos meus amigos.",
+          "casa": "lealdade"
+        },
+        {
+          "texto": "Anoto tudo e procuro nos livros.",
+          "casa": "inteligencia"
+        },
+        {
+          "texto": "Calculo um jeito de chegar lá antes de todo mundo.",
+          "casa": "astucia"
+        },
+        {
+          "texto": "Subo na torre para ver mais de perto.",
+          "casa": "coragem"
+        }
+      ]
+    },
+    {
+      "id": "feitico",
+      "texto": "Qual feitiço você queria dominar primeiro?",
+      "respostas": [
+        {
+          "texto": "Revelar, para descobrir o que está escondido.",
+          "casa": "inteligencia"
+        },
+        {
+          "texto": "Escudo, para encarar qualquer perigo.",
+          "casa": "coragem"
+        },
+        {
+          "texto": "Lumen, para iluminar o caminho de todos.",
+          "casa": "lealdade"
+        },
+        {
+          "texto": "Abrir, porque toda porta tem um jeito.",
+          "casa": "astucia"
+        }
+      ]
+    },
+    {
+      "id": "porao",
+      "texto": "No porão, uma porta range sozinha no escuro.",
+      "respostas": [
+        {
+          "texto": "Empurro a porta e entro primeiro.",
+          "casa": "coragem"
+        },
+        {
+          "texto": "Espio pela fechadura antes de decidir.",
+          "casa": "astucia"
+        },
+        {
+          "texto": "Fico ouvindo para descobrir o que faz o barulho.",
+          "casa": "inteligencia"
+        },
+        {
+          "texto": "Fico do lado de quem estiver com medo.",
+          "casa": "lealdade"
+        }
+      ]
+    },
+    {
+      "id": "tempestade",
+      "texto": "Cai uma tempestade e as luzes do castelo começam a piscar.",
+      "respostas": [
+        {
+          "texto": "Junto todo mundo perto da lareira.",
+          "casa": "lealdade"
+        },
+        {
+          "texto": "Conto os segundos entre o raio e o trovão.",
+          "casa": "inteligencia"
+        },
+        {
+          "texto": "Saio para ver o que está acontecendo.",
+          "casa": "coragem"
+        },
+        {
+          "texto": "Já tenho uma vela guardada no bolso, por esperteza.",
+          "casa": "astucia"
+        }
+      ]
+    },
+    {
+      "id": "mandragoras",
+      "texto": "A Estufa está cheia de mandrágoras gritando.",
+      "respostas": [
+        {
+          "texto": "Coloco protetores de ouvido e passo de fininho.",
+          "casa": "astucia"
+        },
+        {
+          "texto": "Entro no meio da gritaria e replanto uma por uma.",
+          "casa": "coragem"
+        },
+        {
+          "texto": "Leio qual é o jeito certo de acalmá-las.",
+          "casa": "inteligencia"
+        },
+        {
+          "texto": "Ajudo o professor a cuidar delas.",
+          "casa": "lealdade"
+        }
+      ]
+    },
+    {
+      "id": "objeto",
+      "texto": "Você só pode levar um objeto para a aventura. Qual?",
+      "respostas": [
+        {
+          "texto": "Uma foto dos meus amigos.",
+          "casa": "lealdade"
+        },
+        {
+          "texto": "Um mapa cheio de passagens secretas.",
+          "casa": "astucia"
+        },
+        {
+          "texto": "Uma varinha para enfrentar o que vier.",
+          "casa": "coragem"
+        },
+        {
+          "texto": "Um livro de feitiços.",
+          "casa": "inteligencia"
+        }
+      ]
+    },
+    {
+      "id": "acusado",
+      "texto": "Alguém da sua mesa levou a culpa por uma travessura que não fez.",
+      "respostas": [
+        {
+          "texto": "Junto as pistas para provar a verdade.",
+          "casa": "inteligencia"
+        },
+        {
+          "texto": "Falo com a professora, mesmo nervos{o|a}.",
+          "casa": "coragem"
+        },
+        {
+          "texto": "Defendo meu amigo na frente de todos.",
+          "casa": "lealdade"
+        },
+        {
+          "texto": "Descubro quem foi sem ninguém perceber.",
+          "casa": "astucia"
+        }
+      ]
+    },
+    {
+      "id": "atalho",
+      "texto": "Na Galeria, um quadro oferece um atalho mágico, mas não diz para onde.",
+      "respostas": [
+        {
+          "texto": "Só vou se meus amigos puderem ir junto.",
+          "casa": "lealdade"
+        },
+        {
+          "texto": "Aceito e pulo dentro da moldura!",
+          "casa": "coragem"
+        },
+        {
+          "texto": "Pergunto tudo antes de decidir.",
+          "casa": "inteligencia"
+        },
+        {
+          "texto": "Negocio: primeiro ele me mostra o destino.",
+          "casa": "astucia"
+        }
+      ]
+    },
+    {
+      "id": "feliz",
+      "texto": "No fim do dia, o que te deixa mais feliz?",
+      "respostas": [
+        {
+          "texto": "Ter achado um atalho que ninguém conhecia.",
+          "casa": "astucia"
+        },
+        {
+          "texto": "Ter ajudado alguém.",
+          "casa": "lealdade"
+        },
+        {
+          "texto": "Ter aprendido uma coisa nova.",
+          "casa": "inteligencia"
+        },
+        {
+          "texto": "Ter enfrentado algo que me dava medo.",
+          "casa": "coragem"
+        }
+      ]
+    }
+  ]
+}
