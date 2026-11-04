@@ -145,246 +145,8 @@
     },
     "quiz-inicio": {
       "speaker": "Chapéu das Virtudes",
-      "text": "Hmmm... uma cabeça nova! Cinco perguntas, aprendiz. Responda de coração: aqui não existe resposta errada.",
-      "cena": "chapeu",
-      "effects": [
-        {
-          "setFlag": "quiz:coragem",
-          "value": 0
-        },
-        {
-          "setFlag": "quiz:astucia",
-          "value": 0
-        },
-        {
-          "setFlag": "quiz:lealdade",
-          "value": 0
-        },
-        {
-          "setFlag": "quiz:inteligencia",
-          "value": 0
-        }
-      ],
-      "next": "quiz-1"
-    },
-    "quiz-1": {
-      "speaker": "Chapéu das Virtudes",
-      "text": "Primeira: uma vela se apaga no meio do corredor escuro. O que você faz?",
-      "cena": "chapeu",
-      "choices": [
-        {
-          "text": "Vou na frente, mesmo com um pouco de medo.",
-          "next": "quiz-2",
-          "effects": [
-            {
-              "addFlag": "quiz:coragem"
-            }
-          ]
-        },
-        {
-          "text": "Paro para entender por que ela apagou.",
-          "next": "quiz-2",
-          "effects": [
-            {
-              "addFlag": "quiz:inteligencia"
-            }
-          ]
-        },
-        {
-          "text": "Procuro um caminho mais iluminado.",
-          "next": "quiz-2",
-          "effects": [
-            {
-              "addFlag": "quiz:astucia"
-            }
-          ]
-        },
-        {
-          "text": "Seguro a mão de quem estiver comigo.",
-          "next": "quiz-2",
-          "effects": [
-            {
-              "addFlag": "quiz:lealdade"
-            }
-          ]
-        }
-      ]
-    },
-    "quiz-2": {
-      "speaker": "Chapéu das Virtudes",
-      "text": "Segunda: na Biblioteca, um livro fujão sai voando da estante. E agora?",
-      "cena": "chapeu",
-      "choices": [
-        {
-          "text": "Ajudo o Prof. Aristóteles a segurar os outros.",
-          "next": "quiz-3",
-          "effects": [
-            {
-              "addFlag": "quiz:lealdade"
-            }
-          ]
-        },
-        {
-          "text": "Pulo e agarro o livro no ar!",
-          "next": "quiz-3",
-          "effects": [
-            {
-              "addFlag": "quiz:coragem"
-            }
-          ]
-        },
-        {
-          "text": "Fecho as janelas e espero ele cansar.",
-          "next": "quiz-3",
-          "effects": [
-            {
-              "addFlag": "quiz:astucia"
-            }
-          ]
-        },
-        {
-          "text": "Leio o título antes que ele escape.",
-          "next": "quiz-3",
-          "effects": [
-            {
-              "addFlag": "quiz:inteligencia"
-            }
-          ]
-        }
-      ]
-    },
-    "quiz-3": {
-      "speaker": "Chapéu das Virtudes",
-      "text": "Terceira: a Dona Brasa precisa de ajuda na cozinha, e a festa já vai começar.",
-      "cena": "chapeu",
-      "choices": [
-        {
-          "text": "Leio a receita duas vezes antes de mexer.",
-          "next": "quiz-4",
-          "effects": [
-            {
-              "addFlag": "quiz:inteligencia"
-            }
-          ]
-        },
-        {
-          "text": "Fico até o último prato sair.",
-          "next": "quiz-4",
-          "effects": [
-            {
-              "addFlag": "quiz:lealdade"
-            }
-          ]
-        },
-        {
-          "text": "Encaro o caldeirão que ninguém quer encarar.",
-          "next": "quiz-4",
-          "effects": [
-            {
-              "addFlag": "quiz:coragem"
-            }
-          ]
-        },
-        {
-          "text": "Invento um jeito de terminar na metade do tempo.",
-          "next": "quiz-4",
-          "effects": [
-            {
-              "addFlag": "quiz:astucia"
-            }
-          ]
-        }
-      ]
-    },
-    "quiz-4": {
-      "speaker": "Chapéu das Virtudes",
-      "text": "Quarta: um quadro vivo te desafia para uma charada bem difícil.",
-      "cena": "chapeu",
-      "choices": [
-        {
-          "text": "Procuro uma pista escondida na moldura.",
-          "next": "quiz-5",
-          "effects": [
-            {
-              "addFlag": "quiz:astucia"
-            }
-          ]
-        },
-        {
-          "text": "Penso com calma até achar a resposta.",
-          "next": "quiz-5",
-          "effects": [
-            {
-              "addFlag": "quiz:inteligencia"
-            }
-          ]
-        },
-        {
-          "text": "Chamo um amigo para pensarmos juntos.",
-          "next": "quiz-5",
-          "effects": [
-            {
-              "addFlag": "quiz:lealdade"
-            }
-          ]
-        },
-        {
-          "text": "Aceito na hora, sem pensar duas vezes!",
-          "next": "quiz-5",
-          "effects": [
-            {
-              "addFlag": "quiz:coragem"
-            }
-          ]
-        }
-      ]
-    },
-    "quiz-5": {
-      "speaker": "Chapéu das Virtudes",
-      "text": "Última, e a que pesa mais: o que você quer levar desta noite no castelo?",
-      "cena": "chapeu",
-      "choices": [
-        {
-          "text": "Uma aventura para contar a vida inteira.",
-          "next": "quiz-fim",
-          "effects": [
-            {
-              "addFlag": "quiz:coragem",
-              "n": 1.5
-            }
-          ]
-        },
-        {
-          "text": "Amigos para a vida inteira.",
-          "next": "quiz-fim",
-          "effects": [
-            {
-              "addFlag": "quiz:lealdade",
-              "n": 1.5
-            }
-          ]
-        },
-        {
-          "text": "Tudo o que eu puder aprender.",
-          "next": "quiz-fim",
-          "effects": [
-            {
-              "addFlag": "quiz:inteligencia",
-              "n": 1.5
-            }
-          ]
-        },
-        {
-          "text": "Um segredo que mais ninguém sabe.",
-          "next": "quiz-fim",
-          "effects": [
-            {
-              "addFlag": "quiz:astucia",
-              "n": 1.5
-            }
-          ]
-        }
-      ]
+      "text": "Hmmm... uma cabeça nova! Seis perguntas, aprendiz. Responda de coração: aqui não existe resposta errada.",
+      "cena": "chapeu"
     },
     "quiz-fim": {
       "speaker": "Chapéu das Virtudes",
@@ -393,45 +155,29 @@
       "nextIf": [
         {
           "when": {
-            "flagMax": "quiz:coragem",
-            "of": [
-              "quiz:astucia",
-              "quiz:lealdade",
-              "quiz:inteligencia"
-            ]
+            "flag": "quiz:casa",
+            "eq": "coragem"
           },
           "next": "quiz-coragem"
         },
         {
           "when": {
-            "flagMax": "quiz:astucia",
-            "of": [
-              "quiz:coragem",
-              "quiz:lealdade",
-              "quiz:inteligencia"
-            ]
+            "flag": "quiz:casa",
+            "eq": "astucia"
           },
           "next": "quiz-astucia"
         },
         {
           "when": {
-            "flagMax": "quiz:lealdade",
-            "of": [
-              "quiz:coragem",
-              "quiz:astucia",
-              "quiz:inteligencia"
-            ]
+            "flag": "quiz:casa",
+            "eq": "lealdade"
           },
           "next": "quiz-lealdade"
         },
         {
           "when": {
-            "flagMax": "quiz:inteligencia",
-            "of": [
-              "quiz:coragem",
-              "quiz:astucia",
-              "quiz:lealdade"
-            ]
+            "flag": "quiz:casa",
+            "eq": "inteligencia"
           },
           "next": "quiz-inteligencia"
         }

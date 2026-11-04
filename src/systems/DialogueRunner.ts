@@ -64,5 +64,10 @@ export class DialogueRunner {
     this.node = node;
     this.visibleChoices = (node.choices ?? []).filter((c) => check(c.when, this.state));
     for (const e of node.effects ?? []) this.notices.push(...apply(e, this.state, this.db));
+    // fala invisível: só escolhe o caminho
+    if (node.pular) {
+      const branch = node.nextIf?.find((b) => check(b.when, this.state));
+      this.enter(branch ? branch.next : node.next ?? null);
+    }
   }
 }

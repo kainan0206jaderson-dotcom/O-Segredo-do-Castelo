@@ -1,6 +1,7 @@
 import { readFileSync, readdirSync } from 'node:fs';
 import type { ChallengeDef, DialogueDef, HouseDef, ItemDef, ProgressionDef, QuestDef, RecipeDef, SpellDef, TutorialDef } from '../src/types/content';
 import type { ContentDb } from '../src/systems/rules';
+import { montarQuiz, type QuizDef } from '../src/systems/quizChapeu';
 
 /** Mesmo conteúdo que o jogo usa, lido do disco (o jogo usa import.meta.glob do Vite). */
 export const dialogues: Record<string, DialogueDef> = Object.fromEntries(
@@ -9,6 +10,7 @@ export const dialogues: Record<string, DialogueDef> = Object.fromEntries(
     return [d.id, d];
   }),
 );
+dialogues.arquimedes = montarQuiz(dialogues.arquimedes, JSON.parse(readFileSync('content/quiz-chapeu.json', 'utf8')) as QuizDef);
 export const db: ContentDb = {
   quests: JSON.parse(readFileSync('content/quests.json', 'utf8')) as Record<string, QuestDef>,
   items: JSON.parse(readFileSync('content/items.json', 'utf8')) as Record<string, ItemDef>,

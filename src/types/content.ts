@@ -6,8 +6,6 @@ export type Condition =
   | { flag: string; eq?: FlagValue }
   /** Flag numérica (contador) com valor mínimo. */
   | { flagAtLeast: string; n: number }
-  /** Flag numérica que empata ou passa todas as outras da lista (ex.: casa com mais pontos no quiz do chapéu). */
-  | { flagMax: string; of: string[] }
   | { questStage: string; stage: string }
   | { questDone: string }
   | { questActive: string }
@@ -30,6 +28,10 @@ export type Effect =
   | { setFlag: string; value: FlagValue }
   /** Soma n (padrão 1) a uma flag numérica (contador). */
   | { addFlag: string; n?: number }
+  /** Quiz do Chapéu das Virtudes (ver systems/quizChapeu.ts): sorteia as perguntas, tira a próxima, calcula a casa. */
+  | { quizSortear: string[]; quantas: number }
+  | { quizProxima: true }
+  | { quizResultado: true }
   | { giveItem: string; count?: number }
   | { takeItem: string; count?: number }
   | { startQuest: string }
@@ -66,6 +68,8 @@ export interface DialogueNode {
   kids?: string;
   /** Efeito de cena enquanto a fala aparece (ex.: "chapeu" põe o Chapéu das Virtudes no aprendiz). */
   cena?: string;
+  /** Fala invisível: aplica os efeitos e segue direto pelo nextIf/next, sem aparecer na tela. */
+  pular?: boolean;
 }
 
 export interface DialogueDef {
